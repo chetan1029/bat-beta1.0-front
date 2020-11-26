@@ -1,0 +1,102 @@
+// 
+// card.scss
+//
+
+.card_item {
+    background: $white;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+    padding: 4px 0;
+    margin-bottom: 6px;
+    >div {
+        padding: 16px 20px;
+    }
+    &_middle_section {
+        border-top: 0.5px solid rgba($primary, 0.2);
+        border-bottom: 0.5px solid rgba($primary, 0.2);
+        display: flex;
+        justify-content: space-between;
+    }
+    font-weight: 600;
+    &_title {
+        font-size: 12px;
+        opacity: 0.5;
+    }
+    &_buttons {
+        div:last-child {
+            margin-left: 20px;
+        }
+        img {
+            cursor: pointer;
+        }
+    }
+}
+
+.opacity_type {
+    .card_item_middle_section,
+    .card_item_header {
+        opacity: 0.4;
+    }
+}
+
+.banner {
+    width: 100%;
+    position: relative;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+    height: 140px;
+    overflow: hidden;
+    padding-left: 80px;
+    color: $white;
+    margin: 20px 0;
+    * {
+        position: relative;
+        z-index: 2;
+    }
+    &_image {
+        position: absolute;
+        width: 100%;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        height: 100%;
+        img {
+            width: 100%;
+            object-fit: cover;
+            object-position: right;
+            height: 100%;
+        }
+    }
+    &_close {
+        position: absolute;
+        right: 20px;
+        top: 11px;
+        cursor: pointer;
+    }
+    h1 {
+        margin-bottom: 12px;
+    }
+}
+
+.card {
+    background: $white;
+    box-shadow: $box-shadow;
+    border-radius: $border-radius;
+}
+
+
+
+// Responsive
+@media(min-width:1500px) {
+    .banner {
+        height: 180px;
+    }
+}
+
+@media(max-width:991.9px) {
+    // dashboard
+    .dash_card {
+        margin-bottom: 20px;
+        min-height: auto;
+    }
+}

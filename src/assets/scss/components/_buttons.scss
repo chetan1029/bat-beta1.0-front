@@ -1,0 +1,51 @@
+// 
+// buttons.scss
+//
+
+.btn {
+    transition: 0.3s all ease;
+}
+
+
+button {
+    &:focus {
+        outline: none;
+    }
+}
+
+@each $color,
+$value in $theme-colors {
+    .btn-#{$color} {
+        background-color: $value;
+        color: $white !important;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background-color: darken($value, 8%);
+        }
+    }
+
+    .btn-outline-#{$color} {
+        color: $value;
+        border: 1px solid $value;
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: transparent;
+            color: darken($value, 8%);
+            border: 1px solid darken($value, 8%);
+        }
+    }
+}
+
+
+.btn-white {
+    border-color: $gray-300;
+
+    @include hover-focus {
+        background-color: $gray-300;
+        border-color: $gray-400;
+    }
+}

@@ -1,0 +1,309 @@
+// 
+// topbar.scss
+//
+header {
+    height: 60px;
+    transition: all 0.3s;
+    >.navbar {
+        padding: 7px 0;
+        margin: 0 auto;
+        transition: width 1s;
+    }
+}
+
+.fixed_header {
+    >.navbar {
+        position: fixed;
+        right: 0;
+        left: auto;
+        z-index: 8;
+        background: $white;
+        box-shadow: 0px 5px 10px rgba($teal, 0.08);
+        padding: 7px 30px;
+        width: calc(100vw);
+        padding-left: 280px;
+    }
+}
+
+.search {
+    background: $white;
+    border: 0.5px solid rgba($primary, 0.2);
+    box-sizing: border-box;
+    border-radius: $border-radius;
+    display: flex;
+    width: 44%;
+    height: 46px;
+    padding: 0 15px;
+    button {
+        flex-shrink: 0;
+    }
+    input,
+    button {
+        border: none;
+        background-color: transparent;
+        height: 100%;
+    }
+    input {
+        width: 100%;
+        &::placeholder {
+            font-size: 14px;
+        }
+    }
+}
+
+input {
+    outline: none;
+}
+
+button {
+    border: none;
+}
+
+.header_notify {
+    &_wrap {
+        position: relative;
+        margin-right: 30px;
+        .dropdown-toggle {
+            background: transparent;
+            &::after {
+                display: none;
+            }
+        }
+    }
+    span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 2px;
+        right: 3px;
+    }
+    >* {
+        cursor: pointer;
+    }
+}
+
+.note_block {
+    border: none;
+    width: 315px;
+    z-index: 5;
+    right: -40px;
+    left: auto;
+    background: $white;
+    box-shadow: 0px 10px 20px rgba($dark, 0.05);
+    border-radius: $border-radius;
+    padding: 30px 20px;
+    transform: translate(0, 10px);
+    li {
+        border-bottom: 0.5px solid darken($gray-400, 5%);
+        padding: 11px 15px 5px 15px;
+        p:first-child {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        p:last-child {
+            opacity: 0.5;
+        }
+    }
+}
+
+.noti-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 20px;
+    background-color: $white;
+    height: 36px;
+    padding: 10px 30px;
+    border: 1px solid $primary;
+    border-radius: 20px;
+    color: $primary;
+    font-weight: 600;
+    cursor: pointer;
+    img {
+        height: 14px;
+        margin-right: 8px;
+    }
+}
+
+.header_ropdown {
+    position: relative;
+    .dropdown-toggle {
+        background: transparent;
+    }
+    &.show {
+        .dropdown-toggle {
+            &:after {
+                transform: rotate(180deg);
+            }
+        }
+    }
+    .dropdown-toggle {
+        display: flex;
+        align-items: center;
+        &:after {
+            transition: 0.3s all ease;
+            border-top: .3em solid $primary;
+        }
+    }
+    .dropdown-menu {
+        width: 220px;
+        right: -10px;
+        top: calc(100% + 9px);
+        border: none;
+        left: auto;
+        padding: 20px 10px;
+        background: $white;
+        box-shadow: 0px 10px 20px rgba($dark, 0.05);
+        border-radius: $border-radius;
+        z-index: 20;
+    }
+    svg {
+        margin-right: 10px;
+        opacity: 0.5;
+    }
+    .dropdown-item {
+        cursor: pointer;
+        a {
+            display: flex;
+            align-items: center;
+        }
+        span {
+            font-weight: 600;
+        }
+        padding: 13px 11px !important;
+        border-radius: $border-radius;
+        transition: all 0.1s ease;
+        &:hover {
+            background-color: $primary !important;
+            span {
+                color: $white;
+            }
+            svg {
+                opacity: 1;
+                path {
+                    stroke: $white;
+                }
+            }
+        }
+        &:last-child {
+            position: relative;
+            margin-top: 16px;
+            opacity: 0.5;
+            &:hover {
+                opacity: 1;
+            }
+            &:after {
+                content: '';
+                position: absolute;
+                top: -8px;
+                width: calc(100% + 20px);
+                opacity: 0.2;
+                background-color: $primary;
+                height: 0.5px;
+                box-sizing: border-box;
+                transform: translate(-50%, 0);
+                left: 50%;
+            }
+        }
+    }
+}
+
+.header_dropdown_trigger {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &_img {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        margin-right: 6px;
+        img {
+            width: 100%;
+            object-fit: cover;
+            object-position: center center;
+        }
+    }
+    >img {
+        transform: scale(1, -1);
+    }
+}
+
+.header_dropdown_open {
+    .header_dropdown_trigger {
+        >img {
+            transform: none;
+        }
+    }
+}
+
+.header {
+    &_bot {
+        width: 100%;
+    }
+    &_top {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    &_menu_btn {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 12px;
+        span {
+            display: block;
+            height: 2px;
+            width: 17px;
+            background-color: $primary;
+            border-radius: 3px;
+        }
+    }
+}
+
+// Responsive
+@media(max-width:767.9px) {
+    .header_notify_wrap {
+        display: none;
+    }
+    .fixed_header {
+        >.navbar {
+            padding: 10px 15px;
+        }
+    }
+    .dropdown_notify {
+        display: flex;
+        align-items: center;
+        svg {
+            opacity: 1;
+        }
+    }
+    .container-fluid {
+        padding: 0 15px;
+    }
+    .search {
+        width: 220px;
+        height: 30px;
+        img {
+            width: 14px;
+        }
+    }
+    header {
+        height: 90px;
+    }
+}
+
+@media(min-width:767.9px) {
+    .dropdown_notify,
+    .header_top {
+        display: none !important;
+    }
+}
+
+@media(max-width:991.9px) {
+    .search {
+        width: 60%;
+    }
+}

@@ -1,0 +1,29 @@
+//
+// reboot.scss
+//
+
+
+body {
+  color: $dark;
+  background-color: $body-bg !important;
+}
+
+a {
+  text-decoration: none !important;
+  display: inline-block;
+  color: $dark;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+
+.h1,.h2,.h3,.h4,.h5,.h6,
+h1,h2,h3,h4,h5,h6 {
+  font-weight: 600;
+}

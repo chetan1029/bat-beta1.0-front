@@ -1,0 +1,33 @@
+/*
+File: Main Css File
+*/
+
+// FONTS
+@import "custom/fonts";
+
+//CORE FILES
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "variables";
+@import "custom-variables";
+@import "../../../node_modules/bootstrap/scss/bootstrap";
+
+
+@import "reboot";
+
+// COMPONENTS
+@import "components/alerts";
+@import "components/buttons";
+@import "components/card";
+@import "components/forms";
+@import "components/reboot";
+@import "components/helper";
+
+// Pages
+@import "pages/auth";
+
+
+// STRUCTURE
+@import "custom/structure/topbar";
+@import "custom/structure/sidebar";
+@import "custom/loader";
