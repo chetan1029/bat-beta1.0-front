@@ -15,15 +15,8 @@ button {
 
 @each $color,
 $value in $theme-colors {
-    .btn-#{$color} {
-        background-color: $value;
-        color: $white !important;
-
-        &:hover,
-        &:active,
-        &:focus {
-            background-color: darken($value, 8%);
-        }
+    >.icon svg {
+        fill: $value;
     }
 
     .btn-outline-#{$color} {
