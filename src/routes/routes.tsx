@@ -5,8 +5,10 @@ import Dashboard from "../pages/Dashboard/";
 
 // account
 import Login from "../pages/account/Login";
+import Settings from "../pages/Settings/index";
 
 const authProtectedRoutes = [
+  { path: "/settings", component: Settings },
   { path: "/", component: Dashboard },
 ];
 

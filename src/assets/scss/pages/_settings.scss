@@ -1,0 +1,15 @@
+.svg-outline-primary {
+    svg {
+        path {
+            stroke: $primary !important;
+        }
+
+        ellipse {
+            stroke: $primary !important;
+        }
+    }
+}
+
+.settings-cards {
+    min-height: 120px;
+}
