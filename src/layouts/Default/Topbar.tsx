@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Button, Dropdown } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
@@ -97,7 +97,7 @@ const Topbar = (props: TopbarProps) => {
 
                   <Dropdown.Divider></Dropdown.Divider>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item href='/logout'>
                     <Icon name="logout" className='icon icon-xs' />
                     <span>{t('Log Out')}</span>
                   </Dropdown.Item>

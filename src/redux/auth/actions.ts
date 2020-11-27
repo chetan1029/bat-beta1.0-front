@@ -16,3 +16,8 @@ export const loginUser = (username: string, password: string) => ({
     type: AuthActionTypes.LOGIN_USER,
     payload: { username, password }
 });
+
+export const logoutUser = () => ({
+    type: AuthActionTypes.LOGOUT_USER,
+    payload: {}
+});

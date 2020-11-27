@@ -8,4 +8,9 @@ function login(params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 
-export { login }
+function logout() {
+    const baseUrl = "/logout/";
+    return api.create(`${baseUrl}`, {});
+}
+
+export { login, logout }
