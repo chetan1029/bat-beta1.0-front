@@ -23,5 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 
 .eslintcache
+.eslintcache/
+.eslintcache/*
 .vscode/
 .vscode/*
