@@ -191,12 +191,39 @@ const Icon = ({ name, className }: Props) => {
         </svg>
 
       case 'shipment':
-        return <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            opacity="0.2"
-            d="M8.5041 0L1.33333 0C0.454138 0 0.00285304 1.053 0.609194 1.68965L4.02385 5.27504C4.40504 5.67529 5.03864 5.69039 5.43846 5.30874L9.19458 1.72336C9.84716 1.10044 9.40626 0 8.5041 0Z"
-            fill="#182C52"
-          />
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <path
+              d="M3.19961 11.4004C3.79961 11.4004 4.29961 11.9004 4.29961 12.6004C4.29961 13.2004 3.79961 13.8004 3.19961 13.8004C2.59961 13.8004 2.09961 13.3004 2.09961 12.6004C2.09961 11.9004 2.59961 11.4004 3.19961 11.4004Z"
+              stroke="#0A0C32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M11.8998 11.4004C12.4998 11.4004 12.9998 11.9004 12.9998 12.6004C12.9998 13.2004 12.4998 13.8004 11.8998 13.8004C11.2998 13.8004 10.7998 13.3004 10.7998 12.6004C10.7998 11.9004 11.2998 11.4004 11.8998 11.4004Z"
+              stroke="#0A0C32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M9.10039 11.6006H5.90039" stroke="#0A0C32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M0.799805 7.5V10.9" stroke="#0A0C32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+              d="M14.7996 11.1V8C14.7996 7.7 14.5996 7.5 14.3996 7.4C13.5996 7.2 13.0996 6.5 13.0996 5.7L13.0998 4C13.0998 3.7 12.8998 3.5 12.5998 3.5H9.2998C8.9998 3.4 8.7998 3.7 8.7998 4"
+              stroke="#0A0C32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M0.799805 7.5002V3.0002C0.799805 2.3002 1.3998 1.7002 2.0998 1.7002H7.4998C8.1998 1.7002 8.7998 2.3002 8.7998 3.0002V7.5002"
+              stroke="#0A0C32"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </g>
         </svg>;
 
       case 'inventory':
@@ -387,6 +414,28 @@ const Icon = ({ name, className }: Props) => {
           <path fillRule="evenodd" clipRule="evenodd" d="M7.5 18C8.0523 18 8.5 17.5523 8.5 17C8.5 16.4477 8.0523 16 7.5 16C6.9477 16 6.5 16.4477 6.5 17C6.5 17.5523 6.9477 18 7.5 18Z" fill="#396AFF" />
         </svg>;
 
+      case "archive":
+        return <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.3 1H1V4.1H15.3V1Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M13.7006 14.2H2.50059C2.00059 14.2 1.60059 13.8 1.60059 13.3V4.9C1.60059 4.4 2.00059 4 2.50059 4H13.8006C14.3006 4 14.7006 4.4 14.7006 4.9V13.3C14.6006 13.8 14.2006 14.2 13.7006 14.2Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M8.09961 11.8V6.5" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M10.8998 9.7998L8.0998 11.7998L5.2998 9.7998" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+          ;
+      case "delete":
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.9394 6.08398C12.9394 6.08398 12.5231 11.1809 12.2816 13.328C12.1666 14.3534 11.525 14.9543 10.474 14.9732C8.47392 15.0088 6.47156 15.011 4.47227 14.9694C3.46112 14.949 2.83021 14.3405 2.71752 13.3332C2.47451 11.1673 2.06055 6.08398 2.06055 6.08398" stroke="#FF6E6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M14 3.64011H1" stroke="#FF6E6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M11.4952 3.64043C10.8934 3.64043 10.3752 3.22041 10.2571 2.63844L10.0708 1.71819C9.95582 1.29363 9.56639 1 9.12253 1H5.87751C5.43365 1 5.04422 1.29363 4.92923 1.71819L4.74294 2.63844C4.62489 3.22041 4.10666 3.64043 3.50488 3.64043" stroke="#FF6E6E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>;
+
+      case "un-archive":
+        return <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15.3 1H1V4.1H15.3V1Z" stroke="#FBC640" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M13.7006 14.2H2.50059C2.00059 14.2 1.60059 13.8 1.60059 13.3V4.9C1.60059 4.4 2.00059 4 2.50059 4H13.8006C14.3006 4 14.7006 4.4 14.7006 4.9V13.3C14.6006 13.8 14.2006 14.2 13.7006 14.2Z" stroke="#FBC640" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M8.09961 6.4998V11.7998" stroke="#FBC640" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M10.8998 8.5L8.0998 6.5L5.2998 8.5" stroke="#FBC640" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>;
       default:
         return null;
     }

@@ -22,6 +22,14 @@ const Auth = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AuthActionTypes.LOGOUT_USER: {
+                    return {
+                        ...state,
+                        user: null,
+                        loading: false,
+                        userLogout: true,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -42,6 +50,8 @@ const Auth = (state = INIT_STATE, action: any) => {
 
         case AuthActionTypes.LOGIN_USER:
             return { ...state, loading: true, userLoggedIn: false, };
+        case AuthActionTypes.LOGOUT_USER:
+            return { ...state, loading: true, userLogout: false, };
 
         default: return { ...state };
     }

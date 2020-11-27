@@ -6,6 +6,7 @@ import Dashboard from "../pages/Dashboard/";
 // account
 import Login from "../pages/account/Login";
 import Settings from "../pages/Settings/index";
+import Logout from "../pages/account/Logout";
 
 const authProtectedRoutes = [
   { path: "/settings", component: Settings },
@@ -14,6 +15,7 @@ const authProtectedRoutes = [
 
 const publicRoutes = [
   { path: "/login", component: Login },
+  { path: "/logout", component: Logout },
 ];
 
 const routes = [...authProtectedRoutes, ...publicRoutes];
