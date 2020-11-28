@@ -9,7 +9,7 @@ import Settings from "../pages/Settings/index";
 import Logout from "../pages/account/Logout";
 
 const authProtectedRoutes = [
-  { path: "/settings", component: Settings },
+  { path: "/settings/:companyId", component: Settings },
   { path: "/", component: Dashboard },
 ];
 

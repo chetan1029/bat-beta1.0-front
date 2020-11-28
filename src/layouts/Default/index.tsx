@@ -1,24 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 
 //layout components
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+
+//actions
+import { getCompanies } from "../../redux/actions";
 
 interface Props {
   children: any;
 }
 
 const Index = (props: Props) => {
+  const dispatch = useDispatch();
+  const { companies } = useSelector((state: any) => ({
+    companies: state.Company.Common.companies,
+    isCompaniesFetched: state.Company.Common.isCompaniesFetched,
+  }));
+
   const [showSidebar, setshowSidebar] = useState(false);
 
   const toggleSidebar = () => {
     setshowSidebar(!showSidebar);
   };
 
+
+  /*
+  get all companies
+  */
+  useEffect(() => {
+    dispatch(getCompanies());
+  }, [dispatch]);
+
   return (
+
     <React.Fragment>
       {/* sidebar component */}
-      <Sidebar toggleSidebar={toggleSidebar} showSidebar={showSidebar} />
+      <Sidebar toggleSidebar={toggleSidebar} showSidebar={showSidebar} companies={companies.results} />
 
       {/* page wrapper start */}
       <main>

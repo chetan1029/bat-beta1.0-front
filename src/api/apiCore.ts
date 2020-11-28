@@ -29,7 +29,7 @@ axios.interceptors.response.use(response => {
  * @param {*} token 
  */
 const setAuthorization = (token) => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+    axios.defaults.headers.common['Authorization'] = 'JWT ' + token;
 }
 class APICore {
     /**
@@ -137,5 +137,15 @@ class APICore {
     }
 }
 
+/*
+Check if token available in session
+*/
+let user = sessionStorage.getItem("_bat_session_");
+if (user) {
+    const { token } = JSON.parse(user);
+    if (token) {
+        setAuthorization(token);
+    }
+}
 
 export { APICore, setAuthorization };

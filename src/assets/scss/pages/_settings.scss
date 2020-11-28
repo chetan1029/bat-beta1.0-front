@@ -66,15 +66,28 @@
     min-height: 120px;
 }
 
-.payment-card-title {
-    border-bottom: 1px solid rgba(#9D9EAD, 0.3);
-    background-color: transparent;
+.payment-terms-link {
+    color: inherit !important;
+    width: 100%;
+
+    &:hover {
+        color: inherit !important;
+    }
 }
 
-.payment-card-footer {
-    border-top: 1px solid rgba(#9D9EAD, 0.3);
-    background-color: transparent;
+.payment-terms-card {
+
+    .payment-card-title {
+        border-bottom: 1px solid rgba(#9D9EAD, 0.3);
+        background-color: transparent;
+    }
+
+    .payment-card-footer {
+        border-top: 1px solid rgba(#9D9EAD, 0.3);
+        background-color: transparent;
+    }
 }
+
 
 .btn-archive {
     background-color: $primary;
@@ -101,8 +114,19 @@
 .alret-notification {
     position: fixed;
     bottom: 50px;
-    left: 0;
-    right: 0;
     z-index: 1111;
-    width: 50%;
+    width: 790px;
+    left: 400px;
+
+    .card {
+        box-shadow: 0 4px 30px rgba(140, 157, 202, 0.50) !important;
+    }
 }
+
+.add-payment-modal-header {
+    border-bottom: none !important;
+}
+
+/*
+add new payment form
+*/

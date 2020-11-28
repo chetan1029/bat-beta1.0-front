@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Media } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 //components
 import Icon from "../../components/Icon";
@@ -61,7 +61,6 @@ const DefaultView = ({ items, onChangeView }: DefaultViewProps) => {
 
 
 interface IndexProps {
-
 }
 const Index = (props: IndexProps) => {
 
@@ -70,6 +69,7 @@ const Index = (props: IndexProps) => {
     const onChangeView = (view: string) => {
         setselectedView(view);
     }
+
     const items = [
         { title: "Company Profile", key: "settings", icon: "company-profile", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Members", key: "members", icon: "members", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
@@ -98,4 +98,4 @@ const Index = (props: IndexProps) => {
     );
 }
 
-export default Index;
+export default withRouter(Index);

@@ -39,7 +39,7 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
       return true
   }
 
-  return <Tag className={classNames({'selected_item': show})}>
+  return <Tag className={classNames({ 'selected_item': show })}>
     <Link to={hasChildren ? '#' : url} className={classNames("menu_item d-flex", { "selected_link": show })} onClick={toggleMenu}>
       {hasChildren ? <div className="menu_icon">
         <Icon name="arrow-left" />
@@ -80,11 +80,12 @@ interface SideProps {
   toggleSidebar: any,
   match: any,
   location: any,
-  showSidebar?: boolean
+  showSidebar?: boolean,
+  companies: any
 }
 
 const Sidebar = (props: SideProps) => {
-  const { toggleSidebar, showSidebar } = props;
+  const { toggleSidebar, showSidebar, companies } = props;
 
   const { t } = useTranslation();
 
@@ -131,9 +132,11 @@ const Sidebar = (props: SideProps) => {
 
   }
 
+  const companyId = companies ? companies[0].id : 0;
+
   return (
     <React.Fragment>
-      <div className={classNames("side_bar_wrap", {"side_bar_visible": showSidebar})}>
+      <div className={classNames("side_bar_wrap", { "side_bar_visible": showSidebar })}>
         <div className="side_bar">
 
           <Link to='#' className="side_bar_close" onClick={toggleSidebar}>
@@ -153,7 +156,7 @@ const Sidebar = (props: SideProps) => {
 
 
           <div className="bottom-link">
-            <Link to="/settings" className="side_bar_link menu_item d-flex align-items-center selected_link">
+            <Link to={"/settings/" + companyId} className="side_bar_link menu_item d-flex align-items-center selected_link">
               <Icon name='settings' />
               <p>{t('Settings')}</p>
             </Link>

@@ -436,6 +436,14 @@ const Icon = ({ name, className }: Props) => {
           <path d="M8.09961 6.4998V11.7998" stroke="#FBC640" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M10.8998 8.5L8.0998 6.5L5.2998 8.5" stroke="#FBC640" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>;
+      case 'info':
+        return <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g opacity="0.5">
+            <circle cx="11" cy="11" r="8.25" stroke="#0A0C32" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M11 6.875V8.25M11 10.3125V15.8125" stroke="#0A0C32" />
+          </g>
+        </svg>
+          ;
       default:
         return null;
     }
