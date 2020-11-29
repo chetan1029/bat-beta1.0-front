@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Form, Button, Media, Alert } from "react-bootstrap";
+import { Row, Col, Card, Form, Button, Media } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 //components
 import Icon from "../../components/Icon";
-import AddPayment from "./AddPayment";
+import AddEditPaymentTerms from "./AddEditPaymentTerms";
 
 //actions
-import { getPaymentTerms, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm } from "../../redux/actions";
+import { getPaymentTerms, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm, reset } from "../../redux/actions";
 
-//dummy data
 import Loader from "../../components/Loader";
+import MessageAlert from "../../components/MessageAlert";
 
 interface PaymentCardItemProps {
     payment: any;
@@ -21,17 +22,20 @@ interface PaymentCardItemProps {
 }
 
 const EmptyState = () => {
+    const { t } = useTranslation();
     return (
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    There Is No Archived Payment Terms.
+                    <h5 className="font-weight-normal my-0">{t('There are no archived payment terms available')}</h5>
                 </div>
             </Card.Body>
         </Card>
     )
 }
+
 const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, companyId }: PaymentCardItemProps) => {
+    const { t } = useTranslation();
     const dispatch = useDispatch();
     /*
     delete payment term
@@ -57,7 +61,7 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
                     <Link to="#" onClick={() => onEditPaymentTerm(payment)} className="payment-terms-link">
                         <Card.Header className="payment-card-title">
                             <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">Title</h6>
+                                <h6 className="m-0 text-muted font-weight-bold">{t('Title')}</h6>
                                 <h6 className="m-0 font-weight-bold">{payment.title}</h6>
                             </div>
                         </Card.Header>
@@ -65,19 +69,19 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
                             <div className="p-2">
                                 <Row>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">Deposit</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Deposit')}</h6>
                                         <h6 className="m-0 font-weight-bold">{payment.deposit}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">On Delivery</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('On Delivery')}</h6>
                                         <h6 className="m-0 font-weight-bold">{payment.on_delivery}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">Receiving</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Receiving')}</h6>
                                         <h6 className="m-0 font-weight-bold">{payment.receiving}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">Remaining</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Remaining')}</h6>
                                         <h6 className="m-0 font-weight-bold">{payment.remaining} in {payment.payment_days} Days</h6>
                                     </Col>
                                 </Row>
@@ -104,12 +108,13 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
 }
 
 interface PaymentTermsProps {
-    onChangeView: any;
     match: any;
 }
 const PaymentTerms = (props: PaymentTermsProps) => {
+    const { t } = useTranslation();
+
     const dispatch = useDispatch();
-    const { onChangeView } = props;
+
     const { paymentTerms, isPaymentTermsFetched, isPaymentTermCreated, isPaymentTermUpdated, isPaymentTermDeleted, isPaymentTermArchived, isPaymentTermRestored } = useSelector((state: any) => ({
         paymentTerms: state.Company.PaymentTerms.paymentTerms,
 
@@ -155,7 +160,6 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     /*
     alert
     */
-    const [showAlert, setShowAlert] = useState(false);
     const [archiveUnarchiveItem, setarchiveUnarchiveItem] = useState<any>(null);
 
     /*
@@ -163,7 +167,6 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     */
     const onArchiveDeleteAction = (payment: any) => {
         setarchiveUnarchiveItem(payment);
-        setShowAlert(true);
     }
 
     /*
@@ -175,6 +178,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     }
     const closeModal = () => {
         setisopen(false);
+        dispatch(reset());
     }
 
     /*
@@ -202,7 +206,6 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     */
     useEffect(() => {
         if (isPaymentTermDeleted || isPaymentTermArchived || isPaymentTermRestored) {
-            setShowAlert(true);
             dispatch(getPaymentTerms(props.match.params.companyId));
         }
     }, [isPaymentTermDeleted, isPaymentTermArchived, isPaymentTermRestored, dispatch, props.match.params.companyId]);
@@ -213,15 +216,13 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                 <Row>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <Link to="#" onClick={() => onChangeView("defaultView")}>
+                            <Link to={`settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
-                            <h1 className="m-0">
-                                Payment Terms
-                        </h1>
+                            <h1 className="m-0">{t('Payment Terms')}</h1>
                             <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">
-                                    Show archived
+                                    {t('Show archived')}
                                 </span>
                                 <Form.Check
                                     type="switch"
@@ -237,7 +238,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                         <Button variant="primary" onClick={() => {
                             openModal();
                             setselectedPaymentTerm(null);
-                        }}>Add Payment Terms</Button>
+                        }}>{t('Add Payment Terms')}</Button>
                     </Col>
                 </Row>
             </div>
@@ -287,50 +288,21 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                     </div>
             }
 
-            {
-                showAlert &&
-                <div className="position-relative">
-                    <div className="alret-notification">
-                        <Alert variant="light" className="card" onClose={() => setShowAlert(false)} dismissible>
-                            {
-                                isPaymentTermDeleted && <p className="mb-0">Your Payment Term {archiveUnarchiveItem.title} is Deleted</p>
-                            }
-                            {
-                                isPaymentTermArchived && <Row>
-                                    <Col xs={12} lg={2} className="d-flex align-items-center justify-content-center">
-                                        <div className="btn-archive">
-                                            <Icon name="archive" className="icon" />
-                                        </div>
-                                    </Col>
-                                    <Col xs={12} lg={8} className="d-flex align-items-center">
-                                        <p>Your Payment Terms {archiveUnarchiveItem.title} were archived. You can undo this action.</p>
-                                    </Col>
-                                    <Col xs={12} lg={2} className="d-flex align-items-center">
-                                        <Button variant="outline-primary">Undo</Button>
-                                    </Col>
-                                </Row>
-                            }
-                            {
-                                isPaymentTermRestored && <Row>
-                                    <Col xs={12} lg={2} className="d-flex align-items-center justify-content-center">
-                                        <div className="btn-archive">
-                                            <Icon name="un-archive" className="icon" />
-                                        </div>
-                                    </Col>
-                                    <Col xs={12} lg={8} className="d-flex align-items-center">
-                                        <p>Your Payment Terms {archiveUnarchiveItem.title} were archived. You can undo this action.</p>
-                                    </Col>
-                                    <Col xs={12} lg={2} className="d-flex align-items-center">
-                                        <Button variant="outline-primary">Undo</Button>
-                                    </Col>
-                                </Row>
-                            }
-                        </Alert >
-                    </div>
-                </div>
-            }
+            <MessageAlert message={t('A new Payment Term is created')} icon="archive" />
 
-            <AddPayment isOpen={isOpen} onClose={closeModal} companyId={companyId} paymentTerm={selectedPaymentTerm} />
+            {isPaymentTermCreated ? <MessageAlert message={t('A new Payment Term is created')} /> : null}
+
+            {isPaymentTermDeleted ? <MessageAlert message={t('Selected Payment Term is deleted')} /> : null}
+
+            {isPaymentTermRestored ? <MessageAlert message={t('Selected Payment Term is restored')} /> : null}
+
+            {isPaymentTermArchived ? <MessageAlert
+                message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
+                icon="archive" undo={true} onUndo={() => { }}
+            /> : null}
+
+
+            {isOpen ? <AddEditPaymentTerms isOpen={isOpen} onClose={closeModal} companyId={companyId} paymentTerm={selectedPaymentTerm} /> : null}
         </>
     );
 }

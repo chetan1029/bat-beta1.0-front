@@ -1,5 +1,3 @@
-import React from "react";
-
 //dasboard
 import Dashboard from "../pages/Dashboard/";
 
@@ -9,7 +7,7 @@ import Settings from "../pages/Settings/index";
 import Logout from "../pages/account/Logout";
 
 const authProtectedRoutes = [
-  { path: "/settings/:companyId", component: Settings },
+  { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/", component: Dashboard },
 ];
 

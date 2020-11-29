@@ -8,12 +8,8 @@ import { getPaymentTerms as getPaymentTermsByCompanyId,
     restorePaymentTerm as restorePaymentTermApi
 } from "../../../api/index";
 
-import { APICore } from "../../../api/apiCore";
 import { paymentTermsApiResponseSuccess, paymentTermsApiResponseError } from "./actions";
 import { PaymentTermsTypes } from './constants';
-
-
-const api = new APICore();
 
 
 /**
@@ -48,7 +44,6 @@ function* editPaymentTerm({ payload: { companyId, paymentTermId, params } }: any
     try {
         const response = yield call(updatePaymentTerm, companyId, paymentTermId, params);
         yield put(paymentTermsApiResponseSuccess(PaymentTermsTypes.EDIT_PAYMENT_TERM, response.data));
-        
     } catch (error) {
         yield put(paymentTermsApiResponseError(PaymentTermsTypes.EDIT_PAYMENT_TERM, error));
     }
@@ -123,8 +118,8 @@ function* authSaga() {
         fork(watchCreatePaymentTerm),
         fork(watchEditPaymentTerm),
         fork(watchDeletePaymentTerm),
-        fork(watchArchivePaymentTerm),,
-        fork(watchRestorePaymentTerm),
+        fork(watchArchivePaymentTerm),
+        fork(watchRestorePaymentTerm)
     ]);
 }
 

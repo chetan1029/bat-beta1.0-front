@@ -9,4 +9,5 @@ export enum PaymentTermsTypes {
     DELETE_PAYMENT_TERM = '@@company/paymentTerms/DELETE_PAYMENT_TERM',
     ARCHIVE_PAYMENT_TERM = '@@company/paymentTerms/ARCHIVE_PAYMENT_TERM',
     RESTORE_PAYMENT_TERM = '@@company/paymentTerms/RESTORE_PAYMENT_TERM',
+    RESET = '@@company/paymentTerms/RESET',
 }

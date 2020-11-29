@@ -1,9 +1,5 @@
 import { PaymentTermsTypes } from './constants';
 
-import { APICore } from '../../../api/apiCore';
-
-const api = new APICore();
-
 const INIT_STATE: any = {
     paymentTerms: []
 };
@@ -25,30 +21,35 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                         ...state,
                         newPaymentTerm: action.payload.data,
                         isPaymentTermCreated: true,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.EDIT_PAYMENT_TERM: {
                     return {
                         ...state,
                         isPaymentTermUpdated: true,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.DELETE_PAYMENT_TERM: {
                     return {
                         ...state,
                         isPaymentTermDeleted: true,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.ARCHIVE_PAYMENT_TERM: {
                     return {
                         ...state,
                         isPaymentTermArchived: true,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.RESTORE_PAYMENT_TERM: {
                     return {
                         ...state,
                         isPaymentTermRestored: true,
+                        loading: false
                     }
                 }
                 default:
@@ -69,6 +70,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                         ...state,
                         createPaymentTermError: action.payload.error,
                         isPaymentTermCreated: false,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.EDIT_PAYMENT_TERM: {
@@ -76,6 +78,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                         ...state,
                         editPaymentTermError: action.payload.error,
                         isPaymentTermUpdated: false,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.DELETE_PAYMENT_TERM: {
@@ -83,6 +86,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                         ...state,
                         error: action.payload.error,
                         isPaymentTermDeleted: false,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.ARCHIVE_PAYMENT_TERM: {
@@ -90,6 +94,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                         ...state,
                         error: action.payload.error,
                         isPaymentTermArchived: false,
+                        loading: false
                     }
                 }
                 case PaymentTermsTypes.RESTORE_PAYMENT_TERM: {
@@ -97,6 +102,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                         ...state,
                         error: action.payload.error,
                         isPaymentTermRestored: false,
+                        loading: false
                     }
                 }
                 default:
@@ -105,21 +111,33 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
         case PaymentTermsTypes.GET_PAYMENT_TERMS:
             return { ...state, isPaymentTermsFetched: false };
         case PaymentTermsTypes.CREATE_PAYMENT_TERM:
-            return { ...state, isPaymentTermCreated: false };
+            return { ...state, isPaymentTermCreated: false, loading: true };
         case PaymentTermsTypes.EDIT_PAYMENT_TERM:
-            return { ...state, isPaymentTermUpdated: false };
+            return { ...state, isPaymentTermUpdated: false, loading: true };
         case PaymentTermsTypes.DELETE_PAYMENT_TERM:
-            return { ...state, isPaymentTermDeleted: false };
+            return { ...state, isPaymentTermDeleted: false, loading: true };
         case PaymentTermsTypes.ARCHIVE_PAYMENT_TERM: {
             return {
                 ...state,
-                isPaymentTermArchived: true,
+                isPaymentTermArchived: false,
+                loading: true
             }
         }
         case PaymentTermsTypes.RESTORE_PAYMENT_TERM: {
             return {
                 ...state,
-                isPaymentTermRestored: true,
+                isPaymentTermRestored: false,
+                loading: true
+            }
+        }
+        case PaymentTermsTypes.RESET: {
+            return {
+                ...state,
+                editPaymentTermError: null,
+                isPaymentTermCreated: false,
+                isPaymentTermDeleted: false,
+                isPaymentTermRestored: false,
+                isPaymentTermArchived: false,
             }
         }
         default: return { ...state };

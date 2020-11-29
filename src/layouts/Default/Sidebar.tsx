@@ -156,7 +156,7 @@ const Sidebar = (props: SideProps) => {
 
 
           <div className="bottom-link">
-            <Link to={"/settings/" + companyId} className="side_bar_link menu_item d-flex align-items-center selected_link">
+            <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center selected_link">
               <Icon name='settings' />
               <p>{t('Settings')}</p>
             </Link>

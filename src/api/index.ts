@@ -36,7 +36,7 @@ function createPaymentTerm(companyId: number, params?: any) {
 
 function updatePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/payment-terms/${paymentTermId}/`;
-    return api.update(`${baseUrl}`, params);
+    return api.updatePatch(`${baseUrl}`, params);
 }
 
 function deletePaymentTerm(companyId: number, paymentTermId: number, params?: any) {

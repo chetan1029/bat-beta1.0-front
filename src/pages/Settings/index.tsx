@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Card, Media } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 //components
 import Icon from "../../components/Icon";
@@ -8,9 +9,10 @@ import PaymentTerms from "./PaymentTerms";
 
 interface DefaultViewProps {
     items: any;
-    onChangeView: any;
+    companyId: any;
 }
-const DefaultView = ({ items, onChangeView }: DefaultViewProps) => {
+const DefaultView = ({ items, companyId }: DefaultViewProps) => {
+    const { t } = useTranslation();
     return (
         <>
             <div className="py-4 px-3">
@@ -19,7 +21,7 @@ const DefaultView = ({ items, onChangeView }: DefaultViewProps) => {
                         <div className="d-flex align-items-center">
                             <Icon name="settings" className="icon icon-xs svg-outline-primary mr-2" />
                             <h1 className="m-0">
-                                Settings
+                                {t('Settings')}
                             </h1>
                         </div>
                     </Col>
@@ -32,7 +34,7 @@ const DefaultView = ({ items, onChangeView }: DefaultViewProps) => {
                             {
                                 items.map((item, key) =>
                                     <Col md={4} xs={12} key={key}>
-                                        <Link to="#" onClick={() => onChangeView(item.key)}>
+                                        <Link to={`/settings/${companyId}/${item.key}`}>
                                             <div className="pb-3 settings-cards">
                                                 <Media>
                                                     <div className="pt-1">
@@ -61,14 +63,21 @@ const DefaultView = ({ items, onChangeView }: DefaultViewProps) => {
 
 
 interface IndexProps {
+    match: any
 }
-const Index = (props: IndexProps) => {
+const Index = ({ match }: IndexProps) => {
 
-    const [selectedView, setselectedView] = useState("defaultView");
+    const companyId = match.params.companyId;
+    const view = match.params.view;
 
-    const onChangeView = (view: string) => {
-        setselectedView(view);
-    }
+    const [selectedView, setselectedView] = useState("default");
+
+    useEffect(() => {
+        if (view) {
+            setselectedView(view);
+        }
+    }, [view]);
+
 
     const items = [
         { title: "Company Profile", key: "settings", icon: "company-profile", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
@@ -87,10 +96,10 @@ const Index = (props: IndexProps) => {
             {(() => {
                 switch (selectedView) {
                     case "payment_terms":
-                        return <PaymentTerms onChangeView={onChangeView} />;
+                        return <PaymentTerms />;
 
                     default:
-                        return <DefaultView items={items} onChangeView={onChangeView} />;
+                        return <DefaultView items={items} companyId={companyId} />;
                 }
             })()}
 
