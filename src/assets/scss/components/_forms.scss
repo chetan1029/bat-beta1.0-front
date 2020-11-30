@@ -90,6 +90,13 @@
         padding: 0 6px;
         background-color: $white !important;
         transition: all 0.3s ease;
+
+        &.form-check-label {
+            position: relative;
+            transform: none;
+            left: 0;
+            padding: 2px;
+        }
     }
 
     .form-control:focus+label {

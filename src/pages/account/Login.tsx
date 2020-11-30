@@ -65,7 +65,7 @@ const Login = () => {
 
                                         <h5 className="my-0">{t('Log In')}</h5>
                                         <p className="text-muted mt-1 mb-4">
-                                            {t('Do not have the account?')} <Link to='/register'>{t('Sign Up')}</Link>
+                                            {t('Do not have the account?')} <Link to='/signup' className="text-primary font-weight-bold">{t('Sign Up')}</Link>
                                         </p>
 
                                         {/* <Row>
@@ -114,13 +114,13 @@ const Login = () => {
 
                                             <Row>
                                                 <Col className="text-right">
-                                                    <Link to="/forget-password">{t('Forget Password?')}</Link>
+                                                    <Link to="/forget-password" className='font-weight-bold'>{t('Forget Password?')}</Link>
                                                 </Col>
                                             </Row>
 
 
                                             <Form.Group className="mb-0">
-                                                <Button variant="primary" type="submit">Log In</Button>
+                                                <Button variant="primary" type="submit">{t('Log In')}</Button>
                                             </Form.Group>
                                         </Form>
 

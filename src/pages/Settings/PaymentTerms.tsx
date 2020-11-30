@@ -288,8 +288,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                     </div>
             }
 
-            <MessageAlert message={t('A new Payment Term is created')} icon="archive" />
-
+            
             {isPaymentTermCreated ? <MessageAlert message={t('A new Payment Term is created')} /> : null}
 
             {isPaymentTermDeleted ? <MessageAlert message={t('Selected Payment Term is deleted')} /> : null}
