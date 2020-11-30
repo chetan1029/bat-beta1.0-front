@@ -13,6 +13,7 @@ import { getPaymentTerms, deletePaymentTerm, archivePaymentTerm, restorePaymentT
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
+import ConfirmMessage from "../../components/ConfirmMessage";
 
 interface PaymentCardItemProps {
     payment: any;
@@ -21,13 +22,13 @@ interface PaymentCardItemProps {
     companyId: any;
 }
 
-const EmptyState = () => {
+const EmptyState = ({ showArchived }) => {
     const { t } = useTranslation();
     return (
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    <h5 className="font-weight-normal my-0">{t('There are no archived payment terms available')}</h5>
+                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived payment terms available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no payment terms available')}</h5>}
                 </div>
             </Card.Body>
         </Card>
@@ -37,12 +38,15 @@ const EmptyState = () => {
 const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, companyId }: PaymentCardItemProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+
+    const [selectedTermForDelete, setselectedTermForDelete] = useState<any>(null);
+
     /*
     delete payment term
     */
     const onDeletePaymentTerm = (id: any) => {
-        dispatch(deletePaymentTerm(companyId, id));
         onArchiveDeleteAction(payment);
+        setselectedTermForDelete(payment);
     }
 
     const onClickArchiveUnArchive = (action: boolean) => {
@@ -54,7 +58,7 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
         onArchiveDeleteAction(payment);
     }
 
-    return (
+    return (<>
         <Row>
             <Col lg={12}>
                 <Card className="payment-terms-card mb-2">
@@ -82,7 +86,7 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
                                     </Col>
                                     <Col xs={6} lg={3}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Remaining')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{payment.remaining} in {payment.payment_days} Days</h6>
+                                        <h6 className="m-0 font-weight-bold">{payment.remaining}% in {payment.payment_days} Days</h6>
                                     </Col>
                                 </Row>
                             </div>
@@ -103,7 +107,11 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
                     </Card.Footer>
                 </Card>
             </Col>
-        </Row >
+        </Row>
+        {selectedTermForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTermForDelete.title}?`} onConfirm={() => {
+            dispatch(deletePaymentTerm(companyId, selectedTermForDelete.id));
+        }} onClose={() => setselectedTermForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
+    </>
     )
 }
 
@@ -261,7 +269,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                                                             onArchiveDeleteAction={onArchiveDeleteAction}
                                                             onEditPaymentTerm={setPaymentTerm}
                                                         />
-                                                    ) : <EmptyState />
+                                                    ) : <EmptyState showArchived={showArchived} />
                                             }
                                         </Col>
                                         <Col lg={6} xs={12}>
@@ -288,16 +296,23 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                     </div>
             }
 
-            
-            {isPaymentTermCreated ? <MessageAlert message={t('A new Payment Term is created')} /> : null}
 
-            {isPaymentTermDeleted ? <MessageAlert message={t('Selected Payment Term is deleted')} /> : null}
+            {isPaymentTermCreated && (!isPaymentTermDeleted && !isPaymentTermRestored) ? <MessageAlert message={t('A new Payment Term is created')} /> : null}
 
-            {isPaymentTermRestored ? <MessageAlert message={t('Selected Payment Term is restored')} /> : null}
+            {isPaymentTermDeleted && (!isPaymentTermCreated && !isPaymentTermRestored) ? <MessageAlert message={t('Selected Payment Term is deleted')} /> : null}
 
             {isPaymentTermArchived ? <MessageAlert
                 message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
-                icon="archive" undo={true} onUndo={() => { }}
+                icon="archive" undo={true} onUndo={() => {
+                    dispatch(restorePaymentTerm(companyId, archiveUnarchiveItem.id))
+                }}
+            /> : null}
+
+            {isPaymentTermRestored ? <MessageAlert
+                message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
+                icon="archive" undo={true} onUndo={() => {
+                    dispatch(archivePaymentTerm(companyId, archiveUnarchiveItem.id))
+                }}
             /> : null}
 
 

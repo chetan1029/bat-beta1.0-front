@@ -48,7 +48,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                 case PaymentTermsTypes.RESTORE_PAYMENT_TERM: {
                     return {
                         ...state,
-                        isPaymentTermRestored: true,
+                        isPaymentTermArchived: false,
                         loading: false
                     }
                 }
@@ -113,20 +113,33 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
         case PaymentTermsTypes.CREATE_PAYMENT_TERM:
             return { ...state, isPaymentTermCreated: false, loading: true };
         case PaymentTermsTypes.EDIT_PAYMENT_TERM:
-            return { ...state, isPaymentTermUpdated: false, loading: true };
+            return {
+                ...state, 
+                isPaymentTermUpdated: false, isPaymentTermCreated: false,
+                isPaymentTermDeleted: false, isPaymentTermRestored: false, isPaymentTermArchived: false,
+                loading: true
+            };
         case PaymentTermsTypes.DELETE_PAYMENT_TERM:
-            return { ...state, isPaymentTermDeleted: false, loading: true };
+            return {
+                ...state, isPaymentTermDeleted: false, loading: true,
+                isPaymentTermUpdated: false, isPaymentTermCreated: false,
+                isPaymentTermRestored: false, isPaymentTermArchived: false,
+            };
         case PaymentTermsTypes.ARCHIVE_PAYMENT_TERM: {
             return {
                 ...state,
-                isPaymentTermArchived: false,
+                isPaymentTermArchived: false, isPaymentTermRestored: false,
+                isPaymentTermUpdated: false, isPaymentTermCreated: false,
+                isPaymentTermDeleted: false,
                 loading: true
             }
         }
         case PaymentTermsTypes.RESTORE_PAYMENT_TERM: {
             return {
                 ...state,
-                isPaymentTermRestored: false,
+                isPaymentTermRestored: false, isPaymentTermArchived: false,
+                isPaymentTermUpdated: false, isPaymentTermCreated: false,
+                isPaymentTermDeleted: false,
                 loading: true
             }
         }

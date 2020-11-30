@@ -132,7 +132,7 @@ const Sidebar = (props: SideProps) => {
 
   }
 
-  const companyId = companies ? companies[0].id : 0;
+  const companyId = companies && companies.length ? companies[0].id : 0;
 
   return (
     <React.Fragment>

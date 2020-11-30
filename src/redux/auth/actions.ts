@@ -21,3 +21,8 @@ export const logoutUser = () => ({
     type: AuthActionTypes.LOGOUT_USER,
     payload: {}
 });
+
+export const signupUser = (data: any) => ({
+    type: AuthActionTypes.SIGNUP_USER,
+    payload: { data }
+});

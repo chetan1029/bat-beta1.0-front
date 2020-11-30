@@ -13,12 +13,22 @@ function logout() {
     return api.create(`${baseUrl}`, {});
 }
 
+function signup(params: any) {
+    const baseUrl = "/auth/registration/";
+    return api.create(`${baseUrl}`, params);
+}
+
 /*
 companies
 */
 function getCompaniesList(params?: any) {
     const baseUrl = "/companies/";
     return api.get(`${baseUrl}`, params);
+}
+
+function createCompany(params: any) {
+    const baseUrl = "/companies/";
+    return api.create(`${baseUrl}`, params);
 }
 
 /*
@@ -36,7 +46,7 @@ function createPaymentTerm(companyId: number, params?: any) {
 
 function updatePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/payment-terms/${paymentTermId}/`;
-    return api.updatePatch(`${baseUrl}`, params);
+    return api.update(`${baseUrl}`, params);
 }
 
 function deletePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
@@ -55,7 +65,7 @@ function restorePaymentTerm(companyId: number, paymentTermId: number, params?: a
 }
 
 export {
-    login, logout,
-    getCompaniesList,
+    login, logout, signup,
+    getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm
 }

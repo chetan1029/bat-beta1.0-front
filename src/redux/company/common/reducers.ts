@@ -1,9 +1,5 @@
 import { CommonTypes } from './constants';
 
-import { APICore } from '../../../api/apiCore';
-
-const api = new APICore();
-
 const INIT_STATE: any = {
     companies: []
 };
@@ -20,6 +16,14 @@ const Common = (state = INIT_STATE, action: any) => {
                         isCompaniesFetched: true,
                     }
                 }
+                case CommonTypes.CREATE_COMPANY: {
+                    return {
+                        ...state,
+                        company: action.payload.data,
+                        companyCreated: true,
+                        loading: false
+                    }
+                }
 
                 default:
                     return { ...state }
@@ -34,12 +38,22 @@ const Common = (state = INIT_STATE, action: any) => {
                         isCompaniesFetched: false,
                     }
                 }
+                case CommonTypes.CREATE_COMPANY: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        companyCreated: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
 
         case CommonTypes.GET_COMPANIES:
             return { ...state, isCompaniesFetched: false };
+        case CommonTypes.CREATE_COMPANY:
+            return { ...state, loading: true };
 
         default: return { ...state };
     }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert, Badge } from 'react-bootstrap';
-import classNames from "classnames";
+import { Container, Row, Col, Card, Button, Form, Badge } from 'react-bootstrap';
 import { Link, Redirect } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -10,15 +9,17 @@ import { useSelector, useDispatch } from 'react-redux';
 //import loader
 import Loader from '../../components/Loader';
 import CountriesDropdown from "../../components/CountriesDropdown";
+import AlertMessage from "../../components/AlertMessage";
 
-import { loginUser } from "../../redux/actions";
+import { signupUser, createCompany } from "../../redux/actions";
 
 
 interface GeneralInfoProp {
-    onSubmit: any
+    onSubmit: any,
+    values: any
 }
 
-const GeneralInfo = ({ onSubmit }: GeneralInfoProp) => {
+const GeneralInfo = ({ onSubmit, values }: GeneralInfoProp) => {
 
     const { t } = useTranslation();
 
@@ -30,11 +31,12 @@ const GeneralInfo = ({ onSubmit }: GeneralInfoProp) => {
             username: '',
             password1: '',
             email: '',
-            password2: ''
+            password2: '',
+            ...(values || {})
         },
         validationSchema: Yup.object({
             username: Yup.string().required(t('Username is required')).max(150, t('Please enter less than 150 characters')),
-            password1: Yup.string().required(t('Password is required')),
+            password1: Yup.string().required(t('Password is required')).min(8, t('Password is too short. It must contain at least 8 characters.')),
             password2: Yup.string().required(t('Confirm password is required')).oneOf([Yup.ref('password1'), null], t('Passwords must match')),
             email: Yup.string().email().required(t('Email is required')),
             first_name: Yup.string().required(t('First name is required')),
@@ -92,6 +94,19 @@ const GeneralInfo = ({ onSubmit }: GeneralInfoProp) => {
         </Form.Group>
 
         <Form.Group>
+            <Form.Control type="email" placeholder={t("Email")}
+                name="email" id="email"
+                onChange={validator.handleChange}
+                onBlur={validator.handleBlur}
+                value={validator.values.email}
+                isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
+
+            {validator.touched.email && validator.errors.email ? (
+                <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
+            ) : null}
+        </Form.Group>
+
+        <Form.Group>
             {/* <Form.Label>Password</Form.Label> */}
             <Form.Control type="password" placeholder={t("Password")}
                 name="password1" id="password1"
@@ -130,10 +145,12 @@ const GeneralInfo = ({ onSubmit }: GeneralInfoProp) => {
 
 
 interface AccountSetupProp {
-    onSubmit: any
+    onSubmit: any,
+    generalInfo?: any,
+    values?: any
 }
 
-const AccountSetup = ({ onSubmit }: AccountSetupProp) => {
+const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
 
     const { t } = useTranslation();
 
@@ -148,12 +165,13 @@ const AccountSetup = ({ onSubmit }: AccountSetupProp) => {
             zip: '',
             city: '',
             region: '',
-            email: '',
-            phone_number: ''
+            email: generalInfo && generalInfo['email'] ? generalInfo['email'] : '',
+            phone_number: '',
+            ...(values || {})
         },
         validationSchema: Yup.object({
-            name: Yup.string().required(t('Name is required')),
-            country: Yup.string().required(t('Country is required')),
+            name: Yup.string().required(t('Company name is required')),
+            country: Yup.object().required(t('Country is required')),
             email: Yup.string().required(t('Email is required')),
         }),
         onSubmit: values => {
@@ -166,7 +184,7 @@ const AccountSetup = ({ onSubmit }: AccountSetupProp) => {
 
     return <Form noValidate onSubmit={validator.handleSubmit} className="">
         <Form.Group>
-            <Form.Control type="text" placeholder={t("Name")}
+            <Form.Control type="text" placeholder={t("Company name")}
                 name="name" id="name"
                 onChange={validator.handleChange}
                 onBlur={validator.handleBlur}
@@ -234,7 +252,7 @@ const AccountSetup = ({ onSubmit }: AccountSetupProp) => {
         </Form.Group>
 
         <Form.Group>
-            <Form.Control type="text" placeholder={t("Email")}
+            <Form.Control type="email" placeholder={t("Email")}
                 name="email" id="email"
                 onChange={validator.handleChange}
                 onBlur={validator.handleBlur}
@@ -265,7 +283,7 @@ const AccountSetup = ({ onSubmit }: AccountSetupProp) => {
         </Form.Group>
 
         <Form.Group className="mb-0">
-            <Button variant="primary" type="submit" disabled={!acceptTerms}>{t('Continue')}</Button>
+            <Button variant="primary" type="submit" disabled={!acceptTerms}>{t('Sign Up')}</Button>
         </Form.Group>
     </Form>
 }
@@ -283,27 +301,41 @@ const SignUp = () => {
 
     const { t } = useTranslation();
 
-    const { loading, userLoggedIn, user, error } = useSelector((state: any) => ({
-        loading: state.Auth.loading,
+    const { loading, userSignUp, userLoggedIn, user, error, companyCreated, companyError } = useSelector((state: any) => ({
+        loading: state.Auth.loading || state.Company.Common.loading,
         user: state.Auth.user,
         error: state.Auth.error,
-        userLoggedIn: state.Auth.userLoggedIn
+        userSignUp: state.Auth.userSignUp,
+        userLoggedIn: state.Auth.userLoggedIn,
+        companyCreated: state.Company.Common.companyCreated,
+        companyError: state.Company.Common.error,
     }));
 
-    const onGeneralInfoSubmit = (info) => {
-        console.log(info);
-        setselectedStep('account');
+    const [generalInfo, setgeneralInfo] = useState<any>();
+    const onGeneralInfoSubmit = (info: any) => {
+        setgeneralInfo(info);
+        dispatch(signupUser(info));
     }
 
-    const onCompanySubmit = (info) => {
-        console.log(info);
+    const [companyInfo, setcompanyInfo] = useState<any>();
+
+    const onCompanySubmit = (info: any) => {
+        setcompanyInfo(info);
+        dispatch(createCompany({...info, country: info['country']['value']}));
     }
 
-    const [selectedStep, setselectedStep] = useState('account');
+    useEffect(() => {
+        if (userSignUp) {
+            setselectedStep('account');
+        }
+    }, [userSignUp, companyInfo, dispatch]);
+
+
+    const [selectedStep, setselectedStep] = useState('general');
 
 
     return <>
-        {userLoggedIn || user ? <Redirect to='/'></Redirect> : null}
+        {((userLoggedIn || user) && !userSignUp) || companyCreated ? <Redirect to='/'></Redirect> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
@@ -323,12 +355,19 @@ const SignUp = () => {
 
                                             <Row className="mb-4">
                                                 <Col xs='auto'>
-                                                    <Badge variant='primary' className='step-indicator'>1</Badge>
-                                                    <span className="text-muted font-weight-semibold">{t('General Info')}</span>
+                                                    <Link to='#' onClick={() => setselectedStep('general')}>
+                                                        <Badge variant='primary' className='step-indicator'>1</Badge>
+                                                        <span className="text-muted font-weight-semibold">{t('General Info')}</span>
+                                                    </Link>
                                                 </Col>
                                                 <Col>
-                                                    <Badge variant='muted' className='step-indicator'>2</Badge>
-                                                    <span className="text-muted font-weight-semibold">{t('Account Setup')}</span>
+                                                    <Link to='#' onClick={() => {
+                                                        if (generalInfo && userSignUp)
+                                                            setselectedStep('account')
+                                                    }}>
+                                                        <Badge variant={selectedStep === 'account' ? 'primary' : 'muted'} className='step-indicator'>2</Badge>
+                                                        <span className="text-muted font-weight-semibold">{t('Account Setup')}</span>
+                                                    </Link>
                                                 </Col>
                                             </Row>
 
@@ -343,9 +382,11 @@ const SignUp = () => {
 
                                         <div className="py-3 text-center"><span>or</span></div> */}
 
-                                            {error && <Alert variant="danger" className="my-2">{error}</Alert>}
+                                            {error && !userSignUp ? <AlertMessage error={error} /> : null}
 
-                                            {selectedStep === 'general' ? <GeneralInfo onSubmit={onGeneralInfoSubmit} /> : <AccountSetup onSubmit={onCompanySubmit} />}
+                                            {companyError ? <AlertMessage error={companyError} /> : null}
+
+                                            {selectedStep === 'general' ? <GeneralInfo onSubmit={onGeneralInfoSubmit} values={generalInfo} /> : <AccountSetup generalInfo={generalInfo} values={companyInfo} onSubmit={onCompanySubmit} />}
                                         </Col>
                                     </Row>
                                 </div>

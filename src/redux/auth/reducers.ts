@@ -22,6 +22,14 @@ const Auth = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AuthActionTypes.SIGNUP_USER: {
+                    return {
+                        ...state,
+                        user: action.payload.data,
+                        loading: false,
+                        userSignUp: true,
+                    }
+                }
                 case AuthActionTypes.LOGOUT_USER: {
                     return {
                         ...state,
@@ -44,6 +52,14 @@ const Auth = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AuthActionTypes.SIGNUP_USER: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        userSignUp: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -52,6 +68,8 @@ const Auth = (state = INIT_STATE, action: any) => {
             return { ...state, loading: true, userLoggedIn: false, };
         case AuthActionTypes.LOGOUT_USER:
             return { ...state, loading: true, userLogout: false, };
+        case AuthActionTypes.SIGNUP_USER:
+            return { ...state, loading: true, userSignUp: false, };
 
         default: return { ...state };
     }
