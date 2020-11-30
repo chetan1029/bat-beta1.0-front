@@ -13,6 +13,8 @@ import AlertMessage from "../../components/AlertMessage";
 
 import { signupUser, createCompany } from "../../redux/actions";
 
+import TermsConditions from "./TermsConditions";
+
 
 interface GeneralInfoProp {
     onSubmit: any,
@@ -154,6 +156,8 @@ const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
 
     const { t } = useTranslation();
 
+    const [showTerms, setshowTerms] = useState(false);
+
     // validation
     const validator = useFormik({
         initialValues: {
@@ -180,7 +184,7 @@ const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
     });
 
     const [acceptTerms, setacceptTerms] = useState(true);
-    const AcceptTermsLabel = () => <><span>{t('Accept')}</span><Link to='#' onClick={() => { }} className=''>&nbsp;{t('Terms and Conditions')}</Link></>;
+    const AcceptTermsLabel = () => <><span>{t('Accept')}</span><Link to='#' onClick={() => setshowTerms(true)} className='font-weight-bold text-primary'>&nbsp;{t('Terms and Conditions')}</Link></>;
 
     return <Form noValidate onSubmit={validator.handleSubmit} className="">
         <Form.Group>
@@ -285,6 +289,8 @@ const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
         <Form.Group className="mb-0">
             <Button variant="primary" type="submit" disabled={!acceptTerms}>{t('Sign Up')}</Button>
         </Form.Group>
+
+        {showTerms ? <TermsConditions onClose={() => setshowTerms(false)} /> : null}
     </Form>
 }
 
