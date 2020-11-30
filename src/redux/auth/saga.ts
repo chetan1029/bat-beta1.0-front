@@ -1,6 +1,9 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { login as loginApi, logout as logoutApi, signup as signupApi } from "../../api/index";
+import {
+    login as loginApi, logout as logoutApi, signup as signupApi, forgotPassword as forgotPasswordApi,
+    forgotPasswordConfirm
+} from "../../api/index";
 
 import { APICore, setAuthorization } from "../../api/apiCore";
 import { authApiResponseSuccess, authApiResponseError } from "./actions";
@@ -54,6 +57,25 @@ function* signup({ payload: { data } }: any) {
     }
 }
 
+
+function* forgotPassword({ payload: { data } }: any) {
+    try {
+        const response: any = yield call(forgotPasswordApi, data);
+        yield put(authApiResponseSuccess(AuthActionTypes.FORGOT_PASSWORD, response.data));
+    } catch (error) {
+        yield put(authApiResponseError(AuthActionTypes.FORGOT_PASSWORD, error));
+    }
+}
+
+function* forgotPasswordChange({ payload: { data } }: any) {
+    try {
+        const response: any = yield call(forgotPasswordConfirm, data);
+        yield put(authApiResponseSuccess(AuthActionTypes.FORGOT_PASSWORD_CHANGE, response.data));
+    } catch (error) {
+        yield put(authApiResponseError(AuthActionTypes.FORGOT_PASSWORD_CHANGE, error));
+    }
+}
+
 export function* watchLoginUser() {
     yield takeEvery(AuthActionTypes.LOGIN_USER, login)
 }
@@ -66,12 +88,21 @@ export function* watchSignup() {
     yield takeEvery(AuthActionTypes.SIGNUP_USER, signup)
 }
 
+export function* watchForgotPassword() {
+    yield takeEvery(AuthActionTypes.FORGOT_PASSWORD, forgotPassword)
+}
+
+export function* watchForgotPasswordChange() {
+    yield takeEvery(AuthActionTypes.FORGOT_PASSWORD_CHANGE, forgotPasswordChange)
+}
 
 function* authSaga() {
     yield all([
         fork(watchLoginUser),
         fork(watchLogout),
-        fork(watchSignup)
+        fork(watchSignup),
+        fork(watchForgotPassword),
+        fork(watchForgotPasswordChange)
     ]);
 }
 

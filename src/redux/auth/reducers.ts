@@ -38,6 +38,20 @@ const Auth = (state = INIT_STATE, action: any) => {
                         userLogout: true,
                     }
                 }
+                case AuthActionTypes.FORGOT_PASSWORD: {
+                    return {
+                        ...state,
+                        loading: false,
+                        passwordReset: true
+                    }
+                }
+                case AuthActionTypes.FORGOT_PASSWORD_CHANGE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        passwordChange: true
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -60,6 +74,22 @@ const Auth = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AuthActionTypes.FORGOT_PASSWORD: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        loading: false,
+                        passwordReset: false
+                    }
+                }
+                case AuthActionTypes.FORGOT_PASSWORD_CHANGE: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        loading: false,
+                        passwordChange: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -70,6 +100,10 @@ const Auth = (state = INIT_STATE, action: any) => {
             return { ...state, loading: true, userLogout: false, };
         case AuthActionTypes.SIGNUP_USER:
             return { ...state, loading: true, userSignUp: false, };
+        case AuthActionTypes.FORGOT_PASSWORD:
+            return { ...state, loading: true, passwordReset: false, };
+        case AuthActionTypes.FORGOT_PASSWORD_CHANGE:
+            return { ...state, loading: true, passwordChange: false, };
 
         default: return { ...state };
     }

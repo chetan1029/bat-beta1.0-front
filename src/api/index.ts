@@ -18,6 +18,16 @@ function signup(params: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+function forgotPassword(params: any) {
+    const baseUrl = "/password/reset/";
+    return api.create(`${baseUrl}`, params);
+}
+
+function forgotPasswordConfirm(params: any) {
+    const baseUrl = "/password/reset/confirm/";
+    return api.create(`${baseUrl}`, params);
+}
+
 /*
 companies
 */
@@ -65,7 +75,7 @@ function restorePaymentTerm(companyId: number, paymentTermId: number, params?: a
 }
 
 export {
-    login, logout, signup,
+    login, logout, signup, forgotPassword, forgotPasswordConfirm,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm
 }

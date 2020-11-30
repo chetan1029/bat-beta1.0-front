@@ -26,3 +26,13 @@ export const signupUser = (data: any) => ({
     type: AuthActionTypes.SIGNUP_USER,
     payload: { data }
 });
+
+export const forgotPassword = (data: any) => ({
+    type: AuthActionTypes.FORGOT_PASSWORD,
+    payload: { data }
+});
+
+export const forgotPasswordChange = (data: any) => ({
+    type: AuthActionTypes.FORGOT_PASSWORD_CHANGE,
+    payload: { data }
+});

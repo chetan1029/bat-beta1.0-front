@@ -114,7 +114,7 @@ const Login = () => {
 
                                             <Row>
                                                 <Col className="text-right">
-                                                    <Link to="/forget-password" className='font-weight-bold'>{t('Forget Password?')}</Link>
+                                                    <Link to="/forgot-password" className='font-weight-bold'>{t('Forgot Password?')}</Link>
                                                 </Col>
                                             </Row>
 
