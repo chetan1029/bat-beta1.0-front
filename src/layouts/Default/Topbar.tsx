@@ -11,7 +11,7 @@ import logo from "../../assets/images/logo.svg";
 import searchIcon from "../../assets/images/search_icon.svg";
 import bellIcon from "../../assets/images/icons/bell.svg";
 
-import personImg from "../../assets/images/person.png";
+import personImg from "../../assets/images/avatar-placeholder.jpg";
 
 interface TopbarProps {
   toggleSidebar: any

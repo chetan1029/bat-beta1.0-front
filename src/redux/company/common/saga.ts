@@ -2,7 +2,7 @@ import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
 import { getCompaniesList, createCompany as createCompanyApi } from "../../../api/index";
 
-import { commonApiResponseSuccess, commonApiResponseError } from "./actions";
+import { companyCommonApiResponseSuccess, companyCommonApiResponseError } from "./actions";
 import { CommonTypes } from './constants';
 
 
@@ -12,9 +12,9 @@ import { CommonTypes } from './constants';
 function* getCompanies({ payload: filters }: any) {
     try {
         const response = yield call(getCompaniesList, filters);
-        yield put(commonApiResponseSuccess(CommonTypes.GET_COMPANIES, response.data));
+        yield put(companyCommonApiResponseSuccess(CommonTypes.GET_COMPANIES, response.data));
     } catch (error) {
-        yield put(commonApiResponseError(CommonTypes.GET_COMPANIES, error));
+        yield put(companyCommonApiResponseError(CommonTypes.GET_COMPANIES, error));
     }
 }
 
@@ -25,9 +25,9 @@ function* getCompanies({ payload: filters }: any) {
 function* createCompany({ payload: data }: any) {
     try {
         const response = yield call(createCompanyApi, data);
-        yield put(commonApiResponseSuccess(CommonTypes.CREATE_COMPANY, response.data));
+        yield put(companyCommonApiResponseSuccess(CommonTypes.CREATE_COMPANY, response.data));
     } catch (error) {
-        yield put(commonApiResponseError(CommonTypes.CREATE_COMPANY, error));
+        yield put(companyCommonApiResponseError(CommonTypes.CREATE_COMPANY, error));
     }
 }
 

@@ -122,3 +122,15 @@ main {
     height: 42px;
   }
 }
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+.font-weight-semibold {
+  font-weight: 600 !important;
+}
+
+.show {
+  display: block !important;
+}

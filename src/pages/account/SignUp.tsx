@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Form, Badge } from 'react-bootstrap';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../../components/Loader';
 import CountriesDropdown from "../../components/CountriesDropdown";
 import AlertMessage from "../../components/AlertMessage";
+import { useQuery} from "../../components/Hooks";
 
 import { signupUser, createCompany } from "../../redux/actions";
 
@@ -18,10 +19,11 @@ import TermsConditions from "./TermsConditions";
 
 interface GeneralInfoProp {
     onSubmit: any,
-    values: any
+    values: any,
+    disableEmail?: boolean
 }
 
-const GeneralInfo = ({ onSubmit, values }: GeneralInfoProp) => {
+const GeneralInfo = ({ onSubmit, values, disableEmail }: GeneralInfoProp) => {
 
     const { t } = useTranslation();
 
@@ -101,6 +103,7 @@ const GeneralInfo = ({ onSubmit, values }: GeneralInfoProp) => {
                 onChange={validator.handleChange}
                 onBlur={validator.handleBlur}
                 value={validator.values.email}
+                disabled={disableEmail}
                 isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
 
             {validator.touched.email && validator.errors.email ? (
@@ -295,8 +298,13 @@ const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
 }
 
 
-const SignUp = () => {
+const SignUp = ({ match }) => {
     const dispatch = useDispatch();
+
+    const query: any = useQuery();
+
+    const inviteKey = query.get('inviteKey');
+    const inviteEmail = query.get('e');
 
     useEffect(() => {
         document['body'].classList.add('auth-bg');
@@ -317,10 +325,13 @@ const SignUp = () => {
         companyError: state.Company.Common.error,
     }));
 
-    const [generalInfo, setgeneralInfo] = useState<any>();
+    const [generalInfo, setgeneralInfo] = useState<any>(inviteEmail ? { 'email': inviteEmail } : null);
     const onGeneralInfoSubmit = (info: any) => {
         setgeneralInfo(info);
-        dispatch(signupUser(info));
+        if (inviteKey)
+            dispatch(signupUser({ ...info, invite_key: inviteKey }));
+        else
+            dispatch(signupUser(info));
     }
 
     const [companyInfo, setcompanyInfo] = useState<any>();
@@ -331,10 +342,10 @@ const SignUp = () => {
     }
 
     useEffect(() => {
-        if (userSignUp) {
+        if (userSignUp && !inviteKey) {
             setselectedStep('account');
         }
-    }, [userSignUp, companyInfo, dispatch]);
+    }, [userSignUp, companyInfo, dispatch, inviteKey]);
 
 
     const [selectedStep, setselectedStep] = useState('general');
@@ -342,6 +353,8 @@ const SignUp = () => {
 
     return <>
         {((userLoggedIn || user) && !userSignUp) || companyCreated ? <Redirect to='/'></Redirect> : null}
+
+        {inviteKey && userSignUp ? <Redirect to='/'></Redirect> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
@@ -359,7 +372,7 @@ const SignUp = () => {
                                                 {t('Already have an account?')} <Link to='/login' className="text-primary font-weight-bold">{t('Log in')}</Link>
                                             </p>
 
-                                            <Row className="mb-4">
+                                            {!inviteKey ? <Row className="mb-4">
                                                 <Col xs='auto'>
                                                     <Link to='#' onClick={() => setselectedStep('general')}>
                                                         <Badge variant='primary' className='step-indicator'>1</Badge>
@@ -375,7 +388,7 @@ const SignUp = () => {
                                                         <span className="text-muted font-weight-semibold">{t('Account Setup')}</span>
                                                     </Link>
                                                 </Col>
-                                            </Row>
+                                            </Row>: null}
 
                                             {/* <Row>
                                             <Col xs={6} className="text-center">
@@ -392,7 +405,9 @@ const SignUp = () => {
 
                                             {companyError ? <AlertMessage error={companyError} /> : null}
 
-                                            {selectedStep === 'general' ? <GeneralInfo onSubmit={onGeneralInfoSubmit} values={generalInfo} /> : <AccountSetup generalInfo={generalInfo} values={companyInfo} onSubmit={onCompanySubmit} />}
+                                            {inviteKey ? <GeneralInfo onSubmit={onGeneralInfoSubmit} values={generalInfo} disableEmail={true} /> : <>
+                                                {selectedStep === 'general' ? <GeneralInfo onSubmit={onGeneralInfoSubmit} values={generalInfo} /> : <AccountSetup generalInfo={generalInfo} values={companyInfo} onSubmit={onCompanySubmit} />}
+                                            </>}
                                         </Col>
                                     </Row>
                                 </div>
@@ -406,4 +421,4 @@ const SignUp = () => {
     </>;
 }
 
-export default SignUp;
+export default withRouter(SignUp);

@@ -224,7 +224,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                 <Row>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <Link to={`settings/${companyId}`}>
+                            <Link to={`/settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
                             <h1 className="m-0">{t('Payment Terms')}</h1>

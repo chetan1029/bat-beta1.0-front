@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 //components
 import Icon from "../../components/Icon";
 import PaymentTerms from "./PaymentTerms";
+import Members from "./Members/";
 
 interface DefaultViewProps {
     items: any;
@@ -73,9 +74,7 @@ const Index = ({ match }: IndexProps) => {
     const [selectedView, setselectedView] = useState("default");
 
     useEffect(() => {
-        if (view) {
-            setselectedView(view);
-        }
+        setselectedView(view || 'default');
     }, [view]);
 
 
@@ -97,6 +96,8 @@ const Index = ({ match }: IndexProps) => {
                 switch (selectedView) {
                     case "payment_terms":
                         return <PaymentTerms />;
+                    case "members":
+                        return <Members />;
 
                     default:
                         return <DefaultView items={items} companyId={companyId} />;

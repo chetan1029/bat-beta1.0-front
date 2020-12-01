@@ -31,6 +31,10 @@ $value in $theme-colors {
             border: 1px solid darken($value, 8%);
         }
     }
+    
+    .bg-soft-#{$color} {
+        background-color: rgba($value, 0.25) !important;
+    }
 }
 
 

@@ -9,18 +9,23 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //import loader
 import Loader from '../../components/Loader';
+import { useQuery } from "../../components/Hooks";
 
 import { loginUser } from "../../redux/actions";
 
 const Login = () => {
     const dispatch = useDispatch();
 
+    const query: any = useQuery();
+    const next: string = query.get('next');
+
     useEffect(() => {
         document['body'].classList.add('auth-bg');
+
         return () => {
             document['body'].classList.remove('auth-bg');
         }
-    })
+    }, []);
 
     const { t } = useTranslation();
 
@@ -50,7 +55,7 @@ const Login = () => {
 
 
     return <>
-        {userLoggedIn || user ? <Redirect to='/'></Redirect> : null}
+        {userLoggedIn || user ? <Redirect to={next ? next : '/'}></Redirect> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
