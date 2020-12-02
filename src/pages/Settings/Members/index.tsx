@@ -72,9 +72,7 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                         <div className="p-3 border-top">
                             <Row>
                                 <Col>
-                                    {(member['roles'] || []).map((role, idx) => {
-                                        return <Badge variant='outline-primary' pill className='capitalize mr-2 font-14' key={idx}>{role.split('_').join(' ')}</Badge>
-                                    })}
+                                    {member['job_title'] ? <Badge variant='outline-primary' pill className='capitalize mr-2 font-14'>{member['job_title'].split('_').join(' ')}</Badge> : null}
                                 </Col>
                                 {member['is_active'] && loggedInUser && member['user']['username'] !== loggedInUser['username'] ? <Col className="text-right">
                                     <Link to="#" onClick={onDelete}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
