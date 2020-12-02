@@ -142,7 +142,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     useEffect(() => {
         const companyId = props.match.params.companyId;
         if (companyId) {
-            dispatch(getPaymentTerms(companyId));
+            dispatch(getPaymentTerms(companyId, { is_active: true }));
         }
     }, [dispatch, props.match.params.companyId]);
 
@@ -153,16 +153,8 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     const [showArchived, setshowArchived] = useState(false);
 
     const onChangeShowArchive = (checked: boolean) => {
-
         setshowArchived(checked);
-        if (checked) {
-            let filters = {
-                is_active: false
-            }
-            dispatch(getPaymentTerms(companyId, filters));
-        } else {
-            dispatch(getPaymentTerms(companyId));
-        }
+        dispatch(getPaymentTerms(companyId, { is_active: !checked }));
     }
 
     /*
@@ -205,7 +197,10 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     useEffect(() => {
         if (isPaymentTermCreated || isPaymentTermUpdated) {
             setisopen(false);
-            dispatch(getPaymentTerms(props.match.params.companyId));
+            dispatch(getPaymentTerms(props.match.params.companyId, { is_active: true }));
+            setTimeout(() => {
+                dispatch(reset());
+            }, 10000);
         }
     }, [isPaymentTermCreated, isPaymentTermUpdated, dispatch, props.match.params.companyId]);
 
@@ -214,7 +209,10 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     */
     useEffect(() => {
         if (isPaymentTermDeleted || isPaymentTermArchived || isPaymentTermRestored) {
-            dispatch(getPaymentTerms(props.match.params.companyId));
+            dispatch(getPaymentTerms(props.match.params.companyId, { is_active: true }));
+            setTimeout(() => {
+                dispatch(reset());
+            }, 10000);
         }
     }, [isPaymentTermDeleted, isPaymentTermArchived, isPaymentTermRestored, dispatch, props.match.params.companyId]);
 
@@ -297,12 +295,13 @@ const PaymentTerms = (props: PaymentTermsProps) => {
             }
 
 
-            {isPaymentTermCreated && (!isPaymentTermDeleted && !isPaymentTermRestored) ? <MessageAlert message={t('A new Payment Term is created')} /> : null}
+            {isPaymentTermCreated && (!isPaymentTermDeleted && !isPaymentTermRestored) ? <MessageAlert message={t('A new Payment Term is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isPaymentTermDeleted && (!isPaymentTermCreated && !isPaymentTermRestored) ? <MessageAlert message={t('Selected Payment Term is deleted')} /> : null}
+            {isPaymentTermDeleted && (!isPaymentTermCreated && !isPaymentTermRestored) ? <MessageAlert message={t('Selected Payment Term is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
             {isPaymentTermArchived ? <MessageAlert
                 message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
+                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(restorePaymentTerm(companyId, archiveUnarchiveItem.id))
                 }}
@@ -310,6 +309,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
 
             {isPaymentTermRestored ? <MessageAlert
                 message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
+                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(archivePaymentTerm(companyId, archiveUnarchiveItem.id))
                 }}

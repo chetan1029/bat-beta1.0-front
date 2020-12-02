@@ -8,7 +8,7 @@ const AlertMessage = ({ error }) => {
         {error ? <>
             {typeof error === 'object' ? <>
                 <Alert variant="danger" className="my-2">
-                    <ul>
+                    <ul className="mb-0">
                         {Object.entries(error).map(([key, value]) => {
                             return <li key={key}>{key}: {value}</li>
                         })}

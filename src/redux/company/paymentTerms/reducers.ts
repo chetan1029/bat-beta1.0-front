@@ -49,6 +49,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         isPaymentTermArchived: false,
+                        isPaymentTermRestored: true,
                         loading: false
                     }
                 }
