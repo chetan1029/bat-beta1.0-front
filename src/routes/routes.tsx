@@ -3,6 +3,7 @@ import Dashboard from "../pages/Dashboard/";
 
 import Settings from "../pages/Settings/index";
 import AddEditMember from "../pages/Settings/Members/AddEditMember";
+import MemberDetails from "../pages/Settings/Members/MemberDetails";
 import Invitations from "../pages/Invitations/";
 
 // account
@@ -14,6 +15,7 @@ import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 
 const authProtectedRoutes = [
   { path: "/settings/:companyId/members/add", component: AddEditMember },
+  { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/", component: Dashboard },

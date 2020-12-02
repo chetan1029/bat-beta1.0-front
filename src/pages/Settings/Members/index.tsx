@@ -63,7 +63,7 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                                 <h6 className="text-muted my-0">{fullName}</h6>
                                 <h5 className="my-0">{member['user']['email']}</h5>
                             </Media.Body>
-                            <Link to={`/settings/${companyId}/members/${member.id}/view`} className='btn btn-link px-0 font-weight-semibold'>
+                            <Link to={`/settings/${companyId}/members/${member.id}`} className='btn btn-link px-0 font-weight-semibold'>
                                 <Icon name="notes" className="text-primary mr-1"></Icon>
                                 {t('Show Details')}
                             </Link>
@@ -76,7 +76,7 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                                         return <Badge variant='outline-primary' pill className='capitalize mr-2 font-14' key={idx}>{role.split('_').join(' ')}</Badge>
                                     })}
                                 </Col>
-                                {member['is_active'] && loggedInUser && member['user']['id'] !== loggedInUser['id'] ? <Col className="text-right">
+                                {member['is_active'] && loggedInUser && member['user']['username'] !== loggedInUser['username'] ? <Col className="text-right">
                                     <Link to="#" onClick={onDelete}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
                                 </Col> : null}
                             </Row>
@@ -100,10 +100,11 @@ const Members = (props: MembersProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, isMembersFetched, members, loggedInUser, isMemberCreated } = useSelector((state: any) => ({
+    const { loading, isMembersFetched, members, loggedInUser, isMemberCreated, isMemberDeleted } = useSelector((state: any) => ({
         loading: state.Company.Members.loading,
         isMembersFetched: state.Company.Members.isMembersFetched,
         isMemberCreated: state.Company.Members.isMemberCreated,
+        isMemberDeleted: state.Company.Members.isMemberDeleted,
         members: state.Company.Members.members,
         loggedInUser: state.Auth.user
     }));
@@ -112,18 +113,18 @@ const Members = (props: MembersProps) => {
 
     useEffect(() => {
         if (companyId) {
-            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data', 'limit': 100000000 }));
+            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
         }
     }, [dispatch, companyId]);
 
     useEffect(() => {
-        if (companyId && isMemberCreated) {
-            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data', 'limit': 100000000 }));
+        if (companyId && (isMemberCreated || isMemberDeleted)) {
+            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
             setTimeout(() => {
                 dispatch(resetMembers());
             }, 3000);
         }
-    }, [dispatch, companyId, isMemberCreated]);
+    }, [dispatch, companyId, isMemberCreated, isMemberDeleted]);
 
 
     const [showActive, setshowActive] = useState(false);
@@ -134,12 +135,12 @@ const Members = (props: MembersProps) => {
         if (checked) {
             let filters = {
                 is_active: true,
-                'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data',
+                'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities',
                 limit: 100000000
             }
             dispatch(getMembers(companyId, filters));
         } else {
-            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data', 'limit': 100000000 }));
+            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
         }
     }
 
@@ -216,6 +217,8 @@ const Members = (props: MembersProps) => {
                 </Card>
 
                 {isMemberCreated ? <MessageAlert message={t('A new member is invited')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+
+                {isMemberDeleted ? <MessageAlert message={t('The member is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             </div>
             }
 

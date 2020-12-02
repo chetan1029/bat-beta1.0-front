@@ -23,9 +23,9 @@ export const createMember = (companyId: string | number, data: any) => ({
     payload: { companyId, data }
 });
 
-export const editMember = (companyId: string | number, memberId: number | string, params: any) => ({
+export const editMember = (companyId: string | number, memberId: number | string, data: any) => ({
     type: MembersTypes.EDIT_MEMBER,
-    payload: { companyId, memberId, params }
+    payload: { companyId, memberId, data }
 });
 
 export const deleteMember = (companyId: string | number, memberId: number | string) => ({

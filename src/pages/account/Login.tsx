@@ -32,8 +32,8 @@ const Login = () => {
     // validation
     const validator = useFormik({
         initialValues: {
-            username: '',
-            password: ''
+            username: 'nikhil',
+            password: 'bat@123456'
         },
         validationSchema: Yup.object({
             username: Yup.string()

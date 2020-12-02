@@ -96,12 +96,12 @@ function createMember(companyId: number, data: any) {
 
 function editMember(companyId: number, memberId: number | string, data: any) {
     const baseUrl = `/companies/${companyId}/members/${memberId}/`;
-    return api.update(`${baseUrl}`, data);
+    return api.updatePatch(`${baseUrl}`, data);
 }
 
 function deleteMember(companyId: number, memberId: number | string) {
-    const baseUrl = `/companies/${companyId}/members/${memberId}/`;
-    return api.delete(`${baseUrl}`);
+    const baseUrl = `/companies/${companyId}/members/${memberId}/archive/`;
+    return api.create(`${baseUrl}`, {});
 }
 
 function getMember(companyId: number, memberId: number | string) {
