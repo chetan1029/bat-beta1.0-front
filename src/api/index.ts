@@ -109,6 +109,17 @@ function getMember(companyId: number, memberId: number | string) {
     return api.get(`${baseUrl}`);
 }
 
+function getCompanyInvitataions(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/invitations/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function resendCompanyInvite(companyId: number | string, inviteId: number | string) {
+    const baseUrl = `/companies/${companyId}/invitations/${inviteId}/resend/`;
+    return api.create(`${baseUrl}`, {});
+}
+
+
 /* invitations */
 function getInvitataions(params?: any) {
     const baseUrl = `/invitations/`;
@@ -131,5 +142,5 @@ export {
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
-    getMembers, getMember, createMember, deleteMember, editMember
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite
 }

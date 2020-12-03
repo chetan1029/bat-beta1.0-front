@@ -14,6 +14,7 @@ const Common = (state = INIT_STATE, action: any) => {
                         ...state,
                         companies: action.payload.data,
                         isCompaniesFetched: true,
+                        loading: false
                     }
                 }
                 case CommonTypes.CREATE_COMPANY: {
@@ -36,6 +37,7 @@ const Common = (state = INIT_STATE, action: any) => {
                         ...state,
                         error: action.payload.error,
                         isCompaniesFetched: false,
+                        loading: false
                     }
                 }
                 case CommonTypes.CREATE_COMPANY: {
@@ -51,7 +53,7 @@ const Common = (state = INIT_STATE, action: any) => {
             }
 
         case CommonTypes.GET_COMPANIES:
-            return { ...state, isCompaniesFetched: false };
+            return { ...state, isCompaniesFetched: false, loading: true };
         case CommonTypes.CREATE_COMPANY:
             return { ...state, loading: true };
 

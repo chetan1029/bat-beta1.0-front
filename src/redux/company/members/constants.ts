@@ -9,5 +9,8 @@ export enum MembersTypes {
     EDIT_MEMBER = '@@company/members/EDIT_MEMBER',
     DELETE_MEMBER = '@@company/members/DELETE_MEMBER',
 
+    GET_INVITATIONS = '@@company/members/GET_INVITATIONS',
+    RESEND_INVITE = '@@company/members/RESEND_INVITE',
+
     RESET = '@@company/members/RESET',
 }

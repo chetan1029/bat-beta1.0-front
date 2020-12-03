@@ -22,7 +22,7 @@ interface RolePermissionsProps {
     onChange: any,
     selectedRole: string,
     onSelectionRole: any,
-    defaultSelectedPermissions?: Array<any>
+    defaultSelectedPermissions?: Array<any>,
 }
 
 const RolePermissions = ({ role, permissions, selectedRole, onSelectionRole, onChange, defaultSelectedPermissions }: RolePermissionsProps) => {
@@ -35,13 +35,14 @@ const RolePermissions = ({ role, permissions, selectedRole, onSelectionRole, onC
         const op = selectedRole && role && selectedRole === role ? true : false;
         setOpen(op);
         if (!op) {
-            setselectedPerms([]);
+            setselectedPerms(defaultSelectedPermissions || []);
         }
-    }, [selectedRole, role]);
+    }, [selectedRole, role, defaultSelectedPermissions]);
 
     const permChunks: Array<any> = chunk(permissions, 3);
 
     const [selectedPerms, setselectedPerms] = useState<Array<any>>(defaultSelectedPermissions || []);
+
     const onSelectPerms = (e: any, perm: string) => {
         let modifiedSelection: Array<any> = [...selectedPerms];
         if (e.target.checked) {
@@ -77,9 +78,9 @@ const RolePermissions = ({ role, permissions, selectedRole, onSelectionRole, onC
                             return <Row key={idx} className="mb-2">
                                 {chunk.map((perm: string, iidx: number) => {
                                     return <Col lg={4} key={`${idx}-p-${iidx}`}>
-                                        <Form.Check type='checkbox' id={`${role}-perm-${idx}-i-${iidx}-${perm}`} label={<span className='capitalize'>{getFriendlyName(perm)}</span>}
-                                            checked={selectedPerms.includes(perm)}
-                                            onChange={(e: any) => onSelectPerms(e, perm)} />
+                                        <Form.Check type='checkbox' id={`${role}-perm-${idx}-i-${iidx}-${perm}`} label={<span className='capitalize'>{getFriendlyName(perm['name'])}</span>}
+                                            checked={selectedPerms.includes(perm['name'])}
+                                            onChange={(e: any) => onSelectPerms(e, perm['name'])} />
                                     </Col>
                                 })}
                             </Row>

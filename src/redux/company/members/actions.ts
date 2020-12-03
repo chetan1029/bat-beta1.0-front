@@ -17,7 +17,6 @@ export const getMembers = (companyId: string | number, filters?: any) => ({
     payload: { companyId, filters }
 });
 
-
 export const createMember = (companyId: string | number, data: any) => ({
     type: MembersTypes.CREATE_MEMBER,
     payload: { companyId, data }
@@ -40,4 +39,14 @@ export const getMemberDetails = (companyId: string | number, memberId: number | 
 
 export const resetMembers = () => ({
     type: MembersTypes.RESET,
+});
+
+export const getCompanyInvitations = (companyId: string | number, filters?: any) => ({
+    type: MembersTypes.GET_INVITATIONS,
+    payload: { companyId, filters }
+});
+
+export const resendCompanyInvite = (companyId: string | number, inviteId: number | string) => ({
+    type: MembersTypes.RESEND_INVITE,
+    payload: { companyId, inviteId }
 });

@@ -210,6 +210,11 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     useEffect(() => {
         if (isPaymentTermDeleted || isPaymentTermArchived || isPaymentTermRestored) {
             dispatch(getPaymentTerms(props.match.params.companyId, { is_active: true }));
+
+            if (isPaymentTermRestored) {
+                setshowArchived(false);
+            }
+            
             setTimeout(() => {
                 dispatch(reset());
             }, 10000);

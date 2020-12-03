@@ -164,11 +164,13 @@ const AddEditMember = ({ match }: AddEditMemberProps) => {
                                         <Form.Group className="">
                                             {roles ? <>
                                                 {Object.keys(roles).map((role: string, idx: number) => {
+                                                    const defaultPerms:Array<string> = roles[role]['permissions'].filter(p => p['default']).map(p => p['name']);
                                                     return <RolePermissions role={role} permissions={roles[role]['permissions']}
                                                         key={idx} selectedRole={validator.values.role}
+                                                        defaultSelectedPermissions={defaultPerms}
                                                         onSelectionRole={(r: string) => {
                                                             validator.setFieldValue('role', r);
-                                                            setpermissions([]);
+                                                            setpermissions(defaultPerms);
                                                         }}
                                                         onChange={(perms: any) => {
                                                             setpermissions(perms);

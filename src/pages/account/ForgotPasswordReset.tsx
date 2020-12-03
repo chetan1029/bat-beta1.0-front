@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Form, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { withRouter, Redirect, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //import loader
 import Loader from '../../components/Loader';
+import AlertMessage from "../../components/AlertMessage";
 
 
 import { forgotPasswordChange } from "../../redux/actions";
@@ -86,11 +87,12 @@ const ForgotPasswordReset = ({ match }) => {
                                                 </p>
 
 
-                                                {error && !passwordChange && <Alert variant="danger" className="my-2">{error}</Alert>}
+                                                {error && !passwordChange && <AlertMessage error={error} />}
 
 
                                                 <Form noValidate onSubmit={validator.handleSubmit} className="">
                                                     <Form.Group>
+                                                        <Form.Label>{t('New Password')}</Form.Label>
                                                         <Form.Control type="password" placeholder={t("New Password")}
                                                             name="new_password1" id="new_password1"
                                                             onChange={validator.handleChange}
@@ -105,6 +107,7 @@ const ForgotPasswordReset = ({ match }) => {
                                                     </Form.Group>
 
                                                     <Form.Group>
+                                                        <Form.Label>{t('Confirm password')}</Form.Label>
                                                         <Form.Control type="password" placeholder={t("Confirm your Password")}
                                                             name="new_password2" id="new_password2"
                                                             onChange={validator.handleChange}

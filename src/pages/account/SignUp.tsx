@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../../components/Loader';
 import CountriesDropdown from "../../components/CountriesDropdown";
 import AlertMessage from "../../components/AlertMessage";
-import { useQuery} from "../../components/Hooks";
+import { useQuery } from "../../components/Hooks";
 
 import { signupUser, createCompany } from "../../redux/actions";
 
@@ -52,95 +52,111 @@ const GeneralInfo = ({ onSubmit, values, disableEmail }: GeneralInfoProp) => {
     });
 
     return <Form noValidate onSubmit={validator.handleSubmit} className="">
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("First name")}
-                name="first_name" id="first_name"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.first_name}
-                isInvalid={validator.touched.first_name && validator.errors && validator.errors.first_name ? true : false} />
+        <Row>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t("First name")}</Form.Label>
+                    <Form.Control type="text" placeholder={t("First name")}
+                        name="first_name" id="first_name"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.first_name}
+                        isInvalid={validator.touched.first_name && validator.errors && validator.errors.first_name ? true : false} />
+
+                    {validator.touched.first_name && validator.errors.first_name ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.first_name}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t("Last name")}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Last name")}
+                        name="last_name" id="last_name"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.last_name}
+                        isInvalid={validator.touched.last_name && validator.errors && validator.errors.last_name ? true : false} />
 
 
-            {validator.touched.first_name && validator.errors.first_name ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.first_name}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
+                    {validator.touched.last_name && validator.errors.last_name ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.last_name}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
 
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("Last name")}
-                name="last_name" id="last_name"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.last_name}
-                isInvalid={validator.touched.last_name && validator.errors && validator.errors.last_name ? true : false} />
-
-
-            {validator.touched.last_name && validator.errors.last_name ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.last_name}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
-
-        <Form.Group>
-            {/* <Form.Label>Username</Form.Label> */}
-            <Form.Control type="text" placeholder={t("Your username")}
-                name="username" id="username"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.username}
-                maxLength={150}
-                isInvalid={validator.touched.username && validator.errors && validator.errors.username ? true : false} />
+        <Row>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Username')}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Your username")}
+                        name="username" id="username"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.username}
+                        maxLength={150}
+                        isInvalid={validator.touched.username && validator.errors && validator.errors.username ? true : false} />
 
 
-            {validator.touched.username && validator.errors.username ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.username}</Form.Control.Feedback>
-            ) : null}
-            <Form.Text id="usernameHelp" muted>{t('Required 150 characters or fewer.')}</Form.Text>
-        </Form.Group>
+                    {validator.touched.username && validator.errors.username ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.username}</Form.Control.Feedback>
+                    ) : null}
+                    <Form.Text id="usernameHelp" muted>{t('Required 150 characters or fewer.')}</Form.Text>
+                </Form.Group>
+            </Col>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Email')}</Form.Label>
+                    <Form.Control type="email" placeholder={t("Email")}
+                        name="email" id="email"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.email}
+                        disabled={disableEmail}
+                        isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
 
-        <Form.Group>
-            <Form.Control type="email" placeholder={t("Email")}
-                name="email" id="email"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.email}
-                disabled={disableEmail}
-                isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
+                    {validator.touched.email && validator.errors.email ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
 
-            {validator.touched.email && validator.errors.email ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
-
-        <Form.Group>
-            {/* <Form.Label>Password</Form.Label> */}
-            <Form.Control type="password" placeholder={t("Password")}
-                name="password1" id="password1"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.password1}
-                isInvalid={validator.touched.password1 && validator.errors && validator.errors.password1 ? true : false} />
-
-
-            {validator.touched.password1 && validator.errors.password1 ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.password1}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
-
-        <Form.Group>
-            {/* <Form.Label>Password</Form.Label> */}
-            <Form.Control type="password" placeholder={t("Confirm password")}
-                name="password2" id="password2"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.password2}
-                isInvalid={validator.touched.password2 && validator.errors && validator.errors.password2 ? true : false} />
+        <Row>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Password')}</Form.Label>
+                    <Form.Control type="password" placeholder={t("Password")}
+                        name="password1" id="password1"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.password1}
+                        isInvalid={validator.touched.password1 && validator.errors && validator.errors.password1 ? true : false} />
 
 
-            {validator.touched.password2 && validator.errors.password2 ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.password2}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
+                    {validator.touched.password1 && validator.errors.password1 ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.password1}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Confirm password')}</Form.Label>
+                    <Form.Control type="password" placeholder={t("Confirm password")}
+                        name="password2" id="password2"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.password2}
+                        isInvalid={validator.touched.password2 && validator.errors && validator.errors.password2 ? true : false} />
 
+
+                    {validator.touched.password2 && validator.errors.password2 ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.password2}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
 
         <Form.Group className="mb-0">
             <Button variant="primary" type="submit">{t('Continue')}</Button>
@@ -190,99 +206,126 @@ const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
     const AcceptTermsLabel = () => <><span>{t('Accept')}</span><Link to='#' onClick={() => setshowTerms(true)} className='font-weight-bold text-primary'>&nbsp;{t('Terms and Conditions')}</Link></>;
 
     return <Form noValidate onSubmit={validator.handleSubmit} className="">
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("Company name")}
-                name="name" id="name"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.name}
-                isInvalid={validator.touched.name && validator.errors && validator.errors.name ? true : false} />
+        <Row>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Company name')}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Company name")}
+                        name="name" id="name"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.name}
+                        isInvalid={validator.touched.name && validator.errors && validator.errors.name ? true : false} />
 
 
-            {validator.touched.name && validator.errors.name ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
-
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("Abbreviation")}
-                name="abbreviation" id="abbreviation"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.abbreviation}
-                isInvalid={validator.touched.abbreviation && validator.errors && validator.errors.abbreviation ? true : false} />
-
-
-            {validator.touched.abbreviation && validator.errors.abbreviation ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.abbreviation}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
-
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("Address")}
-                name="address1" id="address1"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.address1}
-                isInvalid={validator.touched.address1 && validator.errors && validator.errors.address1 ? true : false} />
+                    {validator.touched.name && validator.errors.name ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Abbreviation')}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Abbreviation")}
+                        name="abbreviation" id="abbreviation"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.abbreviation}
+                        isInvalid={validator.touched.abbreviation && validator.errors && validator.errors.abbreviation ? true : false} />
 
 
-            {validator.touched.address1 && validator.errors.address1 ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.address1}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
+                    {validator.touched.abbreviation && validator.errors.abbreviation ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.abbreviation}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
 
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("Apartment, suite, etc.")}
-                name="address2" id="address2"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.address2}
-                isInvalid={validator.touched.address2 && validator.errors && validator.errors.address2 ? true : false} />
+        <Row>
+            <Col>
+            <Form.Group>
+                    <Form.Label>{t('Address')}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Address")}
+                        name="address1" id="address1"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.address1}
+                        isInvalid={validator.touched.address1 && validator.errors && validator.errors.address1 ? true : false} />
 
 
-            {validator.touched.address2 && validator.errors.address2 ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.address2}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
+                    {validator.touched.address1 && validator.errors.address1 ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.address1}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
 
-        <Form.Group>
-            <CountriesDropdown name='Country' placeholder={t('Country')} className={validator.touched.country && validator.errors.country ? "is-invalid" : ""}
-                onChange={(value) => validator.setFieldValue('country', value)}
-                value={validator.values.country} />
+        <Row>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Apartment, suite, etc.')}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Apartment, suite, etc.")}
+                        name="address2" id="address2"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.address2}
+                        isInvalid={validator.touched.address2 && validator.errors && validator.errors.address2 ? true : false} />
 
-            {validator.touched.country && validator.errors.country ? (
-                <Form.Control.Feedback type="invalid" className="d-block">
-                    {validator.errors.country}
-                </Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
 
-        <Form.Group>
-            <Form.Control type="email" placeholder={t("Email")}
-                name="email" id="email"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.email}
-                isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
+                    {validator.touched.address2 && validator.errors.address2 ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.address2}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Country')}</Form.Label>
+                    <CountriesDropdown name='Country' placeholder={t('Country')} className={validator.touched.country && validator.errors.country ? "is-invalid" : ""}
+                        onChange={(value) => validator.setFieldValue('country', value)}
+                        value={validator.values.country} />
 
-            {validator.touched.email && validator.errors.email ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
+                    {validator.touched.country && validator.errors.country ? (
+                        <Form.Control.Feedback type="invalid" className="d-block">
+                            {validator.errors.country}
+                        </Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
+        
+        <Row>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Email')}</Form.Label>
+                    <Form.Control type="email" placeholder={t("Email")}
+                        name="email" id="email"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.email}
+                        isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
 
-        <Form.Group>
-            <Form.Control type="text" placeholder={t("Phone number")}
-                name="phone_number" id="phone_number"
-                onChange={validator.handleChange}
-                onBlur={validator.handleBlur}
-                value={validator.values.phone_number}
-                isInvalid={validator.touched.phone_number && validator.errors && validator.errors.phone_number ? true : false} />
+                    {validator.touched.email && validator.errors.email ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
 
-            {validator.touched.phone_number && validator.errors.phone_number ? (
-                <Form.Control.Feedback type="invalid">{validator.errors.phone_number}</Form.Control.Feedback>
-            ) : null}
-        </Form.Group>
+            <Col>
+                <Form.Group>
+                    <Form.Label>{t('Phone number')}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Phone number")}
+                        name="phone_number" id="phone_number"
+                        onChange={validator.handleChange}
+                        onBlur={validator.handleBlur}
+                        value={validator.values.phone_number}
+                        isInvalid={validator.touched.phone_number && validator.errors && validator.errors.phone_number ? true : false} />
+
+                    {validator.touched.phone_number && validator.errors.phone_number ? (
+                        <Form.Control.Feedback type="invalid">{validator.errors.phone_number}</Form.Control.Feedback>
+                    ) : null}
+                </Form.Group>
+            </Col>
+        </Row>
 
         <Form.Group>
             <Form.Check type="checkbox" label={<AcceptTermsLabel />} checked={acceptTerms}
@@ -338,7 +381,7 @@ const SignUp = ({ match }) => {
 
     const onCompanySubmit = (info: any) => {
         setcompanyInfo(info);
-        dispatch(createCompany({...info, country: info['country']['value']}));
+        dispatch(createCompany({ ...info, country: info['country']['value'] }));
     }
 
     useEffect(() => {
@@ -359,7 +402,7 @@ const SignUp = ({ match }) => {
         <div className="h-100 d-flex align-items-center">
             <Container>
                 <Row className="justify-content-center">
-                    <Col md={5}>
+                    <Col md={9}>
                         <Card>
                             <Card.Body className="p-4">
                                 <div className="p-2">
@@ -388,7 +431,7 @@ const SignUp = ({ match }) => {
                                                         <span className="text-muted font-weight-semibold">{t('Account Setup')}</span>
                                                     </Link>
                                                 </Col>
-                                            </Row>: null}
+                                            </Row> : null}
 
                                             {/* <Row>
                                             <Col xs={6} className="text-center">

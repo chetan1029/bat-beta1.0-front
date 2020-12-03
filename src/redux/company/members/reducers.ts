@@ -14,6 +14,7 @@ const Members = (state = INIT_STATE, action: any) => {
                         ...state,
                         members: action.payload.data,
                         isMembersFetched: true,
+                        loading: false,
                     }
                 }
                 case MembersTypes.GET_MEMBER: {
@@ -42,6 +43,21 @@ const Members = (state = INIT_STATE, action: any) => {
                         ...state,
                         isMemberDeleted: true,
                         loading: false
+                    }
+                }
+                case MembersTypes.GET_INVITATIONS: {
+                    return {
+                        ...state,
+                        invitations: action.payload.data,
+                        isInvitationsFetched: true,
+                        loading: false,
+                    }
+                }
+                case MembersTypes.RESEND_INVITE: {
+                    return {
+                        ...state,
+                        isInvitationResent: true,
+                        loading: false,
                     }
                 }
                 default:
@@ -88,12 +104,35 @@ const Members = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case MembersTypes.GET_INVITATIONS: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isInvitationsFetched: false,
+                        loading: false,
+                    }
+                }
+                case MembersTypes.RESEND_INVITE: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isInvitationResent: false,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
 
         case MembersTypes.GET_MEMBERS:
-            return { ...state, isMembersFetched: false };
+            return { ...state, isMembersFetched: false, loading: true };
+
+        case MembersTypes.GET_INVITATIONS:
+            return { ...state, isInvitationsFetched: false, loading: true };
+
+        case MembersTypes.RESEND_INVITE:
+            return { ...state, isInvitationResent: false, loading: true };
+
 
         case MembersTypes.CREATE_MEMBER:
             return { ...state, isMemberCreated: false, loading: true };

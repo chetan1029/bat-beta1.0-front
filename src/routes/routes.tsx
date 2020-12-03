@@ -1,4 +1,6 @@
 //dasboard
+import NonAuthLayout from "../layouts/NonAuth";
+
 import Dashboard from "../pages/Dashboard/";
 
 import Settings from "../pages/Settings/index";
@@ -13,12 +15,15 @@ import Logout from "../pages/account/Logout";
 import ForgotPassword from "../pages/account/ForgotPassword";
 import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 
+import Root from "../pages/Root";
+
 const authProtectedRoutes = [
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
-  { path: "/", component: Dashboard },
+  { path: "/dashboard/:companyId", component: Dashboard },
+  { path: "/", component: Root, layout: NonAuthLayout },
 ];
 
 const publicRoutes = [

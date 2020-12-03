@@ -84,6 +84,7 @@ const ForgotPassword = () => {
 
                                                 <Form noValidate onSubmit={validator.handleSubmit} className="">
                                                     <Form.Group>
+                                                        <Form.Label>{t('Email address')}</Form.Label>
                                                         <Form.Control type="email" placeholder={t("Email address")}
                                                             name="email" id="email"
                                                             onChange={validator.handleChange}

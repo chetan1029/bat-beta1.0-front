@@ -165,11 +165,12 @@ const MemberDetails = (props: MemberDetailsProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, member, isMemberEdited, editMemberError } = useSelector((state: any) => ({
+    const { loading, member, isMemberEdited, editMemberError, loggedInUser } = useSelector((state: any) => ({
         loading: state.Company.Members.loading,
         member: state.Company.Members.member,
         isMemberEdited: state.Company.Members.isMemberEdited,
         editMemberError: state.Company.Members.editMemberError,
+        loggedInUser: state.Auth.user
     }));
 
     const companyId = props.match.params.companyId;
@@ -184,7 +185,7 @@ const MemberDetails = (props: MemberDetailsProps) => {
 
 
     const fullName = member ? member['user']['first_name'] + " " + member['user']['last_name'] : "";
-
+    const you = loggedInUser && member['user']['username'] === loggedInUser['username'] ? true : false;
 
     return (
         <>
@@ -292,9 +293,9 @@ const MemberDetails = (props: MemberDetailsProps) => {
                                 </Card.Body>
                             </Card>
 
-                            <div className="mt-3">
+                            {!you ? <div className="mt-3">
                                 {member ? <EditRolePermissions companyId={companyId} memberId={memberId} member={member} /> : null}
-                            </div>
+                            </div>: null}
 
                             <div className="mt-3">
                                 {member ? <RecentAccess activities={member['login_activities']} /> : null}

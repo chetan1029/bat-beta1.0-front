@@ -32,8 +32,8 @@ const Login = () => {
     // validation
     const validator = useFormik({
         initialValues: {
-            username: 'nikhil',
-            password: 'bat@123456'
+            username: '',
+            password: ''
         },
         validationSchema: Yup.object({
             username: Yup.string()
@@ -88,7 +88,8 @@ const Login = () => {
 
                                         <Form noValidate onSubmit={validator.handleSubmit} className="">
                                             <Form.Group>
-                                                {/* <Form.Label>Username</Form.Label> */}
+                                                <Form.Label>{t('Username')}</Form.Label>
+
                                                 <Form.Control type="text" placeholder={t("Your username")}
                                                     name="username" id="username"
                                                     onChange={validator.handleChange}
@@ -96,14 +97,13 @@ const Login = () => {
                                                     value={validator.values.username}
                                                     isInvalid={validator.touched.username && validator.errors && validator.errors.username ? true : false} />
 
-
                                                 {validator.touched.username && validator.errors.username ? (
                                                     <Form.Control.Feedback type="invalid">{validator.errors.username}</Form.Control.Feedback>
                                                 ) : null}
                                             </Form.Group>
 
                                             <Form.Group>
-                                                {/* <Form.Label>Password</Form.Label> */}
+                                                <Form.Label>{t('Password')}</Form.Label>
                                                 <Form.Control type="password" placeholder={t("Your password")}
                                                     name="password" id="password"
                                                     onChange={validator.handleChange}
