@@ -183,9 +183,8 @@ const MemberDetails = (props: MemberDetailsProps) => {
         }
     }, [dispatch, companyId, memberId]);
 
-
     const fullName = member ? member['user']['first_name'] + " " + member['user']['last_name'] : "";
-    const you = loggedInUser && member['user']['username'] === loggedInUser['username'] ? true : false;
+    const you = loggedInUser && member && member['user']['username'] === loggedInUser['username'] ? true : false;
 
     return (
         <>
