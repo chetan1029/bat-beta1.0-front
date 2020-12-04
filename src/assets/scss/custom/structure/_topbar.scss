@@ -44,19 +44,12 @@ header {
         height: 100%;
     }
     input {
+        outline: none;
         width: 100%;
         &::placeholder {
             font-size: 14px;
         }
     }
-}
-
-input {
-    outline: none;
-}
-
-button {
-    border: none;
 }
 
 .header_notify {
@@ -70,13 +63,13 @@ button {
             }
         }
     }
-    span {
+    span.badge {
         display: flex;
         justify-content: center;
         align-items: center;
-        position: absolute;
-        top: 2px;
-        right: 3px;
+        position: absolute !important;
+        top: 0px !important;
+        right: 0px !important;
     }
     >* {
         cursor: pointer;
@@ -142,9 +135,12 @@ button {
     .dropdown-toggle {
         display: flex;
         align-items: center;
+        border: none;
+        background-color: transparent;
+        height: 100%;
+
         &:after {
             transition: 0.3s all ease;
-            border-top: .3em solid $primary;
         }
     }
     .dropdown-menu {
@@ -188,24 +184,23 @@ button {
             }
         }
         &:last-child {
-            position: relative;
-            margin-top: 16px;
+            
             opacity: 0.5;
             &:hover {
                 opacity: 1;
             }
-            &:after {
-                content: '';
-                position: absolute;
-                top: -8px;
-                width: calc(100% + 20px);
-                opacity: 0.2;
-                background-color: $primary;
-                height: 0.5px;
-                box-sizing: border-box;
-                transform: translate(-50%, 0);
-                left: 50%;
-            }
+            // &:after {
+            //     content: '';
+            //     position: absolute;
+            //     top: -8px;
+            //     width: calc(100% + 20px);
+            //     opacity: 0.2;
+            //     background-color: $primary;
+            //     height: 0.5px;
+            //     box-sizing: border-box;
+            //     transform: translate(-50%, 0);
+            //     left: 50%;
+            // }
         }
     }
 }
@@ -214,13 +209,14 @@ button {
     display: flex;
     align-items: center;
     cursor: pointer;
+
     &_img {
         width: 28px;
         height: 28px;
         border-radius: 50%;
         position: relative;
         overflow: hidden;
-        margin-right: 6px;
+
         img {
             width: 100%;
             object-fit: cover;

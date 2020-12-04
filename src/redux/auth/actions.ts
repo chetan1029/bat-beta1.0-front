@@ -16,3 +16,23 @@ export const loginUser = (username: string, password: string) => ({
     type: AuthActionTypes.LOGIN_USER,
     payload: { username, password }
 });
+
+export const logoutUser = () => ({
+    type: AuthActionTypes.LOGOUT_USER,
+    payload: {}
+});
+
+export const signupUser = (data: any) => ({
+    type: AuthActionTypes.SIGNUP_USER,
+    payload: { data }
+});
+
+export const forgotPassword = (data: any) => ({
+    type: AuthActionTypes.FORGOT_PASSWORD,
+    payload: { data }
+});
+
+export const forgotPasswordChange = (data: any) => ({
+    type: AuthActionTypes.FORGOT_PASSWORD_CHANGE,
+    payload: { data }
+});

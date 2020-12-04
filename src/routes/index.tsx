@@ -15,9 +15,10 @@ const AppRoute = ({ component: Component, layout: Layout, roles, isAuthProtected
 
   const api = new APICore();
   return <Route {...rest} render={props => {
+
     if (!api.isUserAuthenticated() && isAuthProtected) {
       // not logged in so redirect to login page with the return url
-      return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />;
+      return <Redirect to={{ pathname: '/login', search: "?next=" + props.location.pathname + props.location.search, state: { from: props.location } }} />;
     }
 
     const loggedInUser = api.getLoggedInUser();
@@ -61,7 +62,7 @@ const Routes = (props: any) => {
           {authProtectedRoutes.map((route: any, idx: number) => (
             <AppRoute
               path={route.path}
-              layout={DefaultLayout}
+              layout={route.layout ? route.layout : DefaultLayout}
               component={route.component}
               key={idx}
               roles={route['roles']}

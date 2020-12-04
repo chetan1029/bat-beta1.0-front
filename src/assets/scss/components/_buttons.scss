@@ -15,15 +15,8 @@ button {
 
 @each $color,
 $value in $theme-colors {
-    .btn-#{$color} {
-        background-color: $value;
-        color: $white !important;
-
-        &:hover,
-        &:active,
-        &:focus {
-            background-color: darken($value, 8%);
-        }
+    >.icon svg {
+        fill: $value;
     }
 
     .btn-outline-#{$color} {
@@ -37,6 +30,10 @@ $value in $theme-colors {
             color: darken($value, 8%);
             border: 1px solid darken($value, 8%);
         }
+    }
+    
+    .bg-soft-#{$color} {
+        background-color: rgba($value, 0.25) !important;
     }
 }
 

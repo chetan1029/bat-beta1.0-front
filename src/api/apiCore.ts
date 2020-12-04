@@ -18,8 +18,9 @@ axios.interceptors.response.use(response => {
         case 401: message = 'Invalid credentials'; break;
         case 403: message = "Access Forbidden"; break;
         case 404: message = "Sorry! the data you are looking for could not be found"; break;
-        default:
-            message = error.response && error.response.data ? error.response.data['message'] : error.message || error;
+        default: {
+            message = error.response && error.response.data ? error.response.data['message'] || error.response.data['non_field_errors'] || error.response.data['detail'] || error.response.data : error.message || error;
+        }
     }
     return Promise.reject(message);
 });
@@ -29,7 +30,10 @@ axios.interceptors.response.use(response => {
  * @param {*} token 
  */
 const setAuthorization = (token) => {
-    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+    if (token)
+        axios.defaults.headers.common['Authorization'] = 'JWT ' + token;
+    else
+        delete axios.defaults.headers.common['Authorization'];
 }
 class APICore {
     /**
@@ -137,5 +141,15 @@ class APICore {
     }
 }
 
+/*
+Check if token available in session
+*/
+let user = sessionStorage.getItem("_bat_session_");
+if (user) {
+    const { token } = JSON.parse(user);
+    if (token) {
+        setAuthorization(token);
+    }
+}
 
 export { APICore, setAuthorization };

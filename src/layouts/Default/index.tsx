@@ -1,45 +1,61 @@
-import React from "react";
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 
 //layout components
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-// import Footer from "./Footer";
+
+//actions
+import { getCompanies } from "../../redux/actions";
 
 interface Props {
   children: any;
 }
 
 const Index = (props: Props) => {
+  const dispatch = useDispatch();
+  const { companies } = useSelector((state: any) => ({
+    companies: state.Company.Common.companies,
+    isCompaniesFetched: state.Company.Common.isCompaniesFetched,
+  }));
+
+  const [showSidebar, setshowSidebar] = useState(false);
+
   const toggleSidebar = () => {
-    document.body.classList.toggle("enlarge-menu");
+    setshowSidebar(!showSidebar);
   };
 
+
+  /*
+  get all companies
+  */
+  useEffect(() => {
+    dispatch(getCompanies());
+  }, [dispatch]);
+
   return (
+
     <React.Fragment>
       {/* sidebar component */}
-      <Sidebar toggleSidebar={toggleSidebar} />
+      <Sidebar toggleSidebar={toggleSidebar} showSidebar={showSidebar} companies={companies.results} />
 
       {/* page wrapper start */}
-      <div className="page-wrapper">
-        {/* topbar component */}
-        <Topbar toggleSidebar={toggleSidebar} />
+      <main>
+        <div className="page-wrapper">
+          <div className="container-fluid">
+            {/* topbar component */}
+            <Topbar toggleSidebar={toggleSidebar} />
 
-        {/* page content start */}
-        <div className="page-content">
-          {/* page content */}
-          {props.children}
-
-          {/* footer component */}
-          {/* <Footer /> */}
+            {/* page content start */}
+            <div className="page-content">
+              {/* page content */}
+              {props.children}
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </React.Fragment>
   );
 }
-
-Index.propTypes = {
-  toggleSidebar: PropTypes.func
-};
 
 export default Index;

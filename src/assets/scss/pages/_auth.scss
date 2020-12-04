@@ -4,3 +4,20 @@
     padding-bottom: 0;
     background-image: url("../../images/auth-bg.svg");
 }
+
+.step-indicator {
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: $font-weight-semibold;
+    margin-right: 4px;
+
+    &.badge-muted {
+        background-color: #0A0C32;
+        color: $white;
+        opacity: 0.2;
+    }
+}

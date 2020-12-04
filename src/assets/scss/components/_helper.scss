@@ -10,7 +10,7 @@
 @media (max-width:576px) {
   .page-wrapper {
     padding: 0;
-  } 
+  }
 }
 
 .main_content {
@@ -34,13 +34,103 @@ main {
 @media(max-width:767.9px) {
   main {
     margin-left: 0;
-  }  
-} 
+  }
+}
 
 
 @media(max-width:1199.9px) {
+
   // dashboard
   .min_height {
-      min-height: 100%;
+    min-height: 100%;
   }
+}
+
+// SVG  Icon Size
+
+.icon[class*="text-"]>svg {
+  fill: currentColor !important;
+}
+
+.icon-xxxs {
+  width: 12px;
+  height: 12px;
+
+  >svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+
+.icon-xxs {
+  width: 15px;
+  height: 15px;
+
+  >svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.icon-xs {
+  width: 18px;
+  height: 18px;
+
+  >svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.icon-sm {
+  width: 22px;
+  height: 22px;
+
+  >svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+.icon-md {
+  width: 30px;
+  height: 30px;
+
+  >svg {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.icon-lg {
+  width: 36px;
+  height: 36px;
+
+  >svg {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+.icon-xl {
+  width: 42px;
+  height: 42px;
+
+  >svg {
+    width: 42px;
+    height: 42px;
+  }
+}
+
+.capitalize {
+  text-transform: capitalize !important;
+}
+
+.font-weight-semibold {
+  font-weight: 600 !important;
+}
+
+.show {
+  display: block !important;
 }

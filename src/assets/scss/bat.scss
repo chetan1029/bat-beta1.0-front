@@ -17,17 +17,23 @@ File: Main Css File
 
 // COMPONENTS
 @import "components/alerts";
+@import "components/badge";
 @import "components/buttons";
 @import "components/card";
 @import "components/forms";
+@import "components/navs";
+@import "components/table";
 @import "components/reboot";
 @import "components/helper";
+@import "components/type";
 
 // Pages
 @import "pages/auth";
+@import "pages/settings";
 
 
 // STRUCTURE
 @import "custom/structure/topbar";
 @import "custom/structure/sidebar";
 @import "custom/loader";
+@import "custom/react-select";

@@ -1,4 +1,6 @@
-export default {
+const config = {
     showErrorStack: true,
-    API_URL: "https://beta.thebatonline.com/api/",
+    API_URL: "http://localhost:8000",
 };
+
+export default config;

@@ -7,12 +7,16 @@
     min-height: 100vh;
     background: $white;
     box-shadow: $box-shadow;
-    padding: 20px 24px 40px 24px;
+    
+    // padding: 20px 24px 40px 24px;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
     &_logo {
         margin-bottom: 30px;
+        padding: 20px 24px 0px 24px;
     }
     &_link {
         border-radius: $border-radius;
@@ -43,9 +47,12 @@
             display: none;
         }
     }
+
     &_menu {
         width: 100%;
-        margin-left: -15px;
+        // margin-left: -15px;
+        padding: 0px 20px 0px 10px;
+
         ul {
             padding-bottom: 6px;
         }
@@ -65,14 +72,27 @@
                     }
                 }
             }
+
+            ul.collapse, ul.collapsing {
+                padding: 0px 10px 4px;
+                li {
+                    .menu_item{
+                        padding: 10px 12px 10px 30px;
+
+                        .menu_icon {
+                            top: 12px;
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 .menu_icon {
     position: absolute;
-    left: 13px;
-    top: 10px;
+    left: 10px;
+    top: 14px;
     transition: 0.3s all ease;
     svg {
         transform: rotate(-90deg);
@@ -81,13 +101,15 @@
 
 .menu_item {
     padding: 14px 12px;
-    height: 45px;
+    // height: 45px;
     align-items: center;
     transition: all 0.1s;
     border-radius: $border-radius;
-    svg {
+
+    .menu_item_icon svg {
         opacity: 0.5;
     }
+
     &_icon {
         margin-right: 10px;
         display: flex;
@@ -122,10 +144,15 @@
     }
 }
 
+.bottom-link {
+    padding: 0px 24px 40px 24px;
+}
+
 .selected_link {
     background-color: $primary !important;
     border-radius: $border-radius;
     color: $white !important;
+
     svg {
         opacity: 1 !important;
         path,

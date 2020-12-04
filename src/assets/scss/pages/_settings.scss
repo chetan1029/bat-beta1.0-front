@@ -1,0 +1,132 @@
+.svg-outline-primary {
+    svg {
+        path {
+            stroke: $primary !important;
+        }
+
+        ellipse {
+            stroke: $primary !important;
+        }
+
+        rect {
+            stroke: $primary !important;
+        }
+    }
+}
+
+.svg-outline-secondary {
+    svg {
+        path {
+            stroke: $secondary !important;
+        }
+
+        ellipse {
+            stroke: $secondary !important;
+        }
+
+        rect {
+            stroke: $secondary !important;
+        }
+    }
+}
+
+.svg-outline-warning {
+    svg {
+        path {
+            stroke: $warning !important;
+        }
+
+        ellipse {
+            stroke: $warning !important;
+        }
+
+        rect {
+            stroke: $warning !important;
+        }
+    }
+}
+
+.svg-outline-danger {
+    svg {
+        path {
+            stroke: $danger !important;
+        }
+
+        ellipse {
+            stroke: $danger !important;
+        }
+
+        rect {
+            stroke: $danger !important;
+        }
+    }
+}
+
+.settings-cards {
+    min-height: 120px;
+}
+
+.payment-terms-link {
+    color: inherit !important;
+    width: 100%;
+
+    &:hover {
+        color: inherit !important;
+    }
+}
+
+.payment-terms-card {
+
+    .payment-card-title {
+        border-bottom: 1px solid rgba(#9D9EAD, 0.3);
+        background-color: transparent;
+    }
+
+    .payment-card-footer {
+        border-top: 1px solid rgba(#9D9EAD, 0.3);
+        background-color: transparent;
+    }
+}
+
+
+.btn-archive {
+    background-color: $primary;
+    text-align: center;
+    padding: 0;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+
+    .icon {
+        position: relative;
+        top: -2px;
+
+        >svg {
+
+            path {
+                stroke: $white !important;
+            }
+        }
+    }
+}
+
+.alret-notification {
+    position: fixed;
+    bottom: 30px;
+    z-index: 1111;
+    width: 790px;
+    left: 280px;
+
+    .card {
+        box-shadow: 0 4px 30px rgba(140, 157, 202, 0.50) !important;
+    }
+}
+
+.add-payment-modal-header {
+    border-bottom: none !important;
+}
+
+/*
+add new payment form
+*/

@@ -9,18 +9,23 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //import loader
 import Loader from '../../components/Loader';
+import { useQuery } from "../../components/Hooks";
 
 import { loginUser } from "../../redux/actions";
 
 const Login = () => {
     const dispatch = useDispatch();
 
+    const query: any = useQuery();
+    const next: string = query.get('next');
+
     useEffect(() => {
         document['body'].classList.add('auth-bg');
+
         return () => {
             document['body'].classList.remove('auth-bg');
         }
-    })
+    }, []);
 
     const { t } = useTranslation();
 
@@ -50,7 +55,7 @@ const Login = () => {
 
 
     return <>
-        {userLoggedIn || user ? <Redirect to='/'></Redirect> : null}
+        {userLoggedIn || user ? <Redirect to={next ? next : '/'}></Redirect> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
@@ -65,7 +70,7 @@ const Login = () => {
 
                                         <h5 className="my-0">{t('Log In')}</h5>
                                         <p className="text-muted mt-1 mb-4">
-                                            {t('Do not have the account?')} <Link to='/register'>{t('Sign Up')}</Link>
+                                            {t('Do not have the account?')} <Link to='/signup' className="text-primary font-weight-bold">{t('Sign Up')}</Link>
                                         </p>
 
                                         {/* <Row>
@@ -83,7 +88,8 @@ const Login = () => {
 
                                         <Form noValidate onSubmit={validator.handleSubmit} className="">
                                             <Form.Group>
-                                                {/* <Form.Label>Username</Form.Label> */}
+                                                <Form.Label>{t('Username')}</Form.Label>
+
                                                 <Form.Control type="text" placeholder={t("Your username")}
                                                     name="username" id="username"
                                                     onChange={validator.handleChange}
@@ -91,14 +97,13 @@ const Login = () => {
                                                     value={validator.values.username}
                                                     isInvalid={validator.touched.username && validator.errors && validator.errors.username ? true : false} />
 
-
                                                 {validator.touched.username && validator.errors.username ? (
                                                     <Form.Control.Feedback type="invalid">{validator.errors.username}</Form.Control.Feedback>
                                                 ) : null}
                                             </Form.Group>
 
                                             <Form.Group>
-                                                {/* <Form.Label>Password</Form.Label> */}
+                                                <Form.Label>{t('Password')}</Form.Label>
                                                 <Form.Control type="password" placeholder={t("Your password")}
                                                     name="password" id="password"
                                                     onChange={validator.handleChange}
@@ -114,13 +119,13 @@ const Login = () => {
 
                                             <Row>
                                                 <Col className="text-right">
-                                                    <Link to="/forget-password">{t('Forget Password?')}</Link>
+                                                    <Link to="/forgot-password" className='font-weight-bold'>{t('Forgot Password?')}</Link>
                                                 </Col>
                                             </Row>
 
 
                                             <Form.Group className="mb-0">
-                                                <Button variant="primary" type="submit">Log In</Button>
+                                                <Button variant="primary" type="submit">{t('Log In')}</Button>
                                             </Form.Group>
                                         </Form>
 
