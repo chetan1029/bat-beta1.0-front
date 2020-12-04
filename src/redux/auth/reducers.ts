@@ -52,6 +52,17 @@ const Auth = (state = INIT_STATE, action: any) => {
                         passwordChange: true
                     }
                 }
+
+                case AuthActionTypes.UPDATE_PROFILE:
+                case AuthActionTypes.UPDATE_PROFILE_PICTURE: {
+                    api.setUserInSession(action.payload.data);
+                    return {
+                        ...state,
+                        loading: false,
+                        profileUpdated: true,
+                        user: action.payload.data
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -90,6 +101,15 @@ const Auth = (state = INIT_STATE, action: any) => {
                         passwordChange: false
                     }
                 }
+                case AuthActionTypes.UPDATE_PROFILE:
+                case AuthActionTypes.UPDATE_PROFILE_PICTURE: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        loading: false,
+                        profileUpdated: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -104,7 +124,10 @@ const Auth = (state = INIT_STATE, action: any) => {
             return { ...state, loading: true, passwordReset: false, };
         case AuthActionTypes.FORGOT_PASSWORD_CHANGE:
             return { ...state, loading: true, passwordChange: false, };
-
+        case AuthActionTypes.UPDATE_PROFILE:
+        case AuthActionTypes.UPDATE_PROFILE_PICTURE: {
+            return { ...state, loading: true, profileUpdated: false, };
+        }
         default: return { ...state };
     }
 }

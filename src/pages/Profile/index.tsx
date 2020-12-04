@@ -1,0 +1,162 @@
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { Row, Col, Card, Form, Media, Badge, Button } from "react-bootstrap";
+import { Link, withRouter } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import classNames from "classnames";
+
+//components
+import Icon from "../../components/Icon";
+import Loader from "../../components/Loader";
+import MessageAlert from "../../components/MessageAlert";
+import TabMenu from "../../components/TabMenu";
+import DisplayDate from "../../components/DisplayDate";
+import { useUser } from "../../components/Hooks";
+
+import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
+
+import { updateProfile, updateProfilePicture } from "../../redux/actions";
+
+
+interface ProfileProp {
+
+}
+
+const Profile = (props: ProfileProp) => {
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const { user } = useUser();
+
+    const [profile, setprofile] = useState<any>({ ...user });
+
+    useEffect(() => {
+        setprofile(user);
+    }, [user]);
+
+    const { loading, profileUpdated, error, updatedUser } = useSelector((state: any) => ({
+        loading: state.Auth.loading,
+        profileUpdated: state.Auth.profileUpdated,
+        error: state.Auth.error,
+        updatedUser: state.Auth.user
+    }));
+
+    const menuItems: Array<any> = [
+        { label: t('General info'), name: 'general', to: '/profile/general' },
+        { label: t('Change password'), name: 'change-password', to: '/profile/change-password' }
+    ];
+
+    const fullName = profile ? profile['first_name'] + " " + profile['last_name'] : "";
+
+    const onProfilePic = (e: any) => {
+        const file = e.target.files[0];
+        if (file)
+            dispatch(updateProfilePicture(user['username'], file));
+    }
+
+    useEffect(() => {
+        if (profileUpdated) {
+            setprofile({ ...updatedUser });
+            setshowEditName(false);
+        }
+    }, [profileUpdated, updatedUser]);
+
+    const [showEditName, setshowEditName] = useState(false);
+
+    const updateName = (field, value) => {
+        const modifiedInfo = { ...profile };
+        modifiedInfo[field] = value;
+        setprofile(modifiedInfo);
+    }
+
+    const saveName = () => {
+        dispatch(updateProfile(user['username'], { 'first_name': profile['first_name'], 'last_name': profile['last_name'] }));
+    }
+
+
+    return <>
+        <div className="py-4 px-3">
+            <Row>
+                <Col>
+                    <div className="d-flex align-items-center">
+                        <Icon name="user" className="icon icon-xs mr-2" />
+                        <h1 className="m-0">{t('Profile')}</h1>
+                    </div>
+                </Col>
+            </Row>
+        </div>
+
+        <Card>
+            <Card.Body className="">
+                <TabMenu items={menuItems} defaultSelectedItem={'general'} />
+
+                <div className="mt-3 position-relative">
+                    {loading ? <Loader /> : null}
+
+                    {profile ? <>
+                        <Row>
+                            <Col>
+                                <Media className=''>
+                                    <div className="position-relative mr-3 align-self-center">
+                                        <img width={60} height={60} className={classNames("rounded-circle", { "border": !profile['profile_picture'] })}
+                                            src={profile['profile_picture'] || avatarPlaceholder} alt="" />
+                                        <div className='profile-pic-edit'>
+                                            <Icon name='pencil' className="icon icon-xxxs" />
+                                            <input type="file" onChange={onProfilePic} accept="image/x-png,image/gif,image/jpeg" />
+                                        </div>
+                                    </div>
+
+                                    <Media.Body>
+                                        {showEditName ? <Row className="mb-2">
+                                            <Col lg={4}>
+                                                <Row noGutters>
+                                                    <Col>
+                                                        <Form.Control type="text" name="first_name" size="sm" value={profile['first_name']}
+                                                            onChange={(e) => updateName('first_name', e.target.value)}></Form.Control>
+                                                    </Col>
+                                                    <Col>
+                                                        <Form.Control type="text" name="last_name" size="sm" value={profile['last_name']}
+                                                            onChange={(e) => updateName('last_name', e.target.value)} className="ml-2"></Form.Control>
+                                                    </Col>
+                                                    <Col>
+                                                        <Button variant='primary' size='sm' onClick={saveName} className="ml-3">
+                                                            <Icon name='check' className='icon icon-xxxs'></Icon>
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                        </Row> : <>
+                                                <h5 className="mt-1">
+                                                    {fullName}
+                                                    <Button variant="link" className="ml-2 p-0 mt-n1" onClick={() => setshowEditName(!showEditName)}>
+                                                        <Icon name='pencil' className="icon icon-xxxs text-primary" />
+                                                    </Button>
+                                                </h5>
+                                            </>}
+
+                                        <p className="mb-0">
+                                            <span className="text-muted">{t('Register on')}:</span>
+                                            <span className="ml-2"><DisplayDate dateStr={profile['date_joined']} timeClass={"ml-1"} /></span>
+                                        </p>
+                                    </Media.Body>
+
+                                    <div className="ml-auto">
+                                        <p className="mb-0">
+                                            <span className="text-muted">{t('Last login')}:</span>
+                                            <span className="ml-2"><DisplayDate dateStr={profile['last_login']} timeClass={"ml-1"} /></span>
+                                        </p>
+                                    </div>
+                                </Media>
+                            </Col>
+                        </Row>
+                    </> : null}
+                </div>
+            </Card.Body>
+        </Card>
+
+        {error ? <MessageAlert message={error} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-md" /> : null}
+        {profileUpdated ? <MessageAlert message={t('Your profile is saved')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+    </>;
+}
+
+export default Profile;

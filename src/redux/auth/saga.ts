@@ -2,7 +2,7 @@ import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
 import {
     login as loginApi, logout as logoutApi, signup as signupApi, forgotPassword as forgotPasswordApi,
-    forgotPasswordConfirm
+    forgotPasswordConfirm, updateProfile as updateProfileApi, updateProfilePicture as updateProfilePictureApi,
 } from "../../api/index";
 
 import { APICore, setAuthorization } from "../../api/apiCore";
@@ -76,6 +76,25 @@ function* forgotPasswordChange({ payload: { data } }: any) {
     }
 }
 
+function* updateProfile({ payload: { username, data } }: any) {
+    try {
+        const response: any = yield call(updateProfileApi, username, data);
+        yield put(authApiResponseSuccess(AuthActionTypes.UPDATE_PROFILE, response.data));
+    } catch (error) {
+        yield put(authApiResponseError(AuthActionTypes.UPDATE_PROFILE, error));
+    }
+}
+
+function* updateProfilePicture({ payload: { username, profile_pic } }: any) {
+    try {
+        console.log(username, profile_pic);
+        const response: any = yield call(updateProfilePictureApi, username, { 'profile_picture': profile_pic });
+        yield put(authApiResponseSuccess(AuthActionTypes.UPDATE_PROFILE_PICTURE, response.data));
+    } catch (error) {
+        yield put(authApiResponseError(AuthActionTypes.UPDATE_PROFILE_PICTURE, error));
+    }
+}
+
 export function* watchLoginUser() {
     yield takeEvery(AuthActionTypes.LOGIN_USER, login)
 }
@@ -96,13 +115,23 @@ export function* watchForgotPasswordChange() {
     yield takeEvery(AuthActionTypes.FORGOT_PASSWORD_CHANGE, forgotPasswordChange)
 }
 
+export function* watchUpdateProfile() {
+    yield takeEvery(AuthActionTypes.UPDATE_PROFILE, updateProfile)
+}
+
+export function* watchUpdateProfilePicture() {
+    yield takeEvery(AuthActionTypes.UPDATE_PROFILE_PICTURE, updateProfilePicture)
+}
+
 function* authSaga() {
     yield all([
         fork(watchLoginUser),
         fork(watchLogout),
         fork(watchSignup),
         fork(watchForgotPassword),
-        fork(watchForgotPasswordChange)
+        fork(watchForgotPasswordChange),
+        fork(watchUpdateProfile),
+        fork(watchUpdateProfilePicture)
     ]);
 }
 

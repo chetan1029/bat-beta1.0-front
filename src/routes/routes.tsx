@@ -7,6 +7,9 @@ import Settings from "../pages/Settings/index";
 import AddEditMember from "../pages/Settings/Members/AddEditMember";
 import MemberDetails from "../pages/Settings/Members/MemberDetails";
 import Invitations from "../pages/Invitations/";
+import Profile from "../pages/Profile/";
+import ChangePassword from "../pages/account/ChangePassword";
+
 
 // account
 import Login from "../pages/account/Login";
@@ -23,6 +26,8 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
+  { path: "/profile/general", component: Profile },
+  { path: "/profile/change-password", component: ChangePassword },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 

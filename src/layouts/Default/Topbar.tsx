@@ -90,7 +90,7 @@ const Topbar = (props: TopbarProps) => {
                     <span>{t('Companies')}</span>
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item href='/profile/general'>
                     <Icon name="user" className='icon icon-xs' />
                     <span>{t('Profile')}</span>
                   </Dropdown.Item>
