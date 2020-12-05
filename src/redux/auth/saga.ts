@@ -3,6 +3,7 @@ import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 import {
     login as loginApi, logout as logoutApi, signup as signupApi, forgotPassword as forgotPasswordApi,
     forgotPasswordConfirm, updateProfile as updateProfileApi, updateProfilePicture as updateProfilePictureApi,
+    changePassword as changePasswordApi
 } from "../../api/index";
 
 import { APICore, setAuthorization } from "../../api/apiCore";
@@ -95,6 +96,17 @@ function* updateProfilePicture({ payload: { username, profile_pic } }: any) {
     }
 }
 
+
+
+function* changePassword({ payload: { new_password1, new_password2 } }: any) {
+    try {
+        const response: any = yield call(changePasswordApi, { new_password1, new_password2 });
+        yield put(authApiResponseSuccess(AuthActionTypes.CHANGE_PASSWORD, response.data));
+    } catch (error) {
+        yield put(authApiResponseError(AuthActionTypes.CHANGE_PASSWORD, error));
+    }
+}
+
 export function* watchLoginUser() {
     yield takeEvery(AuthActionTypes.LOGIN_USER, login)
 }
@@ -123,6 +135,10 @@ export function* watchUpdateProfilePicture() {
     yield takeEvery(AuthActionTypes.UPDATE_PROFILE_PICTURE, updateProfilePicture)
 }
 
+export function* watchchangePassword() {
+    yield takeEvery(AuthActionTypes.CHANGE_PASSWORD, changePassword)
+}
+
 function* authSaga() {
     yield all([
         fork(watchLoginUser),
@@ -131,7 +147,8 @@ function* authSaga() {
         fork(watchForgotPassword),
         fork(watchForgotPasswordChange),
         fork(watchUpdateProfile),
-        fork(watchUpdateProfilePicture)
+        fork(watchUpdateProfilePicture),
+        fork(watchchangePassword)
     ]);
 }
 

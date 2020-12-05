@@ -11,7 +11,7 @@ import NonAuthLayout from "../layouts/NonAuth";
 import { authProtectedRoutes, publicRoutes } from "./routes";
 
 // handle auth and authorization
-const AppRoute = ({ component: Component, layout: Layout, roles, isAuthProtected, ...rest }) => {
+const AppRoute = ({ component: Component, layout: Layout, layoutProps, roles, isAuthProtected, ...rest }) => {
 
   const api = new APICore();
   return <Route {...rest} render={props => {
@@ -29,7 +29,7 @@ const AppRoute = ({ component: Component, layout: Layout, roles, isAuthProtected
     }
 
     // authorised so return component
-    return <Layout>
+    return <Layout {...(layoutProps || {})}>
       <Component {...props} />
     </Layout>
   }} />
@@ -50,6 +50,7 @@ const Routes = (props: any) => {
             <AppRoute
               path={route.path}
               layout={NonAuthLayout}
+              layoutProps={route.layoutProps}
               component={route.component}
               key={idx}
               roles={route['roles']}
@@ -63,6 +64,7 @@ const Routes = (props: any) => {
             <AppRoute
               path={route.path}
               layout={route.layout ? route.layout : DefaultLayout}
+              layoutProps={route.layoutProps}
               component={route.component}
               key={idx}
               roles={route['roles']}

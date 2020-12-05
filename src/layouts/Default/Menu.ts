@@ -75,6 +75,12 @@ const menuItems: Array<MenuItemProp> = [
     }
 ];
 
+
+const mainMenuItems: Array<MenuItemProp> = [
+    { name: 'My Profile', url: '/profile', icon: 'user', label: 'My Profile', id: 1 },
+    { name: 'Companies', url: '/companies', icon: 'bag', label: 'Companies', id: 2 },
+];
+
 const findAllParent = (menuItems: Array<any>, menuItem: any) => {
     let parents: Array<any> = [];
     const parent = menuItems.find(i => i['id'] === menuItem['parentId']);
@@ -87,4 +93,4 @@ const findAllParent = (menuItems: Array<any>, menuItem: any) => {
     return parents;
 }
 
-export { menuItems, findAllParent };
+export { menuItems, mainMenuItems, findAllParent };

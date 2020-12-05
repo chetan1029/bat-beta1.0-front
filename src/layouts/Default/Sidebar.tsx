@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
@@ -7,7 +7,7 @@ import classNames from "classnames";
 import Icon from "../../components/Icon";
 import logo from "../../assets/images/logo.svg";
 
-import { menuItems, findAllParent } from "./Menu";
+import { menuItems, mainMenuItems, findAllParent } from "./Menu";
 import { Collapse } from "react-bootstrap";
 
 
@@ -40,7 +40,7 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
   }
 
   return <Tag className={classNames({ 'selected_item': show })}>
-    <Link to={hasChildren ? '#' : url} className={classNames("menu_item d-flex", { "selected_link": show })} onClick={toggleMenu}>
+    <Link to={hasChildren ? '#' : url} className={classNames("menu_item d-flex", { "selected_link": show })} onClick={toggleMenu} data-menu-id={id}>
       {hasChildren ? <div className="menu_icon">
         <Icon name="arrow-left" />
       </div> : null}
@@ -67,7 +67,7 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
 const Menu = ({ menuItems, className, uId, onToggle, activeMenuItemIds }) => {
 
   return <>
-    <ul className={classNames(className)}>
+    <ul className={classNames(className)} id={uId}>
       {(menuItems || []).map((item: any, index: number) => {
         return <MenuItem menuItem={item} tag='li' key={`menu-${uId}-${index}`} onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
       })}
@@ -81,11 +81,14 @@ interface SideProps {
   match: any,
   location: any,
   showSidebar?: boolean,
-  companies: any
+  companies: any,
+  mainSidebar?: boolean
 }
 
 const Sidebar = (props: SideProps) => {
-  const { toggleSidebar, showSidebar, companies } = props;
+  const { toggleSidebar, showSidebar, companies, mainSidebar } = props;
+
+  const menus = useMemo(() => (mainSidebar ? [...mainMenuItems] : [...menuItems]), [mainSidebar]);
 
   const { t } = useTranslation();
 
@@ -99,32 +102,38 @@ const Sidebar = (props: SideProps) => {
     };
   }, []);
 
-  const activeMenu = () => {
-    const div = document.getElementById("side_bar_menu");
+  const activeMenu = useCallback(() => {
+    const div = document.getElementById("main-side-menu");
     let matchingMenuItem: HTMLElement | null = null;
+    
     if (div) {
       let items = div.getElementsByTagName("a");
+
       for (let i = 0; i < items.length; ++i) {
         if (props.location.pathname === items[i].pathname || props.location.pathname.indexOf(items[i].pathname) !== -1) {
           matchingMenuItem = items[i];
           break;
         }
       }
+
       if (matchingMenuItem) {
-        console.log(matchingMenuItem);
+        const mid = matchingMenuItem.getAttribute('data-menu-id');
+        const activeMt = menus.find(m => m['id'] + '' === mid + '');
+        if (activeMt)
+          setactiveMenuItemIds([activeMt['id'], ...findAllParent(menus, activeMt)])
       }
     }
-  }
+  }, [props.location.pathname, menus]);
 
   useEffect(() => {
     //sidebar menu activation
     activeMenu();
-  });
+  }, [activeMenu]);
 
   const [activeMenuItemIds, setactiveMenuItemIds] = useState<any>([]);
 
   const onMenuToggle = (menuItem: any, show: boolean) => {
-    if (show) setactiveMenuItemIds([menuItem['id'], ...findAllParent(menuItems, menuItem)]);
+    if (show) setactiveMenuItemIds([menuItem['id'], ...findAllParent(menus, menuItem)]);
   }
 
   //function for toggle sidebar according to screen width
@@ -150,7 +159,8 @@ const Sidebar = (props: SideProps) => {
             </Link>
 
             {/* <SimpleBar> */}
-            <Menu menuItems={menuItems} className='side_bar_menu' uId='main' onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} />
+            <Menu menuItems={menus} className='side_bar_menu' uId='main-side-menu' 
+              onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} />
 
           </div>
 

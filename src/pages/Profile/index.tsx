@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Form, Media, Badge, Button } from "react-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { Row, Col, Card, Form, Media, Button } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 //components
 import Icon from "../../components/Icon";
@@ -12,6 +13,9 @@ import MessageAlert from "../../components/MessageAlert";
 import TabMenu from "../../components/TabMenu";
 import DisplayDate from "../../components/DisplayDate";
 import { useUser } from "../../components/Hooks";
+import { LANGS, LanguageDropdown } from "../../components/LanguageDropdown";
+import TimezoneDropdown from "../../components/TimezoneDropdown";
+
 
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
@@ -72,6 +76,19 @@ const Profile = (props: ProfileProp) => {
     const saveName = () => {
         dispatch(updateProfile(user['username'], { 'first_name': profile['first_name'], 'last_name': profile['last_name'] }));
     }
+
+    const validator = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            phone_number: profile ? profile['phone_number'] : "",
+            language: profile ? { label: LANGS[profile['language']], value: profile['language'] } : "",
+            timezone: profile ? { label: profile['timezone'], value: profile['timezone'] } : ""
+        },
+        validationSchema: Yup.object({}),
+        onSubmit: values => {
+            dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'] }));
+        },
+    });
 
 
     return <>
@@ -147,6 +164,98 @@ const Profile = (props: ProfileProp) => {
                                         </p>
                                     </div>
                                 </Media>
+                            </Col>
+                        </Row>
+
+                        <Row>
+                            <Col lg={6}>
+                                <div className="py-4 mt-3 pr-sm-5">
+                                    <Form noValidate onSubmit={validator.handleSubmit} className="">
+                                        <Form.Group>
+                                            <Form.Label>{t('User name')}</Form.Label>
+
+                                            <Form.Control type="text" placeholder={t("User name")}
+                                                name="username" id="username"
+                                                value={profile.username}
+                                                readOnly />
+                                        </Form.Group>
+
+                                        <Form.Group>
+                                            <Form.Label>{t('Email address')}</Form.Label>
+
+                                            <Form.Control type="email" placeholder={t("Email address")}
+                                                name="email" id="email"
+                                                value={profile.email}
+                                                readOnly />
+                                        </Form.Group>
+
+                                        <Form.Group>
+                                            <Form.Label>{t('Phone number')}</Form.Label>
+
+                                            <Form.Control type="text" placeholder={t("Phone number")}
+                                                name="phone_number" id="phone_number"
+                                                onChange={validator.handleChange}
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.phone_number}
+                                                isInvalid={validator.touched.phone_number && validator.errors && validator.errors.phone_number ? true : false} />
+
+                                            {validator.touched.phone_number && validator.errors.phone_number ? (
+                                                <Form.Control.Feedback type="invalid">{validator.errors.phone_number}</Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+
+                                        <Form.Group>
+                                            <Form.Label>{t('Language')}</Form.Label>
+                                            <LanguageDropdown name='language' placeholder={t('Language')}
+                                                className={validator.touched.language && validator.errors.language ? "is-invalid" : ""}
+                                                onChange={(value) => validator.setFieldValue('language', value)}
+                                                value={validator.values.language} />
+
+                                            {validator.touched.language && validator.errors.language ? (
+                                                <Form.Control.Feedback type="invalid" className="d-block">
+                                                    {validator.errors.language}
+                                                </Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+
+                                        <Form.Group>
+                                            <Form.Label>{t('Time zone')}</Form.Label>
+                                            <TimezoneDropdown name='timezone' placeholder={t('Timezone')}
+                                                className={validator.touched.timezone && validator.errors.timezone ? "is-invalid" : ""}
+                                                onChange={(value) => validator.setFieldValue('timezone', value)}
+                                                value={validator.values.timezone} />
+
+                                            {validator.touched.timezone && validator.errors.timezone ? (
+                                                <Form.Control.Feedback type="invalid" className="d-block">
+                                                    {validator.errors.timezone}
+                                                </Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+
+
+                                        <Form.Group className="mb-0">
+                                            <Button variant="primary" type="submit">{t('Submit')}</Button>
+                                        </Form.Group>
+                                    </Form>
+                                </div>
+                            </Col>
+
+                            <Col lg={6}>
+                                <div>
+                                    <Media>
+                                        <div className="pt-1">
+                                            <Icon name="info" className="icon icon-sm svg-outline-secondary" />
+                                        </div>
+                                        <Media.Body>
+                                            <div className="px-3">
+                                                <h2 className="m-0 mb-2">{t('Additional info')}</h2>
+                                                <p className="text-wrap pb-0 text-muted w-75">
+                                                    {t("Username and email address is unique for each account. You can't change it.")}
+                                                </p>
+                                            </div>
+                                        </Media.Body>
+                                    </Media>
+                                </div>
                             </Col>
                         </Row>
                     </> : null}

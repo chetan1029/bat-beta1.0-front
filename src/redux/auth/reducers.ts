@@ -45,7 +45,8 @@ const Auth = (state = INIT_STATE, action: any) => {
                         passwordReset: true
                     }
                 }
-                case AuthActionTypes.FORGOT_PASSWORD_CHANGE: {
+                case AuthActionTypes.FORGOT_PASSWORD_CHANGE:
+                case AuthActionTypes.CHANGE_PASSWORD: {
                     return {
                         ...state,
                         loading: false,
@@ -93,7 +94,8 @@ const Auth = (state = INIT_STATE, action: any) => {
                         passwordReset: false
                     }
                 }
-                case AuthActionTypes.FORGOT_PASSWORD_CHANGE: {
+                case AuthActionTypes.FORGOT_PASSWORD_CHANGE:
+                case AuthActionTypes.CHANGE_PASSWORD: {
                     return {
                         ...state,
                         error: action.payload.error,
@@ -123,6 +125,7 @@ const Auth = (state = INIT_STATE, action: any) => {
         case AuthActionTypes.FORGOT_PASSWORD:
             return { ...state, loading: true, passwordReset: false, };
         case AuthActionTypes.FORGOT_PASSWORD_CHANGE:
+        case AuthActionTypes.CHANGE_PASSWORD:
             return { ...state, loading: true, passwordChange: false, };
         case AuthActionTypes.UPDATE_PROFILE:
         case AuthActionTypes.UPDATE_PROFILE_PICTURE: {

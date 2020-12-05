@@ -9,6 +9,8 @@ import MemberDetails from "../pages/Settings/Members/MemberDetails";
 import Invitations from "../pages/Invitations/";
 import Profile from "../pages/Profile/";
 import ChangePassword from "../pages/account/ChangePassword";
+import Companies from "../pages/Companies/";
+import AddNewCompany from "../pages/Companies/AddNew";
 
 
 // account
@@ -26,8 +28,12 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
-  { path: "/profile/general", component: Profile },
-  { path: "/profile/change-password", component: ChangePassword },
+
+  { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
+  { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
+  
+  { path: "/profile/general", component: Profile, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 

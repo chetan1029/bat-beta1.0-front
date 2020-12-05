@@ -13,4 +13,5 @@ export enum AuthActionTypes {
 
     UPDATE_PROFILE = '@@auth/UPDATE_PROFILE',
     UPDATE_PROFILE_PICTURE = '@@auth/UPDATE_PROFILE_PICTURE',
+    CHANGE_PASSWORD = '@@auth/CHANGE_PASSWORD',
 }
