@@ -85,12 +85,12 @@ const Topbar = (props: TopbarProps) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="">
-                  <Dropdown.Item>
+                  <Dropdown.Item href='/companies'>
                     <Icon name="bag" className='icon icon-xs' />
                     <span>{t('Companies')}</span>
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item href='/profile/general'>
                     <Icon name="user" className='icon icon-xs' />
                     <span>{t('Profile')}</span>
                   </Dropdown.Item>

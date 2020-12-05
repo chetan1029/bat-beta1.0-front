@@ -36,6 +36,22 @@ function forgotPasswordConfirm(params: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+
+function updateProfile(username: string, data: any) {
+    const baseUrl = `/user/${username}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
+function updateProfilePicture(username: string, data: any) {
+    const baseUrl = `/user/${username}/`;
+    return api.updateWithFile(`${baseUrl}`, data);
+}
+
+function changePassword(params: any) {
+    const baseUrl = "/password/change/";
+    return api.create(`${baseUrl}`, params);
+}
+
 /*
 companies
 */
@@ -138,7 +154,8 @@ function rejectInvite(inviteId: number) {
 
 export {
     getRoles,
-    login, logout, signup, forgotPassword, forgotPasswordConfirm,
+    login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
+    updateProfile, updateProfilePicture,
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,

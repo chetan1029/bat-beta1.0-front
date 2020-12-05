@@ -451,22 +451,22 @@ const Icon = ({ name, className }: Props) => {
 
       case 'notes':
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9.74427 10.3185H6.27832" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M9.74427 8.04503H6.27832" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <path d="M7.60134 5.7755H6.27881" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <path fillRule="evenodd" clipRule="evenodd" d="M9.83691 3C9.83691 3 6.15158 3.00217 6.14582 3.00217C4.82089 3.01141 4.00049 3.99783 4.00049 5.50244V10.4976C4.00049 12.0098 4.82713 13 6.16358 13C6.16358 13 9.84843 12.9984 9.85467 12.9984C11.1796 12.9891 12.0005 12.0022 12.0005 10.4976V5.50244C12.0005 3.99022 11.1734 3 9.83691 3Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9.74427 10.3185H6.27832" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9.74427 8.04503H6.27832" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M7.60134 5.7755H6.27881" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path fillRule="evenodd" clipRule="evenodd" d="M9.83691 3C9.83691 3 6.15158 3.00217 6.14582 3.00217C4.82089 3.01141 4.00049 3.99783 4.00049 5.50244V10.4976C4.00049 12.0098 4.82713 13 6.16358 13C6.16358 13 9.84843 12.9984 9.85467 12.9984C11.1796 12.9891 12.0005 12.0022 12.0005 10.4976V5.50244C12.0005 3.99022 11.1734 3 9.83691 3Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
 
       case 'chevron-top':
         return <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.4959 6H8.66667C9.54586 6 9.99715 4.947 9.39081 4.31035L5.97615 0.724959C5.59496 0.324708 4.96136 0.309613 4.56154 0.691258L0.80542 4.27664C0.152838 4.89956 0.593737 6 1.4959 6Z" fill="#3C76E6" />
         </svg>
-      
+
       case 'chevron-down':
         return <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1.4959 0H8.66667C9.54586 0 9.99715 1.053 9.39081 1.68965L5.97615 5.27504C5.59496 5.67529 4.96136 5.69039 4.56154 5.30874L0.80542 1.72336C0.152838 1.10044 0.593737 0 1.4959 0Z" fill="#3C76E6" />
         </svg>
-        
+
       case 'x':
         return <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path fillRule="evenodd" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
@@ -476,7 +476,12 @@ const Icon = ({ name, className }: Props) => {
         return <svg width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
           <path fillRule="evenodd" d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
         </svg>
-        
+      case 'pencil':
+        return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 9.50034V12H2.49966L9.87199 4.62767L7.37233 2.12801L0 9.50034ZM11.8051 2.6946C11.8669 2.63293 11.9159 2.55968 11.9493 2.47904C11.9828 2.3984 12 2.31196 12 2.22466C12 2.13736 11.9828 2.05092 11.9493 1.97028C11.9159 1.88964 11.8669 1.81639 11.8051 1.75472L10.2453 0.194936C10.1836 0.133142 10.1104 0.0841172 10.0297 0.0506674C9.94908 0.0172176 9.86264 0 9.77534 0C9.68804 0 9.6016 0.0172176 9.52096 0.0506674C9.44032 0.0841172 9.36707 0.133142 9.3054 0.194936L8.08557 1.41477L10.5852 3.91443L11.8051 2.6946Z" fill="#396AFF" />
+        </svg>
+
+
       default:
         return null;
     }

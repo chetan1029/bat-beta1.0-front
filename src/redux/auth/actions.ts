@@ -36,3 +36,18 @@ export const forgotPasswordChange = (data: any) => ({
     type: AuthActionTypes.FORGOT_PASSWORD_CHANGE,
     payload: { data }
 });
+
+export const updateProfile = (username: string, data: any) => ({
+    type: AuthActionTypes.UPDATE_PROFILE,
+    payload: { username, data }
+});
+
+export const updateProfilePicture = (username: string, profile_pic: any) => ({
+    type: AuthActionTypes.UPDATE_PROFILE_PICTURE,
+    payload: { username, profile_pic }
+});
+
+export const changePassword = (new_password1: string, new_password2: string) => ({
+    type: AuthActionTypes.CHANGE_PASSWORD,
+    payload: { new_password1, new_password2 }
+});
