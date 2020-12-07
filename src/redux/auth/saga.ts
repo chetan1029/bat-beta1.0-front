@@ -88,7 +88,6 @@ function* updateProfile({ payload: { username, data } }: any) {
 
 function* updateProfilePicture({ payload: { username, profile_pic } }: any) {
     try {
-        console.log(username, profile_pic);
         const response: any = yield call(updateProfilePictureApi, username, { 'profile_picture': profile_pic });
         yield put(authApiResponseSuccess(AuthActionTypes.UPDATE_PROFILE_PICTURE, response.data));
     } catch (error) {
