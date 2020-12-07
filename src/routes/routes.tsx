@@ -11,6 +11,8 @@ import Profile from "../pages/Profile/";
 import ChangePassword from "../pages/account/ChangePassword";
 import Companies from "../pages/Companies/";
 import AddNewCompany from "../pages/Companies/AddNew";
+import AddEditComponent from "../pages/ProductManagement/Components/AddEditComponent";
+import Components from "../pages/ProductManagement/Components";
 
 
 // account
@@ -23,6 +25,9 @@ import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 import Root from "../pages/Root";
 
 const authProtectedRoutes = [
+  { path: "/product-management/components/:companyId", component: Components },
+  { path: "/product-management/:companyId/components/add", component: AddEditComponent },
+
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/:view?", component: Settings },

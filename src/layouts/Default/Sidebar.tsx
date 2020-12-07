@@ -14,7 +14,7 @@ import { Collapse } from "react-bootstrap";
 /**
  * Menu Item
  */
-const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
+const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds, companyId }) => {
   const Tag: any = tag || 'li';
 
   const { id, url, icon, label, children } = menuItem;
@@ -40,7 +40,12 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
   }
 
   return <Tag className={classNames({ 'selected_item': show })}>
-    <Link to={hasChildren ? '#' : url} className={classNames("menu_item d-flex", { "selected_link": show })} onClick={toggleMenu} data-menu-id={id}>
+    <Link
+        to={hasChildren ? "#" : menuItem.companyId ? `${url}/${companyId}` : url}
+        className={classNames("menu_item d-flex", { "selected_link": show })}
+        onClick={toggleMenu}
+        data-menu-id={id}
+    >
       {hasChildren ? <div className="menu_icon">
         <Icon name="arrow-left" />
       </div> : null}
@@ -54,7 +59,7 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
 
     {hasChildren ? <>
       <Collapse in={show}>
-        <Menu menuItems={children} uId={id} className="" onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
+        <Menu menuItems={children} uId={id} className="" onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} companyId={companyId} />
       </Collapse>
     </> : null}
   </Tag>
@@ -64,12 +69,12 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
  * Menu component
  * @param 
  */
-const Menu = ({ menuItems, className, uId, onToggle, activeMenuItemIds }) => {
+const Menu = ({ menuItems, className, uId, onToggle, activeMenuItemIds, companyId }) => {
 
   return <>
     <ul className={classNames(className)} id={uId}>
       {(menuItems || []).map((item: any, index: number) => {
-        return <MenuItem menuItem={item} tag='li' key={`menu-${uId}-${index}`} onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
+        return <MenuItem menuItem={item} tag='li' key={`menu-${uId}-${index}`} onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} companyId={companyId} />
       })}
     </ul>
   </>;
@@ -159,8 +164,8 @@ const Sidebar = (props: SideProps) => {
             </Link>
 
             {/* <SimpleBar> */}
-            <Menu menuItems={menus} className='side_bar_menu' uId='main-side-menu' 
-              onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} />
+            <Menu menuItems={menus} className='side_bar_menu' uId='main-side-menu'
+                  onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} companyId={companyId}/>
 
           </div>
 
