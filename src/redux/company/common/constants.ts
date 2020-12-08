@@ -5,4 +5,6 @@ export enum CommonTypes {
 
     GET_COMPANIES = '@@company/common/GET_COMPANIES',
     CREATE_COMPANY = '@@company/common/CREATE_COMPANY',
+
+    GET_CATEGORIES = '@@company/common/GET_CATEGORIES',
 }
