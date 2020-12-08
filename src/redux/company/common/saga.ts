@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCompaniesList, createCompany as createCompanyApi } from "../../../api/index";
+import { getCompaniesList, createCompany as createCompanyApi, getCompanyCategories as getCompanyCategoriesApi } from "../../../api/index";
 
 import { companyCommonApiResponseSuccess, companyCommonApiResponseError } from "./actions";
 import { CommonTypes } from './constants';
@@ -31,6 +31,19 @@ function* createCompany({ payload: data }: any) {
     }
 }
 
+/**
+ * Fetches the categories
+ */
+function* getCompanyCategories({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getCompanyCategoriesApi, companyId, filters);
+        yield put(companyCommonApiResponseSuccess(CommonTypes.GET_CATEGORIES, response.data));
+    } catch (error) {
+        yield put(companyCommonApiResponseError(CommonTypes.GET_CATEGORIES, error));
+    }
+}
+
+
 export function* watchGetCompanies() {
     yield takeEvery(CommonTypes.GET_COMPANIES, getCompanies)
 }
@@ -39,10 +52,15 @@ export function* watchCreateCompany() {
     yield takeEvery(CommonTypes.CREATE_COMPANY, createCompany)
 }
 
+export function* watchGetCompanyCategories() {
+    yield takeEvery(CommonTypes.GET_CATEGORIES, getCompanyCategories)
+}
+
 function* commonSaga() {
     yield all([
         fork(watchGetCompanies),
-        fork(watchCreateCompany)
+        fork(watchCreateCompany),
+        fork(watchGetCompanyCategories)
     ]);
 }
 

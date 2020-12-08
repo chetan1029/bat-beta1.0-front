@@ -12,6 +12,9 @@ import ChangePassword from "../pages/account/ChangePassword";
 import Companies from "../pages/Companies/";
 import AddNewCompany from "../pages/Companies/AddNew";
 
+import AddEditVendor from "../pages/Vendors/AddEditVendor";
+import Vendors from "../pages/Vendors/";
+
 
 // account
 import Login from "../pages/account/Login";
@@ -29,9 +32,12 @@ const authProtectedRoutes = [
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
 
+  { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: AddEditVendor },
+  { path: "/supply-chain/:companyId/vendors/:categoryId", component: Vendors },
+
   { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
   { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
-  
+
   { path: "/profile/general", component: Profile, layoutProps: { 'mainSidebar': true } },
   { path: "/profile/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
   { path: "/profile", component: Profile, layoutProps: { 'mainSidebar': true } },

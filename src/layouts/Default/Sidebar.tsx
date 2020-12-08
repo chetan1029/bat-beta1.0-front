@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
+import { useDispatch, useSelector } from 'react-redux';
 
 //components
 import Icon from "../../components/Icon";
 import logo from "../../assets/images/logo.svg";
 
-import { menuItems, mainMenuItems, findAllParent } from "./Menu";
+import { getCompanyCategories } from "../../redux/actions";
+
+import { getMenuItems, mainMenuItems, findAllParent, findMenuItem } from "./Menu";
 import { Collapse } from "react-bootstrap";
 
 
@@ -40,7 +43,13 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
   }
 
   return <Tag className={classNames({ 'selected_item': show })}>
-    <Link to={hasChildren ? '#' : url} className={classNames("menu_item d-flex", { "selected_link": show })} onClick={toggleMenu} data-menu-id={id}>
+    <Link to={url} className={classNames("menu_item d-flex", { "selected_link": show })} data-menu-id={id} onClick={(e: any) => {
+      toggleMenu();
+      if (hasChildren) {
+        e.preventDefault();
+        return false;
+      }
+    }}>
       {hasChildren ? <div className="menu_icon">
         <Icon name="arrow-left" />
       </div> : null}
@@ -86,9 +95,35 @@ interface SideProps {
 }
 
 const Sidebar = (props: SideProps) => {
-  const { toggleSidebar, showSidebar, companies, mainSidebar } = props;
 
-  const menus = useMemo(() => (mainSidebar ? [...mainMenuItems] : [...menuItems]), [mainSidebar]);
+  const { toggleSidebar, showSidebar, mainSidebar } = props;
+
+  const dispatch = useDispatch();
+
+  const { vendorCategories } = useSelector((state: any) => ({
+    vendorCategories: state.Company.Common.categories && state.Company.Common.categories.results ? state.Company.Common.categories.results : []
+  }));
+
+  const [menus, setmenus] = useState<any>();
+
+  const companyId = props.match.params.companyId;
+
+  useEffect(() => {
+    if (!mainSidebar) {
+      dispatch(getCompanyCategories(companyId, { 'vendors_only': true }));
+    }
+  }, [dispatch, mainSidebar, companyId]);
+
+  const vendorCategoriesStr = JSON.stringify(vendorCategories);
+
+  useEffect(() => {
+    if (!mainSidebar && vendorCategories) {
+      setmenus(getMenuItems(companyId, vendorCategories));
+    } else {
+      setmenus(mainMenuItems);
+    }
+  }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr]);
+
 
   const { t } = useTranslation();
 
@@ -105,12 +140,12 @@ const Sidebar = (props: SideProps) => {
   const activeMenu = useCallback(() => {
     const div = document.getElementById("main-side-menu");
     let matchingMenuItem: HTMLElement | null = null;
-    
+
     if (div) {
       let items = div.getElementsByTagName("a");
 
       for (let i = 0; i < items.length; ++i) {
-        if (props.location.pathname === items[i].pathname || props.location.pathname.indexOf(items[i].pathname) !== -1) {
+        if (props.location.pathname === items[i].pathname) {
           matchingMenuItem = items[i];
           break;
         }
@@ -118,9 +153,10 @@ const Sidebar = (props: SideProps) => {
 
       if (matchingMenuItem) {
         const mid = matchingMenuItem.getAttribute('data-menu-id');
-        const activeMt = menus.find(m => m['id'] + '' === mid + '');
-        if (activeMt)
-          setactiveMenuItemIds([activeMt['id'], ...findAllParent(menus, activeMt)])
+        const activeMt = findMenuItem(menus, mid);
+        if (activeMt) {
+          setactiveMenuItemIds([activeMt['id'], ...findAllParent(menus, activeMt)]);
+        }
       }
     }
   }, [props.location.pathname, menus]);
@@ -141,8 +177,6 @@ const Sidebar = (props: SideProps) => {
 
   }
 
-  const companyId = companies && companies.length ? companies[0].id : 0;
-
   return (
     <React.Fragment>
       <div className={classNames("side_bar_wrap", { "side_bar_visible": showSidebar })}>
@@ -159,18 +193,18 @@ const Sidebar = (props: SideProps) => {
             </Link>
 
             {/* <SimpleBar> */}
-            <Menu menuItems={menus} className='side_bar_menu' uId='main-side-menu' 
+            <Menu menuItems={[...(menus || [])]} className='side_bar_menu' uId='main-side-menu'
               onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} />
 
           </div>
 
 
-          <div className="bottom-link">
+          {!mainSidebar ? <div className="bottom-link">
             <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center selected_link">
               <Icon name='settings' />
               <p>{t('Settings')}</p>
             </Link>
-          </div>
+          </div> : null}
         </div>
       </div>
     </React.Fragment>

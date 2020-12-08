@@ -65,6 +65,11 @@ function createCompany(params: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+function getCompanyCategories(companyId: string | number, params?: any) {
+    const baseUrl = `/companies/${companyId}/categories`;
+    return api.get(`${baseUrl}`, params);
+}
+
 /*
 payment terms
 */
@@ -152,12 +157,20 @@ function rejectInvite(inviteId: number) {
     return api.create(`${baseUrl}`, {});
 }
 
+
+/* vendors */
+function getVendors(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/vendors/`;
+    return api.get(`${baseUrl}`, params);
+}
+
 export {
-    getRoles,
+    getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
     updateProfile, updateProfilePicture,
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
-    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
+    getVendors
 }

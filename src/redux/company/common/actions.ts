@@ -22,3 +22,9 @@ export const createCompany = (data: any) => ({
     type: CommonTypes.CREATE_COMPANY,
     payload: data
 });
+
+
+export const getCompanyCategories = (companyId: string | number, filters?: any) => ({
+    type: CommonTypes.GET_CATEGORIES,
+    payload: { companyId, filters }
+});

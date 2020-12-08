@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { APICore } from "../api/apiCore";
@@ -8,7 +8,7 @@ const useQuery = () => {
 }
 
 const useUser = () => {
-    const api = new APICore();
+    const api = useMemo(() => (new APICore()), []);
 
     const [user, setuser] = useState<any>();
 
@@ -16,7 +16,7 @@ const useUser = () => {
         if (api.isUserAuthenticated()) {
             setuser(api.getLoggedInUser());
         }
-    }, []);
+    }, [api]);
 
     return { user };
 };
