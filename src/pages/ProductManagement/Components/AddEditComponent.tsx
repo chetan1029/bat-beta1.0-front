@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Card, Col, Form, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import CreatableSelect from 'react-select/creatable';
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import Icon from "../../../components/Icon";
@@ -7,16 +8,26 @@ import TagsInput from "../../../components/TagsInput";
 import MediaInput from "../../../components/MediaInput";
 
 //plug-ins
-import {useFormik} from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import classNames from "classnames";
+import { useDispatch } from "react-redux";
+//action
+import { createComponent, resetComponents } from "../../../redux/actions"
 
 interface AddEditComponentProps {
     match: any;
 }
 
 const AddEditComponent = ({ match }: AddEditComponentProps) => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [tags, setTags] = useState<any>([]);
+    const [files, setFiles] = useState<any>([]);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(resetComponents());
+    }, [dispatch]);
 
     const companyId = match.params.companyId;
 
@@ -26,17 +37,19 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             title: "",
             type: "",
             series: "",
-            tags: [],
             description: "",
         },
         validationSchema: Yup.object({
             title: Yup.string().required(t('Title is required')),
-            type: Yup.string().required(t('Type is required')),
-            tags: Yup.array().required(t('Tags are required')),
-            series: Yup.string().required(t('Series is required')),
-            description: Yup.string().required(t('Description is required')),
         }),
-        onSubmit: () => {},
+        onSubmit: (values) => {
+            const data = {
+                ...values,
+                ...{ is_component: true, tags: tags.toString(), type: values.type['value'], series: values.series['value']
+                }
+            }
+            dispatch(createComponent(companyId, data))
+        },
     });
 
     return (
@@ -82,18 +95,16 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                     <Col lg={6} xs={12}>
                                         <Form.Group className="mb-4">
                                             <Form.Label htmlFor="usr">{t('Type')}</Form.Label>
-                                            <Form.Control type="text" className="form-control" id="type" name="type"
-                                                          placeholder={t('Type')}
-                                                          onBlur={validator.handleBlur}
-                                                          value={validator.values.type}
-                                                          onChange={validator.handleChange}
-                                                          isInvalid={!!(validator.touched.type && validator.errors && validator.errors.type)}/>
-
-                                            {validator.touched.type && validator.errors.type &&
-                                            <Form.Control.Feedback type="invalid">
-                                                {validator.errors.type}
-                                            </Form.Control.Feedback>
-                                            }
+                                            <CreatableSelect
+                                                id={"type"}
+                                                name={"type"}
+                                                placeholder={t('Type')}
+                                                isClearable
+                                                onChange={(value) => validator.setFieldValue('type', value)}
+                                                value={validator.values.type}
+                                                className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.type && "is-invalid")}
+                                                classNamePrefix="react-select"
+                                            />
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -104,34 +115,28 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                                 label={t('Tags')}
                                                 selectedTags={setTags}
                                             />
-                                            {validator.touched.tags && validator.errors.tags &&
-                                            <Form.Control.Feedback type="invalid">
-                                                {validator.errors.tags}
-                                            </Form.Control.Feedback>
-                                            }
                                         </Form.Group>
                                     </Col>
 
                                     <Col lg={6} xs={12}>
                                         <Form.Group className="mb-4">
                                             <Form.Label htmlFor="usr">{t('Series')}</Form.Label>
-                                            <Form.Control type="text" className="form-control" id="series" name="series"
-                                                          placeholder={t('Series')}
-                                                          onBlur={validator.handleBlur}
-                                                          value={validator.values.series}
-                                                          onChange={validator.handleChange}
-                                                          isInvalid={!!(validator.touched.series && validator.errors && validator.errors.series)}/>
-
-                                            {validator.touched.series && validator.errors.series &&
-                                            <Form.Control.Feedback type="invalid">
-                                                {validator.errors.series}
-                                            </Form.Control.Feedback>
-                                            }
+                                            <CreatableSelect
+                                                id={"series"}
+                                                name={"series"}
+                                                placeholder={t('Series')}
+                                                isClearable
+                                                onChange={(value) => validator.setFieldValue('series', value)}
+                                                value={validator.values.series}
+                                                className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.series && "is-invalid")}
+                                                classNamePrefix="react-select"
+                                            />
                                         </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col lg={12} md={12}>
+                                    <Form.Group className="mb-4">
                                         <h4 className="mt-0 mb-3">{t('Description')}</h4>
                                         <Form.Control
                                             as="textarea"
@@ -143,13 +148,17 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                             onChange={validator.handleChange}
                                             isInvalid={!!(validator.touched.description && validator.errors && validator.errors.description)}
                                         />
+                                    </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <h4 className="mt-0 mb-3">{t('Media Library')}</h4>
-                                    <MediaInput/>
+                                    <Col lg={12} md={12}>
+                                        <MediaInput label={t('Media Library')} onSetFiles={setFiles}/>
+                                    </Col>
                                 </Row>
-
+                                <Form.Group className="mb-0">
+                                    <Button variant="primary" type="submit">{t('Submit')}</Button>
+                                </Form.Group>
                             </Form>
                         </div>
                     </Card.Body>

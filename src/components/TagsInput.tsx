@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form } from "react-bootstrap";
 import { map } from "lodash";
+import Icon from "./Icon";
 
 interface TagsInputProps {
     label?: string;
@@ -39,11 +40,11 @@ const TagsInput = (props: TagsInputProps) => {
 
     return (
         <>
-            <Form.Label htmlFor="usr">{props.label}</Form.Label>
+            <Form.Label htmlFor="tags">{props.label}</Form.Label>
             <Form.Control
                 type="text"
                 className="form-control"
-                id="title"
+                id="tagsId"
                 name="tags"
                 value={value}
                 placeholder={props.placeholder}
@@ -57,7 +58,7 @@ const TagsInput = (props: TagsInputProps) => {
                         <span
                             className='tag-close-icon'
                             onClick={() => removeTags(index)}>
-                            x
+                            <Icon name="x" className='icon icon-xs' />
                         </span>
                     </li>
                 ))}

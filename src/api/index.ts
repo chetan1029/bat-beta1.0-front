@@ -152,6 +152,31 @@ function rejectInvite(inviteId: number) {
     return api.create(`${baseUrl}`, {});
 }
 
+
+/* components */
+const componentUrl = (companyId) => `/companies/${companyId}/products/`;
+
+function getComponents(companyId: number, params?: any) {
+    return api.get(componentUrl(companyId), params);
+}
+
+function createComponent(companyId: number, data: any) {
+    return api.create(componentUrl(companyId), data);
+}
+
+function editComponent(companyId: number, memberId: number | string, data: any) {
+    const baseUrl = `/companies/${companyId}/components/${memberId}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
+function deleteComponent(companyId: number, componentId: number | string) {
+    return api.create(`${componentUrl(companyId)}/${componentId}/archive/`, {});
+}
+
+function getComponent(companyId: number, componentId: number | string) {
+    return api.get(`${componentUrl(companyId)}/${componentId}/`);
+}
+
 export {
     getRoles,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -159,5 +184,6 @@ export {
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
-    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
+    getComponents, createComponent, editComponent, deleteComponent, getComponent
 }

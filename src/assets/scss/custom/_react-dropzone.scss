@@ -3,13 +3,43 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 10em;
-        background-color: $gray-300;
-        border: dotted 2px $gray-600;
+        min-height: 8em;
+        background-color: rgba($gray-100, 1);
+        border: 1px dashed rgba($primary, 0.3);
+        border-radius: 0.7em;
+        cursor: pointer;
+        margin: 1em;
+        min-width: 8em;
+        flex-grow: 1;
+
+        &:focus {
+            border: 1px dashed rgba($primary, 0.3);
+            outline: none;
+        }
+
+        .link {
+            border-bottom: 1px solid $black;
+        }
     }
 
-    .image {
-        height: 5em;
-        width: 5em;
+    .files {
+        input[type="checkbox"] {
+            display: block;
+            position: absolute;
+            top: 1.2em;
+            left: 3em;
+        }
+
+        label img {
+            height: 8em;
+            width: 8em;
+            border: 1px solid rgba($primary, 0.3);
+            border-radius: 0.7em;
+            margin: 1em;
+        }
+
+        :checked + label img {
+            border-color: $black;
+        }
     }
 }
