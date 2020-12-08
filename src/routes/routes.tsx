@@ -39,6 +39,7 @@ const authProtectedRoutes = [
   
   { path: "/profile/general", component: Profile, layoutProps: { 'mainSidebar': true } },
   { path: "/profile/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile", component: Profile, layoutProps: { 'mainSidebar': true } },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 
