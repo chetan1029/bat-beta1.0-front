@@ -17,13 +17,21 @@ export const getVendors = (companyId: string | number, filters?: any) => ({
     payload: { companyId, filters }
 });
 
+export const getVendor = (companyId: string | number, vendorId: number | string) => ({
+    type: VendorsTypes.GET_VENDOR,
+    payload: { companyId, vendorId }
+});
 
-export const addVendor = (companyId: string | number, categoryId: number | string, data: any) => ({
+export const addVendor = (companyId: string | number, data: any) => ({
     type: VendorsTypes.ADD_VENDOR,
-    payload: { companyId, categoryId, data }
+    payload: { companyId, data }
 });
 
-export const editVendor = (companyId: string | number, categoryId: number | string, data: any) => ({
+export const editVendor = (companyId: string | number, vendorId: number | string, data: any) => ({
     type: VendorsTypes.EDIT_VENDOR,
-    payload: { companyId, categoryId, data }
+    payload: { companyId, vendorId, data }
 });
+
+export const resetVendors = () => ({
+    type: VendorsTypes.RESET
+})

@@ -1,28 +1,27 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Form, Media } from "react-bootstrap";
+import { Row, Col, Card, Media } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import classNames from "classnames";
+
 
 //components
 import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
-import ConfirmMessage from "../../components/ConfirmMessage";
 
 //actions
-import { getVendors } from "../../redux/actions";
+import { getVendors, resetVendors } from "../../redux/actions";
 import DisplayDate from "../../components/DisplayDate";
 
 
-const EmptyState = ({ showActive }) => {
+const EmptyState = () => {
     const { t } = useTranslation();
     return (
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    {showActive ? <h5 className="font-weight-normal my-0">{t('There are no active vendors')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no vendors')}</h5>}
+                    <h5 className="font-weight-normal my-0">{t('There are no vendors')}</h5>
                 </div>
             </Card.Body>
         </Card>
@@ -38,13 +37,14 @@ interface VendorItemProp {
 
 const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
 
-    const [selectedVendorForDelete, setselectedVendorForDelete] = useState<any>(null);
+    // const dispatch = useDispatch();
 
-    const onDelete = () => {
-        setselectedVendorForDelete(vendor);
-    }
+    // const [selectedVendorForDelete, setselectedVendorForDelete] = useState<any>(null);
+
+    // const onDelete = () => {
+    //     setselectedVendorForDelete(vendor);
+    // }
 
     const rawAddress = () => {
         return { __html: vendor['address'] };
@@ -73,18 +73,18 @@ const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
                                 <Col>
                                     <span className="text-muted">{t('Created')}: </span> {vendor['create_date'] ? <DisplayDate dateStr={vendor['create_date']} /> : null}
                                 </Col>
-                                <Col className="text-right">
+                                {/* <Col className="text-right">
                                     <Link to="#" onClick={onDelete}><Icon name="archive" className="ml-2 svg-outline-danger" /></Link>
-                                </Col>
+                                </Col> */}
                             </Row>
                         </div>
                     </Card.Body>
                 </Card>
             </Col>
         </Row>
-        {selectedVendorForDelete ? <ConfirmMessage message={`Are you sure you want to archive ${vendor['name']}?`} onConfirm={() => {
+        {/* {selectedVendorForDelete ? <ConfirmMessage message={`Are you sure you want to archive ${vendor['name']}?`} onConfirm={() => {
 
-        }} onClose={() => setselectedVendorForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Archive')}></ConfirmMessage> : null}
+        }} onClose={() => setselectedVendorForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Archive')}></ConfirmMessage> : null} */}
     </>
     )
 }
@@ -97,10 +97,11 @@ const Vendors = (props: VendorsProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, isVendorsFetched, vendors } = useSelector((state: any) => ({
+    const { loading, isVendorsFetched, vendors, isVendorAdded } = useSelector((state: any) => ({
         loading: state.Company.Vendors.loading,
         isVendorsFetched: state.Company.Vendors.isVendorsFetched,
-        vendors: state.Company.Vendors.vendors
+        vendors: state.Company.Vendors.vendors,
+        isVendorAdded: state.Company.Vendors.isVendorAdded
     }));
 
     const companyId = props.match.params.companyId;
@@ -115,21 +116,29 @@ const Vendors = (props: VendorsProps) => {
     }, [dispatch, companyId, categoryId, defaultParams]);
 
 
-    const [showActive, setshowActive] = useState(false);
+    // const [showActive, setshowActive] = useState(false);
 
-    const onChangeShowActive = (checked: boolean) => {
-        setshowActive(checked);
+    // const onChangeShowActive = (checked: boolean) => {
+    //     setshowActive(checked);
 
-        if (checked) {
-            let filters = {
-                ...defaultParams,
-                is_active: true
-            }
-            dispatch(getVendors(companyId, filters));
-        } else {
-            dispatch(getVendors(companyId, defaultParams));
+    //     if (checked) {
+    //         let filters = {
+    //             ...defaultParams,
+    //             is_active: true
+    //         }
+    //         dispatch(getVendors(companyId, filters));
+    //     } else {
+    //         dispatch(getVendors(companyId, defaultParams));
+    //     }
+    // }
+
+    useEffect(() => {
+        if (isVendorAdded) {
+            setTimeout(() => {
+                dispatch(resetVendors());
+            }, 3000);
         }
-    }
+    }, [isVendorAdded, dispatch]);
 
     return (
         <>
@@ -138,7 +147,7 @@ const Vendors = (props: VendorsProps) => {
                     <Col>
                         <div className="d-flex align-items-center">
                             <h1 className="m-0">{t('Vendors')}</h1>
-                            <div className="d-flex align-items-center pl-3">
+                            {/* <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">
                                     {t('Show active vendors')}
                                 </span>
@@ -149,7 +158,7 @@ const Vendors = (props: VendorsProps) => {
                                     checked={showActive}
                                     onChange={(e: any) => onChangeShowActive(e.target.checked)}
                                 />
-                            </div>
+                            </div> */}
                         </div>
                     </Col>
                     <Col className="text-right">
@@ -171,7 +180,7 @@ const Vendors = (props: VendorsProps) => {
                                                     <VendorItem vendor={vendor}
                                                         categoryId={categoryId}
                                                         key={key} companyId={companyId} />
-                                                ) : <EmptyState showActive={showActive} />
+                                                ) : <EmptyState />
                                         }
                                     </> : null}
                                 </Col>
@@ -193,10 +202,8 @@ const Vendors = (props: VendorsProps) => {
                                 </Col>
                             </Row>
                         </div>
-                        {/* 
-                            {isMemberCreated ? <MessageAlert message={t('A new member is invited')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-                            {isMemberDeleted ? <MessageAlert message={t('The member is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null} */}
+                        {isVendorAdded ? <MessageAlert message={t('A new vendor is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
                     </div>}
 
                 </Card.Body>

@@ -17,6 +17,13 @@ const Vendors = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case VendorsTypes.GET_VENDOR: {
+                    return {
+                        ...state,
+                        vendor: action.payload.data,
+                        loading: false,
+                    }
+                }
                 case VendorsTypes.ADD_VENDOR: {
                     return {
                         ...state,
@@ -40,21 +47,31 @@ const Vendors = (state = INIT_STATE, action: any) => {
                 case VendorsTypes.GET_VENDORS: {
                     return {
                         ...state,
+                        loading: false,
                         error: action.payload.error,
                         isVendorsFetched: false
+                    }
+                }
+                case VendorsTypes.GET_VENDOR: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
                     }
                 }
                 case VendorsTypes.ADD_VENDOR: {
                     return {
                         ...state,
-                        error: action.payload.error,
+                        loading: false,
+                        createVendorError: action.payload.error,
                         isVendorAdded: false
                     }
                 }
                 case VendorsTypes.EDIT_VENDOR: {
                     return {
                         ...state,
-                        error: action.payload.error,
+                        loading: false,
+                        editVendorError: action.payload.error,
                         isVendorEdited: false
                     }
                 }
@@ -65,6 +82,9 @@ const Vendors = (state = INIT_STATE, action: any) => {
         case VendorsTypes.GET_VENDORS:
             return { ...state, isVendorsFetched: false, loading: true };
 
+        case VendorsTypes.GET_VENDOR:
+            return { ...state, loading: true };
+
         case VendorsTypes.ADD_VENDOR:
         case VendorsTypes.EDIT_VENDOR:
             return { ...state, isVendorAdded: false, isVendorEdited: false, loading: true };
@@ -74,7 +94,9 @@ const Vendors = (state = INIT_STATE, action: any) => {
                 ...state,
                 isVendorsFetched: false,
                 isVendorAdded: false,
-                isVendorEdited: false
+                isVendorEdited: false,
+                createVendorError: null,
+                editVendorError: null
             }
         }
         default: return { ...state };

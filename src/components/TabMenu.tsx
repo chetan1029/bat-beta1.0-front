@@ -7,7 +7,8 @@ interface TabMenuProp {
     defaultSelectedItem?: string,
     items: Array<{
         label: string,
-        name: string
+        name: string,
+        to?: any
     }>
 }
 
