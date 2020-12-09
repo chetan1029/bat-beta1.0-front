@@ -22,19 +22,19 @@ export const createComponent = (companyId: string | number, data: any) => ({
     payload: { companyId, data }
 });
 
-export const editComponent = (companyId: string | number, memberId: number | string, data: any) => ({
+export const editComponent = (companyId: string | number, componentId: number | string, data: any) => ({
     type: ComponentsTypes.EDIT_COMPONENT,
-    payload: { companyId, memberId, data }
+    payload: { companyId, componentId, data }
 });
 
-export const deleteComponent = (companyId: string | number, memberId: number | string) => ({
+export const deleteComponent = (companyId: string | number, componentId: number | string) => ({
     type: ComponentsTypes.DELETE_COMPONENT,
-    payload: { companyId, memberId }
+    payload: { companyId, componentId }
 });
 
-export const getComponentDetails = (companyId: string | number, memberId: number | string) => ({
+export const getComponentDetails = (companyId: string | number, componentId: number | string) => ({
     type: ComponentsTypes.GET_COMPONENT,
-    payload: { companyId, memberId }
+    payload: { companyId, componentId }
 });
 
 export const resetComponents = () => ({

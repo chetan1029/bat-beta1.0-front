@@ -164,7 +164,6 @@ const MediaInput = (props: MediaInputProps) => {
             <div className={"react-dropzone row"}>
                 {map(files, (file: any, index: number) => (
                     <div className={"files"} key={index}>
-                        {console.log("======file",file)}
                         <Form.Check
                             type='checkbox'
                             id={`${file.name}${index}`}
@@ -176,6 +175,7 @@ const MediaInput = (props: MediaInputProps) => {
                 ))}
                 <div className="dropzone" {...getRootProps()}>
                     <input {...getInputProps()} />
+                    <Icon name={"upload"}/>
                     <p>Drag files here or <span className={"link"}>click to browse</span></p>
                 </div>
             </div>

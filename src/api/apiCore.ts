@@ -106,7 +106,7 @@ class APICore {
                 'content-type': 'multipart/form-data'
             }
         }
-        return axios.put(url, formData, config);
+        return axios.post(url, formData, config);
     }
 
     /**

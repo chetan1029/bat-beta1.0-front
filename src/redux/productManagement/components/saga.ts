@@ -1,7 +1,7 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
 import {
-    getComponents, getComponent, createComponent, deleteComponent, editComponent
+    getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages
 } from "../../../api";
 
 import { componentsApiResponseSuccess, componentsApiResponseError } from "./actions";
@@ -40,6 +40,9 @@ function* getComponentById({ payload: { companyId, componentId } }: any) {
 function* createNewComponent({ payload: { companyId, data } }: any) {
     try {
         const response = yield call(createComponent, companyId, data);
+        if (response.data && response.data.id) {
+            yield call(uploadComponentImages, companyId, response.data.id, data.images);
+        }
         yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT, response.data));
     } catch (error) {
         yield put(componentsApiResponseError(ComponentsTypes.CREATE_COMPONENT, error));
