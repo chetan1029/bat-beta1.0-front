@@ -82,6 +82,38 @@ function restorePaymentTerm(companyId: number, paymentTermId: number, params?: a
     return api.create(`${baseUrl}`, params);
 }
 
+/*
+Bank
+*/
+function getBank(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createBank(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
 
 /* members */
 function getMembers(companyId: number, params?: any) {
@@ -142,5 +174,6 @@ export {
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
+    getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite
 }

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from "../../components/Icon";
 import PaymentTerms from "./PaymentTerms";
 import Members from "./Members/";
+import Bank from "./Bank";
 
 interface DefaultViewProps {
     items: any;
@@ -83,7 +84,7 @@ const Index = ({ match }: IndexProps) => {
         { title: "Members", key: "members", icon: "members", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Payment Terms", key: "payment_terms", icon: "wallet", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Membership Plan", key: "membership_plan", icon: "document", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Banks", key: "banks", icon: "bank", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Banks", key: "bank", icon: "bank", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Location", key: "location", icon: "location", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Packing Box", key: "packing_box", icon: "packing", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Hs Code", key: "hs_code", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
@@ -98,6 +99,8 @@ const Index = ({ match }: IndexProps) => {
                         return <PaymentTerms />;
                     case "members":
                         return <Members />;
+                    case "bank":
+                        return <Bank />;
 
                     default:
                         return <DefaultView items={items} companyId={companyId} />;
