@@ -6,8 +6,20 @@ import classNames from 'classnames';
 
 import Icon from "./Icon";
 
-const getFriendlyName = (value: string) => {
-    return value.split('_').join(' ');
+const getFriendlyName = (value: any) => {
+    return (value || "").split('_').join(' ');
+}
+
+const getErrorMessage = (value: any) => {
+    if (typeof value === 'object') {
+        let error = "";
+        for (const k of Object.keys(value)) {
+            error += getFriendlyName(k) + ": " + getErrorMessage(value[k]) + " ";
+        }
+        return error;
+    } else {
+        return value.split('_').join(' ');
+    }
 }
 
 interface MessageAlertProps {
@@ -46,9 +58,9 @@ const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, i
                                     {typeof message === 'object' ? <>
                                         <ul className="mb-0">
                                             {Object.entries(message).map(([key, value]) => {
-                                                return <li key={key} className="text-dark font-weight-semibold"><span className="capitalize">{getFriendlyName(key)}</span>: {value}</li>
+                                                return <li key={key} className="text-dark font-weight-semibold"><span className="capitalize">{getFriendlyName(key)}</span>: {getErrorMessage(value)}</li>
                                             })}</ul>
-                                    </>: <p className="mb-0 text-dark font-weight-semibold">{message}</p>}
+                                    </> : <p className="mb-0 text-dark font-weight-semibold">{message}</p>}
                                 </Col>
                                 {undo ? <Col xs={12} lg={2} className="d-flex align-items-center">
                                     <Button variant="outline-primary" onClick={onUndo}>{t('Undo')}</Button>

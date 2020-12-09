@@ -25,6 +25,14 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case CommonTypes.GET_CATEGORIES: {
+                    return {
+                        ...state,
+                        categories: action.payload.data,
+                        isCategoriesFetched: true,
+                        loading: false
+                    }
+                }
 
                 default:
                     return { ...state }
@@ -48,6 +56,14 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case CommonTypes.GET_CATEGORIES: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isCategoriesFetched: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -56,6 +72,8 @@ const Common = (state = INIT_STATE, action: any) => {
             return { ...state, isCompaniesFetched: false, loading: true };
         case CommonTypes.CREATE_COMPANY:
             return { ...state, loading: true };
+        case CommonTypes.GET_CATEGORIES:
+            return { ...state, isCategoriesFetched: false, loading: true };
 
         default: return { ...state };
     }

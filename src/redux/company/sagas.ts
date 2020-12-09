@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 import paymentTerms from "./paymentTerms/saga";
 import commonSaga from "./common/saga";
 import membersSaga from "./members/saga";
+import vendorsSaga from "./vendors/saga";
 import bank from "./bank/saga";
 
 export default function* companySaga() {
@@ -9,6 +10,7 @@ export default function* companySaga() {
         paymentTerms(),
         commonSaga(),
         membersSaga(),
+        vendorsSaga(),
         bank(),
     ]);
 }

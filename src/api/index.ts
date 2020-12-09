@@ -36,6 +36,22 @@ function forgotPasswordConfirm(params: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+
+function updateProfile(username: string, data: any) {
+    const baseUrl = `/user/${username}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
+function updateProfilePicture(username: string, data: any) {
+    const baseUrl = `/user/${username}/`;
+    return api.updateWithFile(`${baseUrl}`, data);
+}
+
+function changePassword(params: any) {
+    const baseUrl = "/password/change/";
+    return api.create(`${baseUrl}`, params);
+}
+
 /*
 companies
 */
@@ -47,6 +63,11 @@ function getCompaniesList(params?: any) {
 function createCompany(params: any) {
     const baseUrl = "/companies/";
     return api.create(`${baseUrl}`, params);
+}
+
+function getCompanyCategories(companyId: string | number, params?: any) {
+    const baseUrl = `/companies/${companyId}/categories`;
+    return api.get(`${baseUrl}`, params);
 }
 
 /*
@@ -168,12 +189,37 @@ function rejectInvite(inviteId: number) {
     return api.create(`${baseUrl}`, {});
 }
 
+
+/* vendors */
+function getVendors(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/vendors/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getVendor(companyId: number, vendorId: number,) {
+    const baseUrl = `/companies/${companyId}/vendors/${vendorId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function createVendor(companyId: number, data: any) {
+    const baseUrl = `/companies/${companyId}/vendors/`;
+    return api.create(`${baseUrl}`, data);
+}
+
+function updateVendor(companyId: number, vendorId: number, data: any) {
+    const baseUrl = `/companies/${companyId}/vendors/${vendorId}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
+
 export {
-    getRoles,
-    login, logout, signup, forgotPassword, forgotPasswordConfirm,
+    getRoles, getCompanyCategories,
+    login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
+    updateProfile, updateProfilePicture,
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
+    getVendors, getVendor, createVendor, updateVendor
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
-    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite
 }

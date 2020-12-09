@@ -211,16 +211,19 @@ header {
     cursor: pointer;
 
     &_img {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        position: relative;
-        overflow: hidden;
+        // width: 28px;
+        // height: 28px;
+        // border-radius: 50%;
+        // position: relative;
+        // overflow: hidden;
 
         img {
-            width: 100%;
-            object-fit: cover;
-            object-position: center center;
+            // width: 100%;
+            // object-fit: cover;
+            // object-position: center center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
         }
     }
     >img {

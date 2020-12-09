@@ -4,9 +4,13 @@ import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
 
-import { COUNTRIES } from "../constants";
 
-interface CountriesDropdownProps {
+const LANGS: any = {
+    "en": "English",
+    "sv": "Swedish"
+}
+
+interface LanguageDropdownProps {
     placeholder?: string,
     name: string,
     value: any,
@@ -14,15 +18,15 @@ interface CountriesDropdownProps {
     className: any
 }
 
-const CountriesDropdown = ({ placeholder, name, value, onChange, className }: CountriesDropdownProps) => {
+const LanguageDropdown = ({ placeholder, name, value, onChange, className }: LanguageDropdownProps) => {
 
     const { t } = useTranslation();
 
 
-    let countryOpts: Array<any> = [];
-    for (const c in COUNTRIES) {
-        countryOpts.push({
-            label: t(COUNTRIES[c]),
+    let langOpts: Array<any> = [];
+    for (const c in LANGS) {
+        langOpts.push({
+            label: t(LANGS[c]),
             value: c
         });
     }
@@ -30,7 +34,7 @@ const CountriesDropdown = ({ placeholder, name, value, onChange, className }: Co
     return <>
         <Select
             placeholder={placeholder}
-            options={countryOpts}
+            options={langOpts}
             value={value}
             onChange={onChange}
             className={classNames("react-select", "react-select-regular", className)}
@@ -39,4 +43,4 @@ const CountriesDropdown = ({ placeholder, name, value, onChange, className }: Co
     </>
 }
 
-export default CountriesDropdown;
+export { LANGS, LanguageDropdown };
