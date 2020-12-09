@@ -5,6 +5,8 @@ import Icon from "./Icon";
 
 interface TagsInputProps {
     label?: string;
+    name: string;
+    id: string;
     placeholder?: string;
     tags?: [string];
     selectedTags?: (tags: any) => void;
@@ -44,10 +46,11 @@ const TagsInput = (props: TagsInputProps) => {
             <Form.Control
                 type="text"
                 className="form-control"
-                id="tagsId"
-                name="tags"
+                id={props.id}
+                name={props.name}
                 value={value}
                 placeholder={props.placeholder}
+                autoComplete="off"
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
             />

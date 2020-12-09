@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CreatableSelect from 'react-select/creatable';
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
-import { Link, withRouter, Redirect } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import Icon from "../../../components/Icon";
 import TagsInput from "../../../components/TagsInput";
@@ -11,11 +11,12 @@ import MediaInput from "../../../components/MediaInput";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames";
-import { map } from "lodash";
+import { map, uniqBy } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
 import { createComponent, getComponents, resetComponents } from "../../../redux/actions"
 import MessageAlert from "../../../components/MessageAlert";
+import VariationDetails from "../../../components/VariationDetails";
 
 interface AddEditComponentProps {
     match: any;
@@ -31,16 +32,27 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     useEffect(() => {
         dispatch(getComponents(companyId));
         dispatch(resetComponents());
-    }, [dispatch]);
+    }, [dispatch, companyId]);
 
-    const { components, isComponentCreated, createComponentError } = useSelector(({ ProductManagement: { Components } }: any) => ({
+    const {
+        components,
+        isComponentCreated,
+        createComponentError
+    } = useSelector(({ ProductManagement: { Components } }: any) => ({
         components: Components.components,
         isComponentCreated: Components.isComponentCreated,
         createComponentError: Components.createComponentError,
     }));
 
-    const defaultTypes = map(components.results, (component: any) => ({label: component.type, value: component.type}))
-    const defaultSeries = map(components.results, (component: any) => ({label: component.series, value: component.series}))
+    const defaultTypes = uniqBy(map(components.results, (component: any) => ({
+        label: component.type,
+        value: component.type
+    })), "value");
+
+    const defaultSeries = uniqBy(map(components.results, (component: any) => ({
+        label: component.series,
+        value: component.series
+    })), "value");
 
     const validator = useFormik({
         enableReinitialize: true,
@@ -57,10 +69,10 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             const data = {
                 ...values,
                 images: files,
-                ...{ 
-                    is_component: true, 
-                    tags: tags.toString(), 
-                    type: values.type['value'], 
+                ...{
+                    is_component: true,
+                    tags: tags.toString(),
+                    type: values.type['value'],
                     series: values.series['value'],
                     products: [
                         {
@@ -96,17 +108,18 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                     ]
                 }
             }
-            dispatch(createComponent(companyId, data))
+            dispatch(createComponent(companyId, data));
         },
     });
 
     const onHandleSubmit = (event: any) => {
-       validator.handleSubmit(event);
+        validator.handleSubmit(event);
     }
 
     return (
         <>
-            {isComponentCreated ? <Redirect to={`/product-management/components/${companyId}`} /> : null}
+            {isComponentCreated ? <Redirect to={`/product-management/components/${companyId}`}/> : null}
+
             <div className="py-4 px-3">
                 <Row>
                     <Col>
@@ -132,6 +145,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                             <Form.Label htmlFor="usr">{t('Title')}</Form.Label>
                                             <Form.Control type="text" className="form-control" id="title" name="title"
                                                           placeholder={t('Title')}
+                                                          autoComplete="off"
                                                           onBlur={validator.handleBlur}
                                                           value={validator.values.title}
                                                           onChange={validator.handleChange}
@@ -167,6 +181,9 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                         <Form.Group className="mb-4">
                                             <TagsInput
                                                 label={t('Tags')}
+                                                placeholder={t('Tags')}
+                                                id="tagsId"
+                                                name="tags"
                                                 selectedTags={setTags}
                                             />
                                         </Form.Group>
@@ -191,19 +208,19 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                 </Row>
                                 <Row>
                                     <Col lg={12} md={12}>
-                                    <Form.Group className="mb-4">
-                                        <h4 className="mt-0 mb-3">{t('Description')}</h4>
-                                        <Form.Control
-                                            as="textarea"
-                                            id="description"
-                                            name="description"
-                                            rows={5}
-                                            onBlur={validator.handleBlur}
-                                            value={validator.values.description}
-                                            onChange={validator.handleChange}
-                                            isInvalid={!!(validator.touched.description && validator.errors && validator.errors.description)}
-                                        />
-                                    </Form.Group>
+                                        <Form.Group className="mb-4">
+                                            <h4 className="mt-0 mb-3">{t('Description')}</h4>
+                                            <Form.Control
+                                                as="textarea"
+                                                id="description"
+                                                name="description"
+                                                rows={5}
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.description}
+                                                onChange={validator.handleChange}
+                                                isInvalid={!!(validator.touched.description && validator.errors && validator.errors.description)}
+                                            />
+                                        </Form.Group>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -211,8 +228,15 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                         <MediaInput label={t('Media Library')} onSetFiles={setFiles}/>
                                     </Col>
                                 </Row>
-                                <Form.Group className="mb-0">
-                                    <Button variant="primary" type="button" onClick={onHandleSubmit}>{t('Submit')}</Button>
+                                <Row>
+                                    <Col lg={12} md={12}>
+                                        <VariationDetails label={t('Variation Details')}/>
+                                    </Col>
+                                </Row>
+                                <Form.Group className="mt-2 mb-0">
+                                    <Button variant="primary" type="button" onClick={onHandleSubmit}>
+                                        {t('Submit')}
+                                    </Button>
                                 </Form.Group>
                             </Form>
                         </div>
@@ -220,7 +244,8 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                 </Card>
             </div>
             {createComponentError &&
-                <MessageAlert message={createComponentError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-md" />
+            <MessageAlert message={createComponentError} icon={"x"}
+                          iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-md"/>
             }
         </>
     );
