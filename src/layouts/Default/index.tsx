@@ -10,6 +10,7 @@ import { getCompanies } from "../../redux/actions";
 
 interface Props {
   children: any;
+  mainSidebar?: boolean
 }
 
 const Index = (props: Props) => {
@@ -37,7 +38,7 @@ const Index = (props: Props) => {
 
     <React.Fragment>
       {/* sidebar component */}
-      <Sidebar toggleSidebar={toggleSidebar} showSidebar={showSidebar} companies={companies.results} />
+      <Sidebar toggleSidebar={toggleSidebar} showSidebar={showSidebar} companies={companies.results} mainSidebar={props.mainSidebar} />
 
       {/* page wrapper start */}
       <main>

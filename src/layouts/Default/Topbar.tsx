@@ -4,6 +4,7 @@ import { Button, Dropdown } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { isMobile } from "react-device-detect";
 import classNames from "classnames";
+import { useSelector } from 'react-redux';
 
 //components
 import Icon from "../../components/Icon";
@@ -21,6 +22,10 @@ const Topbar = (props: TopbarProps) => {
   const { t } = useTranslation();
 
   const { toggleSidebar } = props;
+
+  const { user } = useSelector((state: any) => ({
+    user: state.Auth.user,
+  }));
 
 
   return (
@@ -80,17 +85,17 @@ const Topbar = (props: TopbarProps) => {
               <Dropdown className="header_ropdown">
                 <Dropdown.Toggle id="dropdown-profile" className="p-0" variant="none">
                   <div className="header_dropdown_trigger_img">
-                    <img src={personImg} alt="" />
+                    <img src={user ? user.profile_picture : personImg} alt="" />
                   </div>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="">
-                  <Dropdown.Item>
+                  <Dropdown.Item to='/companies' as={Link}>
                     <Icon name="bag" className='icon icon-xs' />
                     <span>{t('Companies')}</span>
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
+                  <Dropdown.Item to='/profile/general' as={Link}>
                     <Icon name="user" className='icon icon-xs' />
                     <span>{t('Profile')}</span>
                   </Dropdown.Item>

@@ -7,6 +7,18 @@ import Settings from "../pages/Settings/index";
 import AddEditMember from "../pages/Settings/Members/AddEditMember";
 import MemberDetails from "../pages/Settings/Members/MemberDetails";
 import Invitations from "../pages/Invitations/";
+import Profile from "../pages/Profile/";
+import ChangePassword from "../pages/account/ChangePassword";
+import Companies from "../pages/Companies/";
+import AddNewCompany from "../pages/Companies/AddNew";
+import AddEditComponent from "../pages/ProductManagement/Components/AddEditComponent";
+import Components from "../pages/ProductManagement/Components";
+
+import AddVendor from "../pages/Vendors/AddVendor";
+import VendorDetails from "../pages/Vendors/Details";
+import EditVendor from "../pages/Vendors/EditVendor";
+import Vendors from "../pages/Vendors/";
+
 
 // account
 import Login from "../pages/account/Login";
@@ -18,11 +30,26 @@ import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 import Root from "../pages/Root";
 
 const authProtectedRoutes = [
+  { path: "/product-management/components/:companyId", component: Components },
+  { path: "/product-management/:companyId/components/add", component: AddEditComponent },
+
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
+
+  { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: AddVendor },
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId", component: VendorDetails },
+  { path: "/supply-chain/:companyId/vendors/:categoryId", component: Vendors },
+
+  { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
+  { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
+
+  { path: "/profile/general", component: Profile, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile", component: Profile, layoutProps: { 'mainSidebar': true } },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 

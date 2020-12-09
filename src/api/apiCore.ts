@@ -106,7 +106,25 @@ class APICore {
                 'content-type': 'multipart/form-data'
             }
         }
-        return axios.put(url, formData, config);
+        return axios.post(url, formData, config);
+    }
+
+    /**
+     * post given data to url with file
+     */
+    updateWithFile = (url: string, data: any) => {
+        const formData = new FormData();
+        for (const k in data) {
+            formData.append(k, data[k]);
+        }
+
+        const config = {
+            headers: {
+                ...axios.defaults.headers,
+                'content-type': 'multipart/form-data'
+            }
+        }
+        return axios.patch(url, formData, config);
     }
 
 
@@ -138,6 +156,14 @@ class APICore {
     getLoggedInUser = () => {
         const user = sessionStorage.getItem("_bat_session_");
         return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null;
+    }
+
+    setUserInSession = (modifiedUser: any) => {
+        let userInfo = sessionStorage.getItem("_bat_session_");
+        if (userInfo) {
+            const { token, user } = JSON.parse(userInfo);
+            this.setLoggedInUser({ token, ...user, ...modifiedUser });
+        }
     }
 }
 
