@@ -6,7 +6,6 @@ export interface MenuItemProp {
     icon?: string,
     label: string,
     active?: boolean,
-    companyId?: boolean,
     children?: Array<MenuItemProp>
 }
 
@@ -19,7 +18,7 @@ const getMenuItems = (companyId: string, vendorCategories: any) => {
             name: 'ProductManagement', url: `/product-management/${companyId}`, icon: 'box', label: 'Product Management', id: 'prodManagement',
             children: [
                 { name: 'Dashboard', url: `/product-management/${companyId}/dashboard`, icon: 'apps', label: 'Dashboard', id: 'prodDs', parentId: 'prodManagement' },
-                { name: 'Components', url: `/product-management/${companyId}/components`, icon: 'components', label: 'Components', id: 'prodComps', parentId: 'prodManagement', companyId: true,},
+                { name: 'Components', url: `/product-management/${companyId}/components`, icon: 'components', label: 'Components', id: 'prodComps', parentId: 'prodManagement' },
                 { name: 'Products', url: `/product-management/${companyId}/products`, icon: 'products', label: 'Products', id: 'prodProds', parentId: 'prodManagement' }
             ]
         }];

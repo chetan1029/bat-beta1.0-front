@@ -17,7 +17,7 @@ import { Collapse } from "react-bootstrap";
 /**
  * Menu Item
  */
-const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds, companyId }) => {
+const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
   const Tag: any = tag || 'li';
 
   const { id, url, icon, label, children } = menuItem;
@@ -63,7 +63,7 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds, companyId }) => 
 
     {hasChildren ? <>
       <Collapse in={show}>
-        <Menu menuItems={children} uId={id} className="" onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} companyId={companyId} />
+        <Menu menuItems={children} uId={id} className="" onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
       </Collapse>
     </> : null}
   </Tag>
@@ -73,12 +73,12 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds, companyId }) => 
  * Menu component
  * @param 
  */
-const Menu = ({ menuItems, className, uId, onToggle, activeMenuItemIds, companyId }) => {
+const Menu = ({ menuItems, className, uId, onToggle, activeMenuItemIds }) => {
 
   return <>
     <ul className={classNames(className)} id={uId}>
       {(menuItems || []).map((item: any, index: number) => {
-        return <MenuItem menuItem={item} tag='li' key={`menu-${uId}-${index}`} onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} companyId={companyId} />
+        return <MenuItem menuItem={item} tag='li' key={`menu-${uId}-${index}`} onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
       })}
     </ul>
   </>;
@@ -194,7 +194,7 @@ const Sidebar = (props: SideProps) => {
 
             {/* <SimpleBar> */}
             <Menu menuItems={[...(menus || [])]} className='side_bar_menu' uId='main-side-menu'
-              onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} companyId={companyId}/>
+              onToggle={onMenuToggle} activeMenuItemIds={activeMenuItemIds} />
 
           </div>
 
