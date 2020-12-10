@@ -4,6 +4,7 @@ import Common from "./common/reducers";
 import Members from "./members/reducers";
 import Vendors from "./vendors/reducers";
 import Bank from "./bank/reducers";
+import Location from "./location/reducers";
 
 export default combineReducers({
     PaymentTerms,
@@ -11,4 +12,5 @@ export default combineReducers({
     Vendors,
     Common,
     Bank,
+    Location,
 });

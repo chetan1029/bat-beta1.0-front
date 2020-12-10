@@ -4,6 +4,7 @@ import commonSaga from "./common/saga";
 import membersSaga from "./members/saga";
 import vendorsSaga from "./vendors/saga";
 import bank from "./bank/saga";
+import location from "./location/saga";
 
 export default function* companySaga() {
     yield all([
@@ -12,5 +13,6 @@ export default function* companySaga() {
         membersSaga(),
         vendorsSaga(),
         bank(),
+        location(),
     ]);
 }

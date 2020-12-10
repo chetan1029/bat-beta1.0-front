@@ -62,6 +62,22 @@
     }
 }
 
+.svg-outline-white {
+    svg {
+        path {
+            stroke: $white !important;
+        }
+
+        ellipse {
+            stroke: $white !important;
+        }
+
+        rect {
+            stroke: $white !important;
+        }
+    }
+}
+
 .settings-cards {
     min-height: 120px;
 }

@@ -136,6 +136,39 @@ function restoreBank(companyId: number, bankId: number, params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+/*
+Bank
+*/
+function getLocation(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createLocation(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
 /* members */
 function getMembers(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/members/`;
@@ -220,6 +253,7 @@ export {
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
-    getVendors, getVendor, createVendor, updateVendor
+    getVendors, getVendor, createVendor, updateVendor,
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
+    getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
 }

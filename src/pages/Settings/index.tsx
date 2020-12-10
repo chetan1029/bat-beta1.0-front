@@ -8,6 +8,7 @@ import Icon from "../../components/Icon";
 import PaymentTerms from "./PaymentTerms";
 import Members from "./Members/";
 import Bank from "./Bank";
+import Location from "./Location";
 
 interface DefaultViewProps {
     items: any;
@@ -101,6 +102,8 @@ const Index = ({ match }: IndexProps) => {
                         return <Members />;
                     case "bank":
                         return <Bank />;
+                    case "location":
+                        return <Location />;
 
                     default:
                         return <DefaultView items={items} companyId={companyId} />;

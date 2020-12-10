@@ -6,19 +6,19 @@ import { useTranslation } from 'react-i18next';
 
 //components
 import Icon from "../../components/Icon";
-import AddEditBank from "./AddEditBank";
+import AddEditLocation from "./AddEditLocation";
 
 //actions
-import { getBank, deleteBank, archiveBank, restoreBank, reset } from "../../redux/actions";
+import { getLocation, deleteLocation, archiveLocation, restoreLocation, reset } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
 
-interface BankCardItemProps {
-    bank: any;
+interface LocationCardItemProps {
+    location: any;
     onArchiveDeleteAction: any;
-    onEditBank: any;
+    onEditLocation: any;
     companyId: any;
 }
 
@@ -28,45 +28,45 @@ const EmptyState = ({ showArchived }) => {
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived bank available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no bank available')}</h5>}
+                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived location available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no location available')}</h5>}
                 </div>
             </Card.Body>
         </Card>
     )
 }
 
-const BankCardItem = ({ bank, onArchiveDeleteAction, onEditBank, companyId }: BankCardItemProps) => {
+const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, companyId }: LocationCardItemProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const [selectedTermForDelete, setselectedTermForDelete] = useState<any>(null);
 
     /*
-    delete Bank
+    delete Location
     */
-    const onDeleteBank = (id: any) => {
-        onArchiveDeleteAction(bank);
-        setselectedTermForDelete(bank);
+    const onDeleteLocation = (id: any) => {
+        onArchiveDeleteAction(location);
+        setselectedTermForDelete(location);
     }
 
     const onClickArchiveUnArchive = (action: boolean) => {
         if (action) {
-            dispatch(restoreBank(companyId, bank.id));
+            dispatch(restoreLocation(companyId, location.id));
         } else {
-            dispatch(archiveBank(companyId, bank.id));
+            dispatch(archiveLocation(companyId, location.id));
         }
-        onArchiveDeleteAction(bank);
+        onArchiveDeleteAction(location);
     }
 
     return (<>
         <Row>
             <Col lg={12}>
                 <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditBank(bank)} className="payment-terms-link">
+                    <Link to="#" onClick={() => onEditLocation(location)} className="payment-terms-link">
                         <Card.Header className="payment-card-title">
                             <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Bank Name')}</h6>
-                                <h6 className="m-0 font-weight-bold">{bank.name}</h6>
+                                <h6 className="m-0 text-muted font-weight-bold">{t('Location Name')}</h6>
+                                <h6 className="m-0 font-weight-bold">{location.name}</h6>
                             </div>
                         </Card.Header>
                         <Card.Body>
@@ -74,15 +74,15 @@ const BankCardItem = ({ bank, onArchiveDeleteAction, onEditBank, companyId }: Ba
                                 <Row>
                                     <Col xs={6} lg={4}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Benificary name')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{bank.benificary}</h6>
+                                        <h6 className="m-0 font-weight-bold">{location.benificary}</h6>
                                     </Col>
                                     <Col xs={6} lg={4}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Account number')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{bank.account_number}</h6>
+                                        <h6 className="m-0 font-weight-bold">{location.account_number}</h6>
                                     </Col>
                                     <Col xs={6} lg={4}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Currency Accepted')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{bank.currency.join(", ")}</h6>
+                                        <h6 className="m-0 font-weight-bold">{location.currency.join(", ")}</h6>
                                     </Col>
                                 </Row>
                             </div>
@@ -92,11 +92,11 @@ const BankCardItem = ({ bank, onArchiveDeleteAction, onEditBank, companyId }: Ba
                         <div className="p-2 float-right">
                             <div className="d-flex align-items-center">
                                 {
-                                    !bank.is_active ?
+                                    !location.is_active ?
                                         <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-primary mr-2" /></Link> :
                                         <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-warning mr-2" /></Link>
                                 }
-                                <Link to="#" onClick={() => onDeleteBank(bank.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
+                                <Link to="#" onClick={() => onDeleteLocation(location.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
 
                             </div>
                         </div>
@@ -105,40 +105,40 @@ const BankCardItem = ({ bank, onArchiveDeleteAction, onEditBank, companyId }: Ba
             </Col>
         </Row>
         {selectedTermForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTermForDelete.title}?`} onConfirm={() => {
-            dispatch(deleteBank(companyId, selectedTermForDelete.id));
+            dispatch(deleteLocation(companyId, selectedTermForDelete.id));
         }} onClose={() => setselectedTermForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
     </>
     )
 }
 
-interface BankProps {
+interface LocationProps {
     match: any;
 }
-const Bank = (props: BankProps) => {
+const Location = (props: LocationProps) => {
     const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
-    const { bank, isBankFetched, isBankCreated, isBankUpdated, isBankDeleted, isBankArchived, isBankRestored } = useSelector((state: any) => ({
-        bank: state.Company.Bank.bank,
+    const { location, isLocationFetched, isLocationCreated, isLocationUpdated, isLocationDeleted, isLocationArchived, isLocationRestored } = useSelector((state: any) => ({
+        location: state.Company.Location.location,
 
         //flags
-        isBankFetched: state.Company.Bank.isBankFetched,
-        isBankCreated: state.Company.Bank.isBankCreated,
-        isBankUpdated: state.Company.Bank.isBankUpdated,
-        isBankDeleted: state.Company.Bank.isBankDeleted,
-        isBankArchived: state.Company.Bank.isBankArchived,
-        isBankRestored: state.Company.Bank.isBankRestored
+        isLocationFetched: state.Company.Location.isLocationFetched,
+        isLocationCreated: state.Company.Location.isLocationCreated,
+        isLocationUpdated: state.Company.Location.isLocationUpdated,
+        isLocationDeleted: state.Company.Location.isLocationDeleted,
+        isLocationArchived: state.Company.Location.isLocationArchived,
+        isLocationRestored: state.Company.Location.isLocationRestored
     }));
 
     const companyId = props.match.params.companyId;
     /*
-    bank
+    location
     */
     useEffect(() => {
         const companyId = props.match.params.companyId;
         if (companyId) {
-            dispatch(getBank(companyId, { is_active: true }));
+            dispatch(getLocation(companyId, { is_active: true }));
         }
     }, [dispatch, props.match.params.companyId]);
 
@@ -150,7 +150,7 @@ const Bank = (props: BankProps) => {
 
     const onChangeShowArchive = (checked: boolean) => {
         setshowArchived(checked);
-        dispatch(getBank(companyId, { is_active: !checked }));
+        dispatch(getLocation(companyId, { is_active: !checked }));
     }
 
     /*
@@ -161,8 +161,8 @@ const Bank = (props: BankProps) => {
     /*
     to display alert and set title
     */
-    const onArchiveDeleteAction = (bank: any) => {
-        setarchiveUnarchiveItem(bank);
+    const onArchiveDeleteAction = (location: any) => {
+        setarchiveUnarchiveItem(location);
     }
 
     /*
@@ -178,36 +178,36 @@ const Bank = (props: BankProps) => {
     }
 
     /*
-        bank
+        location
     */
-    const [selectedBank, setselectedBank] = useState<any>();
+    const [selectedLocation, setselectedLocation] = useState<any>();
 
-    const setBank = (bank: any) => {
-        setselectedBank(bank);
+    const setLocation = (location: any) => {
+        setselectedLocation(location);
         setisopen(true);
     }
 
     /*
-    close modal for after creating bank
+    close modal for after creating location
     */
     useEffect(() => {
-        if (isBankCreated || isBankUpdated) {
+        if (isLocationCreated || isLocationUpdated) {
             setisopen(false);
-            dispatch(getBank(props.match.params.companyId, { is_active: true }));
+            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
                 dispatch(reset());
             }, 10000);
         }
-    }, [isBankCreated, isBankUpdated, dispatch, props.match.params.companyId]);
+    }, [isLocationCreated, isLocationUpdated, dispatch, props.match.params.companyId]);
 
     /*
     re-fetch items when item deleted, archived, restored
     */
     useEffect(() => {
-        if (isBankDeleted || isBankArchived || isBankRestored) {
-            dispatch(getBank(props.match.params.companyId, { is_active: true }));
+        if (isLocationDeleted || isLocationArchived || isLocationRestored) {
+            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
 
-            if (isBankRestored) {
+            if (isLocationRestored) {
                 setshowArchived(false);
             }
 
@@ -215,7 +215,7 @@ const Bank = (props: BankProps) => {
                 dispatch(reset());
             }, 10000);
         }
-    }, [isBankDeleted, isBankArchived, isBankRestored, dispatch, props.match.params.companyId]);
+    }, [isLocationDeleted, isLocationArchived, isLocationRestored, dispatch, props.match.params.companyId]);
 
     return (
         <>
@@ -226,7 +226,7 @@ const Bank = (props: BankProps) => {
                             <Link to={`/settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
-                            <h1 className="m-0">{t('Banks')}</h1>
+                            <h1 className="m-0">{t('Locations')}</h1>
                             <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">
                                     {t('Show archived')}
@@ -244,14 +244,14 @@ const Bank = (props: BankProps) => {
                     <Col className="text-right">
                         <Button variant="primary" onClick={() => {
                             openModal();
-                            setselectedBank(null);
-                        }}>{t('Add Banks')}</Button>
+                            setselectedLocation(null);
+                        }}>{t('Add Locations')}</Button>
                     </Col>
                 </Row>
             </div>
 
             {
-                !isBankFetched ?
+                !isLocationFetched ?
                     <Loader />
                     :
                     <div>
@@ -261,12 +261,12 @@ const Bank = (props: BankProps) => {
                                     <Row>
                                         <Col lg={6} xs={12}>
                                             {
-                                                bank['results'].length > 0 ?
-                                                    bank['results'].map((bank, key) =>
-                                                        <BankCardItem bank={bank}
+                                                location['results'].length > 0 ?
+                                                    location['results'].map((location, key) =>
+                                                        <LocationCardItem location={location}
                                                             key={key} companyId={companyId}
                                                             onArchiveDeleteAction={onArchiveDeleteAction}
-                                                            onEditBank={setBank}
+                                                            onEditLocation={setLocation}
                                                         />
                                                     ) : <EmptyState showArchived={showArchived} />
                                             }
@@ -296,30 +296,30 @@ const Bank = (props: BankProps) => {
             }
 
 
-            {isBankCreated && (!isBankDeleted && !isBankRestored) ? <MessageAlert message={t('A new Bank is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isLocationCreated && (!isLocationDeleted && !isLocationRestored) ? <MessageAlert message={t('A new Location is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isBankDeleted && (!isBankCreated && !isBankRestored) ? <MessageAlert message={t('Selected Bank is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isLocationDeleted && (!isLocationCreated && !isLocationRestored) ? <MessageAlert message={t('Selected Location is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isBankArchived ? <MessageAlert
-                message={`${t('Bank')} ${archiveUnarchiveItem.name} ${t('is archived. You can undo this action.')}`}
+            {isLocationArchived ? <MessageAlert
+                message={`${t('Location')} ${archiveUnarchiveItem.name} ${t('is archived. You can undo this action.')}`}
                 iconWrapperClass="bg-warning text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="archive" undo={true} onUndo={() => {
-                    dispatch(restoreBank(companyId, archiveUnarchiveItem.id))
+                    dispatch(restoreLocation(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
-            {isBankRestored ? <MessageAlert
-                message={`${t('Bank')} ${archiveUnarchiveItem.name} ${t('is restored. You can undo this action.')}`}
+            {isLocationRestored ? <MessageAlert
+                message={`${t('Location')} ${archiveUnarchiveItem.name} ${t('is restored. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="un-archive" undo={true} onUndo={() => {
-                    dispatch(archiveBank(companyId, archiveUnarchiveItem.id))
+                    dispatch(archiveLocation(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
 
-            {isOpen ? <AddEditBank isOpen={isOpen} onClose={closeModal} companyId={companyId} bank={selectedBank} /> : null}
+            {isOpen ? <AddEditLocation isOpen={isOpen} onClose={closeModal} companyId={companyId} location={selectedLocation} /> : null}
         </>
     );
 }
 
-export default withRouter(Bank);
+export default withRouter(Location);

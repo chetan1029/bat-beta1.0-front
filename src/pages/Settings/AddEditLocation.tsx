@@ -15,14 +15,14 @@ import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 import { COUNTRIES, CURRENCIES } from "../../constants";
 
 //action
-import { createBank, editBank, reset } from "../../redux/actions";
-interface AddEditBankProps {
+import { createLocation, editLocation, reset } from "../../redux/actions";
+interface AddEditLocationProps {
     isOpen: boolean;
     onClose: any;
-    bank?: any;
+    location?: any;
     companyId: any;
 }
-const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => {
+const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocationProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -30,13 +30,13 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
         dispatch(reset());
     }, [dispatch]);
 
-    const { createBankError, isBankCreated, editBankError, isBankUpdated, loading } = useSelector((state: any) => ({
-        createBankError: state.Company.Bank.createBankError,
-        isBankCreated: state.Company.Bank.isBankCreated,
+    const { createLocationError, isLocationCreated, editLocationError, isLocationUpdated, loading } = useSelector((state: any) => ({
+        createLocationError: state.Company.Location.createLocationError,
+        isLocationCreated: state.Company.Location.isLocationCreated,
 
-        editBankError: state.Company.Bank.editBankError,
-        isBankUpdated: state.Company.Bank.isBankUpdated,
-        loading: state.Company.Bank.loading,
+        editLocationError: state.Company.Location.editLocationError,
+        isLocationUpdated: state.Company.Location.isLocationUpdated,
+        loading: state.Company.Location.loading,
     }));
 
 
@@ -46,21 +46,21 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
-            name: bank ? bank.name : '',
-            benificary: bank ? bank.benificary : '',
-            account_number: bank ? bank.account_number : '',
-            iban: bank ? bank.iban : '',
-            swift_code: bank ? bank.swift_code : '',
-            address1: bank ? bank.address1 : '',
-            address2: bank ? bank.address2 : '',
-            zip: bank ? bank.zip : '',
-            city: bank ? bank.city : '',
-            region: bank ? bank.region : '',
-            country: bank ? { label: COUNTRIES[bank.country], value: bank.country } : '',
-            currency: bank ? bank.currency.map((value) => {return { label: CURRENCIES[value], value: value }; }) : ''
+            name: location ? location.name : '',
+            benificary: location ? location.benificary : '',
+            account_number: location ? location.account_number : '',
+            iban: location ? location.iban : '',
+            swift_code: location ? location.swift_code : '',
+            address1: location ? location.address1 : '',
+            address2: location ? location.address2 : '',
+            zip: location ? location.zip : '',
+            city: location ? location.city : '',
+            region: location ? location.region : '',
+            country: location ? { label: COUNTRIES[location.country], value: location.country } : '',
+            currency: location ? location.currency.map((value) => {return { label: CURRENCIES[value], value: value }; }) : ''
         },
         validationSchema: Yup.object({
-            name: Yup.string().required(t('Bank name is required')),
+            name: Yup.string().required(t('Location name is required')),
             benificary: Yup.string().required(t('Benificary name is required')),
             account_number: Yup.string().required(t('Account Number is required')),
             iban: Yup.string().required(t('Iban is required')),
@@ -69,10 +69,10 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
         }),
         onSubmit: values => {
 
-                if (bank) {
-                    dispatch(editBank(companyId, bank.id, {...values, country: values['country']['value'], currency: values['currency'].map(({value})=>value)}));
+                if (location) {
+                    dispatch(editLocation(companyId, location.id, {...values, country: values['country']['value'], currency: values['currency'].map(({value})=>value)}));
                 } else {
-                    dispatch(createBank(companyId, {...values, country: values['country']['value'], currency: values['currency'].map(({value})=>value)}));
+                    dispatch(createLocation(companyId, {...values, country: values['country']['value'], currency: values['currency'].map(({value})=>value)}));
                 }
         },
     });
@@ -85,21 +85,21 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-bank-modal-header"></Modal.Header>
+            <Modal.Header closeButton className="add-location-modal-header"></Modal.Header>
             <Modal.Body className="p-0">
                 <div className="position-relative">
                     {loading ? <Loader />: null}
 
                     <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{bank ? t("Edit Bank") : t("Add Bank")}</h1>
+                        <h1 className="mb-2 mt-0">{location ? t("Edit Location") : t("Add Location")}</h1>
 
-                        {(!isBankCreated && createBankError) && <AlertMessage error={createBankError} />}
-                        {(!isBankUpdated && editBankError) && <AlertMessage error={editBankError} />}
+                        {(!isLocationCreated && createLocationError) && <AlertMessage error={createLocationError} />}
+                        {(!isLocationUpdated && editLocationError) && <AlertMessage error={editLocationError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
                           <Form.Group className="mb-4">
-                              <Form.Label htmlFor="usr">{t('Bank Name')}</Form.Label>
-                              <Form.Control type="text" className="form-control" id="name" name="name" placeholder="Bank Name"
+                              <Form.Label htmlFor="usr">{t('Location Name')}</Form.Label>
+                              <Form.Control type="text" className="form-control" id="name" name="name" placeholder="Location Name"
                                   onBlur={validator.handleBlur}
                                   value={validator.values.name}
                                   onChange={validator.handleChange}
@@ -148,8 +148,8 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
                           <Row>
                             <Col>
                               <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('International Bank Account Number')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="iban" name="iban" placeholder="International Bank Account Number"
+                                  <Form.Label htmlFor="usr">{t('International Location Account Number')}</Form.Label>
+                                  <Form.Control type="text" className="form-control" id="iban" name="iban" placeholder="International Location Account Number"
                                       onBlur={validator.handleBlur}
                                       value={validator.values.iban}
                                       onChange={validator.handleChange}
@@ -291,7 +291,7 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
                           </Row>
                           <div>
                               <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
-                              <Button type="submit" variant="primary">{bank ? t("Edit Bank") : t("Add Bank")}</Button>
+                              <Button type="submit" variant="primary">{location ? t("Edit Location") : t("Add Location")}</Button>
                           </div>
                         </Form>
                     </div>
@@ -301,4 +301,4 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
     );
 }
 
-export default AddEditBank;
+export default AddEditLocation;
