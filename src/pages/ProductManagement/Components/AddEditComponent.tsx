@@ -11,7 +11,7 @@ import MediaInput from "../../../components/MediaInput";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames";
-import { map, uniqBy } from "lodash";
+import { map, uniqBy, isEmpty } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
 import { createComponent, getComponents, resetComponents } from "../../../redux/actions"
@@ -26,6 +26,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const { t } = useTranslation();
     const [tags, setTags] = useState<any>([]);
     const [files, setFiles] = useState<any>([]);
+    const [variationOptions, setVariationOptions] = useState<any>([]);
     const dispatch = useDispatch();
     const companyId = match.params.companyId;
 
@@ -66,49 +67,27 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             title: Yup.string().required(t('Title is required')),
         }),
         onSubmit: (values: any) => {
-            const data = {
-                ...values,
-                images: files,
-                ...{
-                    is_component: true,
-                    tags: tags.toString(),
-                    type: values.type['value'],
-                    series: values.series['value'],
-                    products: [
-                        {
-                            title: "bookp",
-                            is_active: true,
-                            product_variation_options: [
-                                {
-                                    productoption: {
-                                        name: "color",
-                                        value: "red"
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            title: "bookp",
-                            is_active: true,
-                            product_variation_options: [
-                                {
-                                    productoption: {
-                                        name: "color",
-                                        value: "black"
-                                    }
-                                },
-                                {
-                                    productoption: {
-                                        name: "size",
-                                        value: "sm"
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+            if (!isEmpty(variationOptions)) {
+                let data = {
+                    ...values,
+                    images: files,
+                    ...{
+                        is_component: true,
+                        tags: tags.toString(),
+                        type: values.type['value'],
+                        series: values.series['value'],
+                        products: map(variationOptions, opt => ({
+                            title: values.title,
+                            image: opt.image,
+                            model_number: opt.model_number,
+                            manufacturer_part_number: opt.manufacturer_part_number,
+                            weight: opt.weight,
+                            product_variation_options: map(opt.value, value => ({ productoption: value })),
+                        }))
+                    }
                 }
+                dispatch(createComponent(companyId, data));
             }
-            dispatch(createComponent(companyId, data));
         },
     });
 
@@ -230,7 +209,10 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                 </Row>
                                 <Row>
                                     <Col lg={12} md={12}>
-                                        <VariationDetails label={t('Variation Details')}/>
+                                        <VariationDetails
+                                            label={t('Variation Details')}
+                                            onSetVariationOptions={(variationOptions) => setVariationOptions(variationOptions)}
+                                        />
                                     </Col>
                                 </Row>
                                 <Form.Group className="mt-2 mb-0">

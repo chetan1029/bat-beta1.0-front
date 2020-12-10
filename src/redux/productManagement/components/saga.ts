@@ -1,7 +1,8 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
+import { get, forEach } from 'lodash';
 
 import {
-    getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages
+    getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages, uploadVariationImages
 } from "../../../api";
 
 import { componentsApiResponseSuccess, componentsApiResponseError } from "./actions";
@@ -42,6 +43,17 @@ function* createNewComponent({ payload: { companyId, data } }: any) {
         const response = yield call(createComponent, companyId, data);
         if (response.data && response.data.id) {
             yield call(uploadComponentImages, companyId, response.data.id, data.images);
+            const responseProducts = get(response, "data.products");
+            const dataProducts = get(data, "products");
+            // if (responseProducts && responseProducts.length) {
+            //     forEach(responseProducts, (product) => {
+            //         forEach(product.product_variation_options, (option, i) => {
+            //             if(option){
+            //                 yield call(uploadVariationImages, companyId, option.id, get(dataProducts[i], 'image'))
+            //             }
+            //         })
+            //     })
+            // }
         }
         yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT, response.data));
     } catch (error) {

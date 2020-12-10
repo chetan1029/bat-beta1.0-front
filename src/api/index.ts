@@ -206,6 +206,11 @@ function uploadComponentImages(companyId: number, componentId: number | string, 
     return api.createWithFile(`${componentUrl(companyId)}${componentId}/images/`, data);
 }
 
+function uploadVariationImages(companyId: number, variationId: number | string, data: any) {
+    const baseUrl = `/companies/${companyId}/product-variations/${variationId}/images/`;
+    return api.createWithFile(`${baseUrl}`, data);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -215,5 +220,5 @@ export {
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
     getVendors, getVendor, createVendor, updateVendor,
-    getComponents, createComponent, editComponent, deleteComponent, getComponent, uploadComponentImages
+    getComponents, createComponent, editComponent, deleteComponent, getComponent, uploadComponentImages, uploadVariationImages
 }
