@@ -11,8 +11,7 @@ import * as Yup from 'yup';
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import CountriesDropdown from "../../components/CountriesDropdown";
-import CurrenciesDropdown from "../../components/CurrenciesDropdown";
-import { COUNTRIES, CURRENCIES } from "../../constants";
+import { COUNTRIES } from "../../constants";
 
 //action
 import { createLocation, editLocation, reset } from "../../redux/actions";
@@ -47,32 +46,26 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
         enableReinitialize: true,
         initialValues: {
             name: location ? location.name : '',
-            benificary: location ? location.benificary : '',
-            account_number: location ? location.account_number : '',
-            iban: location ? location.iban : '',
-            swift_code: location ? location.swift_code : '',
             address1: location ? location.address1 : '',
             address2: location ? location.address2 : '',
             zip: location ? location.zip : '',
             city: location ? location.city : '',
             region: location ? location.region : '',
             country: location ? { label: COUNTRIES[location.country], value: location.country } : '',
-            currency: location ? location.currency.map((value) => {return { label: CURRENCIES[value], value: value }; }) : ''
         },
         validationSchema: Yup.object({
             name: Yup.string().required(t('Location name is required')),
-            benificary: Yup.string().required(t('Benificary name is required')),
-            account_number: Yup.string().required(t('Account Number is required')),
-            iban: Yup.string().required(t('Iban is required')),
-            swift_code: Yup.string().required(t('Swift Code is required')),
+            address1: Yup.string().required(t('Address is required')),
+            zip: Yup.string().required(t('Postal Code is required')),
+            city: Yup.string().required(t('City is required')),
             country: Yup.object().required(t('Country is required')),
         }),
         onSubmit: values => {
 
                 if (location) {
-                    dispatch(editLocation(companyId, location.id, {...values, country: values['country']['value'], currency: values['currency'].map(({value})=>value)}));
+                    dispatch(editLocation(companyId, location.id, {...values, country: values['country']['value']}));
                 } else {
-                    dispatch(createLocation(companyId, {...values, country: values['country']['value'], currency: values['currency'].map(({value})=>value)}));
+                    dispatch(createLocation(companyId, {...values, country: values['country']['value']}));
                 }
         },
     });
@@ -111,75 +104,6 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
                                   <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
                               ) : null}
                           </Form.Group>
-                          <Row>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Benificary Name')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="benificary" name="benificary" placeholder="Benificary Name"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.benificary}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.benificary && validator.errors && validator.errors.benificary ? true : false}
-                                      maxLength={100} />
-
-
-                                  {validator.touched.benificary && validator.errors.benificary ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.benificary}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Account Number')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="account_number" name="account_number" placeholder="Account Number"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.account_number}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.account_number && validator.errors && validator.errors.account_number ? true : false}
-                                      maxLength={100} />
-
-
-                                  {validator.touched.account_number && validator.errors.account_number ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.account_number}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('International Location Account Number')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="iban" name="iban" placeholder="International Location Account Number"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.iban}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.iban && validator.errors && validator.errors.iban ? true : false}
-                                      maxLength={100} />
-
-
-                                  {validator.touched.iban && validator.errors.iban ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.iban}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Swift Code')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="swift_code" name="swift_code" placeholder="Swift Code"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.swift_code}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.swift_code && validator.errors && validator.errors.swift_code ? true : false}
-                                      maxLength={100} />
-
-
-                                  {validator.touched.swift_code && validator.errors.swift_code ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.swift_code}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                          </Row>
-
                           <Form.Group className="mb-4">
                               <Form.Label htmlFor="usr">{t('Address')}</Form.Label>
                               <Form.Control type="text" className="form-control" id="address1" name="address1" placeholder="Address"
@@ -270,20 +194,6 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
                                   {validator.touched.country && validator.errors.country ? (
                                       <Form.Control.Feedback type="invalid" className="d-block">
                                           {validator.errors.country}
-                                      </Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Currency')}</Form.Label>
-                                  <CurrenciesDropdown name='currency' placeholder={t('Currency')} className={validator.touched.currency && validator.errors.currency ? "is-invalid" : ""}
-                                      onChange={(value) => validator.setFieldValue('currency', value)}
-                                      value={validator.values.currency} />
-
-                                  {validator.touched.currency && validator.errors.currency ? (
-                                      <Form.Control.Feedback type="invalid" className="d-block">
-                                          {validator.errors.currency}
                                       </Form.Control.Feedback>
                                   ) : null}
                               </Form.Group>

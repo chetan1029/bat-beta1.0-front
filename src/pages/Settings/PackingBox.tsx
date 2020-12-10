@@ -6,19 +6,19 @@ import { useTranslation } from 'react-i18next';
 
 //components
 import Icon from "../../components/Icon";
-import AddEditLocation from "./AddEditLocation";
+import AddEditPackingBox from "./AddEditPackingBox";
 
 //actions
-import { getLocation, deleteLocation, archiveLocation, restoreLocation, reset } from "../../redux/actions";
+import { getPackingBox, deletePackingBox, archivePackingBox, restorePackingBox, reset } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
 
-interface LocationCardItemProps {
-    location: any;
+interface PaymentCardItemProps {
+    packingbox: any;
     onArchiveDeleteAction: any;
-    onEditLocation: any;
+    onEditPackingBox: any;
     companyId: any;
 }
 
@@ -28,14 +28,14 @@ const EmptyState = ({ showArchived }) => {
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived location available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no location available')}</h5>}
+                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived packing box available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no packing box available')}</h5>}
                 </div>
             </Card.Body>
         </Card>
     )
 }
 
-const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, companyId }: LocationCardItemProps) => {
+const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, companyId }: PaymentCardItemProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -44,29 +44,29 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
     /*
     delete payment term
     */
-    const onDeleteLocation = (id: any) => {
-        onArchiveDeleteAction(location);
-        setselectedTermForDelete(location);
+    const onDeletePackingBox = (id: any) => {
+        onArchiveDeleteAction(packingbox);
+        setselectedTermForDelete(packingbox);
     }
 
     const onClickArchiveUnArchive = (action: boolean) => {
         if (action) {
-            dispatch(restoreLocation(companyId, location.id));
+            dispatch(restorePackingBox(companyId, packingbox.id));
         } else {
-            dispatch(archiveLocation(companyId, location.id));
+            dispatch(archivePackingBox(companyId, packingbox.id));
         }
-        onArchiveDeleteAction(location);
+        onArchiveDeleteAction(packingbox);
     }
 
     return (<>
         <Row>
             <Col lg={12}>
                 <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditLocation(location)} className="payment-terms-link">
+                    <Link to="#" onClick={() => onEditPackingBox(packingbox)} className="payment-terms-link">
                         <Card.Header className="payment-card-title">
                             <div className="p-2">
                                 <h6 className="m-0 text-muted font-weight-bold">{t('Title')}</h6>
-                                <h6 className="m-0 font-weight-bold">{location.name}</h6>
+                                <h6 className="m-0 font-weight-bold">{packingbox.title}</h6>
                             </div>
                         </Card.Header>
                         <Card.Body>
@@ -74,19 +74,19 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
                                 <Row>
                                     <Col xs={6} lg={3}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Deposit')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{location.deposit}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.deposit}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('On Delivery')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{location.on_delivery}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.on_delivery}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Receiving')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{location.receiving}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.receiving}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Remaining')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{location.remaining}% in {location.payment_days} Days</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.remaining}% in {packingbox.payment_days} Days</h6>
                                     </Col>
                                 </Row>
                             </div>
@@ -96,11 +96,11 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
                         <div className="p-2 float-right">
                             <div className="d-flex align-items-center">
                                 {
-                                    !location.is_active ?
+                                    !packingbox.is_active ?
                                         <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-warning mr-2" /></Link> :
                                         <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-primary mr-2" /></Link>
                                 }
-                                <Link to="#" onClick={() => onDeleteLocation(location.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
+                                <Link to="#" onClick={() => onDeletePackingBox(packingbox.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
 
                             </div>
                         </div>
@@ -109,30 +109,30 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
             </Col>
         </Row>
         {selectedTermForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTermForDelete.title}?`} onConfirm={() => {
-            dispatch(deleteLocation(companyId, selectedTermForDelete.id));
+            dispatch(deletePackingBox(companyId, selectedTermForDelete.id));
         }} onClose={() => setselectedTermForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
     </>
     )
 }
 
-interface LocationProps {
+interface PackingBoxProps {
     match: any;
 }
-const Location = (props: LocationProps) => {
+const PackingBox = (props: PackingBoxProps) => {
     const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
-    const { location, isLocationFetched, isLocationCreated, isLocationUpdated, isLocationDeleted, isLocationArchived, isLocationRestored } = useSelector((state: any) => ({
-        location: state.Company.Location.location,
+    const { packingBox, isPackingBoxFetched, isPackingBoxCreated, isPackingBoxUpdated, isPackingBoxDeleted, isPackingBoxArchived, isPackingBoxRestored } = useSelector((state: any) => ({
+        packingBox: state.Company.PackingBox.packingBox,
 
         //flags
-        isLocationFetched: state.Company.Location.isLocationFetched,
-        isLocationCreated: state.Company.Location.isLocationCreated,
-        isLocationUpdated: state.Company.Location.isLocationUpdated,
-        isLocationDeleted: state.Company.Location.isLocationDeleted,
-        isLocationArchived: state.Company.Location.isLocationArchived,
-        isLocationRestored: state.Company.Location.isLocationRestored
+        isPackingBoxFetched: state.Company.PackingBox.isPackingBoxFetched,
+        isPackingBoxCreated: state.Company.PackingBox.isPackingBoxCreated,
+        isPackingBoxUpdated: state.Company.PackingBox.isPackingBoxUpdated,
+        isPackingBoxDeleted: state.Company.PackingBox.isPackingBoxDeleted,
+        isPackingBoxArchived: state.Company.PackingBox.isPackingBoxArchived,
+        isPackingBoxRestored: state.Company.PackingBox.isPackingBoxRestored
     }));
 
     const companyId = props.match.params.companyId;
@@ -142,7 +142,7 @@ const Location = (props: LocationProps) => {
     useEffect(() => {
         const companyId = props.match.params.companyId;
         if (companyId) {
-            dispatch(getLocation(companyId, { is_active: true }));
+            dispatch(getPackingBox(companyId, { is_active: true }));
         }
     }, [dispatch, props.match.params.companyId]);
 
@@ -154,7 +154,7 @@ const Location = (props: LocationProps) => {
 
     const onChangeShowArchive = (checked: boolean) => {
         setshowArchived(checked);
-        dispatch(getLocation(companyId, { is_active: !checked }));
+        dispatch(getPackingBox(companyId, { is_active: !checked }));
     }
 
     /*
@@ -182,12 +182,12 @@ const Location = (props: LocationProps) => {
     }
 
     /*
-        payment terms
+        packing box
     */
-    const [selectedLocation, setselectedLocation] = useState<any>();
+    const [selectedPackingBox, setselectedPackingBox] = useState<any>();
 
-    const setLocation = (location: any) => {
-        setselectedLocation(location);
+    const setPackingBox = (payment: any) => {
+        setselectedPackingBox(payment);
         setisopen(true);
     }
 
@@ -195,23 +195,23 @@ const Location = (props: LocationProps) => {
     close modal for after creating payment term
     */
     useEffect(() => {
-        if (isLocationCreated || isLocationUpdated) {
+        if (isPackingBoxCreated || isPackingBoxUpdated) {
             setisopen(false);
-            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
+            dispatch(getPackingBox(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
                 dispatch(reset());
             }, 10000);
         }
-    }, [isLocationCreated, isLocationUpdated, dispatch, props.match.params.companyId]);
+    }, [isPackingBoxCreated, isPackingBoxUpdated, dispatch, props.match.params.companyId]);
 
     /*
     re-fetch items when item deleted, archived, restored
     */
     useEffect(() => {
-        if (isLocationDeleted || isLocationArchived || isLocationRestored) {
-            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
+        if (isPackingBoxDeleted || isPackingBoxArchived || isPackingBoxRestored) {
+            dispatch(getPackingBox(props.match.params.companyId, { is_active: true }));
 
-            if (isLocationRestored) {
+            if (isPackingBoxRestored) {
                 setshowArchived(false);
             }
 
@@ -219,7 +219,7 @@ const Location = (props: LocationProps) => {
                 dispatch(reset());
             }, 10000);
         }
-    }, [isLocationDeleted, isLocationArchived, isLocationRestored, dispatch, props.match.params.companyId]);
+    }, [isPackingBoxDeleted, isPackingBoxArchived, isPackingBoxRestored, dispatch, props.match.params.companyId]);
 
     return (
         <>
@@ -230,7 +230,7 @@ const Location = (props: LocationProps) => {
                             <Link to={`/settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
-                            <h1 className="m-0">{t('Locations')}</h1>
+                            <h1 className="m-0">{t('Packing Box')}</h1>
                             <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">
                                     {t('Show archived')}
@@ -248,14 +248,14 @@ const Location = (props: LocationProps) => {
                     <Col className="text-right">
                         <Button variant="primary" onClick={() => {
                             openModal();
-                            setselectedLocation(null);
-                        }}>{t('Add Location')}</Button>
+                            setselectedPackingBox(null);
+                        }}>{t('Add Packing Box')}</Button>
                     </Col>
                 </Row>
             </div>
 
             {
-                !isLocationFetched ?
+                !isPackingBoxFetched ?
                     <Loader />
                     :
                     <div>
@@ -265,14 +265,14 @@ const Location = (props: LocationProps) => {
                                     <Row>
                                         <Col lg={6} xs={12}>
                                             {
-                                                /*location['results'].length > 0 ?
-                                                    location['results'].map((loc, key) =>
-                                                        <LocationCardItem location={loc}
+                                                packingBox['results'].length > 0 ?
+                                                    packingBox['results'].map((packing, key) =>
+                                                        <PaymentCardItem packingbox={packing}
                                                             key={key} companyId={companyId}
                                                             onArchiveDeleteAction={onArchiveDeleteAction}
-                                                            onEditLocation={setLocation}
+                                                            onEditPackingBox={setPackingBox}
                                                         />
-                                                    ) : <EmptyState showArchived={showArchived} />*/
+                                                    ) : <EmptyState showArchived={showArchived} />
                                             }
                                         </Col>
                                         <Col lg={6} xs={12}>
@@ -300,30 +300,30 @@ const Location = (props: LocationProps) => {
             }
 
 
-            {isLocationCreated && (!isLocationDeleted && !isLocationRestored) ? <MessageAlert message={t('A new Location is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isPackingBoxCreated && (!isPackingBoxDeleted && !isPackingBoxRestored) ? <MessageAlert message={t('A new Payment Term is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isLocationDeleted && (!isLocationCreated && !isLocationRestored) ? <MessageAlert message={t('Selected Location is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isPackingBoxDeleted && (!isPackingBoxCreated && !isPackingBoxRestored) ? <MessageAlert message={t('Selected Payment Term is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isLocationArchived ? <MessageAlert
-                message={`${t('Location')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
+            {isPackingBoxArchived ? <MessageAlert
+                message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
                 icon="archive" undo={true} onUndo={() => {
-                    dispatch(restoreLocation(companyId, archiveUnarchiveItem.id))
+                    dispatch(restorePackingBox(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
-            {isLocationRestored ? <MessageAlert
-                message={`${t('Location')} ${archiveUnarchiveItem.name} ${t('is restored. You can undo this action.')}`}
+            {isPackingBoxRestored ? <MessageAlert
+                message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
                 icon="archive" undo={true} onUndo={() => {
-                    dispatch(archiveLocation(companyId, archiveUnarchiveItem.id))
+                    dispatch(archivePackingBox(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
 
-            {isOpen ? <AddEditLocation isOpen={isOpen} onClose={closeModal} companyId={companyId} location={selectedLocation} /> : null}
+            {isOpen ? <AddEditPackingBox isOpen={isOpen} onClose={closeModal} companyId={companyId} packingBox={selectedPackingBox} /> : null}
         </>
     );
 }
 
-export default withRouter(Location);
+export default withRouter(PackingBox);

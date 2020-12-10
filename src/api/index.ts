@@ -137,7 +137,7 @@ function restoreBank(companyId: number, bankId: number, params?: any) {
 }
 
 /*
-Bank
+Location
 */
 function getLocation(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/location/`;
@@ -166,6 +166,39 @@ function archiveLocation(companyId: number, locationId: number, params?: any) {
 
 function restoreLocation(companyId: number, locationId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/location/${locationId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Packing Box
+*/
+function getPackingBox(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createPackingBox(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updatePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deletePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archivePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restorePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/restore/`;
     return api.create(`${baseUrl}`, params);
 }
 
@@ -256,4 +289,5 @@ export {
     getVendors, getVendor, createVendor, updateVendor,
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
     getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
+    getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,
 }
