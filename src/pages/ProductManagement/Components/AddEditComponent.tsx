@@ -31,7 +31,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const companyId = match.params.companyId;
 
     useEffect(() => {
-        dispatch(getComponents(companyId));
+        dispatch(getComponents(companyId, {is_component: true}));
         dispatch(resetComponents());
     }, [dispatch, companyId]);
 
