@@ -92,13 +92,6 @@ const VariationDetails = (props: VariationDetailsProps) => {
             })
         }
 
-        //TODO- remove repeated
-
-        // filter(newOptions, (opt, i) => {
-        //     forEach(newOptions, option => isEmpty(xorWith(opt.value, newOptions[i + 1] && newOptions[i + 1].value, isEqual)))
-        // })
-
-        
         const uniqueOpts:Array<any> = [];
         const newOpts:Array<any> = []; 
 
@@ -117,11 +110,11 @@ const VariationDetails = (props: VariationDetailsProps) => {
         newOpts.map(x => uniqueOpts.filter(a => isEmpty(xorWith(a.value, x.value, isEqual))).length > 0 ? null : uniqueOpts.push(x));
 
         setVariationOptions(uniqueOpts);
-    }, [variations, variations && size(variations.option)])
+    }, [variations]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         onSetVariationOptions(filter(variationOptions, option => !!option.show))
-    }, [variationOptions])
+    }, [variationOptions]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const removeVariation = (index: number) => {
         const newVariations = [...variations];

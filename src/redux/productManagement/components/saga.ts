@@ -1,5 +1,5 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
-import { get, forEach } from 'lodash';
+import { get, size, map, forEach } from 'lodash';
 
 import {
     getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages, uploadVariationImages
@@ -38,22 +38,23 @@ function* getComponentById({ payload: { companyId, componentId } }: any) {
 /**
  * create new component
  */
-function* createNewComponent({ payload: { companyId, data } }: any) {
+function* createNewComponent({ payload: { companyId, data, images } }: any) {
     try {
         const response = yield call(createComponent, companyId, data);
         if (response.data && response.data.id) {
-            yield call(uploadComponentImages, companyId, response.data.id, data.images);
-            const responseProducts = get(response, "data.products");
-            const dataProducts = get(data, "products");
-            // if (responseProducts && responseProducts.length) {
-            //     forEach(responseProducts, (product) => {
-            //         forEach(product.product_variation_options, (option, i) => {
-            //             if(option){
-            //                 yield call(uploadVariationImages, companyId, option.id, get(dataProducts[i], 'image'))
-            //             }
-            //         })
-            //     })
-            // }
+            if (size(images.productImages) > 0) {
+                yield call(uploadComponentImages, companyId, response.data.id, images.productImages);
+            }
+            const variationOptions = map(get(response, "data.products"), product => get(product, "product_variation_options"));
+            const variationIds:any[] = []
+            forEach(variationOptions, option =>
+                forEach(option, opt => variationIds.push(opt.id) )
+            );
+            if (size(variationIds) > 0 && size(images.variationImages) > 0) {
+                yield all(images.variationImages.map((file, i) =>
+                    call(uploadVariationImages, companyId, variationIds[i], [file])
+                ));
+            }
         }
         yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT, response.data));
     } catch (error) {

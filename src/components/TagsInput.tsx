@@ -10,7 +10,7 @@ interface TagsInputProps {
     id: string;
     placeholder?: string;
     tags?: [string];
-    selectedTags?: (tags: any) => void;
+    selectedTags: (tags: any) => void;
 }
 
 const TagsInput = (props: TagsInputProps) => {
@@ -22,6 +22,7 @@ const TagsInput = (props: TagsInputProps) => {
         if (size(tags) === 0) {
             setError("");
         }
+        props.selectedTags(tags);
     }, [size(tags)])
 
     const handleChange = (event: any) => {
@@ -47,7 +48,6 @@ const TagsInput = (props: TagsInputProps) => {
                setValue("");
             } else {
                 setTags([...tags, value]);
-                props.selectedTags && props.selectedTags([...tags, value]);
                 setValue("")
                 setError("")
             }

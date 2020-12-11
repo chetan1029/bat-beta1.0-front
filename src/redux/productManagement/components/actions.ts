@@ -17,9 +17,9 @@ export const getComponents = (companyId: string | number, filters?: any) => ({
     payload: { companyId, filters }
 });
 
-export const createComponent = (companyId: string | number, data: any) => ({
+export const createComponent = (companyId: string | number, data: any, images: any) => ({
     type: ComponentsTypes.CREATE_COMPONENT,
-    payload: { companyId, data }
+    payload: { companyId, data, images }
 });
 
 export const editComponent = (companyId: string | number, componentId: number | string, data: any) => ({

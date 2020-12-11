@@ -67,10 +67,10 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             title: Yup.string().required(t('Title is required')),
         }),
         onSubmit: (values: any) => {
+            //TODO- allow if no variation option given
             if (!isEmpty(variationOptions)) {
                 let data = {
                     ...values,
-                    images: files,
                     ...{
                         is_component: true,
                         tags: tags.toString(),
@@ -78,7 +78,6 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                         series: values.series['value'],
                         products: map(variationOptions, opt => ({
                             title: values.title,
-                            image: opt.image,
                             model_number: opt.model_number,
                             manufacturer_part_number: opt.manufacturer_part_number,
                             weight: opt.weight,
@@ -86,7 +85,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                         }))
                     }
                 }
-                dispatch(createComponent(companyId, data));
+                dispatch(createComponent(companyId, data, { productImages : files, variationImages: map(variationOptions, opt => opt.image)}));
             }
         },
     });
