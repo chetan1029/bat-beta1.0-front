@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from "react-bootstrap";
-import { map } from "lodash";
+import { map, isEmpty, size } from "lodash";
+import classNames from "classnames";
 import Icon from "./Icon";
 
 interface TagsInputProps {
@@ -15,6 +16,13 @@ interface TagsInputProps {
 const TagsInput = (props: TagsInputProps) => {
     const [tags, setTags] = useState<any>(props.tags);
     const [value, setValue] = useState<any>("");
+    const [error, setError] = useState<any>("");
+
+    useEffect(() => {
+        if (size(tags) === 0) {
+            setError("");
+        }
+    }, [size(tags)])
 
     const handleChange = (event: any) => {
         const { value } = event.target
@@ -33,10 +41,16 @@ const TagsInput = (props: TagsInputProps) => {
     };
 
     const addTags = (value: string) => {
-        if (value !== "") {
-            setTags([...tags, value]);
-            props.selectedTags && props.selectedTags([...tags, value]);
-            setValue("")
+        if (!isEmpty(value)) {
+            if (tags.includes(value.toLowerCase())) {
+               setError(`${props.name} already added`);
+               setValue("");
+            } else {
+                setTags([...tags, value]);
+                props.selectedTags && props.selectedTags([...tags, value]);
+                setValue("")
+                setError("")
+            }
         }
     };
 
@@ -45,7 +59,7 @@ const TagsInput = (props: TagsInputProps) => {
             <Form.Label htmlFor="tags">{props.label}</Form.Label>
             <Form.Control
                 type="text"
-                className="form-control"
+                className={classNames("form-control", error && "border-danger")}
                 id={props.id}
                 name={props.name}
                 value={value}
@@ -54,6 +68,11 @@ const TagsInput = (props: TagsInputProps) => {
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
             />
+            {error &&
+            <span className="text-danger font-10">
+                {error}
+            </span>
+            }
             <ul id="tags">
                 {map(tags, (tag, index) => (
                     <li key={index} className="tag">

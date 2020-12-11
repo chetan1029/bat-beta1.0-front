@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Card, Col, Dropdown, DropdownButton, Form, InputGroup, Row } from "react-bootstrap";
-import { forEach, isEmpty, map, size, uniqBy } from "lodash";
+import { forEach, isEmpty, map, size, uniqBy, filter } from "lodash";
 import Dropzone from "react-dropzone";
 import TagsInput from "./TagsInput";
 import Icon from "./Icon";
@@ -99,20 +99,21 @@ const VariationDetails = (props: VariationDetailsProps) => {
         // })
 
         forEach(uniqBy(newOptions, "value"), varOption => {
-            setVariationOptions((prevState) => uniqBy([...prevState, {
+            setVariationOptions((prevState) => uniqBy([{
                 name: varOption.name,
                 value: varOption.value,
                 image: "",
                 model_number: "",
                 manufacturer_part_number: "",
-                weight: { value: "", unit: "lb" }
+                weight: { value: "", unit: "lb" },
+                show: true,
             }], "name"))
         })
 
     }, [variations, variations && size(variations.option)])
 
     useEffect(() => {
-        onSetVariationOptions(variationOptions)
+        onSetVariationOptions(filter(variationOptions, option => !!option.show))
     }, [variationOptions])
 
     const removeVariation = (index: number) => {
@@ -121,10 +122,18 @@ const VariationDetails = (props: VariationDetailsProps) => {
         setVariations(newVariations);
     }
 
-    const removeVariationOptions = (index: number) => {
+    const removeVariationOptions = (index: number, show, undo: boolean = false) => {
         const newVariationsOptions = [...variationOptions];
-        newVariationsOptions.splice(index, 1);
-        setVariationOptions(newVariationsOptions);
+        if (!!show) {
+            newVariationsOptions[index] = { ...newVariationsOptions[index], show: false };
+            setVariationOptions(newVariationsOptions);
+        } else if (!show && undo) {
+            newVariationsOptions[index] = { ...newVariationsOptions[index], show: true };
+            setVariationOptions(newVariationsOptions);
+        } else {
+            newVariationsOptions.splice(index, 1);
+            setVariationOptions(newVariationsOptions);
+        }
     }
 
     return (
@@ -144,7 +153,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
             {hasVariation &&
             <Card className="mb-4">
               <h6
-                className="text-blue text-right m-3"
+                className="link  text-blue text-right m-3"
                 onClick={() => setVariations([...variations, { name: "", option: "" }])}
               >
                 + {t('Add one more')}
@@ -194,75 +203,100 @@ const VariationDetails = (props: VariationDetailsProps) => {
 
         {map(variationOptions, (option, index) => (
             <Row key={index} className="mt-2 mx-0">
-                <div className="react-dropzone d-flex align-items-center justify-content-center">
-                    {option.image ?
-                        <div className={"variation-image"}>
-                            <img src={option.image.preview} alt={option.image.name}/>
-                        </div> :
-                        <Dropzone onDropAccepted={(files) => handleUploadImage(files[0], index)} multiple maxFiles={1}>
-                            {({ getRootProps, getInputProps }) => (
-                                <div className="small-dropzone" {...getRootProps()}>
-                                    <input {...getInputProps()} />
-                                    <Icon name={"upload"} className="icon-sm"/>
-                                    <span className="font-10">Upload</span>
-                                </div>
-                            )}
-                        </Dropzone>
-                    }
-                </div>
-                <Col lg={4}>
-                    <Form.Group className="mb-4">
-                        <Form.Label htmlFor="name">{`${t("Model Number ")}${option.name}`}</Form.Label>
-                        <Form.Control
-                            type="text"
-                            className="form-control"
-                            id={`model_number${index}`}
-                            name={"model_number"}
-                            value={option.modelNo}
-                            placeholder={`${t("Model Number ")}${option.name}`}
-                            autoComplete="off"
-                            onChange={(e: any) => handleOptionInputChange(e, index)}
-                        />
-                    </Form.Group>
-                </Col>
-                <Col lg={4}>
-                    <Form.Group className="mb-4">
-                        <Form.Label htmlFor="option">{`${t("Manufacturer Number ")}${option.name}`}</Form.Label>
-                        <Form.Control
-                            type="text"
-                            className="form-control"
-                            id={`manufacturer_part_number${index}`}
-                            name={"manufacturer_part_number"}
-                            value={option.modelNo}
-                            placeholder={`${t("Manufacturer Number ")}${option.name}`}
-                            autoComplete="off"
-                            onChange={(e: any) => handleOptionInputChange(e, index)}
-                        />
-                    </Form.Group>
-                </Col>
-                <Col lg={3}>
-                    <Form.Label htmlFor="usr">{`${t("Weight ")}${option.name}`}</Form.Label>
-                    <Form.Group className="mb-4">
-                        <InputGroup>
-                            <Form.Control
-                                placeholder={`${t("Weight ")}${option.name}`}
-                                onChange={(e: any) => handleWeightChange("value", e.target.value, index)}
-                            />
-                            <DropdownButton
-                                as={InputGroup.Append}
-                                variant="outline-secondary"
-                                title={option.weight.unit}
-                                id="input-group-dropdown-2"
-                            >
-                                <Dropdown.Item onClick={() => handleWeightChange("unit", "lb", index)}>{t("lb")}</Dropdown.Item>
-                                <Dropdown.Item onClick={() => handleWeightChange("unit", "kg", index)}>{t("kg")}</Dropdown.Item>
-                            </DropdownButton>
-                        </InputGroup>
-                    </Form.Group>
-                </Col>
-                <div onClick={() => removeVariationOptions(index)} style={{position: "sticky", marginTop: "3em"}}>
-                   <Icon name="delete" className="mx-1 svg-outline-danger"/>
-                </div>
+                {!!option.show ?
+                    <>
+                        <div className="react-dropzone d-flex align-items-center justify-content-center">
+                            {option.image ?
+                                <div className={"variation-image"}>
+                                    <img src={option.image.preview} alt={option.image.name}/>
+                                </div> :
+                                <Dropzone onDropAccepted={(files) => handleUploadImage(files[0], index)} multiple
+                                          maxFiles={1}>
+                                    {({ getRootProps, getInputProps }) => (
+                                        <div className="small-dropzone" {...getRootProps()}>
+                                            <input {...getInputProps()} />
+                                            <Icon name={"upload"} className="icon-sm"/>
+                                            <span className="font-10">Upload</span>
+                                        </div>
+                                    )}
+                                </Dropzone>
+                            }
+                        </div>
+                        <Col lg={4}>
+                            <Form.Group className="mb-4">
+                                <Form.Label htmlFor="name">{`${t("Model Number ")}${option.name}`}</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    className="form-control"
+                                    id={`model_number${index}`}
+                                    name={"model_number"}
+                                    value={option.modelNo}
+                                    placeholder={`${t("Model Number ")}${option.name}`}
+                                    autoComplete="off"
+                                    onChange={(e: any) => handleOptionInputChange(e, index)}
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col lg={4}>
+                            <Form.Group className="mb-4">
+                                <Form.Label htmlFor="option">{`${t("Manufacturer Number ")}${option.name}`}</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    className="form-control"
+                                    id={`manufacturer_part_number${index}`}
+                                    name={"manufacturer_part_number"}
+                                    value={option.modelNo}
+                                    placeholder={`${t("Manufacturer Number ")}${option.name}`}
+                                    autoComplete="off"
+                                    onChange={(e: any) => handleOptionInputChange(e, index)}
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col lg={3}>
+                            <Form.Label htmlFor="usr">{`${t("Weight ")}${option.name}`}</Form.Label>
+                            <Form.Group className="mb-4">
+                                <InputGroup>
+                                    <Form.Control
+                                        aria-label={`${t("Weight ")}${option.name}`}
+                                        aria-describedby="basic-addon2"
+                                        placeholder={`${t("Weight ")}${option.name}`}
+                                        onChange={(e: any) => handleWeightChange("value", e.target.value, index)}
+                                    />
+                                    <DropdownButton
+                                        as={InputGroup.Append}
+                                        variant="outline-secondary"
+                                        title={option.weight.unit}
+                                        id="input-group-dropdown-2"
+                                    >
+                                        <Dropdown.Item
+                                            onClick={() => handleWeightChange("unit", "lb", index)}>{t("lb")}</Dropdown.Item>
+                                        <Dropdown.Item
+                                            onClick={() => handleWeightChange("unit", "kg", index)}>{t("kg")}</Dropdown.Item>
+                                    </DropdownButton>
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                        <div onClick={() => removeVariationOptions(index, option.show)}
+                             style={{ position: "sticky", marginTop: "3em" }}>
+                            <Icon name="delete" className="mx-1 svg-outline-danger"/>
+                        </div>
+                    </> :
+                    <>
+                        <div className="d-flex align-items-center justify-content-center cursor-pointer"
+                             onClick={() => removeVariationOptions(index, option.show)}>
+                            <div className={"delete-box"}>
+                                <Icon name="delete-white"/>
+                            </div>
+                        </div>
+                        <Col lg={3} className="d-flex align-items-center">
+                            {t("This variant will not be created. You can undo this action")}
+                        </Col>
+                         <button className="btn btn-outline-primary cursor-pointer"
+                                 onClick={() => removeVariationOptions(index, option.show, true)}>
+                             {t("Undo")}
+                         </button>
+                    </>
+                }
             </Row>
         ))}
     </>

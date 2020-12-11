@@ -10,7 +10,7 @@ import * as Yup from "yup";
 const urlToFile = (image: any) => {
     const xhr = new XMLHttpRequest();
     return new Promise(function(resolve, reject) {
-        xhr.open('GET', `https://cors-anywhere.herokuapp.com/${image}`, true);
+        xhr.open('GET', `${image}`, true);
         xhr.onload = function(e) {
             if (this.status == 200) {
                 const reader = new FileReader();
@@ -50,6 +50,7 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
             urlToFile(values.url).then((blob: any) => {
                 setLoading(false)
                 const file = new File([blob],`img${Math.random().toString(36).substring(7)}`);
+                Object.assign(file, { preview: values.url })
                 onGetFile(file);
                 onCancel();
                 }).catch((err: any) => err)
@@ -69,6 +70,7 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{t("Add File from URL")}</h1>
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
+
                             <Form.Group className="mb-4">
                                 <Form.Label htmlFor="url">{t('File URL')}</Form.Label>
                                 <Form.Control type="text" className="form-control" id="url" name="url" placeholder="Paste file from URL"
@@ -149,14 +151,14 @@ const MediaInput = (props: MediaInputProps) => {
                 <div className="d-flex justify-content-between align-items-center">
                     {size(selectedFiles) > 0 &&
                         <h6 
-                          className="text-danger mr-3 d-flex justify-content-between align-items-center"
+                          className="link text-danger mr-3 d-flex justify-content-between align-items-center"
                           onClick={handleDeleteFile}
                         >
                             <Icon name="delete" className="mx-1 svg-outline-danger" />
                             {`${t('Delete file')} (${size(selectedFiles)})`}
                         </h6>
                     }
-                    <h6 className="text-blue" onClick={() => setAddFileFromUrlModal(true)}>
+                    <h6 className="text-blue link" onClick={() => setAddFileFromUrlModal(true)}>
                         + {t('Add from URL')}
                     </h6>
                 </div>

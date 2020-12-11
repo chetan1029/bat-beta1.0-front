@@ -82,6 +82,37 @@
     color: $primary !important
 }
 
+.link {
+    cursor: pointer;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.input-group {
+    .dropdown-menu {
+        border: 1px solid $dropdown-border-color !important;
+        border-radius: $dropdown-border-radius !important;
+        background: $white !important;
+    }
+
+    .btn-outline-secondary {
+        border: 1px solid $dropdown-border-color !important;
+    }
+}
+
+.delete-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.5em;
+    width: 3.5em;
+    border: 1px solid rgba($primary, 0.3);
+    border-radius: 0.7em;
+    background-color: $primary;
+}
+
 // .form-group {
 //     position: relative;
 

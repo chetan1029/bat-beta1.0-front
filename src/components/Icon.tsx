@@ -489,6 +489,13 @@ const Icon = ({ name, className }: Props) => {
           <path d="M11.8103 18.0801L16.0538 14.3467L20.1913 18.0801" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
+      case 'delete-white':
+        return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.7916 9.36523C18.7916 9.36523 18.2193 16.3736 17.8872 19.3257C17.7291 20.7357 16.8469 21.5619 15.4017 21.5879C12.6516 21.6368 9.8984 21.6399 7.14937 21.5827C5.75905 21.5546 4.89154 20.718 4.73659 19.333C4.40245 16.3548 3.83325 9.36523 3.83325 9.36523" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M20.25 6.00564H2.375" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M16.806 6.00559C15.9785 6.00559 15.266 5.42807 15.1036 4.62786L14.8475 3.36251C14.6894 2.77875 14.1539 2.375 13.5436 2.375H9.0817C8.47139 2.375 7.93592 2.77875 7.77781 3.36251L7.52167 4.62786C7.35934 5.42807 6.64678 6.00559 5.81934 6.00559" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+
       default:
         return null;
     }
