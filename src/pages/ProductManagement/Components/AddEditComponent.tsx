@@ -97,13 +97,13 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 
     return (
         <>
-            {isComponentCreated ? <Redirect to={`/product-management/components/${companyId}`}/> : null}
+            {isComponentCreated ? <Redirect to={`/product-management/${companyId}/components`}/> : null}
 
             <div className="py-4 px-3">
                 <Row>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <Link to={`/settings/${companyId}/members`}>
+                            <Link to={`/product-management/${companyId}/components`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2"/>
                             </Link>
                             <h1 className="m-0">{t('Add Component')}</h1>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Card, Col, Dropdown, DropdownButton, Form, InputGroup, Row } from "react-bootstrap";
-import { forEach, isEmpty, map, size, uniqBy, filter } from "lodash";
+import { forEach, isEmpty, map, size, uniqBy, filter, isEqual, xorWith } from "lodash";
 import Dropzone from "react-dropzone";
 import TagsInput from "./TagsInput";
 import Icon from "./Icon";
@@ -98,8 +98,12 @@ const VariationDetails = (props: VariationDetailsProps) => {
         //     forEach(newOptions, option => isEmpty(xorWith(opt.value, newOptions[i + 1] && newOptions[i + 1].value, isEqual)))
         // })
 
+        
+        const uniqueOpts:Array<any> = [];
+        const newOpts:Array<any> = []; 
+
         forEach(uniqBy(newOptions, "value"), varOption => {
-            setVariationOptions((prevState) => uniqBy([{
+            newOpts.push({
                 name: varOption.name,
                 value: varOption.value,
                 image: "",
@@ -107,9 +111,12 @@ const VariationDetails = (props: VariationDetailsProps) => {
                 manufacturer_part_number: "",
                 weight: { value: "", unit: "lb" },
                 show: true,
-            }], "name"))
-        })
+            });
+        });
 
+        newOpts.map(x => uniqueOpts.filter(a => isEmpty(xorWith(a.value, x.value, isEqual))).length > 0 ? null : uniqueOpts.push(x));
+
+        setVariationOptions(uniqueOpts);
     }, [variations, variations && size(variations.option)])
 
     useEffect(() => {

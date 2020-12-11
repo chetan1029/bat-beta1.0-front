@@ -30,8 +30,8 @@ import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 import Root from "../pages/Root";
 
 const authProtectedRoutes = [
-  { path: "/product-management/components/:companyId", component: Components },
   { path: "/product-management/:companyId/components/add", component: AddEditComponent },
+  { path: "/product-management/:companyId/components", component: Components },
 
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
