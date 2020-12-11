@@ -6,19 +6,19 @@ import { useTranslation } from 'react-i18next';
 
 //components
 import Icon from "../../components/Icon";
-import AddEditLocation from "./AddEditLocation";
+import AddEditHscode from "./AddEditHscode";
 
 //actions
-import { getLocation, deleteLocation, archiveLocation, restoreLocation, reset } from "../../redux/actions";
+import { getHscode, deleteHscode, archiveHscode, restoreHscode, reset } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
 import { COUNTRIES } from "../../constants";
-interface LocationCardItemProps {
-    location: any;
+interface HscodeCardItemProps {
+    hscode: any;
     onArchiveDeleteAction: any;
-    onEditLocation: any;
+    onEditHscode: any;
     companyId: any;
 }
 
@@ -28,63 +28,73 @@ const EmptyState = ({ showArchived }) => {
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived location available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no location available')}</h5>}
+                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived hscode available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no hscode available')}</h5>}
                 </div>
             </Card.Body>
         </Card>
     )
 }
 
-const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, companyId }: LocationCardItemProps) => {
+const HscodeCardItem = ({ hscode, onArchiveDeleteAction, onEditHscode, companyId }: HscodeCardItemProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
     const [selectedTermForDelete, setselectedTermForDelete] = useState<any>(null);
 
     /*
-    delete Location
+    delete Hscode
     */
-    const onDeleteLocation = (id: any) => {
-        onArchiveDeleteAction(location);
-        setselectedTermForDelete(location);
+    const onDeleteHscode = (id: any) => {
+        onArchiveDeleteAction(hscode);
+        setselectedTermForDelete(hscode);
     }
 
     const onClickArchiveUnArchive = (action: boolean) => {
         if (action) {
-            dispatch(restoreLocation(companyId, location.id));
+            dispatch(restoreHscode(companyId, hscode.id));
         } else {
-            dispatch(archiveLocation(companyId, location.id));
+            dispatch(archiveHscode(companyId, hscode.id));
         }
-        onArchiveDeleteAction(location);
+        onArchiveDeleteAction(hscode);
     }
 
     return (<>
         <Row>
             <Col lg={12}>
                 <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditLocation(location)} className="payment-terms-link">
+                    <Link to="#" onClick={() => onEditHscode(hscode)} className="payment-terms-link">
                         <Card.Header className="payment-card-title">
                             <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Location Name')}</h6>
-                                <h6 className="m-0 font-weight-bold">{location.name}</h6>
+                                <h6 className="m-0 text-muted font-weight-bold">{t('Hscode')}</h6>
+                                <h6 className="m-0 font-weight-bold">{hscode.hscode}</h6>
                             </div>
                         </Card.Header>
                         <Card.Body>
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Address')}</h6>
-                                <h6 className="m-0 font-weight-bold">{location.address1}{location.address2 ? ' '+location.address2:''}, {location.city} {location.zip}, {COUNTRIES[location.country]}</h6>
-                            </div>
+                          <Row>
+                              <Col lg={6}>
+                                <div className="p-2">
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Material')}</h6>
+                                    <h6 className="m-0 font-weight-bold">{hscode.material}</h6>
+                                </div>
+                              </Col>
+                              <Col lg={6}>
+                                <div className="p-2">
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Use')}</h6>
+                                    <h6 className="m-0 font-weight-bold">{hscode.use}</h6>
+                                </div>
+                              </Col>
+                          </Row>
                         </Card.Body>
                     </Link>
                     <Card.Footer className="payment-card-footer">
                         <div className="p-2 float-right">
                             <div className="d-flex align-items-center">
                                 {
-                                    !location.is_active ?
+                                    !hscode.is_active ?
                                         <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-primary mr-2" /></Link> :
                                         <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-warning mr-2" /></Link>
                                 }
-                                <Link to="#" onClick={() => onDeleteLocation(location.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
+                                <Link to="#" onClick={() => onDeleteHscode(hscode.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
 
                             </div>
                         </div>
@@ -93,40 +103,40 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
             </Col>
         </Row>
         {selectedTermForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTermForDelete.title}?`} onConfirm={() => {
-            dispatch(deleteLocation(companyId, selectedTermForDelete.id));
+            dispatch(deleteHscode(companyId, selectedTermForDelete.id));
         }} onClose={() => setselectedTermForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
     </>
     )
 }
 
-interface LocationProps {
+interface HscodeProps {
     match: any;
 }
-const Location = (props: LocationProps) => {
+const Hscode = (props: HscodeProps) => {
     const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
-    const { locations, isLocationFetched, isLocationCreated, isLocationUpdated, isLocationDeleted, isLocationArchived, isLocationRestored } = useSelector((state: any) => ({
-        locations: state.Company.Location.locations,
+    const { hscodes, isHscodeFetched, isHscodeCreated, isHscodeUpdated, isHscodeDeleted, isHscodeArchived, isHscodeRestored } = useSelector((state: any) => ({
+        hscodes: state.Company.Hscode.hscodes,
 
         //flags
-        isLocationFetched: state.Company.Location.isLocationFetched,
-        isLocationCreated: state.Company.Location.isLocationCreated,
-        isLocationUpdated: state.Company.Location.isLocationUpdated,
-        isLocationDeleted: state.Company.Location.isLocationDeleted,
-        isLocationArchived: state.Company.Location.isLocationArchived,
-        isLocationRestored: state.Company.Location.isLocationRestored
+        isHscodeFetched: state.Company.Hscode.isHscodeFetched,
+        isHscodeCreated: state.Company.Hscode.isHscodeCreated,
+        isHscodeUpdated: state.Company.Hscode.isHscodeUpdated,
+        isHscodeDeleted: state.Company.Hscode.isHscodeDeleted,
+        isHscodeArchived: state.Company.Hscode.isHscodeArchived,
+        isHscodeRestored: state.Company.Hscode.isHscodeRestored
     }));
 
     const companyId = props.match.params.companyId;
     /*
-    location
+    hscode
     */
     useEffect(() => {
         const companyId = props.match.params.companyId;
         if (companyId) {
-            dispatch(getLocation(companyId, { is_active: true }));
+            dispatch(getHscode(companyId, { is_active: true }));
         }
     }, [dispatch, props.match.params.companyId]);
 
@@ -138,7 +148,7 @@ const Location = (props: LocationProps) => {
 
     const onChangeShowArchive = (checked: boolean) => {
         setshowArchived(checked);
-        dispatch(getLocation(companyId, { is_active: !checked }));
+        dispatch(getHscode(companyId, { is_active: !checked }));
     }
 
     /*
@@ -149,8 +159,8 @@ const Location = (props: LocationProps) => {
     /*
     to display alert and set title
     */
-    const onArchiveDeleteAction = (location: any) => {
-        setarchiveUnarchiveItem(location);
+    const onArchiveDeleteAction = (hscode: any) => {
+        setarchiveUnarchiveItem(hscode);
     }
 
     /*
@@ -166,36 +176,36 @@ const Location = (props: LocationProps) => {
     }
 
     /*
-        location
+        hscode
     */
-    const [selectedLocation, setselectedLocation] = useState<any>();
+    const [selectedHscode, setselectedHscode] = useState<any>();
 
-    const setLocation = (location: any) => {
-        setselectedLocation(location);
+    const setHscode = (hscode: any) => {
+        setselectedHscode(hscode);
         setisopen(true);
     }
 
     /*
-    close modal for after creating location
+    close modal for after creating hscode
     */
     useEffect(() => {
-        if (isLocationCreated || isLocationUpdated) {
+        if (isHscodeCreated || isHscodeUpdated) {
             setisopen(false);
-            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
+            dispatch(getHscode(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
                 dispatch(reset());
             }, 10000);
         }
-    }, [isLocationCreated, isLocationUpdated, dispatch, props.match.params.companyId]);
+    }, [isHscodeCreated, isHscodeUpdated, dispatch, props.match.params.companyId]);
 
     /*
     re-fetch items when item deleted, archived, restored
     */
     useEffect(() => {
-        if (isLocationDeleted || isLocationArchived || isLocationRestored) {
-            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
+        if (isHscodeDeleted || isHscodeArchived || isHscodeRestored) {
+            dispatch(getHscode(props.match.params.companyId, { is_active: true }));
 
-            if (isLocationRestored) {
+            if (isHscodeRestored) {
                 setshowArchived(false);
             }
 
@@ -203,7 +213,7 @@ const Location = (props: LocationProps) => {
                 dispatch(reset());
             }, 10000);
         }
-    }, [isLocationDeleted, isLocationArchived, isLocationRestored, dispatch, props.match.params.companyId]);
+    }, [isHscodeDeleted, isHscodeArchived, isHscodeRestored, dispatch, props.match.params.companyId]);
 
     return (
         <>
@@ -214,7 +224,7 @@ const Location = (props: LocationProps) => {
                             <Link to={`/settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
-                            <h1 className="m-0">{t('Locations')}</h1>
+                            <h1 className="m-0">{t('Hscodes')}</h1>
                             <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">
                                     {t('Show archived')}
@@ -232,14 +242,14 @@ const Location = (props: LocationProps) => {
                     <Col className="text-right">
                         <Button variant="primary" onClick={() => {
                             openModal();
-                            setselectedLocation(null);
-                        }}>{t('Add Locations')}</Button>
+                            setselectedHscode(null);
+                        }}>{t('Add Hscodes')}</Button>
                     </Col>
                 </Row>
             </div>
 
             {
-                !isLocationFetched ?
+                !isHscodeFetched ?
                     <Loader />
                     :
                     <div>
@@ -249,12 +259,12 @@ const Location = (props: LocationProps) => {
                                     <Row>
                                         <Col lg={6} xs={12}>
                                             {
-                                                locations['results'].length > 0 ?
-                                                    locations['results'].map((location, key) =>
-                                                        <LocationCardItem location={location}
+                                                hscodes['results'].length > 0 ?
+                                                    hscodes['results'].map((hscode, key) =>
+                                                        <HscodeCardItem hscode={hscode}
                                                             key={key} companyId={companyId}
                                                             onArchiveDeleteAction={onArchiveDeleteAction}
-                                                            onEditLocation={setLocation}
+                                                            onEditHscode={setHscode}
                                                         />
                                                     ) : <EmptyState showArchived={showArchived} />
                                             }
@@ -284,30 +294,30 @@ const Location = (props: LocationProps) => {
             }
 
 
-            {isLocationCreated && (!isLocationDeleted && !isLocationRestored) ? <MessageAlert message={t('A new Location is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isHscodeCreated && (!isHscodeDeleted && !isHscodeRestored) ? <MessageAlert message={t('A new Hscode is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isLocationDeleted && (!isLocationCreated && !isLocationRestored) ? <MessageAlert message={t('Selected Location is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isHscodeDeleted && (!isHscodeCreated && !isHscodeRestored) ? <MessageAlert message={t('Selected Hscode is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isLocationArchived ? <MessageAlert
-                message={`${t('Location')} ${archiveUnarchiveItem.name} ${t('is archived. You can undo this action.')}`}
+            {isHscodeArchived ? <MessageAlert
+                message={`${t('Hscode')} ${archiveUnarchiveItem.hscode} ${t('is archived. You can undo this action.')}`}
                 iconWrapperClass="bg-warning text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="archive" undo={true} onUndo={() => {
-                    dispatch(restoreLocation(companyId, archiveUnarchiveItem.id))
+                    dispatch(restoreHscode(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
-            {isLocationRestored ? <MessageAlert
-                message={`${t('Location')} ${archiveUnarchiveItem.name} ${t('is restored. You can undo this action.')}`}
+            {isHscodeRestored ? <MessageAlert
+                message={`${t('Hscode')} ${archiveUnarchiveItem.hscode} ${t('is restored. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="un-archive" undo={true} onUndo={() => {
-                    dispatch(archiveLocation(companyId, archiveUnarchiveItem.id))
+                    dispatch(archiveHscode(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
 
-            {isOpen ? <AddEditLocation isOpen={isOpen} onClose={closeModal} companyId={companyId} location={selectedLocation} /> : null}
+            {isOpen ? <AddEditHscode isOpen={isOpen} onClose={closeModal} companyId={companyId} hscode={selectedHscode} /> : null}
         </>
     );
 }
 
-export default withRouter(Location);
+export default withRouter(Hscode);

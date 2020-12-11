@@ -1,7 +1,7 @@
 import { BankTypes } from './constants';
 
 const INIT_STATE: any = {
-    bank: []
+    banks: []
 };
 
 
@@ -12,7 +12,7 @@ const Bank = (state = INIT_STATE, action: any) => {
                 case BankTypes.GET_BANK: {
                     return {
                         ...state,
-                        bank: action.payload.data,
+                        banks: action.payload.data,
                         isBankFetched: true,
                     }
                 }

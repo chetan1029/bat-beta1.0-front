@@ -41,9 +41,9 @@ function* createLocation({ payload: { companyId, params } }: any) {
 /*
 update payment term
 */
-function* editLocation({ payload: { companyId, bankId, params } }: any) {
+function* editLocation({ payload: { companyId, locationId, params } }: any) {
     try {
-        const response = yield call(updateLocation, companyId, bankId, params);
+        const response = yield call(updateLocation, companyId, locationId, params);
         yield put(locationApiResponseSuccess(LocationTypes.EDIT_LOCATION, response.data));
     } catch (error) {
         yield put(locationApiResponseError(LocationTypes.EDIT_LOCATION, error));
@@ -53,9 +53,9 @@ function* editLocation({ payload: { companyId, bankId, params } }: any) {
 /*
 delete payment term
 */
-function* deleteLocation({ payload: { companyId, bankId } }: any) {
+function* deleteLocation({ payload: { companyId, locationId } }: any) {
     try {
-        const response = yield call(deleteLocationApi, companyId, bankId);
+        const response = yield call(deleteLocationApi, companyId, locationId);
         yield put(locationApiResponseSuccess(LocationTypes.DELETE_LOCATION, response.data));
 
     } catch (error) {
@@ -66,9 +66,9 @@ function* deleteLocation({ payload: { companyId, bankId } }: any) {
 /*
 archive
 */
-function* archiveLocation({ payload: { companyId, bankId, params } }: any) {
+function* archiveLocation({ payload: { companyId, locationId, params } }: any) {
     try {
-        const response = yield call(archiveLocationApi, companyId, bankId, params);
+        const response = yield call(archiveLocationApi, companyId, locationId, params);
         yield put(locationApiResponseSuccess(LocationTypes.ARCHIVE_LOCATION, response.data));
 
     } catch (error) {
@@ -79,9 +79,9 @@ function* archiveLocation({ payload: { companyId, bankId, params } }: any) {
 /*
 restore
 */
-function* restoreLocation({ payload: { companyId, bankId, params } }: any) {
+function* restoreLocation({ payload: { companyId, locationId, params } }: any) {
     try {
-        const response = yield call(restoreLocationApi, companyId, bankId, params);
+        const response = yield call(restoreLocationApi, companyId, locationId, params);
         yield put(locationApiResponseSuccess(LocationTypes.RESTORE_LOCATION, response.data));
 
     } catch (error) {

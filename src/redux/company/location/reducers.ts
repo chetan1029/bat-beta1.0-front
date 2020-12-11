@@ -1,7 +1,7 @@
 import { LocationTypes } from './constants';
 
 const INIT_STATE: any = {
-    bank: []
+    locations: []
 };
 
 
@@ -12,7 +12,7 @@ const Location = (state = INIT_STATE, action: any) => {
                 case LocationTypes.GET_LOCATION: {
                     return {
                         ...state,
-                        bank: action.payload.data,
+                        locations: action.payload.data,
                         isLocationFetched: true,
                     }
                 }

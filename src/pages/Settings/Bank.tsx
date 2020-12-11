@@ -119,8 +119,8 @@ const Bank = (props: BankProps) => {
 
     const dispatch = useDispatch();
 
-    const { bank, isBankFetched, isBankCreated, isBankUpdated, isBankDeleted, isBankArchived, isBankRestored } = useSelector((state: any) => ({
-        bank: state.Company.Bank.bank,
+    const { banks, isBankFetched, isBankCreated, isBankUpdated, isBankDeleted, isBankArchived, isBankRestored } = useSelector((state: any) => ({
+        banks: state.Company.Bank.banks,
 
         //flags
         isBankFetched: state.Company.Bank.isBankFetched,
@@ -261,8 +261,8 @@ const Bank = (props: BankProps) => {
                                     <Row>
                                         <Col lg={6} xs={12}>
                                             {
-                                                bank['results'].length > 0 ?
-                                                    bank['results'].map((bank, key) =>
+                                                banks['results'].length > 0 ?
+                                                    banks['results'].map((bank, key) =>
                                                         <BankCardItem bank={bank}
                                                             key={key} companyId={companyId}
                                                             onArchiveDeleteAction={onArchiveDeleteAction}

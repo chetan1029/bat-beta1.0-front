@@ -4,6 +4,8 @@ import Common from "./common/reducers";
 import Members from "./members/reducers";
 import Vendors from "./vendors/reducers";
 import Bank from "./bank/reducers";
+import Tax from "./tax/reducers";
+import Hscode from "./hscode/reducers";
 import Location from "./location/reducers";
 import PackingBox from "./packingBox/reducers";
 
@@ -13,6 +15,8 @@ export default combineReducers({
     Vendors,
     Common,
     Bank,
+    Hscode,
     Location,
     PackingBox,
+    Tax,
 });
