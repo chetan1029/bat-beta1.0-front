@@ -51,7 +51,10 @@ const AddEditTax = ({ isOpen, onClose, tax, companyId }: AddEditTaxProps) => {
             vat: tax ? tax.vat : '',
         },
         validationSchema: Yup.object({
-            tax: Yup.string().required(t('Tax is required')),
+            from_country: Yup.object().required(t('From Country is required')),
+            to_country: Yup.object().required(t('To Country is required')),
+            custom_duty: Yup.string().required(t('Custom Duty is required')),
+            vat: Yup.string().required(t('VAT is required')),
         }),
         onSubmit: values => {
 
