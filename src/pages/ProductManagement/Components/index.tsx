@@ -8,6 +8,7 @@ import { map } from "lodash";
 //components
 import Icon from "../../../components/Icon";
 import { getComponents, resetComponents } from "../../../redux/actions";
+import MessageAlert from "../../../components/MessageAlert";
 
 const TabMenu = ({ onChange, selectedView }) => {
     const { t } = useTranslation();
@@ -46,8 +47,10 @@ const Components = (props: ComponentsProps) => {
 
     const {
         components,
+        isComponentCreated,
     } = useSelector(({ ProductManagement: { Components } }: any) => ({
-        components: Components.components
+        components: Components.components,
+        isComponentCreated: Components.isComponentCreated,
     }));
 
     const onChangeShowActive = (checked: boolean) => {
@@ -149,6 +152,7 @@ const Components = (props: ComponentsProps) => {
                     </Table>
                 </Card.Body>
             </Card>
+            {isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
         </>
     );
 }

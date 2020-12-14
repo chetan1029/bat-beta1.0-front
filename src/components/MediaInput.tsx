@@ -7,24 +7,42 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const urlToFile = (image: any) => {
-    const xhr = new XMLHttpRequest();
-    return new Promise(function(resolve, reject) {
-        xhr.open('GET', `${image}`, true);
-        xhr.onload = function(e) {
-            if (this.status == 200) {
-                const reader = new FileReader();
-                reader.onloadend = function() {
-                    resolve(reader.result);
-                }
-                reader.readAsDataURL(xhr.response);
-            } else if (this.status >= 300) {
-                reject("Error status code =" + this.status)
+const getImageFormUrl = (url, callback) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload =  (a: any) => {
+        const canvas = document.createElement("canvas") as HTMLCanvasElement;
+        if (canvas) {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx && ctx.drawImage(img, 0, 0);
+
+            const dataURI = canvas.toDataURL("image/jpg");
+
+            // convert base64/URLEncoded data component to raw binary data held in a string
+            let byteString;
+            if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                byteString = atob(dataURI.split(',')[1]);
+            else
+                byteString = unescape(dataURI.split(',')[1]);
+
+            // separate out the mime component
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+            // write the bytes of the string to a typed array
+            const ia = new Uint8Array(byteString.length);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
             }
-        };
-        xhr.responseType = 'blob';
-        xhr.send();
-    });
+
+            return callback(new Blob([ia], { type: mimeString }), null);
+        }
+    }
+    img.src = url;
+    img.onerror = (error) => {
+        return callback(null, error);
+    }
 }
 
 interface AddFileFromUrlProps {
@@ -47,29 +65,44 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
         }),
         onSubmit: values => {
             setLoading(true)
-            urlToFile(values.url).then((blob: any) => {
-                setLoading(false)
-                const file = new File([blob],`img${Math.random().toString(36).substring(7)}`);
-                Object.assign(file, { preview: values.url })
-                onGetFile(file);
-                onCancel();
-                }).catch((err: any) => err)
+            getImageFormUrl(values.url, (blob: any, error) => {
+                if (blob && blob.type.includes("image")) {
+                    setLoading(false);
+                    validator.errors.url = "";
+                    const file = new File([blob],`image-${Math.random().toString(36).substring(7)}.${blob.type.split('/')[1]}`, { type: blob.type } );
+                    Object.assign(file, { preview: URL.createObjectURL(file) });
+                    onGetFile(file);
+                    onCancel();
+                }
+
+                if (error) {
+                    validator.errors.url = "Image invalid";
+                    setTimeout(() => {
+                        validator.errors.url = "";
+                    }, 2000)
+                }
+            });
         },
     });
 
     const onCancel = () => {
         validator.resetForm();
+        setLoading(false);
         onClose();
     }
 
+    const onHandleSubmit = (e: any) => {
+        validator.handleSubmit(e);
+    }
+
     return (
-        <Modal show={isOpen} onHide={onClose} size="lg" centered>
+        <Modal show={isOpen} onHide={onCancel} size="lg" centered>
             <Modal.Header closeButton className="add-payment-modal-header"/>
             <Modal.Body className="p-0">
                 <div className="position-relative">
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{t("Add File from URL")}</h1>
-                        <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
+                        <Form className="mt-3" noValidate>
 
                             <Form.Group className="mb-4">
                                 <Form.Label htmlFor="url">{t('File URL')}</Form.Label>
@@ -86,7 +119,7 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
 
                             <div>
                                 <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
-                                <Button type="submit" variant="primary" disabled={loading}>{t("Add Media")}</Button>
+                                <Button type="button" variant="primary" disabled={loading} onClick={onHandleSubmit}>{t("Add Media")}</Button>
                             </div>
                         </Form>
                     </div>
@@ -110,7 +143,7 @@ const MediaInput = (props: MediaInputProps) => {
 
     useEffect(() => {
         onSetFiles(files)
-    },[size(files)])
+    },[size(files)]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: "image/*",

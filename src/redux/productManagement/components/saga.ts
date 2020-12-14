@@ -1,5 +1,5 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
-import { get, size, map, forEach } from 'lodash';
+import { get, size, map, forEach, isEmpty } from 'lodash';
 
 import {
     getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages, uploadVariationImages
@@ -52,7 +52,7 @@ function* createNewComponent({ payload: { companyId, data, images } }: any) {
             );
             if (size(variationIds) > 0 && size(images.variationImages) > 0) {
                 yield all(images.variationImages.map((file, i) =>
-                    call(uploadVariationImages, companyId, variationIds[i], [file])
+                    !isEmpty(file) && call(uploadVariationImages, companyId, variationIds[i], [file])
                 ));
             }
         }

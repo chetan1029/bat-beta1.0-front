@@ -23,17 +23,17 @@ const TagsInput = (props: TagsInputProps) => {
             setError("");
         }
         props.selectedTags(tags);
-    }, [size(tags)])
+    }, [size(tags)]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChange = (event: any) => {
-        const { value } = event.target
-        setValue(value)
+        const { value } = event.target;
+        setValue(value);
     }
 
     const handleKeyDown = (event: any) => {
-        const { value } = event.target
+        const { value } = event.target;
         if ([13].includes(event.keyCode)) {
-            addTags(value)
+            addTags(value);
         }
     }
 
@@ -48,8 +48,8 @@ const TagsInput = (props: TagsInputProps) => {
                setValue("");
             } else {
                 setTags([...tags, value]);
-                setValue("")
-                setError("")
+                setValue("");
+                setError("");
             }
         }
     };

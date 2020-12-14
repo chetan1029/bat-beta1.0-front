@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Row, Col, Button, Alert } from "react-bootstrap";
 
 import { useTranslation } from 'react-i18next';
@@ -37,6 +37,12 @@ const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, i
 
     const [show, setshow] = useState(true);
 
+    useEffect(() => {
+        if (message) {
+            setshow(true);
+        }
+    }, [message])
+
     const onHideMessage = () => {
         setshow(false);
         if (onHide) onHide();
@@ -69,7 +75,7 @@ const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, i
                         </>
                     }
 
-                </Alert >
+                </Alert>
             </div>
         </div> : null}
     </>
