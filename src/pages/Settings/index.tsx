@@ -86,14 +86,14 @@ const Index = ({ match }: IndexProps) => {
     const items = [
         { title: "Company Profile", key: "settings", icon: "company-profile", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Members", key: "members", icon: "members", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Payment Terms", key: "payment_terms", icon: "wallet", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Membership Plan", key: "membership_plan", icon: "document", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Payment Terms", key: "payment_terms", icon: "wallet", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Banks", key: "bank", icon: "bank", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Taxes", key: "tax", icon: "tax", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Location", key: "location", icon: "location", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Packing Box", key: "packing_box", icon: "packing", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Hs Code", key: "hscode", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Taxes", key: "tax", icon: "tax", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-    ];
+        ];
 
     return (
         <React.Fragment>
