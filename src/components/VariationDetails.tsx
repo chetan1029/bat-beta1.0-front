@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Alert, Card, Col, Dropdown, DropdownButton, Form, InputGroup, Row } from "react-bootstrap";
-import { filter, forEach, isEmpty, isEqual, map, size, uniqBy, xorWith, get } from "lodash";
+import { filter, forEach, get, isEmpty, isEqual, map, size, uniqBy, xorWith } from "lodash";
 import Dropzone from "react-dropzone";
 import TagsInput from "./TagsInput";
 import Icon from "./Icon";
@@ -61,12 +61,15 @@ const VariationDetails = (props: VariationDetailsProps) => {
         setVariationOptions(newVariationsOptions);
     }
 
-    const handleWeightChange = (key: string, value: string, index: number) => {
+    const handleWeightChange = (key: string, value: any, index: number) => {
         const newVariationsOptions = [...variationOptions];
+        if (key === "value") {
+            value = !isNaN(parseFloat(value)) ? parseFloat(value) : "invalid";
+        }
         const finalValue = !isNaN(parseFloat(value)) ? parseFloat(value) : "invalid";
         newVariationsOptions[index] = {
             ...newVariationsOptions[index],
-            weight: { ...newVariationsOptions[index].weight, [key]: finalValue }
+            weight: { ...newVariationsOptions[index].weight, [key]: value }
         };
         setVariationOptions(newVariationsOptions);
     }
@@ -144,6 +147,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
     }, [variations]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
+        if (hasMultiVariations && !isEmpty(variationOptions) && isEmpty(filter(variationOptions, option => !!option.show))) {
+            setVariationOptError("At least one variation option required.")
+        }
         !variationOptError && onSetVariationOptions(filter(variationOptions, option => !!option.show), hasMultiVariations)
     }, [variationOptions]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -154,9 +160,6 @@ const VariationDetails = (props: VariationDetailsProps) => {
     }
 
     const removeVariationOptions = (index: number, show, undo: boolean = false) => {
-        if (size(filter(variationOptions, option => !!option.show)) === 1) {
-            setVariationOptError("At least one variation option required.")
-        }
         const newVariationsOptions = [...variationOptions];
         if (!!show) {
             newVariationsOptions[index] = { ...newVariationsOptions[index], show: false };
@@ -237,7 +240,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
                           </Col>
                           <div onClick={() => removeVariation(index)}
                                style={{ position: "sticky", marginTop: "2.5em" }}>
-                              <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer" />
+                              <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
                           </div>
                       </Row>
                   ))}
@@ -274,7 +277,8 @@ const VariationDetails = (props: VariationDetailsProps) => {
                             }
                             <Col lg={4}>
                                 <Form.Group className="mb-4">
-                                    <Form.Label htmlFor="model_number">{`${t("Model Number ")}${option.name}`}</Form.Label>
+                                    <Form.Label
+                                        htmlFor="model_number">{`${t("Model Number ")}${option.name}`}</Form.Label>
                                     <Form.Control
                                         type="text"
                                         className={classNames("form-control", get(errors, `variationOptions[${index}].model_number`) && "border-danger")}
