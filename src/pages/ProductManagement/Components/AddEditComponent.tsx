@@ -9,9 +9,8 @@ import MediaInput from "../../../components/MediaInput";
 
 //plug-ins
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import classNames from "classnames";
-import { map, uniqBy, isEmpty } from "lodash";
+import { map, uniqBy, isEmpty, isNumber, forEach, filter } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
 import { createComponent, getComponents, resetComponents } from "../../../redux/actions"
@@ -27,6 +26,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const [tags, setTags] = useState<any>([]);
     const [files, setFiles] = useState<any>([]);
     const [variationOptions, setVariationOptions] = useState<any>([]);
+    const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
     const dispatch = useDispatch();
     const companyId = match.params.companyId;
 
@@ -55,6 +55,46 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
         value: component.series
     })), "value");
 
+    const validateCategories = (values) => {
+        let error: any = { variationOptions: [], variations: [] };
+        if (values.title === "") {
+            error.title = "Title is required";
+        }
+
+        if (variationOptions.length === 0) {
+           error.options = "At least one variation option required";
+        }
+
+        forEach(variationOptions, (option, i) => {
+            typeof option.value === "object" && forEach(option.value, (opt, index) => {
+                if (hasMultiVariations && opt.name === "" ) {
+                    error.variations[index] = { ...error.variations[index], "name": "Name required" };
+                }
+            })
+            if (option["model_number"] === "") {
+                error.variationOptions[i] = { ...error.variationOptions[i], "model_number": "Model number required" };
+            }
+            if (option["manufacturer_part_number"] === "") {
+                error.variationOptions[i] = { ...error.variationOptions[i], "manufacturer_part_number": "Manufacturer part number required" };
+            }
+            if (option["weight"].value === "") {
+                error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight is required" };
+            } else if (option["weight"].value === "invalid" && !isNumber(option["weight"].value)) {
+                error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight must be a number" };
+            }
+        })
+
+        if (isEmpty(filter(error.variationOptions, (option) => Object.keys(option).length > 0))) {
+            delete error.variationOptions;
+        }
+
+        if (isEmpty(filter(error.variations, (option) => option && Object.keys(option).length > 0))) {
+            delete error.variations;
+        }
+
+        return error;
+    }
+
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -63,30 +103,27 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             series: "",
             description: "",
         },
-        validationSchema: Yup.object({
-            title: Yup.string().required(t('Title is required')),
-        }),
+        validate: validateCategories,
+        validateOnChange: false,
+        validateOnBlur: false,
         onSubmit: (values: any) => {
-            //TODO- allow if no variation option given
-            if (!isEmpty(variationOptions)) {
-                let data = {
-                    ...values,
-                    ...{
-                        is_component: true,
-                        tags: tags.toString(),
-                        type: values.type['value'],
-                        series: values.series['value'],
-                        products: map(variationOptions, opt => ({
-                            title: values.title,
-                            model_number: opt.model_number,
-                            manufacturer_part_number: opt.manufacturer_part_number,
-                            weight: opt.weight,
-                            product_variation_options: map(opt.value, value => ({ productoption: value })),
-                        }))
-                    }
+            let data = {
+                ...values,
+                ...{
+                    is_component: true,
+                    tags: tags.toString(),
+                    type: values.type['value'],
+                    series: values.series['value'],
+                    products: map(variationOptions, opt => ({
+                        title: values.title,
+                        model_number: opt.model_number,
+                        manufacturer_part_number: opt.manufacturer_part_number,
+                        weight: opt.weight,
+                        product_variation_options: map(opt.value, value => ({ productoption: value })),
+                    }))
                 }
-                dispatch(createComponent(companyId, data, { productImages : files, variationImages: map(variationOptions, opt => opt.image)}));
             }
+            dispatch(createComponent(companyId, data, { productImages : files, variationImages: map(variationOptions, opt => opt.image)}));
         },
     });
 
@@ -208,10 +245,16 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                 </Row>
                                 <Row>
                                     <Col lg={12} md={12}>
+                                        <Form.Group className="mt-2 mb-0">
                                         <VariationDetails
+                                            errors={validator.errors}
                                             label={t('Variation Details')}
-                                            onSetVariationOptions={(variationOptions) => setVariationOptions(variationOptions)}
+                                            onSetVariationOptions={(variationOptions, hasMultiVariations) => {
+                                                setVariationOptions(variationOptions);
+                                                setHasMultiVariations(hasMultiVariations);
+                                            }}
                                         />
+                                        </Form.Group>
                                     </Col>
                                 </Row>
                                 <Form.Group className="mt-2 mb-0">

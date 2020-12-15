@@ -1,27 +1,50 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
-import { Card, Col, Dropdown, DropdownButton, Form, InputGroup, Row } from "react-bootstrap";
-import { filter, forEach, isEmpty, isEqual, map, size, uniqBy, xorWith } from "lodash";
+import { Alert, Card, Col, Dropdown, DropdownButton, Form, InputGroup, Row } from "react-bootstrap";
+import { filter, forEach, isEmpty, isEqual, map, size, uniqBy, xorWith, get } from "lodash";
 import Dropzone from "react-dropzone";
 import TagsInput from "./TagsInput";
 import Icon from "./Icon";
+import classNames from "classnames";
 
 interface VariationDetailsProps {
+    errors?: any;
     label?: string;
-    onSetVariationOptions: (any) => void;
+    onSetVariationOptions: (any, boolean) => void;
 }
 
 const VariationDetails = (props: VariationDetailsProps) => {
     const { t } = useTranslation();
     const prevVariationsRef = useRef();
-    const { label, onSetVariationOptions } = props;
-    const [hasVariation, setHasVariation] = useState<any>(false)
-    const [variations, setVariations] = useState<any>([])
-    const [variationOptions, setVariationOptions] = useState<any>([])
+    const { label, onSetVariationOptions, errors } = props;
+    const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
+    const [variations, setVariations] = useState<any>([]);
+    const [variationOptions, setVariationOptions] = useState<any>([{
+        name: "",
+        value: "",
+        image: "",
+        model_number: "",
+        manufacturer_part_number: "",
+        weight: { value: "", unit: "lb" },
+        show: true,
+    }]);
+    const [variationOptError, setVariationOptError] = useState<any>("");
 
     const handleOnSelect = (e: any) => {
-        setHasVariation(e.target.checked);
-        isEmpty(variations) && setVariations([...variations, { name: "Size", option: "" }])
+        setHasMultiVariations(e.target.checked);
+        if (e.target.checked) {
+            setVariations([{ name: "Size", option: "" }]);
+        } else {
+            setVariationOptions([{
+                name: "",
+                value: "",
+                image: "",
+                model_number: "",
+                manufacturer_part_number: "",
+                weight: { value: "", unit: "lb" },
+                show: true,
+            }]);
+        }
     }
 
     const handleInputChange = (e: any, index: number) => {
@@ -40,9 +63,10 @@ const VariationDetails = (props: VariationDetailsProps) => {
 
     const handleWeightChange = (key: string, value: string, index: number) => {
         const newVariationsOptions = [...variationOptions];
+        const finalValue = !isNaN(parseFloat(value)) ? parseFloat(value) : "invalid";
         newVariationsOptions[index] = {
             ...newVariationsOptions[index],
-            weight: { ...newVariationsOptions[index].weight, [key]: value }
+            weight: { ...newVariationsOptions[index].weight, [key]: finalValue }
         };
         setVariationOptions(newVariationsOptions);
     }
@@ -66,59 +90,61 @@ const VariationDetails = (props: VariationDetailsProps) => {
         let allOptions: any[] = [];
         let newOptions: any[] = [];
 
-        forEach(variations, (variation) => {
-            forEach(variation.option, option => {
-                allOptions.push({ name: variation.name, value: option })
-            })
-        })
-
-        if ((size(prevVariations) === 1 && size(variations) > 1) || (size(prevVariations) > 1 && size(variations) === 1)) {
-            newOptions = []
-            setVariationOptions([])
-        }
-
-        if (size(variations) > 1) {
-            forEach(allOptions, (option, index) => {
-                forEach(allOptions, (opt) => {
-                    if (!isEmpty(allOptions[index + 1]) && (option.name !== opt.name)) {
-                        newOptions.push({
-                            name: `${option.value} ${opt.value}`,
-                            value: [option, opt]
-                        })
-                    }
+        if (size(variations) > 0) {
+            forEach(variations, (variation) => {
+                forEach(variation.option, option => {
+                    allOptions.push({ name: variation.name, value: option })
                 })
             })
-        } else if (size(variations) === 1) {
-            forEach(allOptions, (option) => {
-                newOptions.push({
-                    name: option.value,
-                    value: [option]
+
+            if ((size(prevVariations) === 1 && size(variations) > 1) || (size(prevVariations) > 1 && size(variations) === 1)) {
+                newOptions = []
+                setVariationOptions([])
+            }
+
+            if (size(variations) > 1) {
+                forEach(allOptions, (option, index) => {
+                    forEach(allOptions, (opt) => {
+                        if (!isEmpty(allOptions[index + 1]) && (option.name !== opt.name)) {
+                            newOptions.push({
+                                name: `${option.value} ${opt.value}`,
+                                value: [option, opt]
+                            })
+                        }
+                    })
                 })
-            })
-        }
+            } else if (size(variations) === 1) {
+                forEach(allOptions, (option) => {
+                    newOptions.push({
+                        name: option.value,
+                        value: [option]
+                    })
+                })
+            }
 
-        const uniqueOpts: Array<any> = [];
-        const newOpts: Array<any> = [];
+            const uniqueOpts: Array<any> = [];
+            const newOpts: Array<any> = [];
 
-        forEach(uniqBy(newOptions, "value"), varOption => {
-            newOpts.push({
-                name: varOption.name,
-                value: varOption.value,
-                image: "",
-                model_number: "",
-                manufacturer_part_number: "",
-                weight: { value: "", unit: "lb" },
-                show: true,
+            forEach(uniqBy(newOptions, "value"), varOption => {
+                newOpts.push({
+                    name: varOption.name,
+                    value: varOption.value,
+                    image: "",
+                    model_number: "",
+                    manufacturer_part_number: "",
+                    weight: { value: "", unit: "lb" },
+                    show: true,
+                });
             });
-        });
 
-        newOpts.map(x => uniqueOpts.filter(a => isEmpty(xorWith(a.value, x.value, isEqual))).length > 0 ? null : uniqueOpts.push(x));
+            newOpts.map(x => uniqueOpts.filter(a => isEmpty(xorWith(a.value, x.value, isEqual))).length > 0 ? null : uniqueOpts.push(x));
 
-        setVariationOptions(uniqueOpts);
+            setVariationOptions(uniqueOpts);
+        }
     }, [variations]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        onSetVariationOptions(filter(variationOptions, option => !!option.show))
+        !variationOptError && onSetVariationOptions(filter(variationOptions, option => !!option.show), hasMultiVariations)
     }, [variationOptions]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const removeVariation = (index: number) => {
@@ -128,11 +154,17 @@ const VariationDetails = (props: VariationDetailsProps) => {
     }
 
     const removeVariationOptions = (index: number, show, undo: boolean = false) => {
+        if (size(filter(variationOptions, option => !!option.show)) === 1) {
+            setVariationOptError("At least one variation option required.")
+        }
         const newVariationsOptions = [...variationOptions];
         if (!!show) {
             newVariationsOptions[index] = { ...newVariationsOptions[index], show: false };
             setVariationOptions(newVariationsOptions);
         } else if (!show && undo) {
+            if (variationOptError && size(filter(variationOptions, option => !!option.show)) === 0) {
+                setVariationOptError("");
+            }
             newVariationsOptions[index] = { ...newVariationsOptions[index], show: true };
             setVariationOptions(newVariationsOptions);
         } else {
@@ -147,15 +179,15 @@ const VariationDetails = (props: VariationDetailsProps) => {
                 <h4>{label}</h4>
                 <Form.Check
                     type="checkbox"
-                    id={"hasVariation"}
+                    id={"hasMultiVariations"}
                     className={"pl-0 ml-4"}
                     label={"This component has multiple options, like different sizes or colors"}
-                    value={hasVariation}
+                    value={hasMultiVariations}
                     onChange={handleOnSelect}
                 />
             </div>
 
-            {hasVariation &&
+            {hasMultiVariations &&
             <Card className="mb-4">
               <h6
                 className="link  text-blue text-right m-3"
@@ -171,7 +203,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                   <Form.Label htmlFor="usr">{`${t("Name ")}${index + 1}`}</Form.Label>
                                   <Form.Control
                                       type="text"
-                                      className="form-control"
+                                      className={classNames("form-control", get(errors, `variationOptions[${index}].name`) && "border-danger")}
                                       id={`name${index}`}
                                       name={"name"}
                                       value={variation.name}
@@ -179,6 +211,11 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                       autoComplete="off"
                                       onChange={(e: any) => handleInputChange(e, index)}
                                   />
+                                  {get(errors, `variations[${index}].name`) &&
+                                  <span className="text-danger font-10">
+                                        {get(errors, `variations[${index}].name`)}
+                                    </span>
+                                  }
                               </Form.Group>
                           </Col>
                           <Col lg={4}>
@@ -188,6 +225,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                       placeholder={t('Option Value')}
                                       id="option"
                                       name="option"
+                                      tags={variations[index].option}
                                       selectedTags={(tags: [string]) => handleInputChange({
                                           target: {
                                               name: "option",
@@ -199,19 +237,22 @@ const VariationDetails = (props: VariationDetailsProps) => {
                           </Col>
                           <div onClick={() => removeVariation(index)}
                                style={{ position: "sticky", marginTop: "2.5em" }}>
-                              <Icon name="delete" className="mx-1 svg-outline-danger"/>
+                              <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer" />
                           </div>
                       </Row>
                   ))}
               </Card.Body>
             </Card>
             }
-
+            {variationOptError && <Alert variant="danger" className="my-2">{variationOptError}</Alert>}
+            {get(errors, "options") && variationOptions.length === 0 &&
+            <Alert variant="danger" className="my-2">{get(errors, "options")}</Alert>}
             {map(variationOptions, (option, index) => (
                 <Row key={index} className="mt-2 mx-0">
                     {!!option.show ?
                         <>
-                            <div className="react-dropzone d-flex align-items-center justify-content-center">
+                            <div className="react-dropzone"
+                                style={{maxHeight: "3.5em",marginTop: "1.8em"}}>
                                 {option.image ?
                                     <div className={"variation-image"}>
                                         <img src={option.image.preview} alt={option.image.name}/>
@@ -231,10 +272,10 @@ const VariationDetails = (props: VariationDetailsProps) => {
                             </div>
                             <Col lg={4}>
                                 <Form.Group className="mb-4">
-                                    <Form.Label htmlFor="name">{`${t("Model Number ")}${option.name}`}</Form.Label>
+                                    <Form.Label htmlFor="model_number">{`${t("Model Number ")}${option.name}`}</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        className="form-control"
+                                        className={classNames("form-control", get(errors, `variationOptions[${index}].model_number`) && "border-danger")}
                                         id={`model_number${index}`}
                                         name={"model_number"}
                                         value={option.modelNo}
@@ -242,15 +283,20 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                         autoComplete="off"
                                         onChange={(e: any) => handleOptionInputChange(e, index)}
                                     />
+                                    {get(errors, `variationOptions[${index}].model_number`) &&
+                                    <span className="text-danger font-10">
+                                        {get(errors, `variationOptions[${index}].model_number`)}
+                                    </span>
+                                    }
                                 </Form.Group>
                             </Col>
                             <Col lg={4}>
                                 <Form.Group className="mb-4">
                                     <Form.Label
-                                        htmlFor="option">{`${t("Manufacturer Number ")}${option.name}`}</Form.Label>
+                                        htmlFor="manufacturer_part_number">{`${t("Manufacturer Number ")}${option.name}`}</Form.Label>
                                     <Form.Control
                                         type="text"
-                                        className="form-control"
+                                        className={classNames("form-control", get(errors, `variationOptions[${index}].manufacturer_part_number`) && "border-danger")}
                                         id={`manufacturer_part_number${index}`}
                                         name={"manufacturer_part_number"}
                                         value={option.modelNo}
@@ -258,6 +304,11 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                         autoComplete="off"
                                         onChange={(e: any) => handleOptionInputChange(e, index)}
                                     />
+                                    {get(errors, `variationOptions[${index}].manufacturer_part_number`) &&
+                                    <span className="text-danger font-10">
+                                        {get(errors, `variationOptions[${index}].manufacturer_part_number`)}
+                                    </span>
+                                    }
                                 </Form.Group>
                             </Col>
                             <Col lg={3}>
@@ -265,6 +316,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                 <Form.Group className="mb-4">
                                     <InputGroup>
                                         <Form.Control
+                                            className={classNames("form-control", get(errors, `variationOptions[${index}].weight`) && "border-danger")}
                                             aria-label={`${t("Weight ")}${option.name}`}
                                             aria-describedby="basic-addon2"
                                             placeholder={`${t("Weight ")}${option.name}`}
@@ -282,12 +334,19 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                                 onClick={() => handleWeightChange("unit", "kg", index)}>{t("kg")}</Dropdown.Item>
                                         </DropdownButton>
                                     </InputGroup>
+                                    {get(errors, `variationOptions[${index}].weight`) &&
+                                    <span className="text-danger font-10">
+                                        {get(errors, `variationOptions[${index}].weight`)}
+                                    </span>
+                                    }
                                 </Form.Group>
                             </Col>
+                            {size(variationOptions) > 1 && !!hasMultiVariations &&
                             <div onClick={() => removeVariationOptions(index, option.show)}
                                  style={{ position: "sticky", marginTop: "3em" }}>
-                                <Icon name="delete" className="mx-1 svg-outline-danger"/>
+                              <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
                             </div>
+                            }
                         </> :
                         <>
                             <div className="d-flex align-items-center justify-content-center cursor-pointer"

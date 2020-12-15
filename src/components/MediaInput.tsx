@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { map, size } from 'lodash';
+import { map, size, isEmpty } from 'lodash';
 import { Button, Form, Modal } from "react-bootstrap";
 import Icon from "./Icon";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import classNames from "classnames";
 
 const getImageFormUrl = (url, callback) => {
     const img = new Image();
@@ -54,15 +54,13 @@ interface AddFileFromUrlProps {
 const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState<any>(false)
+    const [error, setError] = useState<any>(false)
 
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
             url: '',
         },
-        validationSchema: Yup.object({
-            url: Yup.string().required(t('URL is required')),
-        }),
         onSubmit: values => {
             setLoading(true)
             getImageFormUrl(values.url, (blob: any, error) => {
@@ -76,10 +74,10 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
                 }
 
                 if (error) {
-                    validator.errors.url = "Image invalid";
+                    setError("Image invalid");
                     setTimeout(() => {
-                        validator.errors.url = "";
-                    }, 2000)
+                        setError( "");
+                    }, 2000);
                 }
             });
         },
@@ -92,7 +90,15 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
     }
 
     const onHandleSubmit = (e: any) => {
-        validator.handleSubmit(e);
+        e.preventDefault();
+        if (isEmpty(validator.values.url)) {
+            setError("URL required");
+            setTimeout(() => {
+                setError( "");
+            }, 2000);
+        } else {
+            validator.handleSubmit(e);
+        }
     }
 
     return (
@@ -102,25 +108,29 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
                 <div className="position-relative">
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{t("Add File from URL")}</h1>
-                        <Form className="mt-3" noValidate>
+                        <Form id="image-form" className="mt-3" noValidate>
 
                             <Form.Group className="mb-4">
                                 <Form.Label htmlFor="url">{t('File URL')}</Form.Label>
-                                <Form.Control type="text" className="form-control" id="url" name="url" placeholder="Paste file from URL"
+                                <Form.Control type="text" className={classNames("form-control", error && "border-danger")}
+                                              id="url"
+                                              name="url"
+                                              placeholder="Paste file from URL"
                                               onBlur={validator.handleBlur}
                                               value={validator.values.url}
                                               onChange={validator.handleChange}
                                               isInvalid={validator.touched.url && validator.errors && !!validator.errors.url} />
-
-                                {validator.touched.url && validator.errors.url ? (
-                                    <Form.Control.Feedback type="invalid">{validator.errors.url}</Form.Control.Feedback>
+                                {error ? (
+                                    <span className="text-danger font-10">
+                                        {error}
+                                    </span>
                                 ) : null}
                             </Form.Group>
 
-                            <div>
+                            <Form.Group>
                                 <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
                                 <Button type="button" variant="primary" disabled={loading} onClick={onHandleSubmit}>{t("Add Media")}</Button>
-                            </div>
+                            </Form.Group>
                         </Form>
                     </div>
                 </div>

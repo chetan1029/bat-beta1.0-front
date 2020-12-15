@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form } from "react-bootstrap";
-import { map, isEmpty, size } from "lodash";
+import { map, isEmpty, size, isEqual } from "lodash";
 import classNames from "classnames";
 import Icon from "./Icon";
 
@@ -14,9 +14,18 @@ interface TagsInputProps {
 }
 
 const TagsInput = (props: TagsInputProps) => {
+    const prevTagsRef = useRef();
     const [tags, setTags] = useState<any>(props.tags);
     const [value, setValue] = useState<any>("");
     const [error, setError] = useState<any>("");
+
+    useEffect(() => {
+        prevTagsRef.current = tags;
+    });
+
+    useEffect(() => {
+        setTags(props.tags);
+    }, [size(props.tags)]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (size(tags) === 0) {
