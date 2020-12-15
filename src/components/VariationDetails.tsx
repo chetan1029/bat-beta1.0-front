@@ -251,8 +251,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
                 <Row key={index} className="mt-2 mx-0">
                     {!!option.show ?
                         <>
+                            {hasMultiVariations &&
                             <div className="react-dropzone"
-                                style={{maxHeight: "3.5em",marginTop: "1.8em"}}>
+                                 style={{ maxHeight: "3.5em", marginTop: "1.8em" }}>
                                 {option.image ?
                                     <div className={"variation-image"}>
                                         <img src={option.image.preview} alt={option.image.name}/>
@@ -270,6 +271,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                     </Dropzone>
                                 }
                             </div>
+                            }
                             <Col lg={4}>
                                 <Form.Group className="mb-4">
                                     <Form.Label htmlFor="model_number">{`${t("Model Number ")}${option.name}`}</Form.Label>
