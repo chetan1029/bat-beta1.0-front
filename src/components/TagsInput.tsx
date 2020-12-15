@@ -52,7 +52,7 @@ const TagsInput = (props: TagsInputProps) => {
 
     const addTags = (value: string) => {
         if (!isEmpty(value)) {
-            if (tags.includes(value.toLowerCase())) {
+            if (tags.map(value => value.toLowerCase()).includes(value.toLowerCase())) {
                setError(`${props.name} already added`);
                setValue("");
             } else {

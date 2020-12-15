@@ -68,7 +68,7 @@ const Components = (props: ComponentsProps) => {
     }
 
     return (
-        <>
+        <div className={"components"}>
             <div className="py-4 px-3">
                 <Row>
                     <Col>
@@ -97,11 +97,11 @@ const Components = (props: ComponentsProps) => {
             </div>
 
             <Card>
-                <Card.Body className="">
+                <Card.Body>
 
                     <TabMenu onChange={setSelectedView} selectedView={selectedView}/>
 
-                    <Table bordered hover>
+                    <Table hover={false} borderless striped={false}>
                         <thead>
                         <tr>
                             <th>
@@ -122,6 +122,7 @@ const Components = (props: ComponentsProps) => {
                         </thead>
                         <tbody>
                         {map(components.results, (component, i) => (
+                            <>
                             <tr key={i}>
                                 <td>
                                     <Form.Check
@@ -144,16 +145,23 @@ const Components = (props: ComponentsProps) => {
                                     </button>
                                 </td>
                                 <td>{component.sku}</td>
-                                <td></td>
+                                <td/>
                             </tr>
-
+                            <tr key={i}>
+                                <td colSpan={6}>
+                                    {component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+                                        <span key={i} className={"tags"}>{tag}</span>
+                                    ))}
+                                </td>
+                            </tr>
+                            </>
                         ))}
                         </tbody>
                     </Table>
                 </Card.Body>
             </Card>
             {isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
-        </>
+        </div>
     );
 }
 
