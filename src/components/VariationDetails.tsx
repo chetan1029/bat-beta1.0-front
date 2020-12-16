@@ -29,6 +29,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
         show: true,
     }]);
     const [variationOptError, setVariationOptError] = useState<any>("");
+    const [numberInvalidError, setNumberInvalidError] = useState<any>("");
 
     const handleOnSelect = (e: any) => {
         setHasMultiVariations(e.target.checked);
@@ -64,9 +65,13 @@ const VariationDetails = (props: VariationDetailsProps) => {
     const handleWeightChange = (key: string, value: any, index: number) => {
         const newVariationsOptions = [...variationOptions];
         if (key === "value") {
-            value = !isNaN(parseFloat(value)) ? parseFloat(value) : "invalid";
+            if (!(!isNaN(value) && !isNaN(parseFloat(value)))) {
+                setNumberInvalidError("Weight must be a valid number");
+                value = "";
+            } else {
+                setNumberInvalidError("");
+            }
         }
-        const finalValue = !isNaN(parseFloat(value)) ? parseFloat(value) : "invalid";
         newVariationsOptions[index] = {
             ...newVariationsOptions[index],
             weight: { ...newVariationsOptions[index].weight, [key]: value }
@@ -322,10 +327,11 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                 <Form.Group className="mb-4">
                                     <InputGroup>
                                         <Form.Control
-                                            className={classNames("form-control", get(errors, `variationOptions[${index}].weight`) && "border-danger")}
+                                            className={classNames("form-control", (numberInvalidError || get(errors, `variationOptions[${index}].weight`)) && "border-danger")}
                                             aria-label={`${t("Weight ")}${option.name}`}
                                             aria-describedby="basic-addon2"
                                             placeholder={`${t("Weight ")}${option.name}`}
+                                            value={option.weight.value}
                                             onChange={(e: any) => handleWeightChange("value", e.target.value, index)}
                                         />
                                         <DropdownButton
@@ -340,9 +346,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
                                                 onClick={() => handleWeightChange("unit", "kg", index)}>{t("kg")}</Dropdown.Item>
                                         </DropdownButton>
                                     </InputGroup>
-                                    {get(errors, `variationOptions[${index}].weight`) &&
+                                    {(numberInvalidError || get(errors, `variationOptions[${index}].weight`)) &&
                                     <span className="text-danger font-10">
-                                        {get(errors, `variationOptions[${index}].weight`)}
+                                        {numberInvalidError ? numberInvalidError : get(errors, `variationOptions[${index}].weight`)}
                                     </span>
                                     }
                                 </Form.Group>

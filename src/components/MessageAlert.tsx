@@ -29,10 +29,11 @@ interface MessageAlertProps {
     undo?: any,
     onUndo?: any,
     iconClass?: string,
-    iconWrapperClass?: string
+    iconWrapperClass?: string,
+    showAsNotification?: boolean,
 }
 
-const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, iconClass }: MessageAlertProps) => {
+const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, iconClass, showAsNotification }: MessageAlertProps) => {
     const { t } = useTranslation();
 
     const [show, setshow] = useState(true);
@@ -50,16 +51,20 @@ const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, i
 
     return <>
         {show ? <div className="position-relative">
-            <div className="alret-notification">
-                <Alert variant="light" className="card" onClose={onHideMessage} dismissible>
+            <div className={classNames(showAsNotification && "alret-notification")}>
+                <Alert variant={showAsNotification ? "light" : "danger"}
+                        className={classNames(showAsNotification && "card")}
+                        onClose={onHideMessage} dismissible>
                     {!icon ? <p className="mb-0">{message}</p> :
                         <>
                             <Row>
+                                {showAsNotification &&
                                 <Col xs={12} lg={1} className="d-flex align-items-center justify-content-center">
-                                    <div className={iconWrapperClass || "btn-archive"}>
-                                        <Icon name={icon} className={classNames("icon", iconClass)} />
-                                    </div>
+                                  <div className={iconWrapperClass || "btn-archive"}>
+                                    <Icon name={icon} className={classNames("icon", iconClass)}/>
+                                  </div>
                                 </Col>
+                                }
                                 <Col xs={12} lg={9} className="d-flex align-items-center">
                                     {typeof message === 'object' ? <>
                                         <ul className="mb-0">
@@ -68,17 +73,20 @@ const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, i
                                             })}</ul>
                                     </> : <p className="mb-0 text-dark font-weight-semibold">{message}</p>}
                                 </Col>
-                                {undo ? <Col xs={12} lg={2} className="d-flex align-items-center">
+                                {(showAsNotification && undo) ? <Col xs={12} lg={2} className="d-flex align-items-center">
                                     <Button variant="outline-primary" onClick={onUndo}>{t('Undo')}</Button>
                                 </Col> : null}
                             </Row>
                         </>
                     }
-
                 </Alert>
             </div>
         </div> : null}
     </>
+}
+
+MessageAlert.defaultProps = {
+    showAsNotification: true,
 }
 
 export default MessageAlert;

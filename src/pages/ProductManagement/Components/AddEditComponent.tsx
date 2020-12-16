@@ -79,7 +79,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             }
             if (option["weight"].value === "") {
                 error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight is required" };
-            } else if (option["weight"].value === "invalid" && !isNumber(option["weight"].value)) {
+            } else if (!(!isNaN(option["weight"].value) && !isNaN(parseFloat(option["weight"].value)))) {
                 error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight must be a number" };
             }
         })
@@ -257,6 +257,13 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                         </Form.Group>
                                     </Col>
                                 </Row>
+                                {createComponentError &&
+                                <MessageAlert
+                                  message={createComponentError} icon={"x"}
+                                  iconWrapperClass="bg-danger text-white p-2 rounded-circle"
+                                  iconClass="icon-md"
+                                  showAsNotification={false}
+                                />}
                                 <Form.Group className="mt-2 mb-0">
                                     <Button variant="primary" type="button" onClick={onHandleSubmit}>
                                         {t('Submit')}
@@ -267,10 +274,6 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                     </Card.Body>
                 </Card>
             </div>
-            {createComponentError &&
-            <MessageAlert message={createComponentError} icon={"x"}
-                          iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-md"/>
-            }
         </>
     );
 }
