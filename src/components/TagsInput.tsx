@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from "react-bootstrap";
-import { map, isEmpty, size, isEqual } from "lodash";
+import { map, isEmpty, size } from "lodash";
 import classNames from "classnames";
 import Icon from "./Icon";
 
@@ -52,7 +52,7 @@ const TagsInput = (props: TagsInputProps) => {
 
     const addTags = (value: string) => {
         if (!isEmpty(value)) {
-            if (tags.map(value => value.toLowerCase()).includes(value.toLowerCase())) {
+            if (map(tags, value => value.toLowerCase()).includes(value.toLowerCase())) {
                setError(`${props.name} already added`);
                setValue("");
             } else {
