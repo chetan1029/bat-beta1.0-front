@@ -8,6 +8,7 @@ export enum ComponentsTypes {
     CREATE_COMPONENT = '@@productManagement/components/CREATE_COMPONENT',
     EDIT_COMPONENT = '@@productManagement/components/EDIT_COMPONENT',
     DELETE_COMPONENT = '@@productManagement/components/DELETE_COMPONENT',
+    ARCHIVE_COMPONENT = '@@productManagement/components/ARCHIVE_COMPONENT',
 
     RESET = '@@productManagement/components/RESET',
 }

@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Card, Col, Form, Nav, Row, Table } from "react-bootstrap";
+import React, { useEffect, useState, useRef } from "react";
+import { Card, Col, Form, Nav, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { map } from "lodash";
+import { map, get, isEqual } from "lodash";
 
-//components
 import Icon from "../../../components/Icon";
-import { getComponents, resetComponents } from "../../../redux/actions";
+import { getComponents, resetComponents, archiveComponent } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
+import Pagination from "../../../components/Pagination";
+import searchIcon from "../../../assets/images/search_icon.svg";
 
 const TabMenu = ({ onChange, selectedView }) => {
     const { t } = useTranslation();
@@ -39,37 +40,67 @@ const Components = (props: ComponentsProps) => {
     const companyId = props.match.params.companyId;
     const [showActive, setShowActive] = useState<boolean>(false);
     const [selectedView, setSelectedView] = useState<any>("all");
+    const [filters, setFilters] = useState<any>({ is_component: true, limit: 5, offset: 0 });
+    const [search, setSearch] = useState<any>({ is_component: true, limit: 5, offset: 0 });
 
     useEffect(() => {
-        dispatch(getComponents(companyId, { is_component: true }));
+        window.scrollTo(0, 0);
+        dispatch(getComponents(companyId, { is_component: true, limit: 5, offset: 0 }));
         dispatch(resetComponents());
     }, [dispatch, companyId]);
 
     const {
         components,
         isComponentCreated,
+        archiveComponentError,
     } = useSelector(({ ProductManagement: { Components } }: any) => ({
         components: Components.components,
         isComponentCreated: Components.isComponentCreated,
+        archiveComponentError: Components.archiveComponentError,
     }));
+
+    const prevFiltersRef = useRef();
+
+    useEffect(() => {
+        prevFiltersRef.current = filters;
+    });
+
+    const prevFilters = prevFiltersRef.current;
+
+    useEffect(()=> {
+        if (!(isEqual(prevFilters, filters))) {
+            dispatch(getComponents(companyId, filters));
+        }
+    },[filters, prevFilters]);
 
     const onChangeShowActive = (checked: boolean) => {
         setShowActive(checked);
-
         if (checked) {
-            let filters = {
-                is_component: true,
-                is_active: true,
-            }
-            dispatch(getComponents(companyId, filters));
+            setFilters({ ...filters, is_active: true });
         } else {
-            dispatch(getComponents(companyId, { is_component: true }));
+            const newFilters = filters;
+            delete newFilters.is_active;
+            setFilters(newFilters);
+            dispatch(getComponents(companyId, newFilters));
+        }
+    }
+
+    const onChangePage = (page) => {
+        setFilters({ ...filters, offset: (page - 1) * 5 });
+        window.scrollTo(0, 0);
+    }
+
+    const handleSearchKeyDown = (event: any) => {
+        const { value } = event.target;
+        setSearch(value);
+        if ([13].includes(event.keyCode)) {
+            setFilters({ ...filters, search: value, offset: 0 });
         }
     }
 
     return (
         <div className={"components"}>
-            <div className="py-4 px-3">
+            <div className="pt-4 pb-3 px-3">
                 <Row>
                     <Col>
                         <div className="d-flex align-items-center">
@@ -89,78 +120,118 @@ const Components = (props: ComponentsProps) => {
                             </div>
                         </div>
                     </Col>
-                    <Col className="text-right">
+                    <Col className="text-right d-flex flex-row align-items-center justify-content-end">
+                        <div>
+                            <span>
+                                <Icon name="import" className="icon icon-xs  mr-2"/>
+                                <b>{t('Import')}</b>
+                            </span>
+                            <span className="m-3">
+                                <Icon name="export" className="icon icon-xs  mr-2"/>
+                                <b>{t('Export')}</b>
+                            </span>
+                        </div>
                         <Link to={`/product-management/${companyId}/components/add`}
                               className="btn btn-primary">{t('Add Component')}</Link>
                     </Col>
                 </Row>
             </div>
 
-            <Card>
+            <Card className={"data-table"}>
                 <Card.Body>
-
                     <TabMenu onChange={setSelectedView} selectedView={selectedView}/>
-
-                    <Table hover={false} borderless striped={false}>
-                        <thead>
-                        <tr>
-                            <th>
-                                <Form.Check
-                                    type="checkbox"
-                                    id={"checkbox"}
-                                    label=""
-                                    onChange={(e: any) => null}
-                                />
-                            </th>
-                            <th>{t("Image")}</th>
-                            <th>{t("Title")}</th>
-                            <th>{t("Status")}</th>
-                            <th>{t("SKU")}</th>
-                            <th>{t("Action")}</th>
-
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {map(components.results, (component, i) => (
-                            <>
-                            <tr key={i}>
-                                <td>
+                    <div className={"mb-3"}>
+                        <div className="search">
+                            <input type="text" placeholder="Search"
+                                   onChange={(e: any) => setSearch(e.target.value)}
+                                   onKeyDown={handleSearchKeyDown}/>
+                            <button type="submit">
+                                <img src={searchIcon} alt="" onClick={() => setFilters({ ...filters, search, offset: 0 })}/>
+                            </button>
+                        </div>
+                    </div>
+                    {archiveComponentError && <MessageAlert message={archiveComponentError}
+                                                            icon={"x"} showAsNotification={false} />}
+                    <Row className={"header-row"}>
+                        <div>
+                            <Form.Check
+                                type="checkbox"
+                                id={"checkbox"}
+                                label=""
+                                onChange={(e: any) => null}
+                            />
+                        </div>
+                        <Col lg={2} className="px-4">
+                            {t("Image")}
+                        </Col>
+                        <Col lg={4} className="p-0">
+                            {t("Title")}
+                        </Col>
+                        <Col lg={2} className="p-0">
+                            {t("Status")}
+                        </Col>
+                        <Col lg={2} className="p-0">
+                            {t("SKU")}
+                        </Col>
+                        <Col lg={1} className="p-0">
+                            {t("Action")}
+                        </Col>
+                    </Row>
+                    {map(components.results, (component, i) => (
+                        <div className={"body-row"} key={i}>
+                            <Row className={"m-0 pb-4"}>
+                                <div>
                                     <Form.Check
                                         type="checkbox"
-                                        id={`checkbox${i}`}
+                                        id={"checkbox"}
                                         label=""
                                         onChange={(e: any) => null}
                                     />
-                                </td>
-                                <td>
-                                    <div className={"variation-image"}>
-                                        <img src={component.images[0]} alt={component.title}/>
+                                </div>
+                                <Col lg={2} className="px-4">
+                                    <div className={"image"}>
+                                        <img src={get(component, "images[0].image")} alt={component.title}/>
                                     </div>
-                                </td>
-                                <td>{component.title}</td>
-                                <td>
-                                    <button className="btn btn-outline-primary cursor-pointer"
-                                            onClick={() => null}>
+                                </Col>
+                                <Col lg={4} className="p-0">
+                                    <b>{component.title}</b><br/>
+                                    <span className="text-muted">{component.description}</span>
+                                </Col>
+                                <Col lg={2} className="p-0">
+                                    <span className="active-label btn btn-outline-primary">
                                         {component.is_active && t("Active")}
-                                    </button>
-                                </td>
-                                <td>{component.sku}</td>
-                                <td/>
-                            </tr>
-                            <tr key={i}>
-                                <td colSpan={6}>
+                                    </span>
+                                </Col>
+                                <Col lg={2} className="p-0">
+                                    {component.sku}
+                                </Col>
+                                <Col lg={1} className="p-0">
+                                    <span onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+                                        <Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
+                                    </span>
+                                    <span>
+                                        <Icon name="delete" className="ml-3 mr-1 svg-outline-danger cursor-pointer"/>
+                                    </span>
+                                </Col>
+                            </Row>
+                            <Row className={"extra-info"}>
+                                <div className="p-0">
                                     {component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
                                         <span key={i} className={"tags"}>{tag}</span>
                                     ))}
-                                </td>
-                            </tr>
-                            </>
-                        ))}
-                        </tbody>
-                    </Table>
+                                </div>
+                                <span className="product-detail btn btn-outline-primary">
+                                        {component.is_active && t("Product Details")}
+                                </span>
+                            </Row>
+                        </div>
+                    ))}
+                    <Pagination onPageChange={onChangePage} pageCount={components.count / 5} />
                 </Card.Body>
             </Card>
-            {isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}
+                                                iconWrapperClass="bg-success text-white p-2 rounded-circle"
+                                                iconClass="icon-sm"/> : null}
         </div>
     );
 }

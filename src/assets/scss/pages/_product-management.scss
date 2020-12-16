@@ -1,37 +1,64 @@
 .components {
-  table {
-    //border-collapse: separate;
-    //border-spacing: 0 1em;
-    tr {
-      background-color: $white;
+
+  .search {
+    width: 25%;
+  }
+
+  .data-table {
+    .body-row {
       box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
       border: 1px $gray-200;
-      border-radius: 1em;
+      border-radius: 10px;
+      padding: 1em 2em;
+      margin: 1em 0;
 
-      :hover {
-        background-color: $white;
+      .image img {
+        height: 3.5em;
+        width: 3.5em;
+        object-fit: cover;
+        border: 1px solid $gray-200;
+        border-radius: 0.7em;
       }
-    }
 
-    thead tr {
-      background-color: $gray-200;
-
-      :hover {
-        background-color: $gray-200;
+      .active-label {
+        padding: 1px 8px;
       }
-    }
 
-    .tags {
-        width: auto;
-        padding: 4px 8px;
-        font-size: 14px;
-        list-style: none;
-        border-radius: 6px;
-        margin: 0 8px 8px 0;
-        background: $gray-200;
-        &:hover {
-          background: red;
+      .product-detail {
+        padding: 5px 30px;
+      }
+
+      .extra-info {
+        margin: 0 !important;
+        padding: 1em 0 !important;
+        border-top: 2px solid $gray-200;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .tags {
+          width: auto;
+          padding: 4px 8px;
+          font-size: 14px;
+          list-style: none;
+          border-radius: 6px;
+          margin: 0 8px 8px 0;
+          background: $gray-200;
+          &:hover {
+            background: $gray-200;
+          }
         }
+      }
+    }
+
+    .header-row {
+      background-color: $gray-200;
+      box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+      border: 1px $gray-200;
+      border-radius: 10px;
+      padding: 1em 2em;
+      margin: 1em 0;
     }
   }
+
 }

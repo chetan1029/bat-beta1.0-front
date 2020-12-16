@@ -2,7 +2,7 @@ import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 import { get, size, map, forEach, isEmpty } from 'lodash';
 
 import {
-    getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages, uploadVariationImages
+    getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages, uploadVariationImages, archiveComponent
 } from "../../../api";
 
 import { componentsApiResponseSuccess, componentsApiResponseError } from "./actions";
@@ -86,6 +86,18 @@ function* deleteComponentById({ payload: { companyId, componentId } }: any) {
     }
 }
 
+/**
+ * archive component
+ */
+function* archiveComponentById({ payload: { companyId, componentId, data } }: any) {
+    try {
+        const response = yield call(archiveComponent, companyId, componentId, data);
+        yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT, response.data));
+    } catch (error) {
+        yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT, error));
+    }
+}
+
 export function* watchGetComponents() {
     yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents)
 }
@@ -106,6 +118,10 @@ export function* watchDeleteComponent() {
     yield takeEvery(ComponentsTypes.DELETE_COMPONENT, deleteComponentById)
 }
 
+export function* watchArchiveComponent() {
+    yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT, archiveComponentById)
+}
+
 
 function* componentsSaga() {
     yield all([
@@ -114,6 +130,7 @@ function* componentsSaga() {
         fork(watchAddComponent),
         fork(watchEditComponent),
         fork(watchDeleteComponent),
+        fork(watchArchiveComponent),
     ]);
 }
 

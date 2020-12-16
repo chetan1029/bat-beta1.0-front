@@ -496,6 +496,28 @@ const Icon = ({ name, className }: Props) => {
           <path d="M16.806 6.00559C15.9785 6.00559 15.266 5.42807 15.1036 4.62786L14.8475 3.36251C14.6894 2.77875 14.1539 2.375 13.5436 2.375H9.0817C8.47139 2.375 7.93592 2.77875 7.77781 3.36251L7.52167 4.62786C7.35934 5.42807 6.64678 6.00559 5.81934 6.00559" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
+      case 'pagination-left':
+        return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16.1602 7.41L11.5802 12L16.1602 16.59L14.7502 18L8.75016 12L14.7502 6L16.1602 7.41Z" fill="#396AFF"/>
+        </svg>
+
+      case 'pagination-right':
+        return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7.83984 7.41L12.4198 12L7.83984 16.59L9.24984 18L15.2498 12L9.24984 6L7.83984 7.41Z" fill="#396AFF"/>
+        </svg>
+
+      case 'import':
+        return <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 9L15 11C15 13.2091 13.2091 15 11 15L5 15C2.79086 15 1 13.2091 1 11L1 9" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M10.625 8.37435L8 10.9993M8 10.9993L5.375 8.37435M8 10.9993L8 1.66602" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+
+      case 'export' :
+        return <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 9L15 11C15 13.2091 13.2091 15 11 15L5 15C2.79086 15 1 13.2091 1 11L1 9" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M5.375 4.29167L8 1.66667M8 1.66667L10.625 4.29167M8 1.66667L8 11" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+
       default:
         return null;
     }

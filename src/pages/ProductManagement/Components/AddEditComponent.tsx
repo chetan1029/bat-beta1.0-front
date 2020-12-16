@@ -260,8 +260,6 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                 {createComponentError &&
                                 <MessageAlert
                                   message={createComponentError} icon={"x"}
-                                  iconWrapperClass="bg-danger text-white p-2 rounded-circle"
-                                  iconClass="icon-md"
                                   showAsNotification={false}
                                 />}
                                 <Form.Group className="mt-2 mb-0">

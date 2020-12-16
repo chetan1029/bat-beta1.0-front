@@ -89,6 +89,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.ARCHIVE_COMPONENT: {
+                    return {
+                        ...state,
+                        archiveComponentError: action.payload.error,
+                        isComponentArchived: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -105,15 +113,20 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.DELETE_COMPONENT:
             return { ...state, isComponentDeleted: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
+        case ComponentsTypes.ARCHIVE_COMPONENT:
+            return { ...state, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
+
 
         case ComponentsTypes.RESET: {
             return {
                 ...state,
                 createComponentError: null,
                 editComponentError: null,
+                archiveComponentError: null,
                 isComponentCreated: false,
                 isComponentEdited: false,
-                isComponentDeleted: false
+                isComponentDeleted: false,
+                isComponentArchived: false,
             }
         }
         default: return { ...state };

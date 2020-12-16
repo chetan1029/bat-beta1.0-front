@@ -198,6 +198,10 @@ function deleteComponent(companyId: number, componentId: number | string) {
     return api.create(`${componentUrl(companyId)}${componentId}/archive/`, {});
 }
 
+function archiveComponent(companyId: number, componentId: number | string, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/archive/`, data);
+}
+
 function getComponent(companyId: number, componentId: number | string) {
     return api.get(`${componentUrl(companyId)}${componentId}/`);
 }
@@ -220,5 +224,6 @@ export {
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
     getVendors, getVendor, createVendor, updateVendor,
-    getComponents, createComponent, editComponent, deleteComponent, getComponent, uploadComponentImages, uploadVariationImages
+    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
+    uploadComponentImages, uploadVariationImages
 }
