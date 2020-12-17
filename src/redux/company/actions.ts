@@ -6,4 +6,5 @@ export * from "./hscode/actions";
 export * from "./location/actions";
 export * from "./tax/actions";
 export * from "./packingBox/actions";
+export * from "./deliveryTerms/actions";
 export * from "./vendors/actions";

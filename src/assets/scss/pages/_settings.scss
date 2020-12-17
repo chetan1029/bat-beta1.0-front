@@ -78,6 +78,38 @@
     }
 }
 
+.svg-outline-success {
+    svg {
+        path {
+            stroke: $success !important;
+        }
+
+        ellipse {
+            stroke: $success !important;
+        }
+
+        rect {
+            stroke: $success !important;
+        }
+    }
+}
+
+.svg-outline-muted {
+    svg {
+        path {
+            stroke: $muted !important;
+        }
+
+        ellipse {
+            stroke: $muted !important;
+        }
+
+        rect {
+            stroke: $muted !important;
+        }
+    }
+}
+
 .settings-cards {
     min-height: 120px;
 }

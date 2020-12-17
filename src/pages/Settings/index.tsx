@@ -12,6 +12,7 @@ import Location from "./Location";
 import PackingBox from "./PackingBox";
 import Hscode from "./Hscode";
 import Tax from "./Tax";
+import DeliveryTerms from "./DeliveryTerms";
 
 interface DefaultViewProps {
     items: any;
@@ -93,6 +94,8 @@ const Index = ({ match }: IndexProps) => {
         { title: "Location", key: "location", icon: "location", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Packing Box", key: "packing_box", icon: "packing", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Hs Code", key: "hscode", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Assets", key: "asset", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Delivery Terms", key: "delivery_terms", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         ];
 
     return (
@@ -113,6 +116,8 @@ const Index = ({ match }: IndexProps) => {
                         return <Hscode />;
                     case "tax":
                         return <Tax />;
+                    case "delivery_terms":
+                        return <DeliveryTerms />;
 
                     default:
                         return <DefaultView items={items} companyId={companyId} />;

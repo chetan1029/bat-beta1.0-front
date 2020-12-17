@@ -49,7 +49,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
             length: packingBox ? packingBox.length : '',
             width: packingBox ? packingBox.width : '',
             depth: packingBox ? packingBox.depth : '',
-            length_unit: packingBox ? packingBox.length_unit : '',
+            length_unit: packingBox ? { label: packingBox.length_unit, value: packingBox.length_unit } : '',
             weight: packingBox ? packingBox.weight : { value: "", unit: "lb" },
         },
         validationSchema: Yup.object({
@@ -57,14 +57,14 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
             length: Yup.string().required(t('Packing Box Length is required')),
             width: Yup.string().required(t('Packing Box Width is required')),
             depth: Yup.string().required(t('Packing Box Depth is required')),
-            length_unit: Yup.string().required(t('Packing Box Length Unit is required')),
+            length_unit: Yup.object().required(t('Packing Box Length Unit is required')),
             weight: Yup.string().required(t('Packing Box Weight is required')),
         }),
         onSubmit: values => {
             if (packingBox) {
-                    dispatch(editPackingBox(companyId, packingBox.id, values));
+                    dispatch(editPackingBox(companyId, packingBox.id, {...values, length_unit: values['length_unit']['value']}));
                 } else {
-                    dispatch(createPackingBox(companyId, values));
+                    dispatch(createPackingBox(companyId, {...values, length_unit: values['length_unit']['value']}));
                 }
         },
     });

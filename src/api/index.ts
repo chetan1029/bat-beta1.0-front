@@ -266,6 +266,14 @@ function restorePackingBox(companyId: number, packingBoxId: number, params?: any
     return api.create(`${baseUrl}`, params);
 }
 
+/*
+Get delivery terms
+*/
+function getDeliveryTerms(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/delivery-terms/`;
+    return api.get(`${baseUrl}`, params);
+}
+
 /* members */
 function getMembers(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/members/`;
@@ -356,4 +364,5 @@ export {
     getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,
     getHscode, createHscode, updateHscode, deleteHscode, archiveHscode, restoreHscode,
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
+    getDeliveryTerms,
 }
