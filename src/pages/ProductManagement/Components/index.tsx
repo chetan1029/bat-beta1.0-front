@@ -1,15 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Card, Col, Form, Nav, Row } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { Card, Col, Dropdown, DropdownButton, Form, Nav, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { map, get, isEqual } from "lodash";
+import { filter, forEach, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import { getComponents, resetComponents, archiveComponent } from "../../../redux/actions";
+import { archiveComponent, getComponents, resetComponents } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
+import FilterDropDown from "../../../components/FilterDropDown";
+import Loader from "../../../components/Loader";
 
 const TabMenu = ({ onChange, selectedView }) => {
     const { t } = useTranslation();
@@ -17,7 +19,7 @@ const TabMenu = ({ onChange, selectedView }) => {
     return <div className="px-2 pb-2 mb-4">
         <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
             <Nav.Item as="li">
-                <Nav.Link className="pt-1" eventKey="all">{t('All')}</Nav.Link>
+                <Nav.Link className="pt-1" eventKey="all active">{t('All active')}</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="draft">{t('Draft')}</Nav.Link>
@@ -29,6 +31,26 @@ const TabMenu = ({ onChange, selectedView }) => {
     </div>
 }
 
+const getTags = (components) => {
+    let tags: any[] = [];
+    forEach(components, component => {
+        const componentTags = component.tags.split(",");
+        forEach(componentTags, tag => {
+            if (!map(tags, tag => tag.toLowerCase()).includes(tag.toLowerCase()))
+                tags = [...tags, tag];
+        })
+    })
+    return filter(tags, tag => tag !== "");
+}
+
+const getTypes = (components) => {
+    let types: any[] = [];
+    forEach(components, component => {
+        if (!map(types, type => type.toLowerCase()).includes(component.type.toLowerCase()))
+            types = [...types, component.type];
+    })
+    return filter(types, type => type !== "");
+}
 
 interface ComponentsProps {
     match: any;
@@ -38,22 +60,23 @@ const Components = (props: ComponentsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const companyId = props.match.params.companyId;
-    const [showActive, setShowActive] = useState<boolean>(false);
-    const [selectedView, setSelectedView] = useState<any>("all");
+    const [selectedView, setSelectedView] = useState<any>("all active");
     const [filters, setFilters] = useState<any>({ is_component: true, limit: 5, offset: 0 });
     const [search, setSearch] = useState<any>({ is_component: true, limit: 5, offset: 0 });
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(getComponents(companyId, { is_component: true, limit: 5, offset: 0 }));
+        dispatch(getComponents(companyId, { is_component: true, is_active: true, limit: 5, offset: 0 }));
         dispatch(resetComponents());
     }, [dispatch, companyId]);
 
     const {
+        loading,
         components,
         isComponentCreated,
         archiveComponentError,
     } = useSelector(({ ProductManagement: { Components } }: any) => ({
+        loading: Components.loading,
         components: Components.components,
         isComponentCreated: Components.isComponentCreated,
         archiveComponentError: Components.archiveComponentError,
@@ -67,23 +90,11 @@ const Components = (props: ComponentsProps) => {
 
     const prevFilters = prevFiltersRef.current;
 
-    useEffect(()=> {
+    useEffect(() => {
         if (!(isEqual(prevFilters, filters))) {
             dispatch(getComponents(companyId, filters));
         }
-    },[filters, prevFilters]);
-
-    const onChangeShowActive = (checked: boolean) => {
-        setShowActive(checked);
-        if (checked) {
-            setFilters({ ...filters, is_active: true });
-        } else {
-            const newFilters = filters;
-            delete newFilters.is_active;
-            setFilters(newFilters);
-            dispatch(getComponents(companyId, newFilters));
-        }
-    }
+    }, [filters, prevFilters]);
 
     const onChangePage = (page) => {
         setFilters({ ...filters, offset: (page - 1) * 5 });
@@ -98,6 +109,22 @@ const Components = (props: ComponentsProps) => {
         }
     }
 
+    const handleOnClickOrderBy = (value: any) => {
+        setFilters({ ...filters, ordering: value });
+    }
+
+    const handleOnSelectFilters = (options: any) => {
+        let tags: string = "";
+        let type: string = "";
+        if (options["Tagged with"]) {
+            tags = options["Tagged with"].toString();
+        }
+        if (options["Component type"]) {
+            type = options["Component type"].toString();
+        }
+        setFilters({ ...filters, tags, type });
+    }
+
     return (
         <div className={"components"}>
             <div className="pt-4 pb-3 px-3">
@@ -106,18 +133,6 @@ const Components = (props: ComponentsProps) => {
                         <div className="d-flex align-items-center">
                             <Icon name="components" className="icon icon-xs  mr-2"/>
                             <h1 className="m-0">{t('Components')}</h1>
-                            <div className="d-flex align-items-center pl-3">
-                                <span className="m-0 font-16 mr-2">
-                                    {t('Show active only')}
-                                </span>
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label=""
-                                    checked={showActive}
-                                    onChange={(e: any) => onChangeShowActive(e.target.checked)}
-                                />
-                            </div>
                         </div>
                     </Col>
                     <Col className="text-right d-flex flex-row align-items-center justify-content-end">
@@ -140,18 +155,38 @@ const Components = (props: ComponentsProps) => {
             <Card className={"data-table"}>
                 <Card.Body>
                     <TabMenu onChange={setSelectedView} selectedView={selectedView}/>
-                    <div className={"mb-3"}>
-                        <div className="search">
-                            <input type="text" placeholder="Search"
-                                   onChange={(e: any) => setSearch(e.target.value)}
-                                   onKeyDown={handleSearchKeyDown}/>
-                            <button type="submit">
-                                <img src={searchIcon} alt="" onClick={() => setFilters({ ...filters, search, offset: 0 })}/>
-                            </button>
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                        <div className="d-flex align-items-center w-75">
+                            <DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
+                                <Dropdown.Item
+                                    onClick={() => handleOnClickOrderBy("create_date")}>{t('Created Date- ASC')}</Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => handleOnClickOrderBy("-create_date")}>{t('Created Date- DESC')}</Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => handleOnClickOrderBy("title")}>{t('Title- ASC')}</Dropdown.Item>
+                                <Dropdown.Item
+                                    onClick={() => handleOnClickOrderBy("-title")}>{t('Title- DESC')}</Dropdown.Item>
+                            </DropdownButton>
+                            <div className="search ml-4">
+                                <input type="text" placeholder="Search"
+                                       onChange={(e: any) => setSearch(e.target.value)}
+                                       onKeyDown={handleSearchKeyDown}/>
+                                <button type="submit">
+                                    <img src={searchIcon} alt=""
+                                         onClick={() => setFilters({ ...filters, search, offset: 0 })}/>
+                                </button>
+                            </div>
                         </div>
+                        <FilterDropDown
+                            filters={{
+                                "Tagged with": getTags(components.results),
+                                "Component type": getTypes(components.results)
+                            }}
+                            onChangeFilters={handleOnSelectFilters}
+                        />
                     </div>
                     {archiveComponentError && <MessageAlert message={archiveComponentError}
-                                                            icon={"x"} showAsNotification={false} />}
+                                                            icon={"x"} showAsNotification={false}/>}
                     <Row className={"header-row"}>
                         <div>
                             <Form.Check
@@ -177,6 +212,7 @@ const Components = (props: ComponentsProps) => {
                             {t("Action")}
                         </Col>
                     </Row>
+                    {loading ? <Loader/> : null}
                     {map(components.results, (component, i) => (
                         <div className={"body-row"} key={i}>
                             <Row className={"m-0 pb-4"}>
@@ -206,11 +242,9 @@ const Components = (props: ComponentsProps) => {
                                     {component.sku}
                                 </Col>
                                 <Col lg={1} className="p-0">
-                                    <span onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+                                    <span
+                                        onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
                                         <Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
-                                    </span>
-                                    <span>
-                                        <Icon name="delete" className="ml-3 mr-1 svg-outline-danger cursor-pointer"/>
                                     </span>
                                 </Col>
                             </Row>
@@ -226,7 +260,7 @@ const Components = (props: ComponentsProps) => {
                             </Row>
                         </div>
                     ))}
-                    <Pagination onPageChange={onChangePage} pageCount={components.count / 5} />
+                    <Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
                 </Card.Body>
             </Card>
             {isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}
