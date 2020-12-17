@@ -50,9 +50,9 @@ const Companies = (props: CompaniesProp) => {
                         <h1 className="m-0">{t('My Companies')}</h1>
                     </div>
                 </Col>
-                <Col className="text-sm-right" lg={6}>
+                {/* <Col className="text-sm-right" lg={6}>
                     <Link to={`/companies/add`} className="btn btn-primary">{t('Add New Company')}</Link>
-                </Col>
+                </Col> */}
             </Row>
         </div>
 

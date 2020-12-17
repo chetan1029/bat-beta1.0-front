@@ -8,7 +8,6 @@ import { Link, Redirect } from "react-router-dom";
 import { getCompanies } from "../redux/actions";
 
 import Loader from "../components/Loader";
-import RolePermDisplayName from "../components/RolePermDisplayName";
 
 interface RootComponentProps {
 
@@ -31,8 +30,12 @@ const Root = (props: RootComponentProps) => {
 
     const noOfCompanies = isCompaniesFetched ? companies.count : 0;
 
+    const company = isCompaniesFetched && noOfCompanies >= 1 ? companies.results[0]: null;
+    const isCompanyDetailsMissing = company && (!company['time_zone'] || !company['currency']); 
+    const redirectUrl = company ? (isCompanyDetailsMissing ? `/companies/${company['id']}/edit`: `/dashboard/${company['id']}`): '';
+
     return <>
-        {isCompaniesFetched && noOfCompanies === 1 ? <Redirect to={`/dashboard/${companies.results[0]['id']}`} /> : null}
+        {isCompaniesFetched && noOfCompanies >= 1 ? <Redirect to={redirectUrl} /> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
@@ -59,7 +62,7 @@ const Root = (props: RootComponentProps) => {
                                                             <Link to='/companies/add' className='btn btn-primary'>{t('Create Company')}</Link>
                                                         </div>
                                                     </> : <>
-                                                            <h5 className="my-0">{t('Select Company')}</h5>
+                                                            {/* <h5 className="my-0">{t('Select Company')}</h5>
                                                             <p className="text-muted mt-1 mb-4">
                                                                 {t('You are member of multiple companies. Select the company to continue.')}
                                                             </p>
@@ -75,7 +78,7 @@ const Root = (props: RootComponentProps) => {
                                                                         </Card.Body>
                                                                     </Card>
                                                                 })}
-                                                            </div>
+                                                            </div> */}
                                                         </>}
                                                 </> : null}
                                             </>}

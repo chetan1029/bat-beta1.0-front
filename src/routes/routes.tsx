@@ -9,8 +9,9 @@ import MemberDetails from "../pages/Settings/Members/MemberDetails";
 import Invitations from "../pages/Invitations/";
 import Profile from "../pages/Profile/";
 import ChangePassword from "../pages/account/ChangePassword";
-import Companies from "../pages/Companies/";
-import AddNewCompany from "../pages/Companies/AddNew";
+// import Companies from "../pages/Companies/";
+// import AddNewCompany from "../pages/Companies/AddNew";
+import EditCompany from "../pages/Companies/EditCompany";
 
 import AddVendor from "../pages/Vendors/AddVendor";
 import VendorDetails from "../pages/Vendors/Details";
@@ -39,8 +40,9 @@ const authProtectedRoutes = [
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId", component: VendorDetails },
   { path: "/supply-chain/:companyId/vendors/:categoryId", component: Vendors },
 
-  { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
-  { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
+  { path: "/companies/:companyId/edit", component: EditCompany, layoutProps: { 'mainSidebar': true } },
+  // { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
+  // { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
 
   { path: "/profile/general", component: Profile, layoutProps: { 'mainSidebar': true } },
   { path: "/profile/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
