@@ -61,8 +61,8 @@ const Components = (props: ComponentsProps) => {
     const dispatch = useDispatch();
     const companyId = props.match.params.companyId;
     const [selectedView, setSelectedView] = useState<any>("all active");
-    const [filters, setFilters] = useState<any>({ is_component: true, limit: 5, offset: 0 });
-    const [search, setSearch] = useState<any>({ is_component: true, limit: 5, offset: 0 });
+    const [filters, setFilters] = useState<any>({ is_component: true, is_active: true, limit: 5, offset: 0 });
+    const [search, setSearch] = useState<any>({ is_component: true, is_active: true, limit: 5, offset: 0 });
 
     useEffect(() => {
         window.scrollTo(0, 0);

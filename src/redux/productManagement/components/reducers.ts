@@ -45,6 +45,13 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.ARCHIVE_COMPONENT: {
+                    return {
+                        ...state,
+                        isComponentArchived: true,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }

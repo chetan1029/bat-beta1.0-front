@@ -125,6 +125,7 @@
             padding: 1.5em 1em;
             .dropdown-item {
                 background: $white;
+                margin-top: 5px;
 
                 &.active {
                     border-radius: $border-radius !important;
@@ -171,8 +172,9 @@
         width: 16em;
         display: flex;
         align-items: center;
-        justify-content: space-evenly;
+        justify-content: space-between;
     }
+
     &.show {
         .dropdown-toggle {
             color: #396aff;
