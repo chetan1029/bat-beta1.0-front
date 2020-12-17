@@ -50,7 +50,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
             width: packingBox ? packingBox.width : '',
             depth: packingBox ? packingBox.depth : '',
             length_unit: packingBox ? packingBox.length_unit : '',
-            weight: packingBox ? packingBox.weight : ''
+            weight: packingBox ? packingBox.weight : { value: "", unit: "lb" },
         },
         validationSchema: Yup.object({
             name: Yup.string().required(t('Packing Box name is required')),
@@ -167,25 +167,25 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
                               </Col>
                             </Row>
                             <Form.Label htmlFor="usr">{t("Weight ")}</Form.Label>
-                                <Form.Group className="mb-4">
-                                    <InputGroup>
-                                        <Form.Control type="text" className="form-control" id="weight" name="weight" placeholder="Weight"
-                                            onBlur={validator.handleBlur}
-                                            value={validator.values.weight}
-                                            onChange={validator.handleChange}
-                                            isInvalid={validator.touched.weight && validator.errors && validator.errors.weight ? true : false}
-                                        />
-                                        <DropdownButton
-                                            as={InputGroup.Append}
-                                            variant="outline-secondary"
-                                            title={validator.values.weight.unit}
-                                            id="input-group-dropdown-2"
-                                        >
-                                            <Dropdown.Item>{t("lb")}</Dropdown.Item>
-                                            <Dropdown.Item>{t("kg")}</Dropdown.Item>
-                                        </DropdownButton>
-                                    </InputGroup>
-                                </Form.Group>
+                            <Form.Group className="mb-4">
+                                <InputGroup>
+                                    <Form.Control type="text" className="form-control" id="weight" name="weight.value" placeholder="Weight"
+                                                  onBlur={validator.handleBlur}
+                                                  value={validator.values.weight.value}
+                                                  onChange={validator.handleChange}
+                                                  isInvalid={validator.touched.weight && validator.errors && validator.errors.weight ? true : false}
+                                    />
+                                    <DropdownButton
+                                        as={InputGroup.Append}
+                                        variant="outline-secondary"
+                                        title={validator.values.weight.unit}
+                                        id="input-group-dropdown-2"
+                                    >
+                                        <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "lb")}>{t("lb")}</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "kg")}>{t("kg")}</Dropdown.Item>
+                                    </DropdownButton>
+                                </InputGroup>
+                            </Form.Group>
                             <div>
                                 <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
                                 <Button type="submit" variant="primary">{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</Button>
