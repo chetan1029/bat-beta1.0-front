@@ -103,6 +103,176 @@ function restorePaymentTerm(companyId: number, paymentTermId: number, params?: a
     return api.create(`${baseUrl}`, params);
 }
 
+/*
+Bank
+*/
+function getBank(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createBank(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Location
+*/
+function getLocation(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createLocation(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+/*
+Location
+*/
+function getHscode(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createHscode(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+/*
+Tax
+*/
+function getTax(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createTax(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Packing Box
+*/
+function getPackingBox(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createPackingBox(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updatePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deletePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archivePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restorePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Get delivery terms
+*/
+function getDeliveryTerms(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/delivery-terms/`;
+    return api.get(`${baseUrl}`, params);
+}
 
 /* members */
 function getMembers(companyId: number, params?: any) {
@@ -188,5 +358,11 @@ export {
     getCompaniesList, createCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
-    getVendors, getVendor, createVendor, updateVendor
+    getVendors, getVendor, createVendor, updateVendor,
+    getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
+    getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
+    getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,
+    getHscode, createHscode, updateHscode, deleteHscode, archiveHscode, restoreHscode,
+    getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
+    getDeliveryTerms,
 }
