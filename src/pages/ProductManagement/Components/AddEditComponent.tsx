@@ -38,7 +38,6 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const componentId = match.params.componentId;
 
     useEffect(() => {
-        // dispatch(getComponents(companyId, {is_component: true}));
         dispatch(getTagsAndTypes(companyId));
         dispatch(resetComponents());
     }, [dispatch, companyId]);
@@ -63,12 +62,12 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
         tagsAndTypes: Components.tagsAndTypes,
     }));
 
-    const defaultTypes = map(tagsAndTypes.type_data, (type: any) => ({
+    const defaultTypes = tagsAndTypes && map(tagsAndTypes.type_data, (type: any) => ({
         label: type,
         value: type
     }));
 
-    const defaultSeries = map(tagsAndTypes.series_data, (series: any) => ({
+    const defaultSeries = tagsAndTypes && map(tagsAndTypes.series_data, (series: any) => ({
         label: series,
         value: series
     }));
@@ -218,6 +217,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                                 placeholder={t('Tags')}
                                                 id="tagsId"
                                                 name="tags"
+                                                tags={component && component.tags.split(",")}
                                                 selectedTags={setTags}
                                             />
                                         </Form.Group>
