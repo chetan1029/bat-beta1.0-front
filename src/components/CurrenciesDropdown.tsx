@@ -11,10 +11,11 @@ interface CurrenciesDropdownProps {
     name: string,
     value: any,
     onChange: any,
-    className: any
+    className: any,
+    isSingle?: boolean
 }
 
-const CurrenciesDropdown = ({ placeholder, name, value, onChange, className }: CurrenciesDropdownProps) => {
+const CurrenciesDropdown = ({ placeholder, name, value, onChange, className, isSingle }: CurrenciesDropdownProps) => {
 
     const { t } = useTranslation();
 
@@ -33,7 +34,7 @@ const CurrenciesDropdown = ({ placeholder, name, value, onChange, className }: C
             options={countryOpts}
             value={value}
             onChange={onChange}
-            isMulti
+            isMulti={!isSingle}
             className={classNames("react-select", "react-select-regular", className)}
             classNamePrefix="react-select"
         />

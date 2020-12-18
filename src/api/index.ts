@@ -72,7 +72,7 @@ function createCompany(params: any) {
 
 function editCompany(companyId: number | string, data: any) {
     const baseUrl = `/companies/${companyId}/`;
-    return api.updatePatch(`${baseUrl}`, data);
+    return api.updateWithFile(`${baseUrl}`, data);
 }
 
 function getCompanyCategories(companyId: string | number, params?: any) {

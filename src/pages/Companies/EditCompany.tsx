@@ -1,21 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { Link } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import classNames from "classnames";
 
 //components
-import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
 import CountriesDropdown from "../../components/CountriesDropdown";
 import TimezoneDropdown from "../../components/TimezoneDropdown";
+import CurrenciesDropdown from "../../components/CurrenciesDropdown";
+import Icon from "../../components/Icon";
 import MessageAlert from "../../components/MessageAlert";
+import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
 import { editCompany, getCompany } from "../../redux/actions";
 
-import { COUNTRIES } from "../../constants";
+import { COUNTRIES, CURRENCIES } from "../../constants";
 
 
 interface EditCompanyProps {
@@ -55,18 +57,60 @@ const EditCompany = (props: EditCompanyProps) => {
             email: '',
             phone_number: '', ...company,
             country: company && company['country'] ? { label: COUNTRIES[company['country']], 'value': company['country'] } : null,
-            timezone: company && company['timezone'] ? { label: company['timezone'], value: company['timezone'] } : null
+            timezone: company && company['time_zone'] ? { label: company['time_zone'], value: company['time_zone'] } : null,
+            currency: company && company['currency'] ? { label: CURRENCIES['currency'], value: company['currency'] } : null
         },
         validationSchema: Yup.object({
             name: Yup.string().required(t('Company name is required')),
             country: Yup.object().required(t('Country is required')),
             email: Yup.string().required(t('Email is required')),
+            timezone: Yup.object().required(t('Timezone is required')).nullable(),
+            currency: Yup.object().required(t('Currency is required')).nullable(),
         }),
         onSubmit: values => {
-            dispatch(editCompany(companyId, { ...company, ...values }));
+            const newData = { ...company, ...values };
+
+            if (values['country']) {
+                newData['country'] = values['country']['value'];
+            }
+
+            if (values['timezone']) {
+                newData['time_zone'] = values['timezone']['value'];
+            }
+
+            if (values['currency']) {
+                newData['currency'] = values['currency']['value'];
+            }
+
+            if (logoFile) {
+                newData['logo'] = logoFile;
+            }
+
+            if (licenseFile) {
+                newData['license_file'] = licenseFile;
+            } else {
+                delete newData['license_file'];
+            }
+
+            dispatch(editCompany(companyId, newData));
         },
     });
 
+    const [logoFile, setlogoFile] = useState<any>();
+    const onLogoFile = (e: any) => {
+        const file = e.target.files[0];
+        if (file)
+            setlogoFile(file);
+    }
+
+    const [licenseFile, setlicenseFile] = useState<any>();
+    const onLicenseFile = (e: any) => {
+        const file = e.target.files[0];
+        if (file)
+            setlicenseFile(file);
+    }
+
+    const imagePath: any = company && company['logo'] ? company['logo'] : (logoFile ? URL.createObjectURL(logoFile) : avatarPlaceholder);
 
     return <>
 
@@ -107,8 +151,6 @@ const EditCompany = (props: EditCompanyProps) => {
                                                 <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
                                             ) : null}
                                         </Form.Group>
-                                    </Col>
-                                    <Col md={6}>
                                         <Form.Group>
                                             <Form.Label>{t('Abbreviation')}</Form.Label>
                                             <Form.Control type="text" placeholder={t("Abbreviation")}
@@ -123,6 +165,19 @@ const EditCompany = (props: EditCompanyProps) => {
                                                 <Form.Control.Feedback type="invalid">{validator.errors.abbreviation}</Form.Control.Feedback>
                                             ) : null}
                                         </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Logo')}</Form.Label>
+                                            <div className="position-relative" style={{ width: 72 }}>
+                                                <img width={72} height={72} className={classNames("rounded-circle", { "border": !(company && company['logo']) })}
+                                                    src={imagePath} alt="" />
+                                                <div className='profile-pic-edit'>
+                                                    <Icon name='pencil' className="icon icon-xxxs" />
+                                                    <input type="file" onChange={onLogoFile} accept="image/x-png,image/gif,image/jpeg" />
+                                                </div>
+                                            </div>
+                                        </Form.Group>                                        
                                     </Col>
                                 </Row>
 
@@ -226,6 +281,36 @@ const EditCompany = (props: EditCompanyProps) => {
                                                     {validator.errors.timezone}
                                                 </Form.Control.Feedback>
                                             ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Cuurency')}</Form.Label>
+                                            <CurrenciesDropdown name='currency' placeholder={t('Currency')}
+                                                className={validator.touched.currency && validator.errors.currency ? "is-invalid" : ""}
+                                                onChange={(value) => validator.setFieldValue('currency', value)}
+                                                value={validator.values.currency} 
+                                                isSingle={true} />
+
+                                            {validator.touched.currency && validator.errors.currency ? (
+                                                <Form.Control.Feedback type="invalid" className="d-block">
+                                                    {validator.errors.currency}
+                                                </Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row className='align-items-center'>
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label>{t('License File')}</Form.Label>
+                                            <Form.Control type="file" name="license_file" id="license_file"
+                                                onChange={onLicenseFile} custom />
+                                            
+                                            {company && company['license_file'] ? <p className="mb-0">
+                                                {t('Current File')}: <a href={company['license_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View file')}</a>
+                                            </p> : null}
                                         </Form.Group>
                                     </Col>
                                 </Row>
