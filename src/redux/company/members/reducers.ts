@@ -53,6 +53,14 @@ const Members = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case MembersTypes.GET_PARTNERS: {
+                    return {
+                        ...state,
+                        partners: action.payload.data,
+                        isPartnersFetched: true,
+                        loading: false,
+                    }
+                }
                 case MembersTypes.RESEND_INVITE: {
                     return {
                         ...state,
@@ -112,6 +120,14 @@ const Members = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case MembersTypes.GET_PARTNERS: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isPartnersFetched: true,
+                        loading: false,
+                    }
+                }
                 case MembersTypes.RESEND_INVITE: {
                     return {
                         ...state,
@@ -129,6 +145,9 @@ const Members = (state = INIT_STATE, action: any) => {
 
         case MembersTypes.GET_INVITATIONS:
             return { ...state, isInvitationsFetched: false, loading: true };
+
+        case MembersTypes.GET_PARTNERS:
+            return { ...state, isPartnersFetched: false, loading: true };
 
         case MembersTypes.RESEND_INVITE:
             return { ...state, isInvitationResent: false, loading: true };

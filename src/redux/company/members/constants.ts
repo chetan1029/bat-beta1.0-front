@@ -12,5 +12,7 @@ export enum MembersTypes {
     GET_INVITATIONS = '@@company/members/GET_INVITATIONS',
     RESEND_INVITE = '@@company/members/RESEND_INVITE',
 
+    GET_PARTNERS = '@@company/members/GET_PARTNERS',
+
     RESET = '@@company/members/RESET',
 }

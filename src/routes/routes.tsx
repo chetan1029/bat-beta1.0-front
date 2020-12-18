@@ -26,11 +26,16 @@ import Logout from "../pages/account/Logout";
 import ForgotPassword from "../pages/account/ForgotPassword";
 import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 
+// other
+import PageNotFound from "../pages/other/PageNotFound";
+
 import Root from "../pages/Root";
 
 const authProtectedRoutes = [
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
+  { path: "/settings/:companyId/edit", component: EditCompany },
+
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
@@ -56,6 +61,8 @@ const publicRoutes = [
   { path: "/signup", component: SignUp },
   { path: "/forgot-password-confirm/:uid/:token", component: ForgotPasswordReset },
   { path: "/forgot-password", component: ForgotPassword },
+
+  { path: "/not-found", component: PageNotFound },
 
 ];
 

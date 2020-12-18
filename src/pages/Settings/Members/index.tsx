@@ -64,11 +64,11 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                                 <h6 className="text-muted my-0">{fullName}</h6>
                                 <h5 className="my-0">{member['user']['email']}</h5>
                             </Media.Body>
-                            
+
                             {!you ? <Link to={`/settings/${companyId}/members/${member.id}`} className='btn btn-link px-0 font-weight-semibold'>
                                 <Icon name="notes" className="text-primary mr-1"></Icon>
                                 {t('Show Details')}
-                            </Link>: null}
+                            </Link> : null}
                         </Media>
 
                         <div className="p-3 border-top">
@@ -159,6 +159,9 @@ const TabMenu = ({ onChange, selectedView }) => {
         <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="members">{t('Members')}</Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li">
+                <Nav.Link className="pt-1" eventKey="partners">{t('Partners')}</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="invitations">{t('Invitations')}</Nav.Link>
@@ -253,7 +256,7 @@ const Members = (props: MembersProps) => {
                                     />
                                 </div>
                             </> : <>
-                                    <h1 className="m-0">{t('Invitations')}</h1>
+                                    <h1 className="m-0">{selectedView === 'partners' ? t('Partners') : t('Invitations')}</h1>
                                 </>}
                         </div>
                     </Col>
@@ -281,9 +284,7 @@ const Members = (props: MembersProps) => {
                                                         <MemberItem member={member}
                                                             key={key} companyId={companyId}
                                                             loggedInUser={loggedInUser}
-                                                            onDeleteMember={(m: any) => {
-
-                                                            }}
+                                                            onDeleteMember={(m: any) => {}}
                                                         />
                                                     ) : <EmptyState showActive={showActive} />
                                             }
@@ -314,19 +315,34 @@ const Members = (props: MembersProps) => {
                         </div>}
                     </> :
                         <>
-                            {loading ? <Loader /> : <div>
-                                <div className="px-2">
-                                    <Row>
-                                        <Col lg={8} xs={12}>
-                                            {isInvitationsFetched ? <>
-                                                {
-                                                    invitations && invitations['results'].length > 0 ?
-                                                        invitations['results'].map((invite: any, key: number) => <InvitationItem invite={invite} companyId={companyId} key={key} />) : <EmptyInvitesState />
-                                                }</> : null}
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </div>}
+                            {selectedView !== 'partners' ? <>
+
+                                {loading ? <Loader /> : <div>
+                                    <div className="px-2">
+                                        <Row>
+                                            <Col lg={8} xs={12}>
+                                                {isInvitationsFetched ? <>
+                                                    {
+                                                        invitations && invitations['results'].length > 0 ?
+                                                            invitations['results'].map((invite: any, key: number) => <InvitationItem invite={invite} companyId={companyId} key={key} />) : <EmptyInvitesState />
+                                                    }</> : null}
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </div>}
+                            </> : <>
+
+                                    {loading ? <Loader /> : <div>
+                                        <div className="px-2">
+                                            <Row>
+                                                <Col lg={8} xs={12}>
+
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </div>}
+
+                                </>}
                         </>}
                 </Card.Body>
             </Card>
