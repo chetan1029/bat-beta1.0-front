@@ -253,3 +253,13 @@ const COUNTRIES: any = {
 
 
 export { COUNTRIES };
+
+const CURRENCIES: any = {
+    "USD": "US Dollar",
+    "SEK": "Swedish Krona",
+    "CNY": "Yuan Renminbi",
+    "EUR": "Euro",
+}
+
+
+export { CURRENCIES };
