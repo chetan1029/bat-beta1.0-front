@@ -19,7 +19,7 @@ const TabMenu = ({ onChange, selectedView }) => {
     return <div className="px-2 pb-2 mb-4">
         <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
             <Nav.Item as="li">
-                <Nav.Link className="pt-1" eventKey="all active">{t('All active')}</Nav.Link>
+                <Nav.Link className="pt-1" eventKey="all active">{t('All Active')}</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="draft">{t('Draft')}</Nav.Link>
@@ -243,7 +243,7 @@ const Components = (props: ComponentsProps) => {
                                 </Col>
                                 <Col lg={1} className="p-0">
                                     <span
-                                        onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+                                        onClick={() => dispatch(archiveComponent(companyId, component.id, component, filters))}>
                                         <Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
                                     </span>
                                 </Col>

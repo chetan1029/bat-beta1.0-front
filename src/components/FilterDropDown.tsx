@@ -64,7 +64,7 @@ const FilterDropDown = (props: FilterDropDownProps) => {
     return (
         <Dropdown ref={dropdown} className={"filter-dropdown"} flip={true} show={isOpen}>
             <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" onClick={() => setIsOpen(!isOpen)}>
-                {t('More filters')}
+                <span className={"toggle-label"}>{t('More filters')}</span>
             </Dropdown.Toggle>
 
             <Dropdown.Menu align={"right"}>

@@ -114,6 +114,45 @@
 }
 
 .filter-dropdown {
+    .toggle-label {
+        color: $black;
+    }
+
+    .dropdown-toggle {
+        width: 16em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: $black;
+        border: 1px solid rgba($primary, 0.5);
+
+        &:after {
+            font-size: 16px;
+        }
+    }
+
+    &.show {
+        .dropdown-toggle {
+            color: $black;
+            background: $white;
+
+            &:after {
+                transform: scaleY(-1);
+                font-size: 16px;
+            }
+        }
+    }
+
+    .btn-outline-secondary {
+        &:focus {
+            color: $black;
+            background: $white;
+            border: 1px solid rgba($primary, 0.5);
+            outline: none;
+            box-shadow: none;
+        }
+    }
+
     .dropdown-menu {
         display: flex !important;
         background: $white !important;
@@ -167,20 +206,6 @@
         }
 
 
-    }
-    .dropdown-toggle {
-        width: 16em;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    &.show {
-        .dropdown-toggle {
-            color: #396aff;
-            border: 1px solid #396aff;
-            background: $white;
-        }
     }
 }
 

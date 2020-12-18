@@ -5,6 +5,42 @@
   }
 
   .dropdown {
+
+    .dropdown-toggle {
+      display: flex;
+      align-items: center;
+      color: $black;
+      border: 1px solid rgba($primary, 0.5);
+
+      &:after {
+        font-size: 16px;
+        margin-left: 5px;
+        color: $primary;
+      }
+    }
+
+    &.show {
+      .dropdown-toggle {
+        color: $black;
+        background: $white;
+
+        &:after {
+          transform: scaleY(-1);
+          font-size: 16px;
+        }
+      }
+    }
+
+    .btn-outline-secondary {
+      &:focus {
+        color: $black;
+        background: $white;
+        border: 1px solid rgba($primary, 0.5);
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
     .dropdown-menu {
       background: $white !important;
       box-shadow: $box-shadow !important;

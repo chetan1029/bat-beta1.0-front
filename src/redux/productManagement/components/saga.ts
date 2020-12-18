@@ -89,10 +89,12 @@ function* deleteComponentById({ payload: { companyId, componentId } }: any) {
 /**
  * archive component
  */
-function* archiveComponentById({ payload: { companyId, componentId, data } }: any) {
+function* archiveComponentById({ payload: { companyId, componentId, data, filters } }: any) {
     try {
         const response = yield call(archiveComponent, companyId, componentId, data);
+        const res = yield call(getComponents, companyId, filters);
         yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT, response.data));
+        yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, res.data));
     } catch (error) {
         yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT, error));
     }

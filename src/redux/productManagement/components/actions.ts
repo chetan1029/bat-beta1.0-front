@@ -32,9 +32,9 @@ export const deleteComponent = (companyId: string | number, componentId: number 
     payload: { companyId, componentId }
 });
 
-export const archiveComponent = (companyId: string | number, componentId: number | string, data: any) => ({
+export const archiveComponent = (companyId: string | number, componentId: number | string, data: any, filters) => ({
     type: ComponentsTypes.ARCHIVE_COMPONENT,
-    payload: { companyId, componentId, data }
+    payload: { companyId, componentId, data, filters }
 });
 
 export const getComponentDetails = (companyId: string | number, componentId: number | string) => ({
