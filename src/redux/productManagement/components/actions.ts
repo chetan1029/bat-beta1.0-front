@@ -42,6 +42,11 @@ export const getComponentDetails = (companyId: string | number, componentId: num
     payload: { companyId, componentId }
 });
 
+export const getTagsAndTypes = (companyId: string | number) => ({
+    type: ComponentsTypes.GET_TAGS_TYPES,
+    payload: { companyId }
+});
+
 export const resetComponents = () => ({
     type: ComponentsTypes.RESET,
 });

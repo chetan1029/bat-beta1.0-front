@@ -38,7 +38,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 	const {
 		loading,
 		component,
-		isComponentArchived
+		isComponentArchived,
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		component: Components.component,

@@ -10,12 +10,18 @@ import MediaInput from "../../../components/MediaInput";
 //plug-ins
 import { useFormik } from 'formik';
 import classNames from "classnames";
-import { map, uniqBy, isEmpty, isNumber, forEach, filter } from "lodash";
+import { map, isEmpty, forEach, filter } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
-import { createComponent, getComponents, resetComponents } from "../../../redux/actions"
+import {
+    createComponent,
+    getComponentDetails,
+    getTagsAndTypes,
+    resetComponents
+} from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import VariationDetails from "../../../components/VariationDetails";
+import Loader from "../../../components/Loader";
 
 interface AddEditComponentProps {
     match: any;
@@ -29,31 +35,43 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
     const dispatch = useDispatch();
     const companyId = match.params.companyId;
+    const componentId = match.params.componentId;
 
     useEffect(() => {
-        dispatch(getComponents(companyId, {is_component: true}));
+        // dispatch(getComponents(companyId, {is_component: true}));
+        dispatch(getTagsAndTypes(companyId));
         dispatch(resetComponents());
     }, [dispatch, companyId]);
 
+    useEffect(() => {
+        if (companyId && componentId) {
+            dispatch(getComponentDetails(companyId, componentId));
+        }
+    }, [dispatch, companyId, componentId]);
+
     const {
-        components,
+        loading,
+        component,
         isComponentCreated,
-        createComponentError
+        createComponentError,
+        tagsAndTypes,
     } = useSelector(({ ProductManagement: { Components } }: any) => ({
-        components: Components.components,
+        loading: Components.loading,
+        component: Components.component,
         isComponentCreated: Components.isComponentCreated,
         createComponentError: Components.createComponentError,
+        tagsAndTypes: Components.tagsAndTypes,
     }));
 
-    const defaultTypes = uniqBy(map(components.results, (component: any) => ({
-        label: component.type,
-        value: component.type
-    })), "value");
+    const defaultTypes = map(tagsAndTypes.type_data, (type: any) => ({
+        label: type,
+        value: type
+    }));
 
-    const defaultSeries = uniqBy(map(components.results, (component: any) => ({
-        label: component.series,
-        value: component.series
-    })), "value");
+    const defaultSeries = map(tagsAndTypes.series_data, (series: any) => ({
+        label: series,
+        value: series
+    }));
 
     const validateCategories = (values) => {
         let error: any = { variationOptions: [], variations: [] };
@@ -98,10 +116,10 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
-            title: "",
-            type: "",
-            series: "",
-            description: "",
+            title: component ? component.title : "",
+            type: component ? component.type : "",
+            series: component ? component.series : "",
+            description: component ? component.description : "",
         },
         validate: validateCategories,
         validateOnChange: false,
@@ -142,15 +160,16 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                             <Link to={`/product-management/${companyId}/components`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2"/>
                             </Link>
-                            <h1 className="m-0">{t('Add Component')}</h1>
+                            <h1 className="m-0">{componentId ? t('Edit Component') : t('Add Component')}</h1>
                         </div>
                     </Col>
                 </Row>
             </div>
 
             <div className='position-relative'>
+                {loading ? <Loader /> : null}
                 <Card>
-                    <Card.Body className="">
+                    <Card.Body>
                         <div className="p-2">
                             <Form className="mt-0" noValidate>
                                 <h4 className="mt-0 mb-3">{t('Component detail')}</h4>

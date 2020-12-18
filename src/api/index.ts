@@ -215,6 +215,10 @@ function uploadVariationImages(companyId: number, variationId: number | string, 
     return api.createWithFile(`${baseUrl}`, data);
 }
 
+function getTagsAndTypes(companyId: number) {
+    return api.get(`${componentUrl(companyId)}tags-types/` );
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -225,5 +229,5 @@ export {
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
     getVendors, getVendor, createVendor, updateVendor,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
-    uploadComponentImages, uploadVariationImages
+    uploadComponentImages, uploadVariationImages, getTagsAndTypes,
 }

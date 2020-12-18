@@ -1,11 +1,19 @@
-import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
-import { get, size, map, forEach, isEmpty } from 'lodash';
+import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
+import { get, isEmpty, map, size } from 'lodash';
 
 import {
-    getComponents, getComponent, createComponent, deleteComponent, editComponent, uploadComponentImages, uploadVariationImages, archiveComponent
+	archiveComponent,
+	createComponent,
+	deleteComponent,
+	editComponent,
+	getComponent,
+	getComponents,
+	getTagsAndTypes,
+	uploadComponentImages,
+	uploadVariationImages
 } from "../../../api";
 
-import { componentsApiResponseSuccess, componentsApiResponseError } from "./actions";
+import { componentsApiResponseError, componentsApiResponseSuccess } from "./actions";
 import { ComponentsTypes } from './constants';
 
 
@@ -13,12 +21,12 @@ import { ComponentsTypes } from './constants';
  * get all components
  */
 function* getAllComponents({ payload: { companyId, filters } }: any) {
-    try {
-        const response = yield call(getComponents, companyId, filters);
-        yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, response.data));
-    } catch (error) {
-        yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENTS, error));
-    }
+	try {
+		const response = yield call(getComponents, companyId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENTS, error));
+	}
 }
 
 
@@ -26,12 +34,12 @@ function* getAllComponents({ payload: { companyId, filters } }: any) {
  * get single component
  */
 function* getComponentById({ payload: { companyId, componentId } }: any) {
-    try {
-        const response = yield call(getComponent, companyId, componentId);
-        yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT, response.data));
-    } catch (error) {
-        yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT, error));
-    }
+	try {
+		const response = yield call(getComponent, companyId, componentId);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT, error));
+	}
 }
 
 
@@ -39,97 +47,114 @@ function* getComponentById({ payload: { companyId, componentId } }: any) {
  * create new component
  */
 function* createNewComponent({ payload: { companyId, data, images } }: any) {
-    try {
-        const response = yield call(createComponent, companyId, data);
-        if (response.data && response.data.id) {
-            if (size(images.productImages) > 0) {
-                yield call(uploadComponentImages, companyId, response.data.id, images.productImages);
-            }
-            const variationIds: any[]= map(get(response, "data.products"), product => product.id);
-            if (size(variationIds) > 0 && size(images.variationImages) > 0) {
-                yield all(images.variationImages.map((file, i) =>
-                    !isEmpty(file) && call(uploadVariationImages, companyId, variationIds[i], [file])
-                ));
-            }
-        }
-        yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT, response.data));
-    } catch (error) {
-        yield put(componentsApiResponseError(ComponentsTypes.CREATE_COMPONENT, error));
-    }
+	try {
+		const response = yield call(createComponent, companyId, data);
+		if (response.data && response.data.id) {
+			if (size(images.productImages) > 0) {
+				yield call(uploadComponentImages, companyId, response.data.id, images.productImages);
+			}
+			const variationIds: any[] = map(get(response, "data.products"), product => product.id);
+			if (size(variationIds) > 0 && size(images.variationImages) > 0) {
+				yield all(images.variationImages.map((file, i) =>
+					!isEmpty(file) && call(uploadVariationImages, companyId, variationIds[i], [file])
+				));
+			}
+		}
+		yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.CREATE_COMPONENT, error));
+	}
 }
 
 /**
  * edit the component
  */
 function* updateComponent({ payload: { companyId, componentId, data } }: any) {
-    try {
-        const response = yield call(editComponent, companyId, componentId, data);
-        yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_COMPONENT, response.data));
-    } catch (error) {
-        yield put(componentsApiResponseError(ComponentsTypes.EDIT_COMPONENT, error));
-    }
+	try {
+		const response = yield call(editComponent, companyId, componentId, data);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_COMPONENT, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.EDIT_COMPONENT, error));
+	}
 }
 
 /**
  * delete component
  */
 function* deleteComponentById({ payload: { companyId, componentId } }: any) {
-    try {
-        const response = yield call(deleteComponent, companyId, componentId);
-        yield put(componentsApiResponseSuccess(ComponentsTypes.DELETE_COMPONENT, response.data));
-    } catch (error) {
-        yield put(componentsApiResponseError(ComponentsTypes.DELETE_COMPONENT, error));
-    }
+	try {
+		const response = yield call(deleteComponent, companyId, componentId);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.DELETE_COMPONENT, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.DELETE_COMPONENT, error));
+	}
 }
 
 /**
  * archive component
  */
 function* archiveComponentById({ payload: { companyId, componentId, data, filters } }: any) {
-    try {
-        const response = yield call(archiveComponent, companyId, componentId, data);
-        const res = yield call(getComponents, companyId, filters);
-        yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT, response.data));
-        yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, res.data));
-    } catch (error) {
-        yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT, error));
-    }
+	try {
+		const response = yield call(archiveComponent, companyId, componentId, data);
+		const res = yield call(getComponents, companyId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT, response.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, res.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT, error));
+	}
+}
+
+/**
+ * get Tags and Types
+ */
+function* getTagsAndTypesById({ payload: { companyId } }: any) {
+	try {
+		const response = yield call(getTagsAndTypes, companyId);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_TAGS_TYPES, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_TAGS_TYPES, error));
+	}
 }
 
 export function* watchGetComponents() {
-    yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents)
+	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
 
 export function* watchGetComponent() {
-    yield takeEvery(ComponentsTypes.GET_COMPONENT, getComponentById)
+	yield takeEvery(ComponentsTypes.GET_COMPONENT, getComponentById);
 }
 
 export function* watchAddComponent() {
-    yield takeEvery(ComponentsTypes.CREATE_COMPONENT, createNewComponent)
+	yield takeEvery(ComponentsTypes.CREATE_COMPONENT, createNewComponent);
 }
 
 export function* watchEditComponent() {
-    yield takeEvery(ComponentsTypes.EDIT_COMPONENT, updateComponent)
+	yield takeEvery(ComponentsTypes.EDIT_COMPONENT, updateComponent);
 }
 
 export function* watchDeleteComponent() {
-    yield takeEvery(ComponentsTypes.DELETE_COMPONENT, deleteComponentById)
+	yield takeEvery(ComponentsTypes.DELETE_COMPONENT, deleteComponentById);
 }
 
 export function* watchArchiveComponent() {
-    yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT, archiveComponentById)
+	yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT, archiveComponentById);
+}
+
+export function* watchGetTagsAndTypes() {
+	yield takeEvery(ComponentsTypes.GET_TAGS_TYPES, getTagsAndTypesById);
 }
 
 
 function* componentsSaga() {
-    yield all([
-        fork(watchGetComponents),
-        fork(watchGetComponent),
-        fork(watchAddComponent),
-        fork(watchEditComponent),
-        fork(watchDeleteComponent),
-        fork(watchArchiveComponent),
-    ]);
+	yield all([
+		fork(watchGetComponents),
+		fork(watchGetComponent),
+		fork(watchAddComponent),
+		fork(watchEditComponent),
+		fork(watchDeleteComponent),
+		fork(watchArchiveComponent),
+		fork(watchGetTagsAndTypes),
+	]);
 }
 
 export default componentsSaga;
