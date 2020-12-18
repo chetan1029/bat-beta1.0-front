@@ -21,6 +21,7 @@ const Components = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         component: action.payload.data,
+                        loading: false,
                     }
                 }
                 case ComponentsTypes.CREATE_COMPONENT: {
@@ -110,6 +111,9 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.GET_COMPONENTS:
             return { ...state, isComponentsFetched: false, loading: true };
+
+        case ComponentsTypes.GET_COMPONENT:
+            return { ...state, loading: true };
 
         case ComponentsTypes.CREATE_COMPONENT:
             return { ...state, isComponentCreated: false, loading: true };

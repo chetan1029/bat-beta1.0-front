@@ -3,7 +3,7 @@ import { Card, Col, Dropdown, DropdownButton, Form, Nav, Row } from "react-boots
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { filter, forEach, get, isEqual, map } from "lodash";
+import { filter, forEach, get, isEqual, map, findIndex, find } from "lodash";
 
 import Icon from "../../../components/Icon";
 import { archiveComponent, getComponents, resetComponents } from "../../../redux/actions";
@@ -61,6 +61,7 @@ const Components = (props: ComponentsProps) => {
     const dispatch = useDispatch();
     const companyId = props.match.params.companyId;
     const [selectedView, setSelectedView] = useState<any>("all active");
+    const [selectedComponents, setSelectedComponents] = useState<any>([]);
     const [filters, setFilters] = useState<any>({ is_component: true, is_active: true, limit: 5, offset: 0 });
     const [search, setSearch] = useState<any>({ is_component: true, is_active: true, limit: 5, offset: 0 });
 
@@ -123,6 +124,23 @@ const Components = (props: ComponentsProps) => {
             type = options["Component type"].toString();
         }
         setFilters({ ...filters, tags, type });
+    }
+
+    const handleOnSelectComponents = (e: any, component: any) => {
+        const index = findIndex(selectedComponents, _component => _component.id === component.id );
+        if (index === -1) {
+            setSelectedComponents([...selectedComponents, component]);
+        } else {
+            setSelectedComponents(selectedComponents.filter((component, i) => i !== index));
+        }
+    }
+
+    const handleOnSelectAllComponents = (e: any) => {
+        if (e.target.checked) {
+            setSelectedComponents([...selectedComponents, ...components.results]);
+        } else {
+            setSelectedComponents([]);
+        }
     }
 
     return (
@@ -193,7 +211,7 @@ const Components = (props: ComponentsProps) => {
                                 type="checkbox"
                                 id={"checkbox"}
                                 label=""
-                                onChange={(e: any) => null}
+                                onChange={(e: any) => handleOnSelectAllComponents(e)}
                             />
                         </div>
                         <Col lg={2} className="px-4">
@@ -219,9 +237,11 @@ const Components = (props: ComponentsProps) => {
                                 <div>
                                     <Form.Check
                                         type="checkbox"
-                                        id={"checkbox"}
+                                        key={component.id}
+                                        id={`checkbox${component.id}`}
                                         label=""
-                                        onChange={(e: any) => null}
+                                        checked={!!find(selectedComponents, _component => _component.id === component.id)}
+                                        onChange={(e: any) => handleOnSelectComponents(e, component)}
                                     />
                                 </div>
                                 <Col lg={2} className="px-4">
@@ -231,7 +251,7 @@ const Components = (props: ComponentsProps) => {
                                 </Col>
                                 <Col lg={4} className="p-0">
                                     <b>{component.title}</b><br/>
-                                    <span className="text-muted">{component.description}</span>
+                                    <p className="description text-muted">{component.description}</p>
                                 </Col>
                                 <Col lg={2} className="p-0">
                                     <span className="active-label btn btn-outline-primary">
@@ -254,9 +274,10 @@ const Components = (props: ComponentsProps) => {
                                         <span key={i} className={"tags"}>{tag}</span>
                                     ))}
                                 </div>
-                                <span className="product-detail btn btn-outline-primary">
-                                        {component.is_active && t("Product Details")}
-                                </span>
+                                <Link className="product-detail btn btn-outline-primary"
+                                      to={`/product-management/${companyId}/components/${component.id}`}>
+                                        {t("Component Details")}
+                                </Link>
                             </Row>
                         </div>
                     ))}

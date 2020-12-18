@@ -512,10 +512,21 @@ const Icon = ({ name, className }: Props) => {
           <path d="M10.625 8.37435L8 10.9993M8 10.9993L5.375 8.37435M8 10.9993L8 1.66602" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
-      case 'export' :
+      case 'export':
         return <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15 9L15 11C15 13.2091 13.2091 15 11 15L5 15C2.79086 15 1 13.2091 1 11L1 9" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           <path d="M5.375 4.29167L8 1.66667M8 1.66667L10.625 4.29167M8 1.66667L8 11" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+
+      case 'eye':
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" clipRule="evenodd" d="M10.3924 8.0011C10.3924 9.19666 9.32083 10.1656 7.99953 10.1656C6.67823 10.1656 5.60742 9.19666 5.60742 8.0011C5.60742 6.80485 6.67823 5.83594 7.99953 5.83594C9.32083 5.83594 10.3924 6.80485 10.3924 8.0011Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path fillRule="evenodd" clipRule="evenodd" d="M7.99849 13C10.8802 13 13.516 11.1252 15 8C13.516 4.87483 10.8802 3 7.99849 3H8.00151C5.11978 3 2.484 4.87483 1 8C2.484 11.1252 5.11978 13 8.00151 13H7.99849Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+
+      case 'edit':
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 12.0837V15H3.91627L11.5 7.5L8.58373 4.58373L1 12.0837ZM14.7726 4.1437C14.8447 4.07175 14.9019 3.98629 14.9409 3.89222C14.9799 3.79814 15 3.69729 15 3.59544C15 3.49359 14.9799 3.39274 14.9409 3.29866C14.9019 3.20458 14.8447 3.11912 14.7726 3.04718L12.9528 1.22743C12.8809 1.15533 12.7954 1.09814 12.7013 1.05911C12.6073 1.02009 12.5064 1 12.4046 1C12.3027 1 12.2019 1.02009 12.1078 1.05911C12.0137 1.09814 11.9282 1.15533 11.8563 1.22743L10.4332 2.65057L13.3494 5.56684L14.7726 4.1437Z" stroke="#396AFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
       default:

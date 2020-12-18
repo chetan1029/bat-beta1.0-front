@@ -45,11 +45,7 @@ function* createNewComponent({ payload: { companyId, data, images } }: any) {
             if (size(images.productImages) > 0) {
                 yield call(uploadComponentImages, companyId, response.data.id, images.productImages);
             }
-            const variationOptions = map(get(response, "data.products"), product => get(product, "product_variation_options"));
-            const variationIds:any[] = []
-            forEach(variationOptions, option =>
-                forEach(option, opt => variationIds.push(opt.id) )
-            );
+            const variationIds: any[]= map(get(response, "data.products"), product => product.id);
             if (size(variationIds) > 0 && size(images.variationImages) > 0) {
                 yield all(images.variationImages.map((file, i) =>
                     !isEmpty(file) && call(uploadVariationImages, companyId, variationIds[i], [file])

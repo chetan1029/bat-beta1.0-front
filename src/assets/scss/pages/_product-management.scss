@@ -78,12 +78,15 @@
         border-radius: 0.7em;
       }
 
-      .active-label {
-        padding: 1px 8px;
-      }
-
       .product-detail {
         padding: 5px 30px;
+      }
+
+      .description {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 90%;
       }
 
       .extra-info {
@@ -118,5 +121,57 @@
       margin: 1em 0;
     }
   }
+}
 
+.active-label {
+  padding: 0 8px;
+  color: #396aff;
+  border: 1px solid #396aff;
+  border-radius: 1em;
+  cursor: pointer;
+  height: 17px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.product-image {
+  max-height: 6.5rem;
+  max-width: 6.5rem;
+  min-height: 6.5rem;
+  min-width: 6.5rem;
+  object-fit: cover;
+  border: 1px solid $gray-200;
+  border-radius: 0.7em;
+}
+
+.component-main-image {
+  max-height: 11rem;
+  max-width: 100%;
+  min-height: 11rem;
+  min-width: 100%;
+  border: 1px solid $gray-200;
+  border-radius: 0.7em;
+}
+
+.component-image {
+  max-height: 3.5rem;
+  max-width: 3.5rem;
+  min-height: 3.5rem;
+  min-width: 3.5rem;
+  object-fit: cover;
+  border: 1px solid $gray-200;
+  border-radius: 0.7em;
+}
+
+.component-tags {
+  width: auto;
+  padding: 4px 8px;
+  font-size: 14px;
+  list-style: none;
+  border-radius: 6px;
+  margin: 0 8px 8px 0;
+  background: $gray-200;
+  &:hover {
+    background: $gray-200;
+  }
 }
