@@ -17,11 +17,26 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case CommonTypes.GET_COMPANY: {
+                    return {
+                        ...state,
+                        company: action.payload.data,
+                        loading: false
+                    }
+                }
                 case CommonTypes.CREATE_COMPANY: {
                     return {
                         ...state,
                         company: action.payload.data,
                         companyCreated: true,
+                        loading: false
+                    }
+                }
+                case CommonTypes.EDIT_COMPANY: {
+                    return {
+                        ...state,
+                        company: action.payload.data,
+                        companyEdited: true,
                         loading: false
                     }
                 }
@@ -48,11 +63,26 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case CommonTypes.GET_COMPANY: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        loading: false
+                    }
+                }
                 case CommonTypes.CREATE_COMPANY: {
                     return {
                         ...state,
                         error: action.payload.error,
                         companyCreated: false,
+                        loading: false
+                    }
+                }
+                case CommonTypes.EDIT_COMPANY: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        companyEdited: false,
                         loading: false
                     }
                 }
@@ -70,8 +100,12 @@ const Common = (state = INIT_STATE, action: any) => {
 
         case CommonTypes.GET_COMPANIES:
             return { ...state, isCompaniesFetched: false, loading: true };
-        case CommonTypes.CREATE_COMPANY:
+        case CommonTypes.GET_COMPANY:
             return { ...state, loading: true };
+        case CommonTypes.CREATE_COMPANY:
+            return { ...state, loading: true, companyCreated: false };
+        case CommonTypes.EDIT_COMPANY:
+            return { ...state, loading: true, companyEdited: false };
         case CommonTypes.GET_CATEGORIES:
             return { ...state, isCategoriesFetched: false, loading: true };
 

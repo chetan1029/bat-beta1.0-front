@@ -90,7 +90,7 @@ const getMenuItems = (companyId: string, vendorCategories: any) => {
 
 const mainMenuItems: Array<MenuItemProp> = [
     { name: 'My Profile', url: '/profile/general', icon: 'user', label: 'My Profile', id: 'myProfile' },
-    { name: 'Companies', url: '/companies', icon: 'bag', label: 'Companies', id: 'myCompanies' },
+    // { name: 'My Company', url: '/companies', icon: 'bag', label: 'Companies', id: 'myCompanies' },
 ];
 
 const findAllParent = (menuItems: Array<any>, menuItem: any) => {
