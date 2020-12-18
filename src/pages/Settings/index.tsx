@@ -7,6 +7,12 @@ import { useTranslation } from 'react-i18next';
 import Icon from "../../components/Icon";
 import PaymentTerms from "./PaymentTerms";
 import Members from "./Members/";
+import Bank from "./Bank";
+import Location from "./Location";
+import PackingBox from "./PackingBox";
+import Hscode from "./Hscode";
+import Tax from "./Tax";
+import DeliveryTerms from "./DeliveryTerms";
 
 interface DefaultViewProps {
     items: any;
@@ -81,14 +87,16 @@ const Index = ({ match }: IndexProps) => {
     const items = [
         { title: "Company Profile", key: "settings", icon: "company-profile", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Members", key: "members", icon: "members", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Payment Terms", key: "payment_terms", icon: "wallet", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Membership Plan", key: "membership_plan", icon: "document", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Banks", key: "banks", icon: "bank", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Payment Terms", key: "payment_terms", icon: "wallet", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Banks", key: "bank", icon: "bank", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Taxes", key: "tax", icon: "tax", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Location", key: "location", icon: "location", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
         { title: "Packing Box", key: "packing_box", icon: "packing", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Hs Code", key: "hs_code", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-        { title: "Taxes", key: "taxes", icon: "tax", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-    ];
+        { title: "Hs Code", key: "hscode", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Assets", key: "asset", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        { title: "Delivery Terms", key: "delivery_terms", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+        ];
 
     return (
         <React.Fragment>
@@ -98,6 +106,18 @@ const Index = ({ match }: IndexProps) => {
                         return <PaymentTerms />;
                     case "members":
                         return <Members />;
+                    case "bank":
+                        return <Bank />;
+                    case "location":
+                        return <Location />;
+                    case "packing_box":
+                        return <PackingBox />;
+                    case "hscode":
+                        return <Hscode />;
+                    case "tax":
+                        return <Tax />;
+                    case "delivery_terms":
+                        return <DeliveryTerms />;
 
                     default:
                         return <DefaultView items={items} companyId={companyId} />;
