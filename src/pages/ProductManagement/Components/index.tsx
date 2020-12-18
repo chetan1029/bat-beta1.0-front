@@ -76,11 +76,13 @@ const Components = (props: ComponentsProps) => {
         components,
         isComponentCreated,
         archiveComponentError,
+        isComponentArchived,
     } = useSelector(({ ProductManagement: { Components } }: any) => ({
         loading: Components.loading,
         components: Components.components,
         isComponentCreated: Components.isComponentCreated,
         archiveComponentError: Components.archiveComponentError,
+        isComponentArchived: Components.isComponentArchived,
     }));
 
     const prevFiltersRef = useRef();
@@ -287,6 +289,8 @@ const Components = (props: ComponentsProps) => {
             {isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}
                                                 iconWrapperClass="bg-success text-white p-2 rounded-circle"
                                                 iconClass="icon-sm"/> : null}
+            {isComponentArchived ? <MessageAlert message={t('Component is archived')} icon={"check"}
+                                                  iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
         </div>
     );
 }

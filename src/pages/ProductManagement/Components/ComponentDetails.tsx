@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Col, Nav, Row } from "react-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { get, map } from 'lodash';
 
@@ -37,10 +37,12 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 
 	const {
 		loading,
-		component
+		component,
+		isComponentArchived
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		component: Components.component,
+		isComponentArchived: Components.isComponentArchived,
 	}));
 
 	const companyId = props.match.params.companyId;
@@ -55,6 +57,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 
 	return (
 		<>
+			{isComponentArchived ? <Redirect to={`/product-management/${companyId}/components`}/> : null}
 			{loading ? <Loader/> : null}
 			{component &&
             <div className="py-4 px-3">
@@ -62,15 +65,20 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                 <Col>
                   <div className="d-flex align-items-center justify-content-between">
                     <div className="d-flex align-items-center">
-						<Link to={`/product-management/${companyId}/components`}>
-						  <Icon name="arrow_left_2" className="icon icon-xs mr-2"/>
-						</Link>
-						<h1 className="m-0">{component && component.title}</h1>
-					</div>
-					<div className="d-flex align-items-center">
-                      	<Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer" />
-						<Icon name="archive" className="mx-2 svg-outline-primary cursor-pointer"/>
-						<Icon name="delete" className="mx-2 svg-outline-danger cursor-pointer" />
+                      <Link to={`/product-management/${companyId}/components`}>
+                        <Icon name="arrow_left_2" className="icon icon-xs mr-2"/>
+                      </Link>
+                      <h1 className="m-0">{component && component.title}</h1>
+                    </div>
+                    <div className="d-flex align-items-center">
+                      <Link to={`/product-management/${companyId}/components/edit/${component.id}`}>
+                      	<Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
+                      </Link>
+                      <span
+                        onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+                      	<Icon name="archive" className="mx-2 svg-outline-primary cursor-pointer"/>
+					  </span>
+                      <Icon name="delete" className="mx-2 svg-outline-danger cursor-pointer"/>
                     </div>
                   </div>
                 </Col>
@@ -79,13 +87,15 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
               <Card className="mt-3">
                 <Card.Body className={"pt-3"}>
                   <Row>
-                    <Col className="col-8 pr-5">
+                    <Col lg={8} md={8} sm={12} className="pr-5">
                       <TabMenu onChange={setSelectedView} selectedView={selectedView}/>
                       <div className="d-flex justify-content-between align-items-center">
                         <h2>{t('Component Detail')}</h2>
-                        <span className="active-label">
-							{component.is_active && t("Active")}
-						</span>
+						  {component.is_active &&
+                          <span className="active-label">
+								{t("Active")}
+							</span>
+						  }
                       </div>
 						{map(component.products, (product, index) =>
 							<>
@@ -93,11 +103,11 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                                 <Card className={"mt-3"} key={index}>
                                   <Card.Body className="p-0">
                                     <Row>
-                                      <Col className="col-2">
+                                      <Col lg={2} sm={6} style={{ maxWidth: "14% !important" }}>
                                         <img className={"product-image"} src={get(product, "images[0].image")}
                                              alt={product.title}/>
                                       </Col>
-                                      <Col className="pt-3">
+                                      <Col lg={10} sm={6} className="pt-3">
                                         <h6>{t('Model Number')}: {get(product, "model_number")}</h6>
                                         <p className="text-muted">
 											{t('Manufacturer Part Number')}: {get(product, "manufacturer_part_number")}
@@ -125,18 +135,20 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                         </h6>
                       </div>
                     </Col>
-                    <Col className="col-4">
-                      <img className={"component-main-image"} src={get(component, "images[0].image")} alt={component.title}/>
+                    <Col lg={4} md={4} sm={12}>
+                      <img className={"component-main-image"} src={get(component, "images[0].image")}
+                           alt={component.title}/>
 						{component.images && component.images.length > 0 &&
-						  <div>
-							  {map(component.images, (image, i) =>
-							  	<>
+                        <div>
+							{map(component.images, (image, i) =>
+								<>
 									{i > 0 &&
-                                    	<img key={i} className={"component-image mt-4 mr-4"} src={image.image} alt={component.title}/>
+                                    <img key={i} className={"component-image mt-4 mr-4"} src={image.image}
+                                         alt={component.title}/>
 									}
-							  	</>
-								)}
-						  </div>
+								</>
+							)}
+                        </div>
 						}
                       <h2 className="mt-4">{t('Description')}</h2>
                       <p className="mt-2 mb-4 text-muted">{component.description}</p>
