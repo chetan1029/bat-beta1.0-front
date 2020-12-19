@@ -2,7 +2,8 @@ import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
 import {
     getMembers, getMember, createMember, deleteMember, editMember,
-    getCompanyInvitataions, resendCompanyInvite, getCompanyPartners as getCompanyPartnersApi
+    getCompanyInvitataions, resendCompanyInvite, getCompanyPartners as getCompanyPartnersApi,
+    archiveCompanyPartner
 } from "../../../api/index";
 
 import { membersApiResponseSuccess, membersApiResponseError } from "./actions";
@@ -109,6 +110,19 @@ function* getPartners({ payload: { companyId, filters } }: any) {
     }
 }
 
+/**
+ * Archives the partner
+ * @param param0 
+ */
+function* archivePartner({ payload: { companyId, partnerId } }: any) {
+    try {
+        const response = yield call(archiveCompanyPartner, companyId, partnerId);
+        yield put(membersApiResponseSuccess(MembersTypes.ARCHIVE_PARTNER, response.data));
+    } catch (error) {
+        yield put(membersApiResponseError(MembersTypes.ARCHIVE_PARTNER, error));
+    }
+}
+
 export function* watchGetMembers() {
     yield takeEvery(MembersTypes.GET_MEMBERS, getAllMembers)
 }
@@ -137,10 +151,14 @@ export function* watchResendInvite() {
     yield takeEvery(MembersTypes.RESEND_INVITE, resendInvite)
 }
 
-
 export function* watchGetPartners() {
     yield takeEvery(MembersTypes.GET_PARTNERS, getPartners)
 }
+
+export function* watchArchivePartner() {
+    yield takeEvery(MembersTypes.ARCHIVE_PARTNER, archivePartner)
+}
+
 
 function* membersSaga() {
     yield all([
@@ -151,7 +169,8 @@ function* membersSaga() {
         fork(watchDeleteMember),
         fork(watchGetInvitiations),
         fork(watchResendInvite),
-        fork(watchGetPartners)
+        fork(watchGetPartners),
+        fork(watchArchivePartner)
     ]);
 }
 

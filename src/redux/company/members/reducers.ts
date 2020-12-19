@@ -61,6 +61,13 @@ const Members = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case MembersTypes.ARCHIVE_PARTNER: {
+                    return {
+                        ...state,
+                        isPartnerArchived: true,
+                        loading: false,
+                    }
+                }
                 case MembersTypes.RESEND_INVITE: {
                     return {
                         ...state,
@@ -128,6 +135,14 @@ const Members = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case MembersTypes.ARCHIVE_PARTNER: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isPartnerArchived: false,
+                        loading: false,
+                    }
+                }
                 case MembersTypes.RESEND_INVITE: {
                     return {
                         ...state,
@@ -148,6 +163,9 @@ const Members = (state = INIT_STATE, action: any) => {
 
         case MembersTypes.GET_PARTNERS:
             return { ...state, isPartnersFetched: false, loading: true };
+        
+        case MembersTypes.ARCHIVE_PARTNER:
+            return { ...state, isPartnerArchived: false, loading: true };
 
         case MembersTypes.RESEND_INVITE:
             return { ...state, isInvitationResent: false, loading: true };
@@ -169,7 +187,8 @@ const Members = (state = INIT_STATE, action: any) => {
                 editMemberError: null,
                 isMemberCreated: false,
                 isMemberEdited: false,
-                isMemberDeleted: false
+                isMemberDeleted: false,
+                isPartnerArchived: false
             }
         }
         default: return { ...state };

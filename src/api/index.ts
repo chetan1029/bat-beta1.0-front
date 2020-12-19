@@ -325,6 +325,11 @@ function getCompanyPartners(companyId: number, params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
+function archiveCompanyPartner(companyId: number, partnerId: number) {
+    const baseUrl = `/companies/${companyId}/partners/${partnerId}/archive/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 
 /* invitations */
 function getInvitataions(params?: any) {
@@ -401,7 +406,7 @@ function uploadVariationImages(companyId: number, variationId: number | string, 
 }
 
 function getTagsAndTypes(companyId: number) {
-    return api.get(`${componentUrl(companyId)}tags-types/` );
+    return api.get(`${componentUrl(companyId)}tags-types/`);
 }
 
 export {
@@ -412,7 +417,7 @@ export {
     getCompaniesList, createCompany, editCompany, getCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite, getCompanyPartners,
-    getVendors, getVendor, createVendor, updateVendor,
+    getVendors, getVendor, createVendor, updateVendor, archiveCompanyPartner,
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
     getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
     getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,

@@ -55,3 +55,8 @@ export const getCompanyPartners = (companyId: string | number, filters?: any) =>
     type: MembersTypes.GET_PARTNERS,
     payload: { companyId, filters }
 });
+
+export const archivePartner = (companyId: string | number, partnerId: string | number) => ({
+    type: MembersTypes.ARCHIVE_PARTNER,
+    payload: { companyId, partnerId }
+});
