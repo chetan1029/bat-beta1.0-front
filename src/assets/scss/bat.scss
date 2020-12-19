@@ -26,10 +26,12 @@ File: Main Css File
 @import "components/reboot";
 @import "components/helper";
 @import "components/type";
+@import "components/pagination";
 
 // Pages
 @import "pages/auth";
 @import "pages/settings";
+@import "pages/product-management";
 
 
 // STRUCTURE
@@ -37,3 +39,5 @@ File: Main Css File
 @import "custom/structure/sidebar";
 @import "custom/loader";
 @import "custom/react-select";
+@import "custom/tags-input";
+@import "custom/react-dropzone";

@@ -12,6 +12,9 @@ import ChangePassword from "../pages/account/ChangePassword";
 // import Companies from "../pages/Companies/";
 // import AddNewCompany from "../pages/Companies/AddNew";
 import EditCompany from "../pages/Companies/EditCompany";
+import AddEditComponent from "../pages/ProductManagement/Components/AddEditComponent";
+import Components from "../pages/ProductManagement/Components";
+import ComponentDetails from "../pages/ProductManagement/Components/ComponentDetails";
 
 import AddVendor from "../pages/Vendors/AddVendor";
 import VendorDetails from "../pages/Vendors/Details";
@@ -32,6 +35,11 @@ import PageNotFound from "../pages/other/PageNotFound";
 import Root from "../pages/Root";
 
 const authProtectedRoutes = [
+  { path: "/product-management/:companyId/components/add", component: AddEditComponent },
+  { path: "/product-management/:companyId/components/edit/:componentId", component: AddEditComponent },
+  { path: "/product-management/:companyId/components/:componentId", component: ComponentDetails },
+  { path: "/product-management/:companyId/components", component: Components },
+
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/edit", component: EditCompany },

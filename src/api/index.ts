@@ -342,7 +342,6 @@ function rejectInvite(inviteId: number) {
     return api.create(`${baseUrl}`, {});
 }
 
-
 /* vendors */
 function getVendors(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/vendors/`;
@@ -365,6 +364,46 @@ function updateVendor(companyId: number, vendorId: number, data: any) {
 }
 
 
+/* components */
+const componentUrl = (companyId) => `/companies/${companyId}/products/`;
+
+function getComponents(companyId: number, params?: any) {
+    return api.get(componentUrl(companyId), params);
+}
+
+function createComponent(companyId: number, data: any) {
+    return api.create(componentUrl(companyId), data);
+}
+
+function editComponent(companyId: number, componentId: number | string, data: any) {
+    return api.updatePatch(`${componentUrl(companyId)}components/${componentId}/`, data);
+}
+
+function deleteComponent(companyId: number, componentId: number | string) {
+    return api.create(`${componentUrl(companyId)}${componentId}/archive/`, {});
+}
+
+function archiveComponent(companyId: number, componentId: number | string, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/archive/`, data);
+}
+
+function getComponent(companyId: number, componentId: number | string) {
+    return api.get(`${componentUrl(companyId)}${componentId}/`);
+}
+
+function uploadComponentImages(companyId: number, componentId: number | string, data: any) {
+    return api.createWithFile(`${componentUrl(companyId)}${componentId}/images/`, data);
+}
+
+function uploadVariationImages(companyId: number, variationId: number | string, data: any) {
+    const baseUrl = `/companies/${companyId}/product-variations/${variationId}/images/`;
+    return api.createWithFile(`${baseUrl}`, data);
+}
+
+function getTagsAndTypes(companyId: number) {
+    return api.get(`${componentUrl(companyId)}tags-types/` );
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -380,4 +419,6 @@ export {
     getHscode, createHscode, updateHscode, deleteHscode, archiveHscode, restoreHscode,
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
     getDeliveryTerms,
+    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
+    uploadComponentImages, uploadVariationImages, getTagsAndTypes,
 }

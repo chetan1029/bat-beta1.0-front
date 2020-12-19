@@ -3,6 +3,7 @@ import authSaga from "./auth/saga";
 import companySaga from "./company/sagas";
 import commonSaga from "./common/saga";
 import invitationsSaga from "./invitations/saga";
+import productManagementSaga from "./productManagement/sagas";
 
 
 export default function* rootSaga() {
@@ -10,6 +11,7 @@ export default function* rootSaga() {
         authSaga(),
         companySaga(),
         commonSaga(),
-        invitationsSaga()
+        invitationsSaga(),
+        productManagementSaga(),
     ]);
 }
