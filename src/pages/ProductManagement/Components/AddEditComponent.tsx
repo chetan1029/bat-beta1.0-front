@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CreatableSelect from 'react-select/creatable';
+import Select from 'react-select';
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -23,6 +24,8 @@ import MessageAlert from "../../../components/MessageAlert";
 import VariationDetails from "../../../components/VariationDetails";
 import Loader from "../../../components/Loader";
 
+const STATUSES: Array<string> = ["Draft", "Active", "Archive"];
+
 interface AddEditComponentProps {
     match: any;
 }
@@ -36,6 +39,13 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const dispatch = useDispatch();
     const companyId = match.params.companyId;
     const componentId = match.params.componentId;
+    let statusOptions: Array<any> = [];
+    for (const status of STATUSES) {
+        statusOptions.push({
+            label: t(status),
+            value: status
+        });
+    }
 
     useEffect(() => {
         dispatch(getTagsAndTypes(companyId));
@@ -119,6 +129,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             type: component ? component.type : "",
             series: component ? component.series : "",
             description: component ? component.description : "",
+            status: component ? component.status : statusOptions[0],
         },
         validate: validateCategories,
         validateOnChange: false,
@@ -131,6 +142,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                     tags: tags.toString(),
                     type: values.type['value'],
                     series: values.series['value'],
+                    status: values.status['value'],
                     products: map(variationOptions, opt => ({
                         title: values.title,
                         model_number: opt.model_number,
@@ -235,6 +247,21 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                                 onChange={(value: any) => validator.setFieldValue('series', value)}
                                                 value={validator.values.series}
                                                 className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.series && "is-invalid")}
+                                                classNamePrefix="react-select"
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col lg={6} xs={12}>
+                                        <Form.Group className="mb-4">
+                                            <Form.Label htmlFor="usr">{t('Status')}</Form.Label>
+                                            <Select
+                                                placeholder={t('Status')}
+                                                options={statusOptions}
+                                                value={validator.values.status}
+                                                onChange={(value: any) => validator.setFieldValue('status', value)}
+                                                className={"react-select react-select-regular"}
                                                 classNamePrefix="react-select"
                                             />
                                         </Form.Group>

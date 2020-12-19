@@ -25,7 +25,7 @@ const TabMenu = ({ onChange, selectedView }) => {
 				<Nav.Link className="pt-1" eventKey="draft">{t('Draft')}</Nav.Link>
 			</Nav.Item>
 			<Nav.Item as="li">
-				<Nav.Link className="pt-1" eventKey="archived">{t('Archived')}</Nav.Link>
+				<Nav.Link className="pt-1" eventKey="archive">{t('Archived')}</Nav.Link>
 			</Nav.Item>
 		</Nav>
 	</div>;
@@ -41,14 +41,12 @@ const Components = (props: ComponentsProps) => {
 	const companyId = props.match.params.companyId;
 	const [selectedView, setSelectedView] = useState<any>("active");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
-	const [filters, setFilters] = useState<any>({ is_component: true, is_active: true, limit: 5, offset: 0 });
-	const [search, setSearch] = useState<any>({ is_component: true, is_active: true, limit: 5, offset: 0 });
+	const [filters, setFilters] = useState<any>({ is_component: true, is_active: true, status: "active", limit: 5, offset: 0 });
+	const [search, setSearch] = useState<any>({ is_component: true, is_active: true, status: "active", limit: 5, offset: 0 });
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
-		dispatch(getComponents(companyId, { is_component: true, is_active: true, limit: 5, offset: 0 }));
 		dispatch(getTagsAndTypes(companyId));
-		dispatch(resetComponents());
 	}, [dispatch, companyId]);
 
 	const {
@@ -77,7 +75,7 @@ const Components = (props: ComponentsProps) => {
 
 	useEffect(() => {
 		if (!(isEqual(prevFilters, filters))) {
-			dispatch(getComponents(companyId, filters));
+			dispatch(getComponents(companyId, filters,));
 		}
 	}, [filters, prevFilters]);
 
@@ -107,7 +105,9 @@ const Components = (props: ComponentsProps) => {
 		if (options["Component type"]) {
 			type = options["Component type"].toString();
 		}
-		setFilters({ ...filters, tags, type });
+		if (tags !== "" && type !== "") {
+			setFilters({ ...filters, tags, type });
+		}
 	};
 
 	const handleOnSelectComponents = (e: any, component: any) => {
@@ -125,6 +125,11 @@ const Components = (props: ComponentsProps) => {
 		} else {
 			setSelectedComponents([]);
 		}
+	};
+
+	const handleOnTabChange = (tab) => {
+		setSelectedView(tab);
+		setFilters({ ...filters, status: tab, limit: 5, offset: 0 });
 	};
 
 	return (
@@ -157,7 +162,7 @@ const Components = (props: ComponentsProps) => {
 			<Card className={"data-table"}>
 				<Card.Body>
 					{loading ? <Loader/> : null}
-					<TabMenu onChange={setSelectedView} selectedView={selectedView}/>
+					<TabMenu onChange={handleOnTabChange} selectedView={selectedView}/>
 					<div className="d-flex align-items-center justify-content-between mb-3">
 						<div className="d-flex align-items-center w-75">
 							<DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
@@ -190,82 +195,87 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
                                                             icon={"x"} showAsNotification={false}/>}
-					<Row className={"header-row"}>
-						<div>
-							<Form.Check
-								type="checkbox"
-								id={"checkbox"}
-								label=""
-								onChange={(e: any) => handleOnSelectAllComponents(e)}
-							/>
-						</div>
-						<Col lg={2} className="px-4">
-							{t("Image")}
-						</Col>
-						<Col lg={4} className="p-0">
-							{t("Title")}
-						</Col>
-						<Col lg={2} className="p-0">
-							{t("Status")}
-						</Col>
-						<Col lg={2} className="p-0">
-							{t("SKU")}
-						</Col>
-						<Col lg={1} className="p-0">
-							{t("Action")}
-						</Col>
-					</Row>
-					{map(components.results, (component, i) => (
-						<div className={"body-row"} key={i}>
-							<Row className={"m-0 pb-4"}>
+					{get(components,"results") && get(components,"results").length > 0 ?
+					  	<>
+							<Row className={"header-row"}>
 								<div>
 									<Form.Check
 										type="checkbox"
-										key={component.id}
-										id={`checkbox${component.id}`}
+										id={"checkbox"}
 										label=""
-										checked={!!find(selectedComponents, _component => _component.id === component.id)}
-										onChange={(e: any) => handleOnSelectComponents(e, component)}
+										onChange={(e: any) => handleOnSelectAllComponents(e)}
 									/>
 								</div>
 								<Col lg={2} className="px-4">
-									<div className={"image"}>
-										<img src={get(component, "images[0].image")} alt={component.title}/>
-									</div>
+									{t("Image")}
 								</Col>
 								<Col lg={4} className="p-0">
-									<b>{component.title}</b><br/>
-									<p className="description text-muted">{component.description}</p>
+									{t("Title")}
 								</Col>
 								<Col lg={2} className="p-0">
-                                    <span className="active-label btn btn-outline-primary">
-                                        {component.is_active && t("Active")}
-                                    </span>
+									{t("Status")}
 								</Col>
 								<Col lg={2} className="p-0">
-									{component.sku}
+									{t("SKU")}
 								</Col>
 								<Col lg={1} className="p-0">
-                                    <span
-										onClick={() => dispatch(archiveComponent(companyId, component.id, component, filters))}>
-                                        <Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
-                                    </span>
+									{t("Action")}
 								</Col>
 							</Row>
-							<Row className={"extra-info"}>
-								<div className="p-0">
-									{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
-										<span key={i} className={"tags"}>{tag}</span>
-									))}
+							{map(components.results, (component, i) => (
+								<div className={"body-row"} key={i}>
+									<Row className={"m-0 pb-4"}>
+										<div>
+											<Form.Check
+												type="checkbox"
+												key={component.id}
+												id={`checkbox${component.id}`}
+												label=""
+												checked={!!find(selectedComponents, _component => _component.id === component.id)}
+												onChange={(e: any) => handleOnSelectComponents(e, component)}
+											/>
+										</div>
+										<Col lg={2} className="px-4">
+											<div className={"image"}>
+												<img src={get(component, "images[0].image")} alt={component.title}/>
+											</div>
+										</Col>
+										<Col lg={4} className="p-0">
+											<b>{component.title}</b><br/>
+											<p className="description text-muted">{component.description}</p>
+										</Col>
+										<Col lg={2} className="p-0">
+											<span className="active-label btn btn-outline-primary">
+												{component.status && t(component.status.name)}
+											</span>
+										</Col>
+										<Col lg={2} className="p-0">
+											{component.sku}
+										</Col>
+										<Col lg={1} className="p-0">
+											<span
+												onClick={() => dispatch(archiveComponent(companyId, component.id, component, filters))}>
+												<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
+											</span>
+										</Col>
+									</Row>
+									<Row className={"extra-info"}>
+										<div className="p-0">
+											{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+												<span key={i} className={"tags"}>{tag}</span>
+											))}
+										</div>
+										<Link className="product-detail btn btn-outline-primary"
+											  to={`/product-management/${companyId}/components/${component.id}`}>
+											{t("Component Details")}
+										</Link>
+									</Row>
 								</div>
-								<Link className="product-detail btn btn-outline-primary"
-									  to={`/product-management/${companyId}/components/${component.id}`}>
-									{t("Component Details")}
-								</Link>
-							</Row>
-						</div>
-					))}
-					<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
+							))}
+							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
+						</> :
+						<h3 className="d-flex justify-content-center">{t('No components found')}</h3>
+					}
 				</Card.Body>
 			</Card>
 			{isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}

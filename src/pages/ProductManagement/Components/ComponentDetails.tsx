@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Card, Col, Nav, Row } from "react-bootstrap";
-import { Link, withRouter, Redirect } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { get, map } from 'lodash';
 
@@ -71,14 +71,17 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                       <h1 className="m-0">{component && component.title}</h1>
                     </div>
                     <div className="d-flex align-items-center">
-                      <Link to={`/product-management/${companyId}/components/edit/${component.id}`}>
-                      	<Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
+                      <Link className={"btn disabled p-0"}
+                            to={`/product-management/${companyId}/components/edit/${component.id}`}>
+                        <Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
                       </Link>
                       <span
                         onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
                       	<Icon name="archive" className="mx-2 svg-outline-primary cursor-pointer"/>
 					  </span>
-                      <Icon name="delete" className="mx-2 svg-outline-danger cursor-pointer"/>
+                      <Link className={"btn disabled p-0"} to={""}>
+                        <Icon name="delete" className="mx-2 svg-outline-danger cursor-pointer"/>
+                      </Link>
                     </div>
                   </div>
                 </Col>
@@ -91,9 +94,9 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                       <TabMenu onChange={setSelectedView} selectedView={selectedView}/>
                       <div className="d-flex justify-content-between align-items-center">
                         <h2>{t('Component Detail')}</h2>
-						  {component.is_active &&
+						  {component.status &&
                           <span className="active-label">
-								{t("Active")}
+								{t(component.status.name)}
 							</span>
 						  }
                       </div>

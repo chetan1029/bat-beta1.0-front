@@ -137,6 +137,7 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.RESET: {
             return {
                 ...state,
+                component: null,
                 createComponentError: null,
                 editComponentError: null,
                 archiveComponentError: null,

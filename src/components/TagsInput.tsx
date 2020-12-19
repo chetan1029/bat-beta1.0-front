@@ -15,7 +15,7 @@ interface TagsInputProps {
 
 const TagsInput = (props: TagsInputProps) => {
     const prevTagsRef = useRef();
-    const [tags, setTags] = useState<any>(props.tags);
+    const [tags, setTags] = useState<any>(props.tags || []);
     const [value, setValue] = useState<any>("");
     const [error, setError] = useState<any>("");
 
