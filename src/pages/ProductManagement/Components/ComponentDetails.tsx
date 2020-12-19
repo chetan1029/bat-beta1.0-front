@@ -103,7 +103,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 						{map(component.products, (product, index) =>
 							<>
 								{((!showMore && index === 0) || (!!showMore)) &&
-                                <Card className={"mt-3"} key={index}>
+                                <Card className={"mt-3"} key={product.id}>
                                   <Card.Body className="p-0">
                                     <Row>
                                       <Col lg={2} sm={6} style={{ maxWidth: "14% !important" }}>
@@ -155,7 +155,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 						}
                       <h2 className="mt-4">{t('Description')}</h2>
                       <p className="mt-2 mb-4 text-muted">{component.description}</p>
-						{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+						{component.tags && component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
 							<span key={i} className={"component-tags"}>{tag}</span>
 						))}
                     </Col>

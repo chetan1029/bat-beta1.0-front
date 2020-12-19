@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { filter, find, findIndex, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, getComponents, getTagsAndTypes, resetComponents } from "../../../redux/actions";
+import { archiveComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
@@ -41,8 +41,20 @@ const Components = (props: ComponentsProps) => {
 	const companyId = props.match.params.companyId;
 	const [selectedView, setSelectedView] = useState<any>("active");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
-	const [filters, setFilters] = useState<any>({ is_component: true, is_active: true, status: "active", limit: 5, offset: 0 });
-	const [search, setSearch] = useState<any>({ is_component: true, is_active: true, status: "active", limit: 5, offset: 0 });
+	const [filters, setFilters] = useState<any>({
+		is_component: true,
+		is_active: true,
+		status: "active",
+		limit: 5,
+		offset: 0
+	});
+	const [search, setSearch] = useState<any>({
+		is_component: true,
+		is_active: true,
+		status: "active",
+		limit: 5,
+		offset: 0
+	});
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
@@ -77,7 +89,7 @@ const Components = (props: ComponentsProps) => {
 		if (!(isEqual(prevFilters, filters))) {
 			dispatch(getComponents(companyId, filters,));
 		}
-	}, [filters, prevFilters]);
+	}, [filters, prevFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const onChangePage = (page) => {
 		setFilters({ ...filters, offset: (page - 1) * 5 });
@@ -195,8 +207,8 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
                                                             icon={"x"} showAsNotification={false}/>}
-					{get(components,"results") && get(components,"results").length > 0 ?
-					  	<>
+					{get(components, "results") && get(components, "results").length > 0 ?
+						<>
 							<Row className={"header-row"}>
 								<div>
 									<Form.Check
@@ -255,7 +267,8 @@ const Components = (props: ComponentsProps) => {
 										<Col lg={1} className="p-0">
 											<span
 												onClick={() => dispatch(archiveComponent(companyId, component.id, component, filters))}>
-												<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
+												<Icon name="archive"
+													  className="mx-1 svg-outline-primary cursor-pointer"/>
 											</span>
 										</Col>
 									</Row>
