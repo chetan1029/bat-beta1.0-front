@@ -38,13 +38,6 @@ interface VendorItemProp {
 const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
     const { t } = useTranslation();
 
-    // const dispatch = useDispatch();
-
-    // const [selectedVendorForDelete, setselectedVendorForDelete] = useState<any>(null);
-
-    // const onDelete = () => {
-    //     setselectedVendorForDelete(vendor);
-    // }
 
     const rawAddress = () => {
         return { __html: vendor['address'] };
@@ -73,18 +66,13 @@ const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
                                 <Col>
                                     <span className="text-muted">{t('Created')}: </span> {vendor['create_date'] ? <DisplayDate dateStr={vendor['create_date']} /> : null}
                                 </Col>
-                                {/* <Col className="text-right">
-                                    <Link to="#" onClick={onDelete}><Icon name="archive" className="ml-2 svg-outline-danger" /></Link>
-                                </Col> */}
                             </Row>
                         </div>
                     </Card.Body>
                 </Card>
             </Col>
         </Row>
-        {/* {selectedVendorForDelete ? <ConfirmMessage message={`Are you sure you want to archive ${vendor['name']}?`} onConfirm={() => {
-
-        }} onClose={() => setselectedVendorForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Archive')}></ConfirmMessage> : null} */}
+        
     </>
     )
 }
@@ -114,23 +102,6 @@ const Vendors = (props: VendorsProps) => {
             dispatch(getVendors(companyId, defaultParams));
         }
     }, [dispatch, companyId, categoryId, defaultParams]);
-
-
-    // const [showActive, setshowActive] = useState(false);
-
-    // const onChangeShowActive = (checked: boolean) => {
-    //     setshowActive(checked);
-
-    //     if (checked) {
-    //         let filters = {
-    //             ...defaultParams,
-    //             is_active: true
-    //         }
-    //         dispatch(getVendors(companyId, filters));
-    //     } else {
-    //         dispatch(getVendors(companyId, defaultParams));
-    //     }
-    // }
 
     useEffect(() => {
         if (isVendorInvited) {

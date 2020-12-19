@@ -16,7 +16,7 @@ import AddEditComponent from "../pages/ProductManagement/Components/AddEditCompo
 import Components from "../pages/ProductManagement/Components";
 import ComponentDetails from "../pages/ProductManagement/Components/ComponentDetails";
 
-import AddVendor from "../pages/Vendors/AddVendor";
+import InviteVendor from "../pages/Vendors/InviteVendor";
 import VendorDetails from "../pages/Vendors/Details";
 import EditVendor from "../pages/Vendors/EditVendor";
 import Vendors from "../pages/Vendors/";
@@ -48,7 +48,7 @@ const authProtectedRoutes = [
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
 
-  { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: AddVendor },
+  { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: InviteVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId", component: VendorDetails },
   { path: "/supply-chain/:companyId/vendors/:categoryId", component: Vendors },
