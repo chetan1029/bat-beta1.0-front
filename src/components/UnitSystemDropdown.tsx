@@ -4,14 +4,9 @@ import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
 
+import { UNIT_SYSTEMS } from "../constants";
 
-const TITLES: any = {
-    "cm": "cm",
-    "in": "in",
-    "m": "m",
-}
-
-interface LengthUnitDropdownProps {
+interface UnitSystemDropdownProps {
     placeholder?: string,
     name: string,
     value: any,
@@ -19,15 +14,15 @@ interface LengthUnitDropdownProps {
     className: any
 }
 
-const LengthUnitDropdown = ({ placeholder, value, onChange, className }: LengthUnitDropdownProps) => {
+const UnitSystemDropdown = ({ placeholder, value, onChange, className }: UnitSystemDropdownProps) => {
 
     const { t } = useTranslation();
 
 
     let opts: Array<any> = [];
-    for (const c in TITLES) {
+    for (const c in UNIT_SYSTEMS) {
         opts.push({
-            label: t(TITLES[c]),
+            label: t(UNIT_SYSTEMS[c]),
             value: c
         });
     }
@@ -44,4 +39,4 @@ const LengthUnitDropdown = ({ placeholder, value, onChange, className }: LengthU
     </>
 }
 
-export default LengthUnitDropdown;
+export default UnitSystemDropdown;

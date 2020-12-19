@@ -50,3 +50,8 @@ export const resendCompanyInvite = (companyId: string | number, inviteId: number
     type: MembersTypes.RESEND_INVITE,
     payload: { companyId, inviteId }
 });
+
+export const getCompanyPartners = (companyId: string | number, filters?: any) => ({
+    type: MembersTypes.GET_PARTNERS,
+    payload: { companyId, filters }
+});

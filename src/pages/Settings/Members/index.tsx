@@ -13,7 +13,7 @@ import ConfirmMessage from "../../../components/ConfirmMessage";
 import avatarPlaceholder from "../../../assets/images/avatar-placeholder.jpg";
 
 //actions
-import { getMembers, deleteMember, resetMembers, getCompanyInvitations, resendCompanyInvite } from "../../../redux/actions";
+import { getMembers, deleteMember, resetMembers, getCompanyInvitations, resendCompanyInvite, getCompanyPartners } from "../../../redux/actions";
 import DisplayDate from "../../../components/DisplayDate";
 
 
@@ -64,11 +64,11 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                                 <h6 className="text-muted my-0">{fullName}</h6>
                                 <h5 className="my-0">{member['user']['email']}</h5>
                             </Media.Body>
-                            
+
                             {!you ? <Link to={`/settings/${companyId}/members/${member.id}`} className='btn btn-link px-0 font-weight-semibold'>
                                 <Icon name="notes" className="text-primary mr-1"></Icon>
                                 {t('Show Details')}
-                            </Link>: null}
+                            </Link> : null}
                         </Media>
 
                         <div className="p-3 border-top">
@@ -152,6 +152,64 @@ const InvitationItem = ({ companyId, invite }) => {
 }
 
 
+const PartnerItem = ({ companyId, partner }) => {
+    const { t } = useTranslation();
+
+
+    return (<>
+        <Row>
+            <Col lg={12}>
+                <Card className="mb-2">
+                    <Card.Body className='p-0'>
+                        <Media className='p-3'>
+                            <Media.Body>
+                                <h6 className="text-muted my-0">{t('name')}</h6>
+                                <h5 className="my-0">{partner['name']}</h5>
+                            </Media.Body>
+                            
+
+                            <div className="ml-auto">
+                                {partner && partner['create_date'] ? <DisplayDate dateStr={partner['create_date']} /> : null}
+                            </div>
+                        </Media>
+
+                        <div className="p-3 border-top">
+                            <Row>
+                                <Col xs={6} lg={2} className='align-self-center'>
+                                    <Badge variant='outline-primary' pill className='capitalize mr-2 font-14'>{partner['company_type']}</Badge>
+                                </Col>
+                                <Col xs={6} lg={2}>
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Abbreviation')}</h6>
+                                    <h6 className="m-0 font-weight-bold">
+                                        {partner['abbreviation']}
+                                    </h6>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Contact Info')}</h6>
+                                    <h6 className="m-0 font-weight-bold">
+                                        {partner['email'] + partner['phone_number'] ? " - " + partner['phone_number'] : ""}
+                                    </h6>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Address')}</h6>
+                                    <h6 className="m-0 font-weight-bold">
+                                        {partner['address1']}{partner['city'] ? <>&nbsp;{partner['city']}</> : null}
+                                        {partner['state'] ? <>&nbsp;{partner['state']}</> : null}
+                                        {partner['country'] ? <>&nbsp;{partner['country']}</> : null}
+                                    </h6>
+                                </Col>
+
+                            </Row>
+                        </div>
+                    </Card.Body>
+                </Card>
+            </Col>
+        </Row>
+    </>
+    )
+}
+
+
 const TabMenu = ({ onChange, selectedView }) => {
     const { t } = useTranslation();
 
@@ -159,6 +217,9 @@ const TabMenu = ({ onChange, selectedView }) => {
         <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="members">{t('Members')}</Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li">
+                <Nav.Link className="pt-1" eventKey="partners">{t('Partners')}</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="invitations">{t('Invitations')}</Nav.Link>
@@ -175,16 +236,20 @@ const Members = (props: MembersProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, isMembersFetched, members, loggedInUser, isMemberCreated, isMemberDeleted, invitations, isInvitationsFetched } = useSelector((state: any) => ({
-        loading: state.Company.Members.loading,
-        isMembersFetched: state.Company.Members.isMembersFetched,
-        isMemberCreated: state.Company.Members.isMemberCreated,
-        isMemberDeleted: state.Company.Members.isMemberDeleted,
-        members: state.Company.Members.members,
-        invitations: state.Company.Members.invitations,
-        isInvitationsFetched: state.Company.Members.isInvitationsFetched,
-        loggedInUser: state.Auth.user
-    }));
+    const { loading, isMembersFetched, members, loggedInUser, isMemberCreated,
+        isMemberDeleted, invitations, isInvitationsFetched,
+        isPartnersFetched, partners } = useSelector((state: any) => ({
+            loading: state.Company.Members.loading,
+            isMembersFetched: state.Company.Members.isMembersFetched,
+            isMemberCreated: state.Company.Members.isMemberCreated,
+            isMemberDeleted: state.Company.Members.isMemberDeleted,
+            members: state.Company.Members.members,
+            invitations: state.Company.Members.invitations,
+            isInvitationsFetched: state.Company.Members.isInvitationsFetched,
+            loggedInUser: state.Auth.user,
+            isPartnersFetched: state.Company.Members.isPartnersFetched,
+            partners: state.Company.Members.partners,
+        }));
 
     const companyId = props.match.params.companyId;
 
@@ -194,7 +259,10 @@ const Members = (props: MembersProps) => {
         if (companyId) {
             if (selectedView === 'members') {
                 dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
-            } else {
+            } else if (selectedView === 'partners') {
+                dispatch(getCompanyPartners(companyId, { 'limit': 100000000 }));
+            }
+            else {
                 dispatch(getCompanyInvitations(companyId, { 'is_accepted': false, 'limit': 100000000 }));
             }
         }
@@ -253,7 +321,7 @@ const Members = (props: MembersProps) => {
                                     />
                                 </div>
                             </> : <>
-                                    <h1 className="m-0">{t('Invitations')}</h1>
+                                    <h1 className="m-0">{selectedView === 'partners' ? t('Partners') : t('Invitations')}</h1>
                                 </>}
                         </div>
                     </Col>
@@ -281,9 +349,7 @@ const Members = (props: MembersProps) => {
                                                         <MemberItem member={member}
                                                             key={key} companyId={companyId}
                                                             loggedInUser={loggedInUser}
-                                                            onDeleteMember={(m: any) => {
-
-                                                            }}
+                                                            onDeleteMember={(m: any) => { }}
                                                         />
                                                     ) : <EmptyState showActive={showActive} />
                                             }
@@ -314,19 +380,38 @@ const Members = (props: MembersProps) => {
                         </div>}
                     </> :
                         <>
-                            {loading ? <Loader /> : <div>
-                                <div className="px-2">
-                                    <Row>
-                                        <Col lg={8} xs={12}>
-                                            {isInvitationsFetched ? <>
-                                                {
-                                                    invitations && invitations['results'].length > 0 ?
-                                                        invitations['results'].map((invite: any, key: number) => <InvitationItem invite={invite} companyId={companyId} key={key} />) : <EmptyInvitesState />
-                                                }</> : null}
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </div>}
+                            {selectedView !== 'partners' ? <>
+
+                                {loading ? <Loader /> : <div>
+                                    <div className="px-2">
+                                        <Row>
+                                            <Col lg={8} xs={12}>
+                                                {isInvitationsFetched ? <>
+                                                    {
+                                                        invitations && invitations['results'].length > 0 ?
+                                                            invitations['results'].map((invite: any, key: number) => <InvitationItem invite={invite} companyId={companyId} key={key} />) : <EmptyInvitesState />
+                                                    }</> : null}
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </div>}
+                            </> : <>
+
+                                    {loading ? <Loader /> : <div>
+                                        <div className="px-2">
+                                            <Row>
+                                                <Col lg={8} xs={12}>
+                                                    {isPartnersFetched ? <>
+                                                        {
+                                                            partners && partners['results'].length > 0 ?
+                                                                partners['results'].map((partner: any, key: number) => <PartnerItem partner={partner} companyId={companyId} key={key} />) : <EmptyInvitesState />
+                                                        }</> : null}
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </div>}
+
+                                </>}
                         </>}
                 </Card.Body>
             </Card>

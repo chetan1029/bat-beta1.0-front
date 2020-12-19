@@ -320,6 +320,11 @@ function resendCompanyInvite(companyId: number | string, inviteId: number | stri
     return api.create(`${baseUrl}`, {});
 }
 
+function getCompanyPartners(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/partners/`;
+    return api.get(`${baseUrl}`, params);
+}
+
 
 /* invitations */
 function getInvitataions(params?: any) {
@@ -367,7 +372,7 @@ export {
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany, editCompany, getCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
-    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite, getCompanyPartners,
     getVendors, getVendor, createVendor, updateVendor,
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
     getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,

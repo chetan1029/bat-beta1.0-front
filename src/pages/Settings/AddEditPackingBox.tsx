@@ -58,14 +58,17 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
             width: Yup.string().required(t('Packing Box Width is required')),
             depth: Yup.string().required(t('Packing Box Depth is required')),
             length_unit: Yup.object().required(t('Packing Box Length Unit is required')),
-            weight: Yup.string().required(t('Packing Box Weight is required')),
+            weight: Yup.object({
+                value: Yup.number().required(t('Weight value is required')),
+                unit: Yup.string().required(t('Weight unit is required'))
+            }),
         }),
         onSubmit: values => {
             if (packingBox) {
-                    dispatch(editPackingBox(companyId, packingBox.id, {...values, length_unit: values['length_unit']['value']}));
-                } else {
-                    dispatch(createPackingBox(companyId, {...values, length_unit: values['length_unit']['value']}));
-                }
+                dispatch(editPackingBox(companyId, packingBox.id, { ...values, length_unit: values['length_unit']['value'] }));
+            } else {
+                dispatch(createPackingBox(companyId, { ...values, length_unit: values['length_unit']['value'] }));
+            }
         },
     });
 
@@ -80,7 +83,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
             <Modal.Header closeButton className="add-payment-modal-header"></Modal.Header>
             <Modal.Body className="p-0">
                 <div className="position-relative">
-                    {loading ? <Loader />: null}
+                    {loading ? <Loader /> : null}
 
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</h1>
@@ -105,87 +108,100 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
                                 ) : null}
                             </Form.Group>
                             <Row>
-                              <Col>
-                                <Form.Group className="mb-4">
-                                    <Form.Label htmlFor="usr">{t('Length')}</Form.Label>
-                                    <Form.Control type="text" className="form-control" id="length" name="length" placeholder="Lenth"
-                                        onBlur={validator.handleBlur}
-                                        value={validator.values.length}
-                                        onChange={validator.handleChange}
-                                        isInvalid={validator.touched.length && validator.errors && validator.errors.length ? true : false}
-                                        maxLength={200} />
+                                <Col lg={3}>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Length')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="length" name="length" placeholder="Lenth"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.length}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.length && validator.errors && validator.errors.length ? true : false}
+                                            maxLength={200} />
 
 
-                                    {validator.touched.length && validator.errors.length ? (
-                                        <Form.Control.Feedback type="invalid">{validator.errors.length}</Form.Control.Feedback>
-                                    ) : null}
-                                </Form.Group>
-                              </Col>
-                              <Col>
-                                <Form.Group className="mb-4">
-                                    <Form.Label htmlFor="usr">{t('Width')}</Form.Label>
-                                    <Form.Control type="text" className="form-control" id="width" name="width" placeholder="Width"
-                                        onBlur={validator.handleBlur}
-                                        value={validator.values.width}
-                                        onChange={validator.handleChange}
-                                        isInvalid={validator.touched.width && validator.errors && validator.errors.width ? true : false}
-                                        maxLength={200} />
+                                        {validator.touched.length && validator.errors.length ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.length}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col lg={3}>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Width')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="width" name="width" placeholder="Width"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.width}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.width && validator.errors && validator.errors.width ? true : false}
+                                            maxLength={200} />
 
 
-                                    {validator.touched.width && validator.errors.width ? (
-                                        <Form.Control.Feedback type="invalid">{validator.errors.width}</Form.Control.Feedback>
-                                    ) : null}
-                                </Form.Group>
-                              </Col>
-                              <Col>
-                                <Form.Group className="mb-4">
-                                    <Form.Label htmlFor="usr">{t('Depth')}</Form.Label>
-                                    <Form.Control type="text" className="form-control" id="depth" name="depth" placeholder="Depth"
-                                        onBlur={validator.handleBlur}
-                                        value={validator.values.depth}
-                                        onChange={validator.handleChange}
-                                        isInvalid={validator.touched.depth && validator.errors && validator.errors.depth ? true : false}
-                                        maxLength={200} />
+                                        {validator.touched.width && validator.errors.width ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.width}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col lg={3}>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Depth')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="depth" name="depth" placeholder="Depth"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.depth}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.depth && validator.errors && validator.errors.depth ? true : false}
+                                            maxLength={200} />
 
 
-                                    {validator.touched.depth && validator.errors.depth ? (
-                                        <Form.Control.Feedback type="invalid">{validator.errors.depth}</Form.Control.Feedback>
-                                    ) : null}
-                                </Form.Group>
-                              </Col>
-                              <Col>
-                                <Form.Group className="mb-4">
-                                    <Form.Label htmlFor="usr">{t('Length Unit')}</Form.Label>
-                                    <LengthUnitDropdown name='length_unit' placeholder={t('Length Unit')} className={validator.touched.length_unit && validator.errors.length_unit ? "is-invalid" : ""}
-                                        onChange={(value) => validator.setFieldValue('length_unit', value)}
-                                        value={validator.values.length_unit} />
+                                        {validator.touched.depth && validator.errors.depth ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.depth}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col lg={3}>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Length Unit')}</Form.Label>
+                                        <LengthUnitDropdown name='length_unit' placeholder={t('Length Unit')} className={validator.touched.length_unit && validator.errors.length_unit ? "is-invalid" : ""}
+                                            onChange={(value) => validator.setFieldValue('length_unit', value)}
+                                            value={validator.values.length_unit} />
 
-                                    {validator.touched.length_unit && validator.errors.length_unit ? (
-                                        <Form.Control.Feedback type="invalid">{validator.errors.length_unit}</Form.Control.Feedback>
-                                    ) : null}
-                                </Form.Group>
-                              </Col>
+                                        {validator.touched.length_unit && validator.errors.length_unit ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.length_unit}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
                             </Row>
-                            <Form.Label htmlFor="usr">{t("Weight ")}</Form.Label>
-                            <Form.Group className="mb-4">
-                                <InputGroup>
-                                    <Form.Control type="text" className="form-control" id="weight" name="weight.value" placeholder="Weight"
-                                                  onBlur={validator.handleBlur}
-                                                  value={validator.values.weight.value}
-                                                  onChange={validator.handleChange}
-                                                  isInvalid={validator.touched.weight && validator.errors && validator.errors.weight ? true : false}
-                                    />
-                                    <DropdownButton
-                                        as={InputGroup.Append}
-                                        variant="outline-secondary"
-                                        title={validator.values.weight.unit}
-                                        id="input-group-dropdown-2"
-                                    >
-                                        <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "lb")}>{t("lb")}</Dropdown.Item>
-                                        <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "kg")}>{t("kg")}</Dropdown.Item>
-                                    </DropdownButton>
-                                </InputGroup>
-                            </Form.Group>
+
+                            <Row>
+                                <Col lg={4}>
+                                    <Form.Label htmlFor="usr">{t("Weight ")}</Form.Label>
+                                    <Form.Group className="mb-4">
+                                        <InputGroup>
+                                            <Form.Control type="text" className="form-control" id="weight" name="weight.value" placeholder="Weight"
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.weight.value}
+                                                onChange={validator.handleChange}
+                                                isInvalid={validator.touched.weight && validator.errors && validator.errors.weight ? true : false}
+                                            />
+                                            <DropdownButton
+                                                as={InputGroup.Append}
+                                                variant="outline-secondary"
+                                                title={validator.values.weight.unit}
+                                                id="input-group-dropdown-2"
+                                                className='btn-dropdown'
+                                            >
+                                                <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "lb")}>{t("lb")}</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "kg")}>{t("kg")}</Dropdown.Item>
+                                            </DropdownButton>
+                                        </InputGroup>
+                                        {validator.touched.weight && validator.errors.weight && validator.errors.weight['value'] ? (
+                                            <Form.Control.Feedback type="invalid" className='show'>{validator.errors.weight['value']}</Form.Control.Feedback>
+                                        ) : null}
+                                        {validator.touched.weight && validator.errors.weight && validator.errors.weight['unit'] ? (
+                                            <Form.Control.Feedback type="invalid" className='show'>{validator.errors.weight['unit']}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
                             <div>
                                 <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
                                 <Button type="submit" variant="primary">{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</Button>

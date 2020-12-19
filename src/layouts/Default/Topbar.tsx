@@ -93,7 +93,7 @@ const Topbar = (props: TopbarProps) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="">
-                  <Dropdown.Item to={`/companies/${companyId}/edit`} as={Link}>
+                  <Dropdown.Item to={`/settings/${companyId}/edit`} as={Link}>
                     <Icon name="bag" className='icon icon-xs' />
                     <span>{t('Edit Company')}</span>
                   </Dropdown.Item>

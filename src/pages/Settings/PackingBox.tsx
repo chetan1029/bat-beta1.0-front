@@ -65,28 +65,24 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
                     <Link to="#" onClick={() => onEditPackingBox(packingbox)} className="payment-terms-link">
                         <Card.Header className="payment-card-title">
                             <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Title')}</h6>
-                                <h6 className="m-0 font-weight-bold">{packingbox.title}</h6>
+                                <h6 className="m-0 text-muted font-weight-bold">{t('Name')}</h6>
+                                <h6 className="m-0 font-weight-bold">{packingbox.name}</h6>
                             </div>
                         </Card.Header>
                         <Card.Body>
                             <div className="p-2">
                                 <Row>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Deposit')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.deposit}</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Length')}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.length}&nbsp;{packingbox.length_unit}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('On Delivery')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.on_delivery}</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Weight')}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.weight ? packingbox.weight['value'] + ' ' + packingbox.weight['unit']: ''}</h6>
                                     </Col>
                                     <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Receiving')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.receiving}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Remaining')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.remaining}% in {packingbox.payment_days} Days</h6>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Depth')}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.depth}</h6>
                                     </Col>
                                 </Row>
                             </div>
@@ -300,12 +296,12 @@ const PackingBox = (props: PackingBoxProps) => {
             }
 
 
-            {isPackingBoxCreated && (!isPackingBoxDeleted && !isPackingBoxRestored) ? <MessageAlert message={t('A new Payment Term is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isPackingBoxCreated && (!isPackingBoxDeleted && !isPackingBoxRestored) ? <MessageAlert message={t('A new Packing Box is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {isPackingBoxDeleted && (!isPackingBoxCreated && !isPackingBoxRestored) ? <MessageAlert message={t('Selected Payment Term is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {isPackingBoxDeleted && (!isPackingBoxCreated && !isPackingBoxRestored) ? <MessageAlert message={t('Selected Packing Box is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
             {isPackingBoxArchived ? <MessageAlert
-                message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
+                message={`${t('Packing Box')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(restorePackingBox(companyId, archiveUnarchiveItem.id))
@@ -313,7 +309,7 @@ const PackingBox = (props: PackingBoxProps) => {
             /> : null}
 
             {isPackingBoxRestored ? <MessageAlert
-                message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
+                message={`${t('Packing Box')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(archivePackingBox(companyId, archiveUnarchiveItem.id))
