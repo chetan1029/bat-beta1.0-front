@@ -10,7 +10,7 @@ import logo from "../../assets/images/logo.svg";
 
 import { getCompanyCategories } from "../../redux/actions";
 
-import { getMenuItems, mainMenuItems, findAllParent, findMenuItem } from "./Menu";
+import { getMenuItems, getMainMenuItems, findAllParent, findMenuItem } from "./Menu";
 import { Collapse } from "react-bootstrap";
 
 
@@ -104,9 +104,9 @@ const Sidebar = (props: SideProps) => {
     vendorCategories: state.Company.Common.categories && state.Company.Common.categories.results ? state.Company.Common.categories.results : []
   }));
 
-  const [menus, setmenus] = useState<any>();
-
   const companyId = props.match.params.companyId;
+
+  const [menus, setmenus] = useState<any>(getMainMenuItems(companyId));
 
   useEffect(() => {
     if (!mainSidebar) {
@@ -119,8 +119,6 @@ const Sidebar = (props: SideProps) => {
   useEffect(() => {
     if (!mainSidebar && vendorCategories) {
       setmenus(getMenuItems(companyId, vendorCategories));
-    } else {
-      setmenus(mainMenuItems);
     }
   }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr]);
 
@@ -199,12 +197,12 @@ const Sidebar = (props: SideProps) => {
           </div>
 
 
-          {!mainSidebar ? <div className="bottom-link">
+          <div className="bottom-link">
             <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center selected_link">
               <Icon name='settings' />
               <p>{t('Settings')}</p>
             </Link>
-          </div> : null}
+          </div>
         </div>
       </div>
     </React.Fragment>

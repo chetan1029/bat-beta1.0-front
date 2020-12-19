@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames";
@@ -139,9 +140,9 @@ const EditCompany = (props: EditCompanyProps) => {
             <Row className="align-items-center">
                 <Col lg={6}>
                     <div className="d-flex align-items-center">
-                        {/* <Link to={`/companies`}>
+                        <Link to={`/settings/${companyId}`}>
                             <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
-                        </Link> */}
+                        </Link>
                         <h1 className="m-0">{t('Edit Company Information')}</h1>
                     </div>
                 </Col>

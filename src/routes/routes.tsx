@@ -49,9 +49,9 @@ const authProtectedRoutes = [
   // { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
   // { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
 
-  { path: "/profile/general", component: Profile, layoutProps: { 'mainSidebar': true } },
-  { path: "/profile/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
-  { path: "/profile", component: Profile, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': true } },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 

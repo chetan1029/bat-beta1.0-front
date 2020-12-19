@@ -88,10 +88,17 @@ const getMenuItems = (companyId: string, vendorCategories: any) => {
 
 
 
-const mainMenuItems: Array<MenuItemProp> = [
-    { name: 'My Profile', url: '/profile/general', icon: 'user', label: 'My Profile', id: 'myProfile' },
-    // { name: 'My Company', url: '/companies', icon: 'bag', label: 'Companies', id: 'myCompanies' },
-];
+const getMainMenuItems = (companyId: number | string) => {
+    const mainMenuItems: Array<MenuItemProp> = [
+        { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
+        { name: 'My Profile', url: `/profile/${companyId}/general`, icon: 'user', label: 'My Profile', id: 'myProfile' },
+        { name: 'My Clients', url: `/clients/${companyId}`, icon: 'bag', label: 'My Clients', id: 'myClients' },
+    ];
+
+    return mainMenuItems;
+}
+
+
 
 const findAllParent = (menuItems: Array<any>, menuItem: any) => {
     let parents: Array<any> = [];
@@ -118,4 +125,4 @@ const findMenuItem = (menuItems: Array<any>, menuItemId: any) => {
     return null;
 }
 
-export { getMenuItems, mainMenuItems, findAllParent, findMenuItem };
+export { getMenuItems, getMainMenuItems, findAllParent, findMenuItem };
