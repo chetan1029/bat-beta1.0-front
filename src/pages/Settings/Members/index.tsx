@@ -166,6 +166,7 @@ const PartnerItem = ({ companyId, partner }) => {
                                 <h6 className="text-muted my-0">{t('name')}</h6>
                                 <h5 className="my-0">{partner['name']}</h5>
                             </Media.Body>
+                            
 
                             <div className="ml-auto">
                                 {partner && partner['create_date'] ? <DisplayDate dateStr={partner['create_date']} /> : null}
@@ -174,7 +175,10 @@ const PartnerItem = ({ companyId, partner }) => {
 
                         <div className="p-3 border-top">
                             <Row>
-                                <Col xs={6} lg={4}>
+                                <Col xs={6} lg={2} className='align-self-center'>
+                                    <Badge variant='outline-primary' pill className='capitalize mr-2 font-14'>{partner['company_type']}</Badge>
+                                </Col>
+                                <Col xs={6} lg={2}>
                                     <h6 className="m-0 text-muted font-weight-bold">{t('Abbreviation')}</h6>
                                     <h6 className="m-0 font-weight-bold">
                                         {partner['abbreviation']}
