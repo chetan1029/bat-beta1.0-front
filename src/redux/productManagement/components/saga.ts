@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { get, isEmpty, map, size } from 'lodash';
+import { get, isEmpty, map, size, forEach } from 'lodash';
 
 import {
 	archiveComponent,
@@ -51,7 +51,9 @@ function* createNewComponent({ payload: { companyId, data, images } }: any) {
 		const response = yield call(createComponent, companyId, data);
 		if (response.data && response.data.id) {
 			if (size(images.productImages) > 0) {
-				yield call(uploadComponentImages, companyId, response.data.id, images.productImages);
+				let imagesData:any = {};
+				forEach(images.productImages, (image, i) => imagesData[i === 0 ? "main_image" : i]= image);
+				yield call(uploadComponentImages, companyId, response.data.id, imagesData);
 			}
 			const variationIds: any[] = map(get(response, "data.products"), product => product.id);
 			if (size(variationIds) > 0 && size(images.variationImages) > 0) {

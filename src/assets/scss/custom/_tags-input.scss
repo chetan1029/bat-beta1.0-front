@@ -53,3 +53,27 @@
         margin: 0 0 2px 2px;
     }
 }
+
+.tags {
+
+    .react-select__control {
+        width: 100%;
+    }
+
+    .react-select__multi-value {
+        background-color: rgba($gray-200, 0.7) !important;
+        color: $gray-600 !important;
+    }
+
+    .react-select__multi-value__label {
+        color: $gray-600 !important;
+    }
+
+    .react-select__multi-value__remove {
+        &:hover {
+            background-color: rgba($gray-200, 0.7) !important;
+            color: $gray-600 !important;
+            cursor: pointer;
+        }
+    }
+}

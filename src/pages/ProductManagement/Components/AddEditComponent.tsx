@@ -5,13 +5,12 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import Icon from "../../../components/Icon";
-import TagsInput from "../../../components/TagsInput";
 import MediaInput from "../../../components/MediaInput";
 
 //plug-ins
 import { useFormik } from 'formik';
 import classNames from "classnames";
-import { map, isEmpty, forEach, filter } from "lodash";
+import { map, isEmpty, forEach, filter, get } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
 import {
@@ -32,7 +31,6 @@ interface AddEditComponentProps {
 
 const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const { t } = useTranslation();
-    const [tags, setTags] = useState<any>([]);
     const [files, setFiles] = useState<any>([]);
     const [variationOptions, setVariationOptions] = useState<any>([]);
     const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
@@ -80,6 +78,11 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const defaultSeries = tagsAndTypes && map(tagsAndTypes.series_data, (series: any) => ({
         label: series,
         value: series
+    }));
+
+    const defaultTags = tagsAndTypes && map(tagsAndTypes.tag_data, (tag: any) => ({
+        label: tag,
+        value: tag
     }));
 
     const validateCategories = (values) => {
@@ -130,8 +133,9 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             series: component ? component.series : "",
             description: component ? component.description : "",
             status: component ? component.status : statusOptions[0],
+            tags: [],
         },
-        validate: validateCategories,
+		validate: validateCategories,
         validateOnChange: false,
         validateOnBlur: false,
         onSubmit: (values: any) => {
@@ -139,7 +143,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                 ...values,
                 ...{
                     is_component: true,
-                    tags: tags.toString(),
+                    tags: values.tags.map(tag => tag.value).toString(),
                     type: values.type['value'],
                     series: values.series['value'],
                     status: values.status['value'],
@@ -224,13 +228,17 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                 <Row>
                                     <Col lg={6} xs={12}>
                                         <Form.Group className="mb-4">
-                                            <TagsInput
-                                                label={t('Tags')}
+                                            <Form.Label htmlFor="tags">{t('Tags')}</Form.Label>
+                                            <CreatableSelect
+                                                isMulti
+                                                id={"tags"}
+                                                name={"tags"}
                                                 placeholder={t('Tags')}
-                                                id="tagsId"
-                                                name="tags"
-                                                tags={component && component.tags.split(",")}
-                                                selectedTags={setTags}
+                                                onChange={(value: any) => validator.setFieldValue('tags', value)}
+                                                options={defaultTags || []}
+                                                value={validator.values.tags}
+                                                className={"react-select react-select-regular tags mt-0"}
+                                                classNamePrefix="react-select"
                                             />
                                         </Form.Group>
                                     </Col>
@@ -255,7 +263,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                 <Row>
                                     <Col lg={6} xs={12}>
                                         <Form.Group className="mb-4">
-                                            <Form.Label htmlFor="usr">{t('Status')}</Form.Label>
+                                            <Form.Label htmlFor="status">{t('Status')}</Form.Label>
                                             <Select
                                                 placeholder={t('Status')}
                                                 options={statusOptions}
@@ -293,6 +301,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                     <Col lg={12} md={12}>
                                         <Form.Group className="mt-2 mb-0">
                                         <VariationDetails
+                                            validator={validator}
                                             errors={validator.errors}
                                             label={t('Variation Details')}
                                             onSetVariationOptions={(variationOptions, hasMultiVariations) => {

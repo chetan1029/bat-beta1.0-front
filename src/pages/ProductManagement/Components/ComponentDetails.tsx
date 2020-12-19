@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, Col, Nav, Row } from "react-bootstrap";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { get, map } from 'lodash';
+import { get, map, find } from 'lodash';
 
 //components
 import Icon from "../../../components/Icon";
@@ -107,7 +107,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                                   <Card.Body className="p-0">
                                     <Row>
                                       <Col lg={2} sm={6} style={{ maxWidth: "14% !important" }}>
-                                        <img className={"product-image"} src={get(product, "images[0].image")}
+                                        <img className={"product-image"} src={find(product.images, img => !!img.mainImage)}
                                              alt={product.title}/>
                                       </Col>
                                       <Col lg={10} sm={6} className="pt-3">
@@ -127,16 +127,18 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 								}
 							</>
 						)}
-                      <div className="cursor-pointer d-flex align-items-center justify-content-end mt-2"
-                           onClick={() => setShowMore(!showMore)}>
-                        <Icon name={"eye"} className={"icon icon-xs mr-2"}/>
-                        <h6 className="text-primary mb-0">
-							{showMore ?
-								`${t('Less child products')} (${component.products.length - 1})` :
-								`${t('More child products')} (${component.products.length - 1})`
-							}
-                        </h6>
-                      </div>
+						{component.products && component.products.length > 1 &&
+							<div className="cursor-pointer d-flex align-items-center justify-content-end mt-2"
+								 onClick={() => setShowMore(!showMore)}>
+							  <Icon name={"eye"} className={"icon icon-xs mr-2"}/>
+							  <h6 className="text-primary mb-0">
+								  {showMore ?
+									  `${t('Less child products')} (${component.products.length - 1})` :
+									  `${t('More child products')} (${component.products.length - 1})`
+								  }
+							  </h6>
+							</div>
+						}
                     </Col>
                     <Col lg={4} md={4} sm={12}>
                       <img className={"component-main-image"} src={get(component, "images[0].image")}

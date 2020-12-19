@@ -287,7 +287,8 @@ const Components = (props: ComponentsProps) => {
 							))}
 							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
 						</> :
-						<h3 className="d-flex justify-content-center">{t('No components found')}</h3>
+						get(components, "results") && get(components, "results").length === 0 &&
+					  <h3 className="d-flex justify-content-center">{t('No components found')}</h3>
 					}
 				</Card.Body>
 			</Card>
