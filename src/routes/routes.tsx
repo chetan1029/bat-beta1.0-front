@@ -21,6 +21,8 @@ import VendorDetails from "../pages/Vendors/Details";
 import EditVendor from "../pages/Vendors/EditVendor";
 import Vendors from "../pages/Vendors/";
 
+// clients
+import Clients from "../pages/Clients/";
 
 // account
 import Login from "../pages/account/Login";
@@ -43,6 +45,8 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/edit", component: EditCompany },
+
+  { path: "/clients/:companyId", component: Clients },
 
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
