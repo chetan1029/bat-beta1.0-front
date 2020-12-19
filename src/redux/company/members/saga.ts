@@ -2,7 +2,7 @@ import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
 import {
     getMembers, getMember, createMember, deleteMember, editMember,
-    getCompanyInvitataions, resendCompanyInvite
+    getCompanyInvitataions, resendCompanyInvite, getCompanyPartners as getCompanyPartnersApi
 } from "../../../api/index";
 
 import { membersApiResponseSuccess, membersApiResponseError } from "./actions";
@@ -72,7 +72,10 @@ function* deleteMemberById({ payload: { companyId, memberId } }: any) {
     }
 }
 
-
+/**
+ * Gets invites
+ * @param param0
+ */
 function* getAllInvitations({ payload: { companyId, filters } }: any) {
     try {
         const response = yield call(getCompanyInvitataions, companyId, filters);
@@ -82,12 +85,27 @@ function* getAllInvitations({ payload: { companyId, filters } }: any) {
     }
 }
 
+
 function* resendInvite({ payload: { companyId, inviteId } }: any) {
     try {
         const response = yield call(resendCompanyInvite, companyId, inviteId);
         yield put(membersApiResponseSuccess(MembersTypes.RESEND_INVITE, response.data));
     } catch (error) {
         yield put(membersApiResponseError(MembersTypes.RESEND_INVITE, error));
+    }
+}
+
+
+/**
+ * Gets partners
+ * @param param0
+ */
+function* getPartners({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getCompanyPartnersApi, companyId, filters);
+        yield put(membersApiResponseSuccess(MembersTypes.GET_PARTNERS, response.data));
+    } catch (error) {
+        yield put(membersApiResponseError(MembersTypes.GET_PARTNERS, error));
     }
 }
 
@@ -120,6 +138,10 @@ export function* watchResendInvite() {
 }
 
 
+export function* watchGetPartners() {
+    yield takeEvery(MembersTypes.GET_PARTNERS, getPartners)
+}
+
 function* membersSaga() {
     yield all([
         fork(watchGetMembers),
@@ -128,7 +150,8 @@ function* membersSaga() {
         fork(watchEditMember),
         fork(watchDeleteMember),
         fork(watchGetInvitiations),
-        fork(watchResendInvite)
+        fork(watchResendInvite),
+        fork(watchGetPartners)
     ]);
 }
 
