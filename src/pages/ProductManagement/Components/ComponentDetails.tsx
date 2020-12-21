@@ -71,17 +71,10 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                       <h1 className="m-0">{component && component.title}</h1>
                     </div>
                     <div className="d-flex align-items-center">
-                      <Link className={"btn disabled p-0"}
-                            to={`/product-management/${companyId}/components/edit/${component.id}`}>
-                        <Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
-                      </Link>
-                      <span
-                        onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+                      <Link to={"#"}
+                        	onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
                       	<Icon name="archive" className="mx-2 svg-outline-primary cursor-pointer"/>
-					  </span>
-                      <Link className={"btn disabled p-0"} to={""}>
-                        <Icon name="delete" className="mx-2 svg-outline-danger cursor-pointer"/>
-                      </Link>
+					  </Link>
                     </div>
                   </div>
                 </Col>
@@ -111,7 +104,13 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                                              alt={product.title}/>
                                       </Col>
                                       <Col lg={10} sm={6} className="pt-3">
-                                        <h6>{t('Model Number')}: {get(product, "model_number")}</h6>
+										<div className="d-flex justify-content-between">
+                                        	<h6>{t('Model Number')}: {get(product, "model_number")}</h6>
+                                          <Link className="py-1 edit-variation mr-3"
+                                                to={`/product-management/${companyId}/components/${component.id}/variation/edit/${product.id}`}>
+                                            <Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
+                                          </Link>
+                                        </div>
                                         <p className="text-muted">
 											{t('Manufacturer Part Number')}: {get(product, "manufacturer_part_number")}
                                         </p>

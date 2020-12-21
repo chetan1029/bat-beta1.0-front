@@ -66,6 +66,13 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case ComponentsTypes.GET_VARIATION: {
+                    return {
+                        ...state,
+                        variation: action.payload.data,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -126,6 +133,13 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case ComponentsTypes.GET_VARIATION: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -150,6 +164,9 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.EXPORT_COMPONENT:
             return { ...state, isExported: false, loading: true };
+
+        case ComponentsTypes.GET_VARIATION:
+            return { ...state, loading: true };
 
         case ComponentsTypes.RESET: {
             return {

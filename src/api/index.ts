@@ -407,6 +407,11 @@ function exportXLSFile(companyId: number) {
     return api.get(`${componentUrl(companyId)}xlsxeport/` );
 }
 
+function getVariation(companyId: number, variationId: number | string) {
+    const baseUrl = `/companies/${companyId}/product-variations/${variationId}/`;
+    return api.get(`${baseUrl}`);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -423,5 +428,5 @@ export {
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
     getDeliveryTerms,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
-    uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile
+    uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile, getVariation,
 }

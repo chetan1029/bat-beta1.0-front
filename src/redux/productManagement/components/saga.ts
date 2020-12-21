@@ -12,7 +12,8 @@ import {
 	getComponents,
 	getTagsAndTypes,
 	uploadComponentImages,
-	uploadVariationImages
+	uploadVariationImages,
+	getVariation
 } from "../../../api";
 
 import { componentsApiResponseError, componentsApiResponseSuccess } from "./actions";
@@ -140,6 +141,18 @@ function* exportComponent({ payload: { companyId, fileType } }: any) {
 	}
 }
 
+/**
+ * get variation
+ */
+function* getVariationById({ payload: { companyId, variationId } }: any) {
+	try {
+		const response = yield call(getVariation, companyId, variationId);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_VARIATION, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_VARIATION, error));
+	}
+}
+
 export function* watchGetComponents() {
 	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
@@ -172,6 +185,10 @@ export function* watchExportComponent() {
 	yield takeEvery(ComponentsTypes.EXPORT_COMPONENT, exportComponent);
 }
 
+export function* watchGetVariation() {
+	yield takeEvery(ComponentsTypes.GET_VARIATION, getVariationById);
+}
+
 
 function* componentsSaga() {
 	yield all([
@@ -183,6 +200,7 @@ function* componentsSaga() {
 		fork(watchArchiveComponent),
 		fork(watchGetTagsAndTypes),
 		fork(watchExportComponent),
+		fork(watchGetVariation),
 	]);
 }
 

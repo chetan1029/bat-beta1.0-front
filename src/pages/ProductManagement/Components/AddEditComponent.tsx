@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
 import * as Yup from 'yup';
@@ -11,15 +11,10 @@ import MediaInput from "../../../components/MediaInput";
 //plug-ins
 import { useFormik } from 'formik';
 import classNames from "classnames";
-import { map, isEmpty, forEach, get } from "lodash";
+import { forEach, map } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
-import {
-    createComponent,
-    getComponentDetails,
-    getTagsAndTypes,
-    resetComponents
-} from "../../../redux/actions";
+import { createComponent, getVariationDetails, getTagsAndTypes, resetComponents } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import VariationDetails from "../../../components/VariationDetails";
 import Loader from "../../../components/Loader";
@@ -39,7 +34,9 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const dispatch = useDispatch();
     const companyId = match.params.companyId;
     const componentId = match.params.componentId;
+    const variationId = match.params.variationId;
     let statusOptions: Array<any> = [];
+
     for (const status of STATUSES) {
         statusOptions.push({
             label: t(status),
@@ -53,23 +50,23 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     }, [dispatch, companyId]);
 
     useEffect(() => {
-        if (companyId && componentId) {
-            dispatch(getComponentDetails(companyId, componentId));
+        if (companyId && variationId) {
+            dispatch(getVariationDetails(companyId, variationId));
         }
-    }, [dispatch, companyId, componentId]);
+    }, [dispatch, companyId, variationId]);
 
     const {
         loading,
-        component,
         isComponentCreated,
         createComponentError,
         tagsAndTypes,
+        variation,
     } = useSelector(({ ProductManagement: { Components } }: any) => ({
         loading: Components.loading,
-        component: Components.component,
         isComponentCreated: Components.isComponentCreated,
         createComponentError: Components.createComponentError,
         tagsAndTypes: Components.tagsAndTypes,
+        variation: Components.variation,
     }));
 
     const defaultTypes = tagsAndTypes && map(tagsAndTypes.type_data, (type: any) => ({
@@ -90,11 +87,11 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
-            title: component ? component.title : "",
-            type: component ? component.type : "",
-            series: component ? component.series : "",
-            description: component ? component.description : "",
-            status: component ? component.status : statusOptions[0],
+            title: variation ? variation.title : "",
+            type: "",
+            series: "",
+            description: variation ? variation.description : "",
+            status: variation ? variation.status : statusOptions[0],
             tags: [],
         },
         validationSchema: Yup.object({
@@ -148,7 +145,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                             <Link to={`/product-management/${companyId}/components`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2"/>
                             </Link>
-                            <h1 className="m-0">{componentId ? t('Edit Component') : t('Add Component')}</h1>
+                            <h1 className="m-0">{variationId ? t('Edit Product Variation') : t('Add Component')}</h1>
                         </div>
                     </Col>
                 </Row>
