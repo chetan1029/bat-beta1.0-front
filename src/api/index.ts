@@ -399,6 +399,14 @@ function getTagsAndTypes(companyId: number) {
     return api.get(`${componentUrl(companyId)}tags-types/` );
 }
 
+function exportCSVFile(companyId: number) {
+    return api.get(`${componentUrl(companyId)}csvexport/` );
+}
+
+function exportXLSFile(companyId: number) {
+    return api.get(`${componentUrl(companyId)}xlsxeport/` );
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -415,5 +423,5 @@ export {
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
     getDeliveryTerms,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
-    uploadComponentImages, uploadVariationImages, getTagsAndTypes,
+    uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile
 }

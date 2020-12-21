@@ -10,6 +10,7 @@ export enum ComponentsTypes {
     DELETE_COMPONENT = '@@productManagement/components/DELETE_COMPONENT',
     ARCHIVE_COMPONENT = '@@productManagement/components/ARCHIVE_COMPONENT',
     GET_TAGS_TYPES = '@@productManagement/components/GET_TAGS_TYPES',
+    EXPORT_COMPONENT = '@@productManagement/components/EXPORT_COMPONENT',
 
     RESET = '@@productManagement/components/RESET',
 }

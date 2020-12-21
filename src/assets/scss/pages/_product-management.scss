@@ -121,6 +121,12 @@
       margin: 1em 0;
     }
   }
+
+  .export {
+    &:after {
+      content: none;
+   }
+  }
 }
 
 .active-label {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Alert, Card, Col, Dropdown, DropdownButton, Form, InputGroup, Row } from "react-bootstrap";
 import { filter, forEach, get, isEmpty, isEqual, map, size, uniqBy, xorWith } from "lodash";
@@ -8,8 +8,10 @@ import Icon from "./Icon";
 import classNames from "classnames";
 
 interface VariationDetailsProps {
+	inputRef?: any;
 	validator?: any;
 	errors?: any;
+	isSubmit?: boolean;
 	label?: string;
 	onSetVariationOptions: (any, boolean) => void;
 }
@@ -17,7 +19,8 @@ interface VariationDetailsProps {
 const VariationDetails = (props: VariationDetailsProps) => {
 	const { t } = useTranslation();
 	const prevVariationsRef = useRef();
-	const { label, onSetVariationOptions, errors, validator } = props;
+	const prevHasMultiVariationsRef = useRef();
+	const { label, onSetVariationOptions, validator, isSubmit, inputRef } = props;
 	const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
 	const [variations, setVariations] = useState<any>([]);
 	const [variationOptions, setVariationOptions] = useState<any>([{
@@ -31,6 +34,53 @@ const VariationDetails = (props: VariationDetailsProps) => {
 	}]);
 	const [variationOptError, setVariationOptError] = useState<any>("");
 	const [numberInvalidError, setNumberInvalidError] = useState<any>("");
+	const [errors, setErrors] = useState<any>({});
+
+	const onSubmit = () => {
+		let error: any = { variationOptions: [], variations: [] };
+		variationOptions.length > 0 && forEach(variationOptions, (option, i) => {
+			typeof option.value === "object" && forEach(option.value, (opt, index) => {
+				if (hasMultiVariations && opt.name === "") {
+					error.variations[index] = { ...error.variations[index], "name": "Name required" };
+				}
+			});
+			if (option["model_number"] === "") {
+				error.variationOptions[i] = {
+					...error.variationOptions[i],
+					"model_number": "Model number required"
+				};
+			}
+			if (option["manufacturer_part_number"] === "") {
+				error.variationOptions[i] = {
+					...error.variationOptions[i],
+					"manufacturer_part_number": "Manufacturer part number required"
+				};
+			}
+			if (option["weight"].value === "") {
+				error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight is required" };
+			} else if (!(!isNaN(option["weight"].value) && !isNaN(parseFloat(option["weight"].value)))) {
+				error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight must be a number" };
+			}
+		});
+		setErrors(error);
+	}
+
+	useEffect(() => {
+		inputRef.current = { errors, variationOptions, onSubmit }
+	}, [errors, variationOptions]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	useEffect(() => {
+		prevVariationsRef.current = variations;
+		prevHasMultiVariationsRef.current = hasMultiVariations;
+	});
+	const prevVariations = prevVariationsRef.current;
+	const prevHasMultiVariations = prevHasMultiVariationsRef.current;
+
+	useEffect(() => {
+		if (!prevHasMultiVariations && !!hasMultiVariations) {
+			setErrors({});
+		}
+	}, [hasMultiVariations]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const handleOnSelect = (e: any) => {
 		setHasMultiVariations(e.target.checked);
@@ -58,6 +108,11 @@ const VariationDetails = (props: VariationDetailsProps) => {
 
 	const handleOptionInputChange = (e: any, index: number) => {
 		const { name, value } = e.target;
+		if (errors.variationOptions && errors.variationOptions[index] !== "" && value !== "") {
+			const newErrorVariationOptions = errors.variationOptions;
+			newErrorVariationOptions[index] = { ...newErrorVariationOptions[index], [name]: "" };
+			setErrors({ ...errors, "variationOptions": [...newErrorVariationOptions] });
+		}
 		const newVariationsOptions = [...variationOptions];
 		newVariationsOptions[index] = { ...newVariationsOptions[index], [name]: value };
 		setVariationOptions(newVariationsOptions);
@@ -72,6 +127,11 @@ const VariationDetails = (props: VariationDetailsProps) => {
 			} else {
 				setNumberInvalidError("");
 			}
+		}
+		if (errors.variationOptions && errors.variationOptions[index] !== "" && value !== "") {
+			const newErrorVariationOptions = errors.variationOptions;
+			newErrorVariationOptions[index] = { ...newErrorVariationOptions[index], "weight": "" };
+			setErrors({ ...errors, "variationOptions": [...newErrorVariationOptions] });
 		}
 		newVariationsOptions[index] = {
 			...newVariationsOptions[index],
@@ -88,12 +148,6 @@ const VariationDetails = (props: VariationDetailsProps) => {
 		};
 		setVariationOptions(newVariationsOptions);
 	};
-
-	useEffect(() => {
-		prevVariationsRef.current = variations;
-	});
-
-	const prevVariations = prevVariationsRef.current;
 
 	useEffect(() => {
 		let allOptions: any[] = [];
@@ -397,4 +451,4 @@ const VariationDetails = (props: VariationDetailsProps) => {
 	);
 };
 
-export default VariationDetails;
+export default forwardRef(VariationDetails);

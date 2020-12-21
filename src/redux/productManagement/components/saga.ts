@@ -6,6 +6,8 @@ import {
 	createComponent,
 	deleteComponent,
 	editComponent,
+	exportCSVFile,
+	exportXLSFile,
 	getComponent,
 	getComponents,
 	getTagsAndTypes,
@@ -118,6 +120,26 @@ function* getTagsAndTypesById({ payload: { companyId } }: any) {
 	}
 }
 
+/**
+ * export component
+ */
+function* exportComponent({ payload: { companyId, fileType } }: any) {
+	try {
+		if (fileType) {
+			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId);
+			const url = window.URL.createObjectURL(new Blob([response.data]));
+			const link = document.createElement('a');
+			link.href = url;
+			link.setAttribute('download', `components.${fileType}`);
+			document.body.appendChild(link);
+			link.click();
+			yield put(componentsApiResponseSuccess(ComponentsTypes.EXPORT_COMPONENT, response.data));
+		}
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.EXPORT_COMPONENT, error));
+	}
+}
+
 export function* watchGetComponents() {
 	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
@@ -146,6 +168,10 @@ export function* watchGetTagsAndTypes() {
 	yield takeEvery(ComponentsTypes.GET_TAGS_TYPES, getTagsAndTypesById);
 }
 
+export function* watchExportComponent() {
+	yield takeEvery(ComponentsTypes.EXPORT_COMPONENT, exportComponent);
+}
+
 
 function* componentsSaga() {
 	yield all([
@@ -156,6 +182,7 @@ function* componentsSaga() {
 		fork(watchDeleteComponent),
 		fork(watchArchiveComponent),
 		fork(watchGetTagsAndTypes),
+		fork(watchExportComponent),
 	]);
 }
 

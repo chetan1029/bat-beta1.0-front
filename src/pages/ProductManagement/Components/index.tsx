@@ -6,12 +6,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { filter, find, findIndex, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
+import { archiveComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
 import FilterDropDown from "../../../components/FilterDropDown";
 import Loader from "../../../components/Loader";
+
+const FILETYPES: Array<any> = [
+	{ label: "As csv", value: "csv" },
+	{ label: "As xls", value: "xls" },
+];
 
 const TabMenu = ({ onChange, selectedView }) => {
 	const { t } = useTranslation();
@@ -68,6 +73,7 @@ const Components = (props: ComponentsProps) => {
 		archiveComponentError,
 		isComponentArchived,
 		tagsAndTypes,
+		isExported
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		components: Components.components,
@@ -75,6 +81,7 @@ const Components = (props: ComponentsProps) => {
 		archiveComponentError: Components.archiveComponentError,
 		isComponentArchived: Components.isComponentArchived,
 		tagsAndTypes: Components.tagsAndTypes,
+		isExported: Components.isExported,
 	}));
 
 	const prevFiltersRef = useRef();
@@ -87,7 +94,7 @@ const Components = (props: ComponentsProps) => {
 
 	useEffect(() => {
 		if (!(isEqual(prevFilters, filters))) {
-			dispatch(getComponents(companyId, filters,));
+			dispatch(getComponents(companyId, filters));
 		}
 	}, [filters, prevFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -117,9 +124,7 @@ const Components = (props: ComponentsProps) => {
 		if (options["Component type"]) {
 			type = options["Component type"].toString();
 		}
-		if (tags !== "" && type !== "") {
-			setFilters({ ...filters, tags, type });
-		}
+		setFilters({ ...filters, tags, type });
 	};
 
 	const handleOnSelectComponents = (e: any, component: any) => {
@@ -155,15 +160,27 @@ const Components = (props: ComponentsProps) => {
 						</div>
 					</Col>
 					<Col className="text-right d-flex flex-row align-items-center justify-content-end">
-						<div>
+						<div className="d-flex align-items-center">
                             <span>
                                 <Icon name="import" className="icon icon-xs  mr-2"/>
                                 <b>{t('Import')}</b>
                             </span>
-							<span className="m-3">
-                                <Icon name="export" className="icon icon-xs  mr-2"/>
-                                <b>{t('Export')}</b>
-                            </span>
+
+							<Dropdown>
+								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export' as={Link}>
+									<Icon name="export" className="icon icon-xs  mr-2"/>
+									<span className='font-weight-bold'>{t('Export')}</span>
+								</Dropdown.Toggle>
+
+								<Dropdown.Menu>
+									{map(FILETYPES, (file, index) => (
+										<Dropdown.Item key={index}
+											 onClick={() => dispatch(exportComponent(companyId, file.value))}>
+											{file.label}
+										</Dropdown.Item>
+									))}
+								</Dropdown.Menu>
+							</Dropdown>
 						</div>
 						<Link to={`/product-management/${companyId}/components/add`}
 							  className="btn btn-primary">{t('Add Component')}</Link>
@@ -296,6 +313,9 @@ const Components = (props: ComponentsProps) => {
 												iconWrapperClass="bg-success text-white p-2 rounded-circle"
 												iconClass="icon-sm"/> : null}
 			{isComponentArchived ? <MessageAlert message={t('Component is archived')} icon={"check"}
+												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
+												 iconClass="icon-sm"/> : null}
+			{isExported ? <MessageAlert message={t('File exported successfully')} icon={"check"}
 												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
 												 iconClass="icon-sm"/> : null}
 		</div>

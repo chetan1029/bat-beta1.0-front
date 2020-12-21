@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import CreatableSelect from 'react-select/creatable';
 import Select from 'react-select';
+import * as Yup from 'yup';
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -10,7 +11,7 @@ import MediaInput from "../../../components/MediaInput";
 //plug-ins
 import { useFormik } from 'formik';
 import classNames from "classnames";
-import { map, isEmpty, forEach, filter, get } from "lodash";
+import { map, isEmpty, forEach, get } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 //action
 import {
@@ -32,8 +33,9 @@ interface AddEditComponentProps {
 const AddEditComponent = ({ match }: AddEditComponentProps) => {
     const { t } = useTranslation();
     const [files, setFiles] = useState<any>([]);
+    const variationRef = useRef({});
     const [variationOptions, setVariationOptions] = useState<any>([]);
-    const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
+    const [submitClicked, setSubmitClicked] = useState<any>(0);
     const dispatch = useDispatch();
     const companyId = match.params.companyId;
     const componentId = match.params.componentId;
@@ -85,46 +87,6 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
         value: tag
     }));
 
-    const validateCategories = (values) => {
-        let error: any = { variationOptions: [], variations: [] };
-        if (values.title === "") {
-            error.title = "Title is required";
-        }
-
-        if (variationOptions.length === 0) {
-           error.options = "At least one variation option required";
-        }
-
-        forEach(variationOptions, (option, i) => {
-            typeof option.value === "object" && forEach(option.value, (opt, index) => {
-                if (hasMultiVariations && opt.name === "" ) {
-                    error.variations[index] = { ...error.variations[index], "name": "Name required" };
-                }
-            })
-            if (option["model_number"] === "") {
-                error.variationOptions[i] = { ...error.variationOptions[i], "model_number": "Model number required" };
-            }
-            if (option["manufacturer_part_number"] === "") {
-                error.variationOptions[i] = { ...error.variationOptions[i], "manufacturer_part_number": "Manufacturer part number required" };
-            }
-            if (option["weight"].value === "") {
-                error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight is required" };
-            } else if (!(!isNaN(option["weight"].value) && !isNaN(parseFloat(option["weight"].value)))) {
-                error.variationOptions[i] = { ...error.variationOptions[i], "weight": "Weight must be a number" };
-            }
-        })
-
-        if (isEmpty(filter(error.variationOptions, (option) => Object.keys(option).length > 0))) {
-            delete error.variationOptions;
-        }
-
-        if (isEmpty(filter(error.variations, (option) => option && Object.keys(option).length > 0))) {
-            delete error.variations;
-        }
-
-        return error;
-    }
-
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -135,9 +97,9 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
             status: component ? component.status : statusOptions[0],
             tags: [],
         },
-		validate: validateCategories,
-        validateOnChange: false,
-        validateOnBlur: false,
+        validationSchema: Yup.object({
+            title: Yup.string().required(t('Title is required')),
+        }),
         onSubmit: (values: any) => {
             let data = {
                 ...values,
@@ -161,7 +123,18 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
     });
 
     const onHandleSubmit = (event: any) => {
-        validator.handleSubmit(event);
+        let valid: boolean = false;
+        setSubmitClicked(submitClicked + 1);
+        variationRef.current && variationRef.current["onSubmit"]();
+        variationOptions.length > 0 && forEach(variationOptions, (option, i) => {
+            if (option["model_number"] !== "" || option["manufacturer_part_number"] !== "" || option["weight"].value !== "") {
+                valid = true;
+            }
+        });
+
+        if (valid) {
+            validator.handleSubmit(event);
+        }
     }
 
     return (
@@ -301,12 +274,13 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                     <Col lg={12} md={12}>
                                         <Form.Group className="mt-2 mb-0">
                                         <VariationDetails
+                                            inputRef={variationRef}
                                             validator={validator}
                                             errors={validator.errors}
+                                            isSubmit={submitClicked}
                                             label={t('Variation Details')}
-                                            onSetVariationOptions={(variationOptions, hasMultiVariations) => {
+                                            onSetVariationOptions={(variationOptions) => {
                                                 setVariationOptions(variationOptions);
-                                                setHasMultiVariations(hasMultiVariations);
                                             }}
                                         />
                                         </Form.Group>

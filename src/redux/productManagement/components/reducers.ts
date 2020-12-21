@@ -59,6 +59,13 @@ const Components = (state = INIT_STATE, action: any) => {
                         tagsAndTypes: action.payload.data,
                     }
                 }
+                case ComponentsTypes.EXPORT_COMPONENT: {
+                    return {
+                        ...state,
+                        isExported: true,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -111,6 +118,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.EXPORT_COMPONENT: {
+                    return {
+                        ...state,
+                        exportComponentError: action.payload.error,
+                        isExported: false,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -133,6 +148,8 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.ARCHIVE_COMPONENT:
             return { ...state, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
+        case ComponentsTypes.EXPORT_COMPONENT:
+            return { ...state, isExported: false, loading: true };
 
         case ComponentsTypes.RESET: {
             return {
@@ -141,10 +158,12 @@ const Components = (state = INIT_STATE, action: any) => {
                 createComponentError: null,
                 editComponentError: null,
                 archiveComponentError: null,
+                exportComponentError: null,
                 isComponentCreated: false,
                 isComponentEdited: false,
                 isComponentDeleted: false,
                 isComponentArchived: false,
+                isExported: false,
             }
         }
         default: return { ...state };

@@ -47,6 +47,11 @@ export const getTagsAndTypes = (companyId: string | number) => ({
     payload: { companyId }
 });
 
+export const exportComponent = (companyId: string | number, fileType: string) => ({
+    type: ComponentsTypes.EXPORT_COMPONENT,
+    payload: { companyId, fileType }
+});
+
 export const resetComponents = () => ({
     type: ComponentsTypes.RESET,
 });
