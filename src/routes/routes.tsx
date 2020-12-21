@@ -16,11 +16,18 @@ import AddEditComponent from "../pages/ProductManagement/Components/AddEditCompo
 import Components from "../pages/ProductManagement/Components";
 import ComponentDetails from "../pages/ProductManagement/Components/ComponentDetails";
 
-import AddVendor from "../pages/Vendors/AddVendor";
+import InviteVendor from "../pages/Vendors/InviteVendor";
 import VendorDetails from "../pages/Vendors/Details";
 import EditVendor from "../pages/Vendors/EditVendor";
 import Vendors from "../pages/Vendors/";
 
+// sales channels
+import SalesChannels from "../pages/SalesChannels/";
+import SalesChannelsDetails from "../pages/SalesChannels/Details";
+import InviteChannel from "../pages/SalesChannels/InviteChannel";
+
+// clients
+import Clients from "../pages/Clients/";
 
 // account
 import Login from "../pages/account/Login";
@@ -31,6 +38,7 @@ import ForgotPasswordReset from "../pages/account/ForgotPasswordReset";
 
 // other
 import PageNotFound from "../pages/other/PageNotFound";
+import AccessDenied from "../pages/other/AccessDenied";
 
 import Root from "../pages/Root";
 
@@ -44,14 +52,20 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/edit", component: EditCompany },
 
+  { path: "/clients/:companyId", component: Clients },
+
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
 
-  { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: AddVendor },
+  { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: InviteVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId", component: VendorDetails },
   { path: "/supply-chain/:companyId/vendors/:categoryId", component: Vendors },
+
+  { path: "/sales/:companyId/channels/:categoryId/add", component: InviteChannel },
+  { path: "/sales/:companyId/channels/:categoryId/:channelId", component: SalesChannelsDetails },
+  { path: "/sales/:companyId/channels/:categoryId", component: SalesChannels },
 
   { path: "/companies/:companyId/edit", component: EditCompany, layoutProps: { 'mainSidebar': true } },
   // { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
@@ -71,6 +85,7 @@ const publicRoutes = [
   { path: "/forgot-password", component: ForgotPassword },
 
   { path: "/not-found", component: PageNotFound },
+  { path: "/access-denied", component: AccessDenied },
 
 ];
 

@@ -11,7 +11,7 @@ import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 
 //actions
-import { getVendors, resetVendors } from "../../redux/actions";
+import { getSalesChannels, resetSalesChannels } from "../../redux/actions";
 import DisplayDate from "../../components/DisplayDate";
 
 
@@ -21,7 +21,7 @@ const EmptyState = () => {
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    <h5 className="font-weight-normal my-0">{t('There are no vendors')}</h5>
+                    <h5 className="font-weight-normal my-0">{t('There are no sales channels')}</h5>
                 </div>
             </Card.Body>
         </Card>
@@ -29,27 +29,18 @@ const EmptyState = () => {
 }
 
 
-interface VendorItemProp {
+interface SalesItemProp {
     companyId: any,
     categoryId: any,
-    vendor: any,
+    salesChannel: any,
 }
 
-const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
+const SalesItem = ({ salesChannel, companyId, categoryId }: SalesItemProp) => {
     const { t } = useTranslation();
 
-    // const dispatch = useDispatch();
-
-    // const [selectedVendorForDelete, setselectedVendorForDelete] = useState<any>(null);
-
-    // const onDelete = () => {
-    //     setselectedVendorForDelete(vendor);
-    // }
-
     const rawAddress = () => {
-        return { __html: vendor['address'] };
+        return { __html: salesChannel['address'] };
     }
-
 
     return (<>
         <Row>
@@ -58,11 +49,11 @@ const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
                     <Card.Body className='p-0'>
                         <Media className='p-3'>
                             <Media.Body>
-                                <h5 className="my-0">{vendor['name']}</h5>
+                                <h5 className="my-0">{salesChannel['name']}</h5>
                                 <p className="my-0 text-muted" dangerouslySetInnerHTML={rawAddress()}></p>
                             </Media.Body>
 
-                            <Link to={`/supply-chain/${companyId}/vendors/${categoryId}/${vendor['id']}`} className='btn btn-link px-0 font-weight-semibold'>
+                            <Link to={`/sales/${companyId}/channels/${categoryId}/${salesChannel['id']}`} className='btn btn-link px-0 font-weight-semibold'>
                                 <Icon name="notes" className="text-primary mr-1"></Icon>
                                 {t('Show Details')}
                             </Link>
@@ -71,37 +62,31 @@ const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
                         <div className="p-3 border-top">
                             <Row>
                                 <Col>
-                                    <span className="text-muted">{t('Created')}: </span> {vendor['create_date'] ? <DisplayDate dateStr={vendor['create_date']} /> : null}
+                                    <span className="text-muted">{t('Created')}: </span> {salesChannel['create_date'] ? <DisplayDate dateStr={salesChannel['create_date']} /> : null}
                                 </Col>
-                                {/* <Col className="text-right">
-                                    <Link to="#" onClick={onDelete}><Icon name="archive" className="ml-2 svg-outline-danger" /></Link>
-                                </Col> */}
                             </Row>
                         </div>
                     </Card.Body>
                 </Card>
             </Col>
         </Row>
-        {/* {selectedVendorForDelete ? <ConfirmMessage message={`Are you sure you want to archive ${vendor['name']}?`} onConfirm={() => {
-
-        }} onClose={() => setselectedVendorForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Archive')}></ConfirmMessage> : null} */}
     </>
     )
 }
 
-interface VendorsProps {
+interface SalesChannelsProps {
     match: any;
 }
-const Vendors = (props: VendorsProps) => {
+const SalesChannels = (props: SalesChannelsProps) => {
     const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
-    const { loading, isVendorsFetched, vendors, isVendorInvited } = useSelector((state: any) => ({
-        loading: state.Company.Vendors.loading,
-        isVendorsFetched: state.Company.Vendors.isVendorsFetched,
-        vendors: state.Company.Vendors.vendors,
-        isVendorInvited: state.Company.Vendors.isVendorInvited,
+    const { loading, isChannelsFetched, salesChannels, isChannelsInvited } = useSelector((state: any) => ({
+        loading: state.Company.SalesChannels.loading,
+        isChannelsFetched: state.Company.SalesChannels.isChannelsFetched,
+        salesChannels: state.Company.SalesChannels.salesChannels,
+        isChannelsInvited: state.Company.SalesChannels.isChannelsInvited,
     }));
 
     const companyId = props.match.params.companyId;
@@ -111,35 +96,18 @@ const Vendors = (props: VendorsProps) => {
 
     useEffect(() => {
         if (companyId && categoryId) {
-            dispatch(getVendors(companyId, defaultParams));
+            dispatch(getSalesChannels(companyId, defaultParams));
         }
     }, [dispatch, companyId, categoryId, defaultParams]);
 
-
-    // const [showActive, setshowActive] = useState(false);
-
-    // const onChangeShowActive = (checked: boolean) => {
-    //     setshowActive(checked);
-
-    //     if (checked) {
-    //         let filters = {
-    //             ...defaultParams,
-    //             is_active: true
-    //         }
-    //         dispatch(getVendors(companyId, filters));
-    //     } else {
-    //         dispatch(getVendors(companyId, defaultParams));
-    //     }
-    // }
-
     useEffect(() => {
-        if (isVendorInvited) {
+        if (isChannelsInvited) {
             setTimeout(() => {
-                dispatch(resetVendors());
-                dispatch(getVendors(companyId, defaultParams));
+                dispatch(resetSalesChannels());
+                dispatch(getSalesChannels(companyId, defaultParams));
             }, 3000);
         }
-    }, [isVendorInvited, dispatch, companyId, defaultParams]);
+    }, [isChannelsInvited, dispatch, companyId, defaultParams]);
 
     return (
         <>
@@ -147,23 +115,11 @@ const Vendors = (props: VendorsProps) => {
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <h1 className="m-0">{t('Vendors')}</h1>
-                            {/* <div className="d-flex align-items-center pl-3">
-                                <span className="m-0 font-16 mr-2">
-                                    {t('Show active vendors')}
-                                </span>
-                                <Form.Check
-                                    type="switch"
-                                    id="custom-switch"
-                                    label=""
-                                    checked={showActive}
-                                    onChange={(e: any) => onChangeShowActive(e.target.checked)}
-                                />
-                            </div> */}
+                            <h1 className="m-0">{t('Sales Channels')}</h1>
                         </div>
                     </Col>
                     <Col className="text-right">
-                        <Link to={`/supply-chain/${companyId}/vendors/${categoryId}/add`} className="btn btn-primary">{t('Add New Vendor')}</Link>
+                        <Link to={`/sales/${companyId}/channels/${categoryId}/add`} className="btn btn-primary">{t('Add New')}</Link>
                     </Col>
                 </Row>
             </div>
@@ -174,11 +130,11 @@ const Vendors = (props: VendorsProps) => {
                         <div className="px-2">
                             <Row>
                                 <Col lg={7} xs={12}>
-                                    {isVendorsFetched ? <>
+                                    {isChannelsFetched ? <>
                                         {
-                                            vendors['results'].length > 0 ?
-                                                vendors['results'].map((vendor: any, key: number) =>
-                                                    <VendorItem vendor={vendor}
+                                            salesChannels['results'].length > 0 ?
+                                                salesChannels['results'].map((salesChannel: any, key: number) =>
+                                                    <SalesItem salesChannel={salesChannel}
                                                         categoryId={categoryId}
                                                         key={key} companyId={companyId} />
                                                 ) : <EmptyState />
@@ -204,7 +160,7 @@ const Vendors = (props: VendorsProps) => {
                             </Row>
                         </div>
 
-                        {isVendorInvited ? <MessageAlert message={t('The vendor is invited successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+                        {isChannelsInvited ? <MessageAlert message={t('The sales channel is invited successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
                     </div>}
 
                 </Card.Body>
@@ -214,4 +170,4 @@ const Vendors = (props: VendorsProps) => {
     );
 }
 
-export default withRouter(Vendors);
+export default withRouter(SalesChannels);

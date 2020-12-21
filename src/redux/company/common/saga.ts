@@ -75,6 +75,24 @@ function* getCompanyCategories({ payload: { companyId, filters } }: any) {
     }
 }
 
+function* getVendorCategories({ payload: { companyId } }: any) {
+    try {
+        const response = yield call(getCompanyCategoriesApi, companyId, {'vendors_only': true});
+        yield put(companyCommonApiResponseSuccess(CommonTypes.GET_VENDOR_CATEGORIES, response.data));
+    } catch (error) {
+        yield put(companyCommonApiResponseError(CommonTypes.GET_VENDOR_CATEGORIES, error));
+    }
+}
+
+function* getSalesCategories({ payload: { companyId } }: any) {
+    try {
+        const response = yield call(getCompanyCategoriesApi, companyId, { 'sales_channel_only': true });
+        yield put(companyCommonApiResponseSuccess(CommonTypes.GET_SALES_CATEGORIES, response.data));
+    } catch (error) {
+        yield put(companyCommonApiResponseError(CommonTypes.GET_SALES_CATEGORIES, error));
+    }
+}
+
 
 export function* watchGetCompanies() {
     yield takeEvery(CommonTypes.GET_COMPANIES, getCompanies)
@@ -93,7 +111,9 @@ export function* watchEditCompany() {
 }
 
 export function* watchGetCompanyCategories() {
-    yield takeEvery(CommonTypes.GET_CATEGORIES, getCompanyCategories)
+    yield takeEvery(CommonTypes.GET_CATEGORIES, getCompanyCategories);
+    yield takeEvery(CommonTypes.GET_VENDOR_CATEGORIES, getVendorCategories);
+    yield takeEvery(CommonTypes.GET_SALES_CATEGORIES, getSalesCategories);
 }
 
 function* commonSaga() {

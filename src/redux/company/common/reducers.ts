@@ -48,6 +48,22 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case CommonTypes.GET_VENDOR_CATEGORIES: {
+                    return {
+                        ...state,
+                        vendorCategories: action.payload.data,
+                        isCategoriesFetched: true,
+                        loading: false
+                    }
+                }
+                case CommonTypes.GET_SALES_CATEGORIES: {
+                    return {
+                        ...state,
+                        salesCategories: action.payload.data,
+                        isCategoriesFetched: true,
+                        loading: false
+                    }
+                }
 
                 default:
                     return { ...state }
@@ -86,7 +102,9 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
-                case CommonTypes.GET_CATEGORIES: {
+                case CommonTypes.GET_CATEGORIES: 
+                case CommonTypes.GET_VENDOR_CATEGORIES:
+                case CommonTypes.GET_SALES_CATEGORIES: {
                     return {
                         ...state,
                         error: action.payload.error,
@@ -107,6 +125,8 @@ const Common = (state = INIT_STATE, action: any) => {
         case CommonTypes.EDIT_COMPANY:
             return { ...state, loading: true, companyEdited: false };
         case CommonTypes.GET_CATEGORIES:
+        case CommonTypes.GET_VENDOR_CATEGORIES:
+        case CommonTypes.GET_SALES_CATEGORIES: 
             return { ...state, isCategoriesFetched: false, loading: true };
 
         default: return { ...state };

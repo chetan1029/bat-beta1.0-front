@@ -32,7 +32,19 @@ export const editCompany = (companyId: string | number, data: any) => ({
     payload: { companyId, data }
 });
 
+
 export const getCompanyCategories = (companyId: string | number, filters?: any) => ({
     type: CommonTypes.GET_CATEGORIES,
     payload: { companyId, filters }
+});
+
+export const getVendorCategories = (companyId: string | number) => ({
+    type: CommonTypes.GET_VENDOR_CATEGORIES,
+    payload: { companyId }
+});
+
+
+export const getSalesCategories = (companyId: string | number) => ({
+    type: CommonTypes.GET_SALES_CATEGORIES,
+    payload: { companyId }
 });

@@ -369,6 +369,34 @@ function updateVendor(companyId: number, vendorId: number, data: any) {
 }
 
 
+/* sales channels */
+function getSalesChannels(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/sales-channels/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getSalesChannel(companyId: number, channelId: number,) {
+    const baseUrl = `/companies/${companyId}/sales-channels/${channelId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+
+/* clients */
+function getClients(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/clients/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getClient(companyId: number, clientId: number,) {
+    const baseUrl = `/companies/${companyId}/clients/${clientId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function archiveClient(companyId: number, clientId: number,) {
+    const baseUrl = `/companies/${companyId}/clients/${clientId}/archive/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 /* components */
 const componentUrl = (companyId) => `/companies/${companyId}/products/`;
 
@@ -426,4 +454,6 @@ export {
     getDeliveryTerms,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
     uploadComponentImages, uploadVariationImages, getTagsAndTypes,
+    getClients, getClient, archiveClient,
+    getSalesChannels, getSalesChannel
 }

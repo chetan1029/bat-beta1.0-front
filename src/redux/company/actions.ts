@@ -8,3 +8,5 @@ export * from "./tax/actions";
 export * from "./packingBox/actions";
 export * from "./deliveryTerms/actions";
 export * from "./vendors/actions";
+export * from "./clients/actions";
+export * from "./salesChannels/actions";

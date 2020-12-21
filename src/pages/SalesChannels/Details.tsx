@@ -6,50 +6,53 @@ import { useTranslation } from 'react-i18next';
 
 
 //components
+import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
 import TabMenu from "../../components/TabMenu";
 
 
 //actions
-import { getVendor } from "../../redux/actions";
+import { getSalesChannel } from "../../redux/actions";
 import DisplayDate from "../../components/DisplayDate";
 
 
-interface VendorsProps {
+interface SalesChannelDetailsProps {
     match: any;
 }
-const VendorDetails = (props: VendorsProps) => {
+const SalesChannelDetails = (props: SalesChannelDetailsProps) => {
     const { t } = useTranslation();
 
     const dispatch = useDispatch();
 
-    const { loading, vendorDetails } = useSelector((state: any) => ({
-        loading: state.Company.Vendors.loading,
-        vendorDetails: state.Company.Vendors.vendor
+    const { loading, channel } = useSelector((state: any) => ({
+        loading: state.Company.SalesChannels.loading,
+        channel: state.Company.SalesChannels.channel
     }));
 
     const companyId = props.match.params.companyId;
     const categoryId = props.match.params.categoryId;
-    const vendorId = props.match.params.vendorId;
+    const channelId = props.match.params.channelId;
 
     useEffect(() => {
-        if (companyId && vendorId) {
-            dispatch(getVendor(companyId, vendorId));
+        if (companyId && channelId) {
+            dispatch(getSalesChannel(companyId, channelId));
         }
-    }, [dispatch, vendorId, companyId]);
+    }, [dispatch, channelId, companyId]);
 
 
     const rawAddress = () => {
-        return { __html: vendorDetails['address'] };
+        return { __html: channel['address'] };
     }
 
     const tabMenuItems: Array<any> = [
-        { label: t('Details'), name: 'details', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}` },
-        { label: t('Members'), name: 'members', to: `/settings/${vendorId}/members` },
-        { label: t('Bank'), name: 'banks', to: `/settings/${vendorId}/banks` },
-        { label: t('Location'), name: 'locations', to: `/settings/${vendorId}/locations` },
-        { label: t('Contracts'), name: 'contracts', to: `/settings/${vendorId}/contracts` }
-    ]
+        { label: t('Details'), name: 'details', to: `/sales/${companyId}/channels/${categoryId}/${channelId}` },
+        { label: t('Members'), name: 'members', to: `/settings/${channelId}/members` },
+        { label: t('Bank'), name: 'banks', to: `/settings/${channelId}/banks` },
+        { label: t('Location'), name: 'locations', to: `/settings/${channelId}/locations` },
+        { label: t('Contracts'), name: 'contracts', to: `/settings/${channelId}/contracts` }
+    ];
+
+    const backUrl = `/sales/${companyId}/channels/${categoryId}`;
 
     return (
         <>
@@ -57,7 +60,10 @@ const VendorDetails = (props: VendorsProps) => {
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <h1 className="m-0">{t('Vendor Details')}</h1>
+                            <Link to={backUrl}>
+                                <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
+                            </Link>
+                            <h1 className="m-0">{t('Sales Channel Details')}</h1>
                         </div>
                     </Col>
                 </Row>
@@ -75,26 +81,22 @@ const VendorDetails = (props: VendorsProps) => {
                                     <Col lg={6}>
                                         <Card>
                                             <Card.Body className="">
-                                                {vendorDetails ? <>
+                                                {channel ? <>
                                                     <div className="">
                                                         <Media className='pb-3 px-2'>
                                                             <Media.Body>
-                                                                <h5 className="my-0">{vendorDetails['name']}</h5>
+                                                                <h5 className="my-0">{channel['name']}</h5>
                                                                 <p className="my-0 text-muted" dangerouslySetInnerHTML={rawAddress()}></p>
                                                             </Media.Body>
-                                                            {/* <Link to={`/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/edit`}
-                                                                className='btn btn-primary'>
-                                                                {t('Edit')}
-                                                            </Link> */}
                                                         </Media>
 
                                                         <div className="pt-3 px-2 border-top">
                                                             <Row>
                                                                 <Col>
-                                                                    <span className="text-muted">{t('Created')}: </span> {vendorDetails['create_date'] ? <DisplayDate dateStr={vendorDetails['create_date']} /> : null}
+                                                                    <span className="text-muted">{t('Created')}: </span> {channel['create_date'] ? <DisplayDate dateStr={channel['create_date']} /> : null}
                                                                 </Col>
                                                                 <Col>
-                                                                    <span className="text-muted">{t('Updated')}: </span> {vendorDetails['update_date'] ? <DisplayDate dateStr={vendorDetails['update_date']} /> : null}
+                                                                    <span className="text-muted">{t('Updated')}: </span> {channel['update_date'] ? <DisplayDate dateStr={channel['update_date']} /> : null}
                                                                 </Col>
                                                             </Row>
                                                         </div>
@@ -113,4 +115,4 @@ const VendorDetails = (props: VendorsProps) => {
     );
 }
 
-export default withRouter(VendorDetails);
+export default withRouter(SalesChannelDetails);

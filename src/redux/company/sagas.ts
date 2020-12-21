@@ -3,6 +3,8 @@ import paymentTerms from "./paymentTerms/saga";
 import commonSaga from "./common/saga";
 import membersSaga from "./members/saga";
 import vendorsSaga from "./vendors/saga";
+import clientsSaga from "./clients/saga";
+import salesChannelsSaga from "./salesChannels/saga";
 import bank from "./bank/saga";
 import tax from "./tax/saga";
 import hscode from "./hscode/saga";
@@ -16,6 +18,8 @@ export default function* companySaga() {
         commonSaga(),
         membersSaga(),
         vendorsSaga(),
+        clientsSaga(),
+        salesChannelsSaga(),
         bank(),
         tax(),
         location(),
