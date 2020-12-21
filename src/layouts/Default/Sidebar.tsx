@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from "../../components/Icon";
 import logo from "../../assets/images/logo.svg";
 
-import { getCompanyCategories } from "../../redux/actions";
+import { getVendorCategories, getSalesCategories } from "../../redux/actions";
 
 import { getMenuItems, getMainMenuItems, findAllParent, findMenuItem } from "./Menu";
 import { Collapse } from "react-bootstrap";
@@ -100,8 +100,9 @@ const Sidebar = (props: SideProps) => {
 
   const dispatch = useDispatch();
 
-  const { vendorCategories } = useSelector((state: any) => ({
-    vendorCategories: state.Company.Common.categories && state.Company.Common.categories.results ? state.Company.Common.categories.results : []
+  const { vendorCategories, salesCategories } = useSelector((state: any) => ({
+    vendorCategories: state.Company.Common.vendorCategories && state.Company.Common.vendorCategories.results ? state.Company.Common.vendorCategories.results : [],
+    salesCategories: state.Company.Common.salesCategories && state.Company.Common.salesCategories.results ? state.Company.Common.salesCategories.results : []
   }));
 
   const companyId = props.match.params.companyId;
@@ -110,17 +111,20 @@ const Sidebar = (props: SideProps) => {
 
   useEffect(() => {
     if (!mainSidebar) {
-      dispatch(getCompanyCategories(companyId, { 'vendors_only': true }));
+      dispatch(getVendorCategories(companyId));
+      dispatch(getSalesCategories(companyId));
     }
   }, [dispatch, mainSidebar, companyId]);
 
   const vendorCategoriesStr = JSON.stringify(vendorCategories);
 
+  const salesCategoriesStr = JSON.stringify(salesCategories);
+
   useEffect(() => {
-    if (!mainSidebar && vendorCategories) {
-      setmenus(getMenuItems(companyId, vendorCategories));
+    if (!mainSidebar && vendorCategories && salesCategories) {
+      setmenus(getMenuItems(companyId, vendorCategories, salesCategories));
     }
-  }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr]);
+  }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr, salesCategories, salesCategoriesStr]);
 
 
   const { t } = useTranslation();

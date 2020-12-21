@@ -23,9 +23,9 @@ const VendorInviteForm = ({ onSubmit, values }: VendorInviteFormProps) => {
             ...(values || {})
         },
         validationSchema: Yup.object({
-            vendor_name: Yup.string().required(t('Vendor name is required')),
+            vendor_name: Yup.string().required(t('Name is required')),
             first_name: Yup.string().required(t('First name is required')),
-            last_name: Yup.string().required(t('First name is required')),
+            last_name: Yup.string().required(t('Last name is required')),
             email: Yup.string().email().required(t('Email is required')),
         }),
         onSubmit: values => {
@@ -37,8 +37,8 @@ const VendorInviteForm = ({ onSubmit, values }: VendorInviteFormProps) => {
         <Row>
             <Col>
                 <Form.Group>
-                    <Form.Label>{t("Vendor name")}</Form.Label>
-                    <Form.Control type="text" placeholder={t("Vendor Name")}
+                    <Form.Label>{t("Name")}</Form.Label>
+                    <Form.Control type="text" placeholder={t("Name")}
                         name="vendor_name" id="vendor_name"
                         onChange={validator.handleChange}
                         onBlur={validator.handleBlur}

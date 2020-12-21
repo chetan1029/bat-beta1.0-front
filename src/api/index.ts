@@ -369,6 +369,18 @@ function updateVendor(companyId: number, vendorId: number, data: any) {
 }
 
 
+/* sales channels */
+function getSalesChannels(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/sales-channels/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getSalesChannel(companyId: number, channelId: number,) {
+    const baseUrl = `/companies/${companyId}/sales-channels/${channelId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+
 /* clients */
 function getClients(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/clients/`;
@@ -442,5 +454,6 @@ export {
     getDeliveryTerms,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
     uploadComponentImages, uploadVariationImages, getTagsAndTypes,
-    getClients, getClient, archiveClient
+    getClients, getClient, archiveClient,
+    getSalesChannels, getSalesChannel
 }

@@ -4,6 +4,7 @@ import Common from "./common/reducers";
 import Members from "./members/reducers";
 import Vendors from "./vendors/reducers";
 import Clients from "./clients/reducers";
+import SalesChannels from "./salesChannels/reducers";
 import Bank from "./bank/reducers";
 import Tax from "./tax/reducers";
 import Hscode from "./hscode/reducers";
@@ -16,6 +17,7 @@ export default combineReducers({
     Members,
     Vendors,
     Clients,
+    SalesChannels,
     Common,
     Bank,
     Hscode,
