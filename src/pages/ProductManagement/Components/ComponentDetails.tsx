@@ -8,6 +8,7 @@ import { get, map, find } from 'lodash';
 //components
 import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
+import dummyImage from "../../../assets/images/dummy_image.svg";
 
 //actions
 import { archiveComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
@@ -100,7 +101,8 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                                   <Card.Body className="p-0">
                                     <Row>
                                       <Col lg={2} sm={6} style={{ maxWidth: "14% !important" }}>
-                                        <img className={"product-image"} src={find(product.images, img => !!img.mainImage)}
+                                        <img className={"product-image"}
+											 src={product.images.length > 0 ? find(product.images, img => !!img.mainImage) : dummyImage}
                                              alt={product.title}/>
                                       </Col>
                                       <Col lg={10} sm={6} className="pt-3">
