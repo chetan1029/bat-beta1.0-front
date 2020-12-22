@@ -1,35 +1,30 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Col, Dropdown, DropdownButton, Form, Nav, Row } from "react-bootstrap";
+import { Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { filter, find, findIndex, get, isEqual, map, size } from "lodash";
+import { filter, findIndex, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import {
-	archiveComponent,
-	discontinueComponent,
-	exportComponent,
-	getComponents,
-	getTagsAndTypes
-} from "../../../redux/actions";
+import { archiveComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
 import FilterDropDown from "../../../components/FilterDropDown";
 import Loader from "../../../components/Loader";
-import dummyImage from "../../../assets/images/dummy_image.svg";
+import ListView from "./ListView";
+import GridView from "./GridView";
 
 const FILETYPES: Array<any> = [
 	{ label: "As csv", value: "csv" },
 	{ label: "As xls", value: "xls" },
 ];
 
-const TabMenu = ({ onChange, selectedView }) => {
+const TabMenu = ({ onChange, selectedTab }) => {
 	const { t } = useTranslation();
 
 	return <div className="px-2 pb-2 mb-4">
-		<Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
+		<Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedTab} onSelect={onChange} as='ul'>
 			<Nav.Item as="li">
 				<Nav.Link className="pt-1" eventKey="active">{t('Active')}</Nav.Link>
 			</Nav.Item>
@@ -51,20 +46,22 @@ const Components = (props: ComponentsProps) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 	const companyId = props.match.params.companyId;
-	const [selectedView, setSelectedView] = useState<any>("active");
+	const [selectedTab, setSelectedTab] = useState<any>("active");
+	const [selectedView, setSelectedView] = useState<any>("list");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
+	const limit = selectedView === "list" ? 5 : 8;
 	const [filters, setFilters] = useState<any>({
 		is_component: true,
 		is_active: true,
 		status: "active",
-		limit: 5,
+		limit,
 		offset: 0
 	});
 	const [search, setSearch] = useState<any>({
 		is_component: true,
 		is_active: true,
 		status: "active",
-		limit: 5,
+		limit,
 		offset: 0
 	});
 
@@ -154,8 +151,16 @@ const Components = (props: ComponentsProps) => {
 	};
 
 	const handleOnTabChange = (tab) => {
-		setSelectedView(tab);
-		setFilters({ ...filters, status: tab, limit: 5, offset: 0 });
+		setSelectedTab(tab);
+		setFilters({ ...filters, status: tab, limit, offset: 0 });
+	};
+
+	const onChangeView = () => {
+		if(selectedView === "list") {
+			setSelectedView("grid");
+		} else if(selectedView === "grid") {
+			setSelectedView("list");
+		}
 	};
 
 	return (
@@ -198,10 +203,13 @@ const Components = (props: ComponentsProps) => {
 				</Row>
 			</div>
 
-			<Card className={"data-table"}>
+			<Card>
 				<Card.Body>
 					{loading ? <Loader/> : null}
-					<TabMenu onChange={handleOnTabChange} selectedView={selectedView}/>
+					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab}/>
+					<Link to={"#"} className={"view-icon"} onClick={onChangeView}>
+						<Icon name="components" className="icon icon-xs svg-outline-primary  mr-2"/>
+					</Link>
 					<div className="d-flex align-items-center justify-content-between mb-3">
 						<div className="d-flex align-items-center w-75">
 							<DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
@@ -236,87 +244,23 @@ const Components = (props: ComponentsProps) => {
                                                             icon={"x"} showAsNotification={false}/>}
 					{get(components, "results") && get(components, "results").length > 0 ?
 						<>
-							<Row className={"header-row"}>
-								<div>
-									<Form.Check
-										type="checkbox"
-										id={"checkbox"}
-										label=""
-										onChange={(e: any) => handleOnSelectAllComponents(e)}
-									/>
-								</div>
-								<Col lg={2} className="px-4">
-									{t("Image")}
-								</Col>
-								<Col lg={4} className="p-0">
-									{t("Title")}
-								</Col>
-								<Col lg={2} className="p-0">
-									{t("Status")}
-								</Col>
-								<Col lg={2} className="p-0">
-									{t("SKU")}
-								</Col>
-								<Col lg={1} className="p-0">
-									{t("Action")}
-								</Col>
-							</Row>
-							{map(components.results, (component, i) => (
-								<div className={"body-row"} key={i}>
-									<Row className={"m-0 pb-4"}>
-										<div>
-											<Form.Check
-												type="checkbox"
-												key={component.id}
-												id={`checkbox${component.id}`}
-												label=""
-												checked={!!find(selectedComponents, _component => _component.id === component.id)}
-												onChange={(e: any) => handleOnSelectComponents(e, component)}
-											/>
-										</div>
-										<Col lg={2} className="px-4">
-											<div className={"image"}>
-												<img src={size(component.images) > 0 ? (
-														find(component.images, img => !!img.main_image) ?
-															find(component.images, img => !!img.main_image).image :
-															get(component, "images[0].image")) :
-													dummyImage}
-													 alt={component.title}/>
-											</div>
-										</Col>
-										<Col lg={4} className="p-0">
-											<b>{component.title}</b><br/>
-											<p className="description text-muted">{component.description}</p>
-										</Col>
-										<Col lg={2} className="p-0">
-											<span className="active-label btn btn-outline-primary">
-												{component.status && t(component.status.name)}
-											</span>
-										</Col>
-										<Col lg={2} className="p-0">
-											{component.sku}
-										</Col>
-										<Col lg={1} className="p-0">
-											<Link to={"#"}
-												  onClick={() => dispatch(archiveComponent(companyId, component.id, component, filters))}>
-												<Icon name="archive"
-													  className="mx-1 svg-outline-primary cursor-pointer"/>
-											</Link>
-										</Col>
-									</Row>
-									<Row className={"extra-info"}>
-										<div className="p-0">
-											{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
-												<span key={i} className={"tags"}>{tag}</span>
-											))}
-										</div>
-										<Link className="product-detail btn btn-outline-primary"
-											  to={`/product-management/${companyId}/components/${component.id}`}>
-											{t("Component Details")}
-										</Link>
-									</Row>
-								</div>
-							))}
+							{selectedView === "list" ?
+								<ListView
+									companyId={companyId}
+									components={components}
+									selectedComponents={selectedComponents}
+									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
+									onSelectComponent={handleOnSelectComponents}
+									onSelectAllComponents={handleOnSelectAllComponents}
+								/> :
+								<GridView
+									companyId={companyId}
+									components={components}
+									selectedComponents={selectedComponents}
+									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
+									onSelectComponent={handleOnSelectComponents}
+								/>
+							}
 							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
 						</> :
 						get(components, "results") && get(components, "results").length === 0 &&
