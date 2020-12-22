@@ -37,6 +37,11 @@ export const archiveComponent = (companyId: string | number, componentId: number
     payload: { companyId, componentId, data, filters }
 });
 
+export const discontinueComponent = (companyId: string | number, componentId: number | string, data: any, filters:any = {}) => ({
+    type: ComponentsTypes.DISCONTINUE_COMPONENT,
+    payload: { companyId, componentId, data, filters }
+});
+
 export const getComponentDetails = (companyId: string | number, componentId: number | string) => ({
     type: ComponentsTypes.GET_COMPONENT,
     payload: { companyId, componentId }
@@ -59,4 +64,9 @@ export const resetComponents = () => ({
 export const getVariationDetails = (companyId: string | number, variationId: number | string) => ({
     type: ComponentsTypes.GET_VARIATION,
     payload: { companyId, variationId }
+});
+
+export const editVariation = (companyId: string | number, variationId: number | string, data: any, images: any) => ({
+    type: ComponentsTypes.EDIT_VARIATION,
+    payload: { companyId, variationId, data, images }
 });

@@ -13,7 +13,10 @@ import {
 	getTagsAndTypes,
 	uploadComponentImages,
 	uploadVariationImages,
-	getVariation
+	getVariation,
+	editVariation,
+	deleteVariationImages,
+	discontinueComponent
 } from "../../../api";
 
 import { componentsApiResponseError, componentsApiResponseSuccess } from "./actions";
@@ -61,7 +64,7 @@ function* createNewComponent({ payload: { companyId, data, images } }: any) {
 			const variationIds: any[] = map(get(response, "data.products"), product => product.id);
 			if (size(variationIds) > 0 && size(images.variationImages) > 0) {
 				yield all(images.variationImages.map((file, i) =>
-					!isEmpty(file) && call(uploadVariationImages, companyId, variationIds[i], [file])
+					!isEmpty(file) && call(uploadVariationImages, companyId, variationIds[i], { main_image: file })
 				));
 			}
 		}
@@ -102,10 +105,24 @@ function* archiveComponentById({ payload: { companyId, componentId, data, filter
 	try {
 		const response = yield call(archiveComponent, companyId, componentId, data);
 		const res = yield call(getComponents, companyId, filters);
-		yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT, response.data));
 		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT, response.data));
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT, error));
+	}
+}
+
+/**
+ * discontinue component
+ */
+function* discontinueComponentById({ payload: { companyId, componentId, data, filters } }: any) {
+	try {
+		const response = yield call(discontinueComponent, companyId, componentId, data);
+		const res = yield call(getComponents, companyId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.DISCONTINUE_COMPONENT, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.DISCONTINUE_COMPONENT, error));
 	}
 }
 
@@ -153,6 +170,26 @@ function* getVariationById({ payload: { companyId, variationId } }: any) {
 	}
 }
 
+/**
+ * edit the component
+ */
+function* editVariationById({ payload: { companyId, variationId, data, images } }: any) {
+	try {
+		const response = yield call(editVariation, companyId, variationId, data);
+		if (size(images.deletedImages) > 0) {
+			yield call(deleteVariationImages, companyId, variationId, images.deletedImages.toString());
+		}
+		if (size(images.newImages) > 0) {
+			let imagesData:any = {};
+			forEach(images.newImages, (image, i) => imagesData[i === 0 ? "main_image" : i]= image);
+			yield call(uploadVariationImages, companyId, variationId, imagesData);
+		}
+		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_VARIATION, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.EDIT_VARIATION, error));
+	}
+}
+
 export function* watchGetComponents() {
 	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
@@ -177,6 +214,10 @@ export function* watchArchiveComponent() {
 	yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT, archiveComponentById);
 }
 
+export function* watchDiscontinueComponent() {
+	yield takeEvery(ComponentsTypes.DISCONTINUE_COMPONENT, discontinueComponentById);
+}
+
 export function* watchGetTagsAndTypes() {
 	yield takeEvery(ComponentsTypes.GET_TAGS_TYPES, getTagsAndTypesById);
 }
@@ -187,6 +228,10 @@ export function* watchExportComponent() {
 
 export function* watchGetVariation() {
 	yield takeEvery(ComponentsTypes.GET_VARIATION, getVariationById);
+}
+
+export function* watchEditVariation() {
+	yield takeEvery(ComponentsTypes.EDIT_VARIATION, editVariationById);
 }
 
 
@@ -201,6 +246,8 @@ function* componentsSaga() {
 		fork(watchGetTagsAndTypes),
 		fork(watchExportComponent),
 		fork(watchGetVariation),
+		fork(watchEditVariation),
+		fork(watchDiscontinueComponent),
 	]);
 }
 

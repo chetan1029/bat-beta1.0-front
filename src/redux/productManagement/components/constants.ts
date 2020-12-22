@@ -10,8 +10,10 @@ export enum ComponentsTypes {
     EDIT_COMPONENT = '@@productManagement/components/EDIT_COMPONENT',
     DELETE_COMPONENT = '@@productManagement/components/DELETE_COMPONENT',
     ARCHIVE_COMPONENT = '@@productManagement/components/ARCHIVE_COMPONENT',
+    DISCONTINUE_COMPONENT = '@@productManagement/components/DISCONTINUE_COMPONENT',
     GET_TAGS_TYPES = '@@productManagement/components/GET_TAGS_TYPES',
     EXPORT_COMPONENT = '@@productManagement/components/EXPORT_COMPONENT',
+    EDIT_VARIATION = '@@productManagement/components/EDIT_VARIATION',
 
     RESET = '@@productManagement/components/RESET',
 }

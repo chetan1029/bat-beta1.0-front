@@ -11,7 +11,6 @@ interface VariationDetailsProps {
 	inputRef?: any;
 	validator?: any;
 	errors?: any;
-	isSubmit?: boolean;
 	label?: string;
 	onSetVariationOptions: (any, boolean) => void;
 }
@@ -20,7 +19,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
 	const { t } = useTranslation();
 	const prevVariationsRef = useRef();
 	const prevHasMultiVariationsRef = useRef();
-	const { label, onSetVariationOptions, validator, isSubmit, inputRef } = props;
+	const { label, onSetVariationOptions, validator, inputRef } = props;
 	const [hasMultiVariations, setHasMultiVariations] = useState<any>(false);
 	const [variations, setVariations] = useState<any>([]);
 	const [variationOptions, setVariationOptions] = useState<any>([{
@@ -63,10 +62,10 @@ const VariationDetails = (props: VariationDetailsProps) => {
 			}
 		});
 		setErrors(error);
-	}
+	};
 
 	useEffect(() => {
-		inputRef.current = { errors, variationOptions, onSubmit }
+		inputRef.current = { errors, variationOptions, onSubmit, hasMultiVariations };
 	}, [errors, variationOptions]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
@@ -267,7 +266,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
 								  <Form.Label htmlFor="usr">{`${t("Name ")}${index + 1}`}</Form.Label>
 								  <Form.Control
 									  type="text"
-									  className={classNames("form-control", get(errors, `variationOptions[${index}].name`) && "border-danger")}
+									  className={classNames("form-control", get(errors, `variations[${index}].name`) && "border-danger")}
 									  id={`name${index}`}
 									  name={"name"}
 									  value={variation.name}
