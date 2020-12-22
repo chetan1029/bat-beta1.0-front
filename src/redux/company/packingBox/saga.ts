@@ -41,9 +41,9 @@ function* createPackingBox({ payload: { companyId, params } }: any) {
 /*
 update payment term
 */
-function* editPackingBox({ payload: { companyId, paymentTermId, params } }: any) {
+function* editPackingBox({ payload: { companyId, packingBoxId, params } }: any) {
     try {
-        const response = yield call(updatePackingBox, companyId, paymentTermId, params);
+        const response = yield call(updatePackingBox, companyId, packingBoxId, params);
         yield put(packingBoxApiResponseSuccess(PackingBoxTypes.EDIT_PACKING_BOX, response.data));
     } catch (error) {
         yield put(packingBoxApiResponseError(PackingBoxTypes.EDIT_PACKING_BOX, error));
@@ -53,9 +53,9 @@ function* editPackingBox({ payload: { companyId, paymentTermId, params } }: any)
 /*
 delete payment term
 */
-function* deletePackingBox({ payload: { companyId, paymentTermId } }: any) {
+function* deletePackingBox({ payload: { companyId, packingBoxId } }: any) {
     try {
-        const response = yield call(deletePackingBoxApi, companyId, paymentTermId);
+        const response = yield call(deletePackingBoxApi, companyId, packingBoxId);
         yield put(packingBoxApiResponseSuccess(PackingBoxTypes.DELETE_PACKING_BOX, response.data));
 
     } catch (error) {
@@ -66,9 +66,9 @@ function* deletePackingBox({ payload: { companyId, paymentTermId } }: any) {
 /*
 archive
 */
-function* archivePackingBox({ payload: { companyId, paymentTermId, params } }: any) {
+function* archivePackingBox({ payload: { companyId, packingBoxId } }: any) {
     try {
-        const response = yield call(archivePackingBoxApi, companyId, paymentTermId, params);
+        const response = yield call(archivePackingBoxApi, companyId, packingBoxId);
         yield put(packingBoxApiResponseSuccess(PackingBoxTypes.ARCHIVE_PACKING_BOX, response.data));
 
     } catch (error) {
@@ -79,9 +79,9 @@ function* archivePackingBox({ payload: { companyId, paymentTermId, params } }: a
 /*
 restore
 */
-function* restorePackingBox({ payload: { companyId, paymentTermId, params } }: any) {
+function* restorePackingBox({ payload: { companyId, packingBoxId, params } }: any) {
     try {
-        const response = yield call(restorePackingBoxApi, companyId, paymentTermId, params);
+        const response = yield call(restorePackingBoxApi, companyId, packingBoxId, params);
         yield put(packingBoxApiResponseSuccess(PackingBoxTypes.RESTORE_PACKING_BOX, response.data));
 
     } catch (error) {

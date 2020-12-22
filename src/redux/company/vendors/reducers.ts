@@ -38,6 +38,13 @@ const Vendors = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case VendorsTypes.INVITE_VENDOR: {
+                    return {
+                        ...state,
+                        isVendorInvited: true,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -75,6 +82,14 @@ const Vendors = (state = INIT_STATE, action: any) => {
                         isVendorEdited: false
                     }
                 }
+                case VendorsTypes.INVITE_VENDOR: {
+                    return {
+                        ...state,
+                        inviteVendorError: action.payload.error,
+                        isVendorInvited: false,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -87,7 +102,8 @@ const Vendors = (state = INIT_STATE, action: any) => {
 
         case VendorsTypes.ADD_VENDOR:
         case VendorsTypes.EDIT_VENDOR:
-            return { ...state, isVendorAdded: false, isVendorEdited: false, loading: true };
+        case VendorsTypes.INVITE_VENDOR:
+            return { ...state, isVendorAdded: false, isVendorEdited: false, isVendorInvited: false, loading: true };
 
         case VendorsTypes.RESET: {
             return {
@@ -96,7 +112,9 @@ const Vendors = (state = INIT_STATE, action: any) => {
                 isVendorAdded: false,
                 isVendorEdited: false,
                 createVendorError: null,
-                editVendorError: null
+                editVendorError: null,
+                isVendorInvited: false,
+                inviteVendorError: null
             }
         }
         default: return { ...state };

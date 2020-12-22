@@ -2,22 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Button, Form } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import classNames from "classnames";
 
 //components
 import Loader from "../../components/Loader";
+import { LANGS, LanguageDropdown } from "../../components/LanguageDropdown";
 import CountriesDropdown from "../../components/CountriesDropdown";
 import TimezoneDropdown from "../../components/TimezoneDropdown";
 import CurrenciesDropdown from "../../components/CurrenciesDropdown";
+import WeightUnitDropdown from "../../components/WeightUnitDropdown";
+import UnitSystemDropdown from "../../components/UnitSystemDropdown";
 import Icon from "../../components/Icon";
 import MessageAlert from "../../components/MessageAlert";
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
 import { editCompany, getCompany } from "../../redux/actions";
 
-import { COUNTRIES, CURRENCIES } from "../../constants";
+import { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS } from "../../constants";
 
 
 interface EditCompanyProps {
@@ -55,10 +59,14 @@ const EditCompany = (props: EditCompanyProps) => {
             city: '',
             region: '',
             email: '',
+            organization_number: '',
             phone_number: '', ...company,
             country: company && company['country'] ? { label: COUNTRIES[company['country']], 'value': company['country'] } : null,
             timezone: company && company['time_zone'] ? { label: company['time_zone'], value: company['time_zone'] } : null,
-            currency: company && company['currency'] ? { label: CURRENCIES['currency'], value: company['currency'] } : null
+            currency: company && company['currency'] ? { label: CURRENCIES[company['currency']], value: company['currency'] } : null,
+            language: company && company['language'] ? { label: LANGS[company['language']], value: company['language'] } : null,
+            weight_unit: company && company['weight_unit'] ? { label: WEIGHTS[company['weight_unit']], value: company['weight_unit'] } : null,
+            unit_system: company && company['unit_system'] ? { label: UNIT_SYSTEMS[company['unit_system']], value: company['unit_system'] } : null,
         },
         validationSchema: Yup.object({
             name: Yup.string().required(t('Company name is required')),
@@ -82,8 +90,22 @@ const EditCompany = (props: EditCompanyProps) => {
                 newData['currency'] = values['currency']['value'];
             }
 
+            if (values['language']) {
+                newData['language'] = values['language']['value'];
+            }
+
+            if (values['weight_unit']) {
+                newData['weight_unit'] = values['weight_unit']['value'];
+            }
+
+            if (values['unit_system']) {
+                newData['unit_system'] = values['unit_system']['value'];
+            }
+
             if (logoFile) {
                 newData['logo'] = logoFile;
+            } else {
+                delete newData['logo'];
             }
 
             if (licenseFile) {
@@ -118,9 +140,9 @@ const EditCompany = (props: EditCompanyProps) => {
             <Row className="align-items-center">
                 <Col lg={6}>
                     <div className="d-flex align-items-center">
-                        {/* <Link to={`/companies`}>
+                        <Link to={`/settings/${companyId}`}>
                             <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
-                        </Link> */}
+                        </Link>
                         <h1 className="m-0">{t('Edit Company Information')}</h1>
                     </div>
                 </Col>
@@ -177,12 +199,31 @@ const EditCompany = (props: EditCompanyProps) => {
                                                     <input type="file" onChange={onLogoFile} accept="image/x-png,image/gif,image/jpeg" />
                                                 </div>
                                             </div>
-                                        </Form.Group>                                        
+                                        </Form.Group>
                                     </Col>
                                 </Row>
 
                                 <Row>
-                                    <Col md={12}>
+                                    <Col md={6}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Organization Number')}</Form.Label>
+                                            <Form.Control type="text" placeholder={t("Organization Number")}
+                                                name="organization_number" id="organization_number"
+                                                onChange={validator.handleChange}
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.organization_number}
+                                                isInvalid={validator.touched.organization_number && validator.errors && validator.errors.organization_number ? true : false} />
+
+
+                                            {validator.touched.organization_number && validator.errors.organization_number ? (
+                                                <Form.Control.Feedback type="invalid">{validator.errors.organization_number}</Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row>
+                                    <Col md={6}>
                                         <Form.Group>
                                             <Form.Label>{t('Address')}</Form.Label>
                                             <Form.Control type="text" placeholder={t("Address")}
@@ -198,9 +239,6 @@ const EditCompany = (props: EditCompanyProps) => {
                                             ) : null}
                                         </Form.Group>
                                     </Col>
-                                </Row>
-
-                                <Row>
                                     <Col md={6}>
                                         <Form.Group>
                                             <Form.Label>{t('Apartment, suite, etc.')}</Form.Label>
@@ -217,7 +255,42 @@ const EditCompany = (props: EditCompanyProps) => {
                                             ) : null}
                                         </Form.Group>
                                     </Col>
-                                    <Col md={6}>
+                                </Row>
+
+                                <Row>
+                                    <Col md={4}>
+                                        <Form.Group>
+                                            <Form.Label>{t('City')}</Form.Label>
+                                            <Form.Control type="text" placeholder={t("City")}
+                                                name="city" id="city"
+                                                onChange={validator.handleChange}
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.city}
+                                                isInvalid={validator.touched.city && validator.errors && validator.errors.city ? true : false} />
+
+
+                                            {validator.touched.city && validator.errors.city ? (
+                                                <Form.Control.Feedback type="invalid">{validator.errors.city}</Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Region')}</Form.Label>
+                                            <Form.Control type="text" placeholder={t("Region")}
+                                                name="region" id="region"
+                                                onChange={validator.handleChange}
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.region}
+                                                isInvalid={validator.touched.region && validator.errors && validator.errors.region ? true : false} />
+
+
+                                            {validator.touched.region && validator.errors.region ? (
+                                                <Form.Control.Feedback type="invalid">{validator.errors.region}</Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={4}>
                                         <Form.Group>
                                             <Form.Label>{t('Country')}</Form.Label>
                                             <CountriesDropdown name='Country' placeholder={t('Country')} className={validator.touched.country && validator.errors.country ? "is-invalid" : ""}
@@ -285,16 +358,66 @@ const EditCompany = (props: EditCompanyProps) => {
                                     </Col>
                                     <Col md={6}>
                                         <Form.Group>
-                                            <Form.Label>{t('Cuurency')}</Form.Label>
+                                            <Form.Label>{t('Currency')}</Form.Label>
                                             <CurrenciesDropdown name='currency' placeholder={t('Currency')}
                                                 className={validator.touched.currency && validator.errors.currency ? "is-invalid" : ""}
                                                 onChange={(value) => validator.setFieldValue('currency', value)}
-                                                value={validator.values.currency} 
+                                                value={validator.values.currency}
                                                 isSingle={true} />
 
                                             {validator.touched.currency && validator.errors.currency ? (
                                                 <Form.Control.Feedback type="invalid" className="d-block">
                                                     {validator.errors.currency}
+                                                </Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+
+                                <Row>
+                                    <Col lg={6}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Language')}</Form.Label>
+                                            <LanguageDropdown name='language' placeholder={t('Language')}
+                                                className={validator.touched.language && validator.errors.language ? "is-invalid" : ""}
+                                                onChange={(value) => validator.setFieldValue('language', value)}
+                                                value={validator.values.language} />
+
+                                            {validator.touched.language && validator.errors.language ? (
+                                                <Form.Control.Feedback type="invalid" className="d-block">
+                                                    {validator.errors.language}
+                                                </Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={3}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Unit System')}</Form.Label>
+                                            <UnitSystemDropdown name='unit_system' placeholder={t('Unit System')}
+                                                className={validator.touched.unit_system && validator.errors.unit_system ? "is-invalid" : ""}
+                                                onChange={(value) => validator.setFieldValue('unit_system', value)}
+                                                value={validator.values.unit_system}
+                                            />
+
+                                            {validator.touched.unit_system && validator.errors.unit_system ? (
+                                                <Form.Control.Feedback type="invalid" className="d-block">
+                                                    {validator.errors.unit_system}
+                                                </Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
+                                    </Col>
+                                    <Col md={3}>
+                                        <Form.Group>
+                                            <Form.Label>{t('Weight Unit')}</Form.Label>
+                                            <WeightUnitDropdown name='weight_unit' placeholder={t('Weight Unit')}
+                                                className={validator.touched.weight_unit && validator.errors.weight_unit ? "is-invalid" : ""}
+                                                onChange={(value) => validator.setFieldValue('weight_unit', value)}
+                                                value={validator.values.weight_unit}
+                                            />
+
+                                            {validator.touched.weight_unit && validator.errors.weight_unit ? (
+                                                <Form.Control.Feedback type="invalid" className="d-block">
+                                                    {validator.errors.weight_unit}
                                                 </Form.Control.Feedback>
                                             ) : null}
                                         </Form.Group>
@@ -307,7 +430,7 @@ const EditCompany = (props: EditCompanyProps) => {
                                             <Form.Label>{t('License File')}</Form.Label>
                                             <Form.Control type="file" name="license_file" id="license_file"
                                                 onChange={onLicenseFile} custom />
-                                            
+
                                             {company && company['license_file'] ? <p className="mb-0">
                                                 {t('Current File')}: <a href={company['license_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View file')}</a>
                                             </p> : null}

@@ -9,4 +9,7 @@ export enum CommonTypes {
     EDIT_COMPANY = '@@company/common/EDIT_COMPANY',
 
     GET_CATEGORIES = '@@company/common/GET_CATEGORIES',
+
+    GET_VENDOR_CATEGORIES = '@@company/common/GET_VENDOR_CATEGORIES',
+    GET_SALES_CATEGORIES = '@@company/common/GET_SALES_CATEGORIES',
 }

@@ -8,9 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Icon from "../../components/Icon";
 import logo from "../../assets/images/logo.svg";
 
-import { getCompanyCategories } from "../../redux/actions";
+import { getVendorCategories, getSalesCategories } from "../../redux/actions";
 
-import { getMenuItems, mainMenuItems, findAllParent, findMenuItem } from "./Menu";
+import { getMenuItems, getMainMenuItems, findAllParent, findMenuItem } from "./Menu";
 import { Collapse } from "react-bootstrap";
 
 
@@ -100,29 +100,31 @@ const Sidebar = (props: SideProps) => {
 
   const dispatch = useDispatch();
 
-  const { vendorCategories } = useSelector((state: any) => ({
-    vendorCategories: state.Company.Common.categories && state.Company.Common.categories.results ? state.Company.Common.categories.results : []
+  const { vendorCategories, salesCategories } = useSelector((state: any) => ({
+    vendorCategories: state.Company.Common.vendorCategories && state.Company.Common.vendorCategories.results ? state.Company.Common.vendorCategories.results : [],
+    salesCategories: state.Company.Common.salesCategories && state.Company.Common.salesCategories.results ? state.Company.Common.salesCategories.results : []
   }));
-
-  const [menus, setmenus] = useState<any>();
 
   const companyId = props.match.params.companyId;
 
+  const [menus, setmenus] = useState<any>(getMainMenuItems(companyId));
+
   useEffect(() => {
     if (!mainSidebar) {
-      dispatch(getCompanyCategories(companyId, { 'vendors_only': true }));
+      dispatch(getVendorCategories(companyId));
+      dispatch(getSalesCategories(companyId));
     }
   }, [dispatch, mainSidebar, companyId]);
 
   const vendorCategoriesStr = JSON.stringify(vendorCategories);
 
+  const salesCategoriesStr = JSON.stringify(salesCategories);
+
   useEffect(() => {
-    if (!mainSidebar && vendorCategories) {
-      setmenus(getMenuItems(companyId, vendorCategories));
-    } else {
-      setmenus(mainMenuItems);
+    if (!mainSidebar && vendorCategories && salesCategories) {
+      setmenus(getMenuItems(companyId, vendorCategories, salesCategories));
     }
-  }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr]);
+  }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr, salesCategories, salesCategoriesStr]);
 
 
   const { t } = useTranslation();
@@ -199,12 +201,12 @@ const Sidebar = (props: SideProps) => {
           </div>
 
 
-          {!mainSidebar ? <div className="bottom-link">
+          <div className="bottom-link">
             <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center selected_link">
               <Icon name='settings' />
               <p>{t('Settings')}</p>
             </Link>
-          </div> : null}
+          </div>
         </div>
       </div>
     </React.Fragment>

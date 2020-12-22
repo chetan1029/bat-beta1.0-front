@@ -10,7 +10,7 @@ export interface MenuItemProp {
 }
 
 
-const getMenuItems = (companyId: string, vendorCategories: any) => {
+const getMenuItems = (companyId: string, vendorCategories: any, salesCategories: any) => {
 
     let menuItems: Array<MenuItemProp> = [
         { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
@@ -52,19 +52,21 @@ const getMenuItems = (companyId: string, vendorCategories: any) => {
             ]
         });
 
+    const salesCats: Array<any> = [];
+
+    for (const category of salesCategories) {
+        salesCats.push(
+            { name: category['name'], url: `/sales/${companyId}/channels/${category['id']}`, icon: 'circle', label: category['name'], id: `salesChanels-${category['name']}`, parentId: 'salesChanels' },
+        );
+    }
     menuItems = [...menuItems, ...[{
         name: 'Sales', url: '/sales', icon: 'sales', label: 'Sales', id: 'sales',
         children: [
             { name: 'Dashboard', url: '/sales/dashboard', icon: 'box-2', label: 'Dashboard', id: 'salesDs', parentId: 'sales' },
             { name: 'CostControl', url: '/sales/cost-control', icon: 'cost_control', label: 'Cost Control', id: 'salesCC', parentId: 'sales' },
             {
-                name: 'SalesChannel', url: '/sales/sales_channel', icon: 'shop', label: 'SalesChannel', id: 'salesChanels', parentId: 'sales',
-                children: [
-                    { name: 'Amazon', url: '/sales/amazon', icon: 'circle', label: 'Amazon', id: 'salesChanelsAZ', parentId: 'salesChanels' },
-                    { name: 'Distributor', url: '/sales/circle', icon: 'circle', label: 'Distributor', id: 'salesChanelsDist', parentId: 'salesChanels' },
-                    { name: 'Retail', url: '/sales/retail', icon: 'circle', label: 'Retail', id: 'salesChanelsRT', parentId: 'salesChanels' },
-                    { name: 'Website', url: '/sales/website', icon: 'circle', label: 'Website', id: 'salesChanelsWB', parentId: 'salesChanels' }
-                ]
+                name: 'SalesChannel', url: `/sales/${companyId}/channels`, icon: 'shop', label: 'Sales Channels', id: 'salesChanels', parentId: 'sales',
+                children: salesCats
             },
             {
                 name: 'Optimization', url: '/sales/optimization', icon: 'optimization', label: 'Optimization', id: 'salesOpt', parentId: 'sales',
@@ -88,10 +90,17 @@ const getMenuItems = (companyId: string, vendorCategories: any) => {
 
 
 
-const mainMenuItems: Array<MenuItemProp> = [
-    { name: 'My Profile', url: '/profile/general', icon: 'user', label: 'My Profile', id: 'myProfile' },
-    // { name: 'My Company', url: '/companies', icon: 'bag', label: 'Companies', id: 'myCompanies' },
-];
+const getMainMenuItems = (companyId: number | string) => {
+    const mainMenuItems: Array<MenuItemProp> = [
+        { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
+        { name: 'My Profile', url: `/profile/${companyId}/general`, icon: 'user', label: 'My Profile', id: 'myProfile' },
+        { name: 'My Clients', url: `/clients/${companyId}`, icon: 'bag', label: 'My Clients', id: 'myClients' },
+    ];
+
+    return mainMenuItems;
+}
+
+
 
 const findAllParent = (menuItems: Array<any>, menuItem: any) => {
     let parents: Array<any> = [];
@@ -118,4 +127,4 @@ const findMenuItem = (menuItems: Array<any>, menuItemId: any) => {
     return null;
 }
 
-export { getMenuItems, mainMenuItems, findAllParent, findMenuItem };
+export { getMenuItems, getMainMenuItems, findAllParent, findMenuItem };

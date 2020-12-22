@@ -320,6 +320,16 @@ function resendCompanyInvite(companyId: number | string, inviteId: number | stri
     return api.create(`${baseUrl}`, {});
 }
 
+function getCompanyPartners(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/partners/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function archiveCompanyPartner(companyId: number, partnerId: number) {
+    const baseUrl = `/companies/${companyId}/partners/${partnerId}/archive/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 
 /* invitations */
 function getInvitataions(params?: any) {
@@ -358,6 +368,34 @@ function updateVendor(companyId: number, vendorId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+
+/* sales channels */
+function getSalesChannels(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/sales-channels/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getSalesChannel(companyId: number, channelId: number,) {
+    const baseUrl = `/companies/${companyId}/sales-channels/${channelId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+
+/* clients */
+function getClients(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/clients/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getClient(companyId: number, clientId: number,) {
+    const baseUrl = `/companies/${companyId}/clients/${clientId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function archiveClient(companyId: number, clientId: number,) {
+    const baseUrl = `/companies/${companyId}/clients/${clientId}/archive/`;
+    return api.create(`${baseUrl}`, {});
+}
 
 /* components */
 const componentUrl = (companyId) => `/companies/${companyId}/products/`;
@@ -400,7 +438,7 @@ function uploadVariationImages(companyId: number, variationId: number | string, 
 }
 
 function getTagsAndTypes(companyId: number) {
-    return api.get(`${componentUrl(companyId)}tags-types/` );
+    return api.get(`${componentUrl(companyId)}tags-types/`);
 }
 
 function exportCSVFile(companyId: number) {
@@ -433,8 +471,8 @@ export {
     getInvitataions, acceptInvite, rejectInvite,
     getCompaniesList, createCompany, editCompany, getCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
-    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
-    getVendors, getVendor, createVendor, updateVendor,
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite, getCompanyPartners,
+    getVendors, getVendor, createVendor, updateVendor, archiveCompanyPartner,
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
     getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
     getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,
@@ -443,5 +481,7 @@ export {
     getDeliveryTerms,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
     uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile,
-    getVariation, editVariation, deleteVariationImages, discontinueComponent
+    getVariation, editVariation, deleteVariationImages, discontinueComponent,
+    getClients, getClient, archiveClient,
+    getSalesChannels, getSalesChannel
 }

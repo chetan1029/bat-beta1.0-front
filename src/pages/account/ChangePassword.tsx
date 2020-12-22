@@ -3,6 +3,7 @@ import { Row, Col, Card, Form, Media, Button } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
+import { withRouter } from "react-router-dom";
 import * as Yup from 'yup';
 
 //components
@@ -14,11 +15,13 @@ import TabMenu from "../../components/TabMenu";
 import { changePassword } from "../../redux/actions";
 
 interface ChangePasswordProps {
-
+    match: any
 }
 
 const ChangePassword = (props: ChangePasswordProps) => {
     const { t } = useTranslation();
+
+    const companyId = props.match.params.companyId;
 
     const dispatch = useDispatch();
 
@@ -30,8 +33,8 @@ const ChangePassword = (props: ChangePasswordProps) => {
 
 
     const menuItems: Array<any> = [
-        { label: t('General info'), name: 'general', to: '/profile/general' },
-        { label: t('Change password'), name: 'change-password', to: '/profile/change-password' }
+        { label: t('General info'), name: 'general', to: `/profile/${companyId}/general` },
+        { label: t('Change password'), name: 'change-password', to: `/profile/${companyId}/change-password` }
     ];
 
     const validator = useFormik({
@@ -147,4 +150,4 @@ const ChangePassword = (props: ChangePasswordProps) => {
     </>;
 }
 
-export default ChangePassword;
+export default withRouter(ChangePassword);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Form, Media, Button } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
 import { useFormik } from 'formik';
@@ -23,12 +24,14 @@ import { updateProfile, updateProfilePicture } from "../../redux/actions";
 
 
 interface ProfileProp {
-
+    match: any
 }
 
 const Profile = (props: ProfileProp) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+
+    const companyId = props.match.params.companyId;
 
     const { user } = useUser();
 
@@ -46,8 +49,8 @@ const Profile = (props: ProfileProp) => {
     }));
 
     const menuItems: Array<any> = [
-        { label: t('General info'), name: 'general', to: '/profile/general' },
-        { label: t('Change password'), name: 'change-password', to: '/profile/change-password' }
+        { label: t('General info'), name: 'general', to: `/profile/${companyId}/general` },
+        { label: t('Change password'), name: 'change-password', to: `/profile/${companyId}/change-password` }
     ];
 
     const fullName = profile ? profile['first_name'] + " " + profile['last_name'] : "";
@@ -268,4 +271,4 @@ const Profile = (props: ProfileProp) => {
     </>;
 }
 
-export default Profile;
+export default withRouter(Profile);
