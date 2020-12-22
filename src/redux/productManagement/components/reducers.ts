@@ -21,6 +21,7 @@ const Components = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         component: action.payload.data,
+                        loading: false,
                     }
                 }
                 case ComponentsTypes.CREATE_COMPONENT: {
@@ -43,6 +44,19 @@ const Components = (state = INIT_STATE, action: any) => {
                         ...state,
                         isComponentDeleted: true,
                         loading: false
+                    }
+                }
+                case ComponentsTypes.ARCHIVE_COMPONENT: {
+                    return {
+                        ...state,
+                        isComponentArchived: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.GET_TAGS_TYPES: {
+                    return {
+                        ...state,
+                        tagsAndTypes: action.payload.data,
                     }
                 }
                 default:
@@ -89,12 +103,23 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.ARCHIVE_COMPONENT: {
+                    return {
+                        ...state,
+                        archiveComponentError: action.payload.error,
+                        isComponentArchived: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
 
         case ComponentsTypes.GET_COMPONENTS:
             return { ...state, isComponentsFetched: false, loading: true };
+
+        case ComponentsTypes.GET_COMPONENT:
+            return { ...state, loading: true };
 
         case ComponentsTypes.CREATE_COMPONENT:
             return { ...state, isComponentCreated: false, loading: true };
@@ -105,14 +130,21 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.DELETE_COMPONENT:
             return { ...state, isComponentDeleted: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
+        case ComponentsTypes.ARCHIVE_COMPONENT:
+            return { ...state, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
+
 
         case ComponentsTypes.RESET: {
             return {
                 ...state,
+                component: null,
+                createComponentError: null,
                 editComponentError: null,
+                archiveComponentError: null,
                 isComponentCreated: false,
                 isComponentEdited: false,
-                isComponentDeleted: false
+                isComponentDeleted: false,
+                isComponentArchived: false,
             }
         }
         default: return { ...state };

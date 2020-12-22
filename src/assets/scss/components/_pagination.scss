@@ -1,0 +1,43 @@
+.react-paginate {
+  margin-top: 2em;
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    cursor: pointer;
+
+    .previous, .next {
+      .pagination__link {
+        padding: 2px;
+        border: 1px solid $primary;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  .pagination a {
+    padding: 4px 12px;
+    margin: 4px 8px;
+    border-radius: 5px;
+    outline: none;
+    font-size: 17px;
+  }
+
+  .pagination__link {
+    font-weight: bold;
+    outline: none;
+  }
+
+  .pagination__link--active a {
+    color: $white;
+    background: $primary;
+  }
+
+  .pagination__link--disabled a {
+    opacity: 0.5;
+    cursor: not-allowed ;
+    i {
+      cursor: not-allowed ;
+    }
+  }
+}

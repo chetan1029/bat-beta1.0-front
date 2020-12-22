@@ -17,14 +17,34 @@ export const getCompanies = (filters?: any) => ({
     payload: filters
 });
 
+export const getCompany = (companyId: string | number) => ({
+    type: CommonTypes.GET_COMPANY,
+    payload: companyId
+});
 
 export const createCompany = (data: any) => ({
     type: CommonTypes.CREATE_COMPANY,
     payload: data
 });
 
+export const editCompany = (companyId: string | number, data: any) => ({
+    type: CommonTypes.EDIT_COMPANY,
+    payload: { companyId, data }
+});
+
 
 export const getCompanyCategories = (companyId: string | number, filters?: any) => ({
     type: CommonTypes.GET_CATEGORIES,
     payload: { companyId, filters }
+});
+
+export const getVendorCategories = (companyId: string | number) => ({
+    type: CommonTypes.GET_VENDOR_CATEGORIES,
+    payload: { companyId }
+});
+
+
+export const getSalesCategories = (companyId: string | number) => ({
+    type: CommonTypes.GET_SALES_CATEGORIES,
+    payload: { companyId }
 });

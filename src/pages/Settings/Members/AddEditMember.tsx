@@ -86,7 +86,6 @@ const AddEditMember = ({ match }: AddEditMemberProps) => {
 
             <div className='position-relative'>
                 {loading ? <Loader /> : null}
-
                 <Card>
                     <Card.Body className="">
                         <div className="p-2">

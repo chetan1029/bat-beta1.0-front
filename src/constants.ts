@@ -251,5 +251,24 @@ const COUNTRIES: any = {
     "ZW": "Zimbabwe",
 }
 
+const CURRENCIES: any = {
+    "USD": "US Dollar",
+    "SEK": "Swedish Krona",
+    "CNY": "Yuan Renminbi",
+    "EUR": "Euro",
+}
 
-export { COUNTRIES };
+const WEIGHTS: any = {
+    "kg": "kg",
+    "g": "g",
+    "lb": "lb",
+    "oz": "oz"
+}
+
+const UNIT_SYSTEMS: any = {
+    "Imperial": "Imperial",
+    "Metric": "Metric"
+}
+
+
+export { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS };

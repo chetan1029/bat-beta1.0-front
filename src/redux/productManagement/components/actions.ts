@@ -17,9 +17,9 @@ export const getComponents = (companyId: string | number, filters?: any) => ({
     payload: { companyId, filters }
 });
 
-export const createComponent = (companyId: string | number, data: any) => ({
+export const createComponent = (companyId: string | number, data: any, images: any) => ({
     type: ComponentsTypes.CREATE_COMPONENT,
-    payload: { companyId, data }
+    payload: { companyId, data, images }
 });
 
 export const editComponent = (companyId: string | number, componentId: number | string, data: any) => ({
@@ -32,9 +32,19 @@ export const deleteComponent = (companyId: string | number, componentId: number 
     payload: { companyId, componentId }
 });
 
+export const archiveComponent = (companyId: string | number, componentId: number | string, data: any, filters:any = {}) => ({
+    type: ComponentsTypes.ARCHIVE_COMPONENT,
+    payload: { companyId, componentId, data, filters }
+});
+
 export const getComponentDetails = (companyId: string | number, componentId: number | string) => ({
     type: ComponentsTypes.GET_COMPONENT,
     payload: { companyId, componentId }
+});
+
+export const getTagsAndTypes = (companyId: string | number) => ({
+    type: ComponentsTypes.GET_TAGS_TYPES,
+    payload: { companyId }
 });
 
 export const resetComponents = () => ({
