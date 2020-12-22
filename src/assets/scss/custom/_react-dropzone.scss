@@ -43,4 +43,23 @@
             border-color: $black;
         }
     }
+
+    .small-dropzone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba($primary, 0.3);
+        border-radius: 0.7em;
+        flex-direction: column;
+        padding: 0.4em 0.5em;
+    }
+
+    .variation-image {
+        img {
+            height: 3.5em;
+            width: 3.5em;
+            border: 1px solid rgba($primary, 0.3);
+            border-radius: 0.7em;
+        }
+    }
 }

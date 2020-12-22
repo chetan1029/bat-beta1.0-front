@@ -15,7 +15,8 @@ import bellIcon from "../../assets/images/icons/bell.svg";
 import personImg from "../../assets/images/avatar-placeholder.jpg";
 
 interface TopbarProps {
-  toggleSidebar: any
+  toggleSidebar: any,
+  match: any
 }
 
 const Topbar = (props: TopbarProps) => {
@@ -26,6 +27,8 @@ const Topbar = (props: TopbarProps) => {
   const { user } = useSelector((state: any) => ({
     user: state.Auth.user,
   }));
+
+  const companyId = props.match.params.companyId;
 
 
   return (
@@ -90,14 +93,19 @@ const Topbar = (props: TopbarProps) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="">
-                  <Dropdown.Item to='/companies' as={Link}>
-                    <Icon name="bag" className='icon icon-xs' />
-                    <span>{t('Companies')}</span>
+                  <Dropdown.Item to={`/profile/${companyId}/general`} as={Link}>
+                    <Icon name="user" className='icon icon-xs' />
+                    <span>{t('My Profile')}</span>
                   </Dropdown.Item>
 
-                  <Dropdown.Item to='/profile/general' as={Link}>
-                    <Icon name="user" className='icon icon-xs' />
-                    <span>{t('Profile')}</span>
+                  <Dropdown.Item to={`/clients/${companyId}`} as={Link}>
+                    <Icon name="bag" className='icon icon-xs' />
+                    <span>{t('My Clients')}</span>
+                  </Dropdown.Item>
+
+                  <Dropdown.Item to={`/settings/${companyId}`} as={Link}>
+                    <Icon name="settings" className='icon icon-xs' />
+                    <span>{t('Settings')}</span>
                   </Dropdown.Item>
 
                   <Dropdown.Divider></Dropdown.Divider>

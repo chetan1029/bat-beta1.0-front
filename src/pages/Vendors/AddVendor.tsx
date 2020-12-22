@@ -14,7 +14,9 @@ import { addVendor } from "../../redux/actions";
 import VendorForm from "./VendorForm";
 import UserForm from "./UserForm";
 
-
+/**
+ * NOTE - Keeping this component in branch as a backup for future when we are ready to implement this two steps
+ */
 
 interface AddVendorProps {
     match: any;

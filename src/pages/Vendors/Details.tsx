@@ -82,10 +82,10 @@ const VendorDetails = (props: VendorsProps) => {
                                                                 <h5 className="my-0">{vendorDetails['name']}</h5>
                                                                 <p className="my-0 text-muted" dangerouslySetInnerHTML={rawAddress()}></p>
                                                             </Media.Body>
-                                                            <Link to={`/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/edit`}
+                                                            {/* <Link to={`/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/edit`}
                                                                 className='btn btn-primary'>
                                                                 {t('Edit')}
-                                                            </Link>
+                                                            </Link> */}
                                                         </Media>
 
                                                         <div className="pt-3 px-2 border-top">

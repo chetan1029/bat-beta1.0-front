@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Form, Media, Badge, Nav, Button } from "react-bootstrap";
+import { Row, Col, Card, Media, Badge, Nav, Button } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
@@ -13,17 +13,19 @@ import ConfirmMessage from "../../../components/ConfirmMessage";
 import avatarPlaceholder from "../../../assets/images/avatar-placeholder.jpg";
 
 //actions
-import { getMembers, deleteMember, resetMembers, getCompanyInvitations, resendCompanyInvite } from "../../../redux/actions";
+import {
+    getMembers, deleteMember, resetMembers, getCompanyInvitations, resendCompanyInvite,
+    getCompanyPartners, archivePartner
+} from "../../../redux/actions";
 import DisplayDate from "../../../components/DisplayDate";
 
 
-const EmptyState = ({ showActive }) => {
-    const { t } = useTranslation();
+const EmptyState = ({ message }) => {
     return (
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    {showActive ? <h5 className="font-weight-normal my-0">{t('There are no active members')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no members')}</h5>}
+                    <h5 className="font-weight-normal my-0">{message}</h5>
                 </div>
             </Card.Body>
         </Card>
@@ -64,11 +66,11 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                                 <h6 className="text-muted my-0">{fullName}</h6>
                                 <h5 className="my-0">{member['user']['email']}</h5>
                             </Media.Body>
-                            
+
                             {!you ? <Link to={`/settings/${companyId}/members/${member.id}`} className='btn btn-link px-0 font-weight-semibold'>
                                 <Icon name="notes" className="text-primary mr-1"></Icon>
                                 {t('Show Details')}
-                            </Link>: null}
+                            </Link> : null}
                         </Media>
 
                         <div className="p-3 border-top">
@@ -89,21 +91,6 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
             dispatch(deleteMember(companyId, selectedMemberForDelete.id));
         }} onClose={() => setselectedMemberForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Archive')}></ConfirmMessage> : null}
     </>
-    )
-}
-
-
-
-const EmptyInvitesState = () => {
-    const { t } = useTranslation();
-    return (
-        <Card className="payment-terms-card mb-2">
-            <Card.Body>
-                <div className="p-2">
-                    <h5 className="font-weight-normal my-0">{t('There are no pending invitations')}</h5>
-                </div>
-            </Card.Body>
-        </Card>
     )
 }
 
@@ -152,6 +139,81 @@ const InvitationItem = ({ companyId, invite }) => {
 }
 
 
+const PartnerItem = ({ companyId, partner }) => {
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const partnerDetails = partner['details'];
+
+    const [selectedPartnerForArchive, setselectedPartnerForArchive] = useState<any>(null);
+
+    const onArchive = () => {
+        setselectedPartnerForArchive(partner);
+    }
+
+    return (<>
+        <Row>
+            <Col lg={12}>
+                <Card className="mb-2">
+                    <Card.Body className='p-0'>
+                        <Media className='p-3'>
+                            <Media.Body>
+                                <h6 className="text-muted my-0">{t('name')}</h6>
+                                <h5 className="my-0">{partnerDetails['name']}</h5>
+                            </Media.Body>
+
+
+                            <div className="ml-auto">
+                                {partner && partner['create_date'] ? <DisplayDate dateStr={partner['create_date']} /> : null}
+                            </div>
+                        </Media>
+
+                        <div className="p-3 border-top">
+                            <Row>
+                                <Col xs={6} lg={2} className='align-self-center'>
+                                    <Badge variant='outline-primary' pill className='capitalize mr-2 font-14'>{partner['company_type']}</Badge>
+                                </Col>
+                                <Col xs={6} lg={2}>
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Abbreviation')}</h6>
+                                    <h6 className="m-0 font-weight-bold">
+                                        {partnerDetails['abbreviation']}
+                                    </h6>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Contact Info')}</h6>
+                                    <h6 className="m-0 font-weight-bold">
+                                        {partnerDetails['email'] + partnerDetails['phone_number'] ? " - " + partnerDetails['phone_number'] : ""}
+                                    </h6>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <h6 className="m-0 text-muted font-weight-bold">{t('Address')}</h6>
+                                    <h6 className="m-0 font-weight-bold">
+                                        {partnerDetails['address1']}{partnerDetails['city'] ? <>&nbsp;{partnerDetails['city']}</> : null}
+                                        {partnerDetails['state'] ? <>&nbsp;{partnerDetails['state']}</> : null}
+                                        {partnerDetails['country'] ? <>&nbsp;{partnerDetails['country']}</> : null}
+                                    </h6>
+                                </Col>
+                            </Row>
+                        </div>
+                        <div className="p-3 border-top">
+                            <Row>
+                                {partner['is_active'] ? <Col className="text-right">
+                                    <Link to="#" onClick={onArchive}><Icon name="archive" className="ml-2 svg-outline-danger" /></Link>
+                                </Col> : null}
+                            </Row>
+                        </div>
+                    </Card.Body>
+                </Card>
+            </Col>
+        </Row>
+        {selectedPartnerForArchive ? <ConfirmMessage message={`Are you sure you want to archive ${selectedPartnerForArchive['details']['name']}?`} onConfirm={() => {
+            dispatch(archivePartner(companyId, selectedPartnerForArchive.id));
+        }} onClose={() => setselectedPartnerForArchive(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Archive')}></ConfirmMessage> : null}
+    </>
+    )
+}
+
+
 const TabMenu = ({ onChange, selectedView }) => {
     const { t } = useTranslation();
 
@@ -159,6 +221,9 @@ const TabMenu = ({ onChange, selectedView }) => {
         <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="members">{t('Members')}</Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li">
+                <Nav.Link className="pt-1" eventKey="partners">{t('Partners')}</Nav.Link>
             </Nav.Item>
             <Nav.Item as="li">
                 <Nav.Link className="pt-1" eventKey="invitations">{t('Invitations')}</Nav.Link>
@@ -175,16 +240,27 @@ const Members = (props: MembersProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, isMembersFetched, members, loggedInUser, isMemberCreated, isMemberDeleted, invitations, isInvitationsFetched } = useSelector((state: any) => ({
-        loading: state.Company.Members.loading,
-        isMembersFetched: state.Company.Members.isMembersFetched,
-        isMemberCreated: state.Company.Members.isMemberCreated,
-        isMemberDeleted: state.Company.Members.isMemberDeleted,
-        members: state.Company.Members.members,
-        invitations: state.Company.Members.invitations,
-        isInvitationsFetched: state.Company.Members.isInvitationsFetched,
-        loggedInUser: state.Auth.user
-    }));
+    const memberFilters = useMemo(() => ({
+        is_active: true,
+        'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities',
+        limit: 100000000
+    }), []);
+
+    const { loading, isMembersFetched, members, loggedInUser, isMemberCreated,
+        isMemberDeleted, invitations, isInvitationsFetched, isPartnerArchived,
+        isPartnersFetched, partners } = useSelector((state: any) => ({
+            loading: state.Company.Members.loading,
+            isMembersFetched: state.Company.Members.isMembersFetched,
+            isMemberCreated: state.Company.Members.isMemberCreated,
+            isMemberDeleted: state.Company.Members.isMemberDeleted,
+            members: state.Company.Members.members,
+            invitations: state.Company.Members.invitations,
+            isInvitationsFetched: state.Company.Members.isInvitationsFetched,
+            loggedInUser: state.Auth.user,
+            isPartnersFetched: state.Company.Members.isPartnersFetched,
+            partners: state.Company.Members.partners,
+            isPartnerArchived: state.Company.Members.isPartnerArchived,
+        }));
 
     const companyId = props.match.params.companyId;
 
@@ -193,39 +269,33 @@ const Members = (props: MembersProps) => {
     useEffect(() => {
         if (companyId) {
             if (selectedView === 'members') {
-                dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
-            } else {
+                dispatch(getMembers(companyId, memberFilters));
+            } else if (selectedView === 'partners') {
+                dispatch(getCompanyPartners(companyId, { 'limit': 100000000, is_active: true }));
+            }
+            else {
                 dispatch(getCompanyInvitations(companyId, { 'is_accepted': false, 'limit': 100000000 }));
             }
         }
-    }, [dispatch, companyId, selectedView]);
+    }, [dispatch, companyId, selectedView, memberFilters]);
 
     useEffect(() => {
         if (companyId && selectedView === 'members' && (isMemberCreated || isMemberDeleted)) {
-            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
+            dispatch(getMembers(companyId, memberFilters));
             setTimeout(() => {
                 dispatch(resetMembers());
             }, 3000);
         }
-    }, [dispatch, companyId, isMemberCreated, isMemberDeleted, selectedView]);
+    }, [dispatch, companyId, isMemberCreated, isMemberDeleted, selectedView, memberFilters]);
 
-
-    const [showActive, setshowActive] = useState(false);
-
-    const onChangeShowActive = (checked: boolean) => {
-        setshowActive(checked);
-
-        if (checked) {
-            let filters = {
-                is_active: true,
-                'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities',
-                limit: 100000000
-            }
-            dispatch(getMembers(companyId, filters));
-        } else {
-            dispatch(getMembers(companyId, { 'fields!': 'user_permissions,invitation_accepted,invited_by,extra_data,login_activities', 'limit': 100000000 }));
+    useEffect(() => {
+        if (companyId && selectedView === 'partners' && isPartnerArchived) {
+            dispatch(getCompanyPartners(companyId, { 'limit': 100000000, is_active: true }));
+            setTimeout(() => {
+                dispatch(resetMembers());
+            }, 3000);
         }
-    }
+    }, [dispatch, companyId, isPartnerArchived, selectedView]);
 
 
     return (
@@ -240,20 +310,8 @@ const Members = (props: MembersProps) => {
 
                             {selectedView === 'members' ? <>
                                 <h1 className="m-0">{t('Staff members')}</h1>
-                                <div className="d-flex align-items-center pl-3">
-                                    <span className="m-0 font-16 mr-2">
-                                        {t('Show active members')}
-                                    </span>
-                                    <Form.Check
-                                        type="switch"
-                                        id="custom-switch"
-                                        label=""
-                                        checked={showActive}
-                                        onChange={(e: any) => onChangeShowActive(e.target.checked)}
-                                    />
-                                </div>
                             </> : <>
-                                    <h1 className="m-0">{t('Invitations')}</h1>
+                                    <h1 className="m-0">{selectedView === 'partners' ? t('Partners') : t('Invitations')}</h1>
                                 </>}
                         </div>
                     </Col>
@@ -281,11 +339,9 @@ const Members = (props: MembersProps) => {
                                                         <MemberItem member={member}
                                                             key={key} companyId={companyId}
                                                             loggedInUser={loggedInUser}
-                                                            onDeleteMember={(m: any) => {
-
-                                                            }}
+                                                            onDeleteMember={(m: any) => { }}
                                                         />
-                                                    ) : <EmptyState showActive={showActive} />
+                                                    ) : <EmptyState message={t('There are no active members')} />
                                             }
                                         </> : null}
                                     </Col>
@@ -314,23 +370,43 @@ const Members = (props: MembersProps) => {
                         </div>}
                     </> :
                         <>
-                            {loading ? <Loader /> : <div>
-                                <div className="px-2">
-                                    <Row>
-                                        <Col lg={8} xs={12}>
-                                            {isInvitationsFetched ? <>
-                                                {
-                                                    invitations && invitations['results'].length > 0 ?
-                                                        invitations['results'].map((invite: any, key: number) => <InvitationItem invite={invite} companyId={companyId} key={key} />) : <EmptyInvitesState />
-                                                }</> : null}
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </div>}
+                            {selectedView !== 'partners' ? <>
+
+                                {loading ? <Loader /> : <div>
+                                    <div className="px-2">
+                                        <Row>
+                                            <Col lg={8} xs={12}>
+                                                {isInvitationsFetched ? <>
+                                                    {
+                                                        invitations && invitations['results'].length > 0 ?
+                                                            invitations['results'].map((invite: any, key: number) => <InvitationItem invite={invite} companyId={companyId} key={key} />) : <EmptyState message={t('There are no pending invitations')} />
+                                                    }</> : null}
+                                            </Col>
+                                        </Row>
+                                    </div>
+                                </div>}
+                            </> : <>
+
+                                    {loading ? <Loader /> : <div>
+                                        <div className="px-2">
+                                            <Row>
+                                                <Col lg={8} xs={12}>
+                                                    {isPartnersFetched ? <>
+                                                        {
+                                                            partners && partners['results'].length > 0 ?
+                                                                partners['results'].map((partner: any, key: number) => <PartnerItem partner={partner} companyId={companyId} key={key} />) : <EmptyState message={t('There are no active partners')} />
+                                                        }</> : null}
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </div>}
+
+                                </>}
                         </>}
                 </Card.Body>
             </Card>
 
+            {isPartnerArchived ? <MessageAlert message={t('A partner is archived')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
         </>
     );
 }

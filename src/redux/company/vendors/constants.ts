@@ -11,4 +11,6 @@ export enum VendorsTypes {
     EDIT_VENDOR = '@@company/vendors/EDIT_VENDOR',
 
     RESET = '@@company/vendors/RESET',
+
+    INVITE_VENDOR = '@@company/vendors/INVITE_VENDOR',
 }

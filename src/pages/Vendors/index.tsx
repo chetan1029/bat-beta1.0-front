@@ -97,11 +97,11 @@ const Vendors = (props: VendorsProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, isVendorsFetched, vendors, isVendorAdded } = useSelector((state: any) => ({
+    const { loading, isVendorsFetched, vendors, isVendorInvited } = useSelector((state: any) => ({
         loading: state.Company.Vendors.loading,
         isVendorsFetched: state.Company.Vendors.isVendorsFetched,
         vendors: state.Company.Vendors.vendors,
-        isVendorAdded: state.Company.Vendors.isVendorAdded
+        isVendorInvited: state.Company.Vendors.isVendorInvited,
     }));
 
     const companyId = props.match.params.companyId;
@@ -133,12 +133,13 @@ const Vendors = (props: VendorsProps) => {
     // }
 
     useEffect(() => {
-        if (isVendorAdded) {
+        if (isVendorInvited) {
             setTimeout(() => {
                 dispatch(resetVendors());
+                dispatch(getVendors(companyId, defaultParams));
             }, 3000);
         }
-    }, [isVendorAdded, dispatch]);
+    }, [isVendorInvited, dispatch, companyId, defaultParams]);
 
     return (
         <>
@@ -203,7 +204,7 @@ const Vendors = (props: VendorsProps) => {
                             </Row>
                         </div>
 
-                        {isVendorAdded ? <MessageAlert message={t('A new vendor is created')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+                        {isVendorInvited ? <MessageAlert message={t('The vendor is invited successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
                     </div>}
 
                 </Card.Body>

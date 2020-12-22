@@ -1,28 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form } from "react-bootstrap";
-import { map } from "lodash";
+import { map, isEmpty, size } from "lodash";
+import classNames from "classnames";
 import Icon from "./Icon";
 
 interface TagsInputProps {
     label?: string;
+    name: string;
+    id: string;
     placeholder?: string;
     tags?: [string];
-    selectedTags?: (tags: any) => void;
+    selectedTags: (tags: any) => void;
 }
 
 const TagsInput = (props: TagsInputProps) => {
-    const [tags, setTags] = useState<any>(props.tags);
+    const prevTagsRef = useRef();
+    const [tags, setTags] = useState<any>(props.tags || []);
     const [value, setValue] = useState<any>("");
+    const [error, setError] = useState<any>("");
+
+    useEffect(() => {
+        prevTagsRef.current = tags;
+    });
+
+    useEffect(() => {
+        setTags(props.tags);
+    }, [size(props.tags)]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (size(tags) === 0) {
+            setError("");
+        }
+        props.selectedTags(tags);
+    }, [size(tags)]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChange = (event: any) => {
-        const { value } = event.target
-        setValue(value)
+        const { value } = event.target;
+        setValue(value);
     }
 
     const handleKeyDown = (event: any) => {
-        const { value } = event.target
+        const { value } = event.target;
         if ([13].includes(event.keyCode)) {
-            addTags(value)
+            addTags(value);
         }
     }
 
@@ -31,10 +51,15 @@ const TagsInput = (props: TagsInputProps) => {
     };
 
     const addTags = (value: string) => {
-        if (value !== "") {
-            setTags([...tags, value]);
-            props.selectedTags && props.selectedTags([...tags, value]);
-            setValue("")
+        if (!isEmpty(value)) {
+            if (map(tags, value => value.toLowerCase()).includes(value.toLowerCase())) {
+               setError(`${props.name} already added`);
+               setValue("");
+            } else {
+                setTags([...tags, value]);
+                setValue("");
+                setError("");
+            }
         }
     };
 
@@ -43,14 +68,20 @@ const TagsInput = (props: TagsInputProps) => {
             <Form.Label htmlFor="tags">{props.label}</Form.Label>
             <Form.Control
                 type="text"
-                className="form-control"
-                id="tagsId"
-                name="tags"
+                className={classNames("form-control", error && "border-danger")}
+                id={props.id}
+                name={props.name}
                 value={value}
                 placeholder={props.placeholder}
+                autoComplete="off"
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
             />
+            {error &&
+            <span className="text-danger font-10">
+                {error}
+            </span>
+            }
             <ul id="tags">
                 {map(tags, (tag, index) => (
                     <li key={index} className="tag">

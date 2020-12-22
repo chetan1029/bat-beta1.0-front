@@ -35,3 +35,8 @@ export const editVendor = (companyId: string | number, vendorId: number | string
 export const resetVendors = () => ({
     type: VendorsTypes.RESET
 })
+
+export const inviteVendor = (companyId: string | number, data: any) => ({
+    type: VendorsTypes.INVITE_VENDOR,
+    payload: { companyId, data }
+});

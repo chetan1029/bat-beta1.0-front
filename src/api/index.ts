@@ -60,9 +60,19 @@ function getCompaniesList(params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
+function getCompany(companyId: number | string) {
+    const baseUrl = `/companies/${companyId}/`;
+    return api.get(`${baseUrl}`);
+}
+
 function createCompany(params: any) {
     const baseUrl = "/companies/";
     return api.create(`${baseUrl}`, params);
+}
+
+function editCompany(companyId: number | string, data: any) {
+    const baseUrl = `/companies/${companyId}/`;
+    return api.updateWithFile(`${baseUrl}`, data);
 }
 
 function getCompanyCategories(companyId: string | number, params?: any) {
@@ -103,6 +113,176 @@ function restorePaymentTerm(companyId: number, paymentTermId: number, params?: a
     return api.create(`${baseUrl}`, params);
 }
 
+/*
+Bank
+*/
+function getBank(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createBank(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreBank(companyId: number, bankId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/bank/${bankId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Location
+*/
+function getLocation(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createLocation(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreLocation(companyId: number, locationId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/${locationId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+/*
+Location
+*/
+function getHscode(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createHscode(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreHscode(companyId: number, hscodeId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/hscode/${hscodeId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+/*
+Tax
+*/
+function getTax(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createTax(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreTax(companyId: number, taxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/tax/${taxId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Packing Box
+*/
+function getPackingBox(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createPackingBox(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updatePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deletePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archivePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restorePackingBox(companyId: number, packingBoxId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/packing-box/${packingBoxId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+/*
+Get delivery terms
+*/
+function getDeliveryTerms(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/delivery-terms/`;
+    return api.get(`${baseUrl}`, params);
+}
 
 /* members */
 function getMembers(companyId: number, params?: any) {
@@ -137,6 +317,16 @@ function getCompanyInvitataions(companyId: number, params?: any) {
 
 function resendCompanyInvite(companyId: number | string, inviteId: number | string) {
     const baseUrl = `/companies/${companyId}/invitations/${inviteId}/resend/`;
+    return api.create(`${baseUrl}`, {});
+}
+
+function getCompanyPartners(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/partners/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function archiveCompanyPartner(companyId: number, partnerId: number) {
+    const baseUrl = `/companies/${companyId}/partners/${partnerId}/archive/`;
     return api.create(`${baseUrl}`, {});
 }
 
@@ -179,6 +369,34 @@ function updateVendor(companyId: number, vendorId: number, data: any) {
 }
 
 
+/* sales channels */
+function getSalesChannels(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/sales-channels/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getSalesChannel(companyId: number, channelId: number,) {
+    const baseUrl = `/companies/${companyId}/sales-channels/${channelId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+
+/* clients */
+function getClients(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/clients/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getClient(companyId: number, clientId: number,) {
+    const baseUrl = `/companies/${companyId}/clients/${clientId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function archiveClient(companyId: number, clientId: number,) {
+    const baseUrl = `/companies/${companyId}/clients/${clientId}/archive/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 /* components */
 const componentUrl = (companyId) => `/companies/${companyId}/products/`;
 
@@ -198,6 +416,14 @@ function deleteComponent(companyId: number, componentId: number | string) {
     return api.create(`${componentUrl(companyId)}${componentId}/archive/`, {});
 }
 
+function archiveComponent(companyId: number, componentId: number | string, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/archive/`, data);
+}
+
+function discontinueComponent(companyId: number, componentId: number | string, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/discontinued/`, data);
+}
+
 function getComponent(companyId: number, componentId: number | string) {
     return api.get(`${componentUrl(companyId)}${componentId}/`);
 }
@@ -206,14 +432,56 @@ function uploadComponentImages(companyId: number, componentId: number | string, 
     return api.createWithFile(`${componentUrl(companyId)}${componentId}/images/`, data);
 }
 
+function uploadVariationImages(companyId: number, variationId: number | string, data: any) {
+    const baseUrl = `/companies/${companyId}/product-variations/${variationId}/images/`;
+    return api.createWithFile(`${baseUrl}`, data);
+}
+
+function getTagsAndTypes(companyId: number) {
+    return api.get(`${componentUrl(companyId)}tags-types/`);
+}
+
+function exportCSVFile(companyId: number) {
+    return api.get(`${componentUrl(companyId)}csvexport/` );
+}
+
+function exportXLSFile(companyId: number) {
+    return api.get(`${componentUrl(companyId)}xlsxeport/` );
+}
+
+/*variations*/
+const variationUrl = (companyId) => `/companies/${companyId}/product-variations/`;
+
+function getVariation(companyId: number, variationId: number | string) {
+    return api.get(`${variationUrl(companyId)}${variationId}/`);
+}
+
+function editVariation(companyId: number, variationId: number | string, data: any) {
+    return api.updatePatch(`${variationUrl(companyId)}${variationId}/`, data);
+}
+
+function deleteVariationImages(companyId: number, variationId: number | string, ids: any) {
+    return api.delete(`${variationUrl(companyId)}${variationId}/images/destroy_bulk/?ids=${ids}`);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
     updateProfile, updateProfilePicture,
     getInvitataions, acceptInvite, rejectInvite,
-    getCompaniesList, createCompany,
+    getCompaniesList, createCompany, editCompany, getCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
-    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite,
-    getVendors, getVendor, createVendor, updateVendor,
-    getComponents, createComponent, editComponent, deleteComponent, getComponent, uploadComponentImages
+    getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite, getCompanyPartners,
+    getVendors, getVendor, createVendor, updateVendor, archiveCompanyPartner,
+    getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
+    getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
+    getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,
+    getHscode, createHscode, updateHscode, deleteHscode, archiveHscode, restoreHscode,
+    getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
+    getDeliveryTerms,
+    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
+    uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile,
+    getVariation, editVariation, deleteVariationImages, discontinueComponent,
+    getClients, getClient, archiveClient,
+    getSalesChannels, getSalesChannel
 }
