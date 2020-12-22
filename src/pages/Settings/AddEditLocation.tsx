@@ -78,13 +78,14 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-location-modal-header"></Modal.Header>
-            <Modal.Body className="p-0">
+            <Modal.Header closeButton className="add-location-modal-header">
+              <Modal.Title>{location ? t("Edit Location") : t("Add Location")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
 
-                    <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{location ? t("Edit Location") : t("Add Location")}</h1>
+                    <div>
 
                         {(!isLocationCreated && createLocationError) && <AlertMessage error={createLocationError} />}
                         {(!isLocationUpdated && editLocationError) && <AlertMessage error={editLocationError} />}

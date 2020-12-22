@@ -1,4 +1,4 @@
-// 
+//
 // card.scss
 //
 
@@ -84,6 +84,17 @@
     border-radius: $border-radius;
 }
 
+.card-header {
+  padding: $card-cap-padding-y $card-cap-padding-x;
+  margin-bottom: 0; // Removes the default margin-bottom of <hN>
+  color: $card-cap-color;
+  background-color: $white;
+  border-bottom: $card-border-width solid $card-border-color;
+
+  &:first-child {
+    @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+  }
+}
 
 
 // Responsive

@@ -214,7 +214,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
             if (isPaymentTermRestored) {
                 setshowArchived(false);
             }
-            
+
             setTimeout(() => {
                 dispatch(reset());
             }, 10000);
@@ -249,7 +249,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                         <Button variant="primary" onClick={() => {
                             openModal();
                             setselectedPaymentTerm(null);
-                        }}>{t('Add Payment Terms')}</Button>
+                        }}>{t('Add Payment Term')}</Button>
                     </Col>
                 </Row>
             </div>
