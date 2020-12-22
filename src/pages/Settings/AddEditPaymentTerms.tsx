@@ -12,6 +12,7 @@ import * as Yup from 'yup';
 import { createPaymentTerm, editPaymentTerm, reset } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
+import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 interface AddEditPaymentTermsProps {
     isOpen: boolean;
@@ -84,6 +85,7 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
         validator.resetForm();
         onClose();
     }
+    
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
@@ -95,7 +97,13 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{paymentTerm ? t("Edit Payment Terms") : t("Add Payment Terms")}</h1>
 
-                        {(!isPaymentTermCreated && createPaymentTermError) && <AlertMessage error={createPaymentTermError} />}
+                        {createPaymentTermError && createPaymentTermError['existing_items'] ? <ExistingDataWarning message={createPaymentTermError} onConfirm={() => {
+
+                        }} onClose={() => {
+                            
+                        }} /> : null}
+
+                        {(!isPaymentTermCreated && createPaymentTermError) && <AlertMessage error={createPaymentTermError && createPaymentTermError['existing_items'] ? createPaymentTermError['message'] : createPaymentTermError} />}
                         {(!isPaymentTermUpdated && editPaymentTermError) && <AlertMessage error={editPaymentTermError} />}
                         {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
 
