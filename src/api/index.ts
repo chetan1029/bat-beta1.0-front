@@ -420,6 +420,10 @@ function archiveComponent(companyId: number, componentId: number | string, data:
     return api.create(`${componentUrl(companyId)}${componentId}/archive/`, data);
 }
 
+function discontinueComponent(companyId: number, componentId: number | string, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/discontinued/`, data);
+}
+
 function getComponent(companyId: number, componentId: number | string) {
     return api.get(`${componentUrl(companyId)}${componentId}/`);
 }
@@ -435,6 +439,29 @@ function uploadVariationImages(companyId: number, variationId: number | string, 
 
 function getTagsAndTypes(companyId: number) {
     return api.get(`${componentUrl(companyId)}tags-types/`);
+}
+
+function exportCSVFile(companyId: number) {
+    return api.get(`${componentUrl(companyId)}csvexport/` );
+}
+
+function exportXLSFile(companyId: number) {
+    return api.get(`${componentUrl(companyId)}xlsxeport/` );
+}
+
+/*variations*/
+const variationUrl = (companyId) => `/companies/${companyId}/product-variations/`;
+
+function getVariation(companyId: number, variationId: number | string) {
+    return api.get(`${variationUrl(companyId)}${variationId}/`);
+}
+
+function editVariation(companyId: number, variationId: number | string, data: any) {
+    return api.updatePatch(`${variationUrl(companyId)}${variationId}/`, data);
+}
+
+function deleteVariationImages(companyId: number, variationId: number | string, ids: any) {
+    return api.delete(`${variationUrl(companyId)}${variationId}/images/destroy_bulk/?ids=${ids}`);
 }
 
 export {
@@ -453,7 +480,8 @@ export {
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
     getDeliveryTerms,
     getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
-    uploadComponentImages, uploadVariationImages, getTagsAndTypes,
+    uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile,
+    getVariation, editVariation, deleteVariationImages, discontinueComponent,
     getClients, getClient, archiveClient,
     getSalesChannels, getSalesChannel
 }

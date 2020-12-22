@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card, Col, Nav, Row } from "react-bootstrap";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { get, map } from 'lodash';
+import { get, map, find, size } from 'lodash';
 
 //components
 import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
+import dummyImage from "../../../assets/images/dummy_image.svg";
 
 //actions
-import { archiveComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
+import { archiveComponent, discontinueComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
 
 const TabMenu = ({ onChange, selectedView }) => {
 	const { t } = useTranslation();
@@ -39,10 +40,12 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 		loading,
 		component,
 		isComponentArchived,
+		isComponentDiscontinued
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		component: Components.component,
 		isComponentArchived: Components.isComponentArchived,
+		isComponentDiscontinued: Components.isComponentDiscontinued,
 	}));
 
 	const companyId = props.match.params.companyId;
@@ -57,7 +60,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 
 	return (
 		<>
-			{isComponentArchived ? <Redirect to={`/product-management/${companyId}/components`}/> : null}
+			{(isComponentArchived || isComponentDiscontinued) ? <Redirect to={`/product-management/${companyId}/components`}/> : null}
 			{loading ? <Loader/> : null}
 			{component &&
             <div className="py-4 px-3">
@@ -71,16 +74,13 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                       <h1 className="m-0">{component && component.title}</h1>
                     </div>
                     <div className="d-flex align-items-center">
-                      <Link className={"btn disabled p-0"}
-                            to={`/product-management/${companyId}/components/edit/${component.id}`}>
-                        <Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
-                      </Link>
-                      <span
-                        onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+                      <Link to={"#"}
+                        	onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
                       	<Icon name="archive" className="mx-2 svg-outline-primary cursor-pointer"/>
-					  </span>
-                      <Link className={"btn disabled p-0"} to={""}>
-                        <Icon name="delete" className="mx-2 svg-outline-danger cursor-pointer"/>
+					  </Link>
+                      <Link to={"#"}
+                            onClick={() => dispatch(discontinueComponent(companyId, component.id, component))}>
+                        <Icon name="archive" className="mx-1 svg-outline-danger cursor-pointer"/>
                       </Link>
                     </div>
                   </div>
@@ -107,11 +107,23 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
                                   <Card.Body className="p-0">
                                     <Row>
                                       <Col lg={2} sm={6} style={{ maxWidth: "14% !important" }}>
-                                        <img className={"product-image"} src={get(product, "images[0].image")}
+                                        <img className={"product-image"}
+											 src={product.images.length > 0 ? (
+												 find(product.images, img => !!img.main_image) ?
+													 find(product.images, img => !!img.main_image).image :
+													 product.images[0].image ) :
+													 dummyImage
+											 	}
                                              alt={product.title}/>
                                       </Col>
                                       <Col lg={10} sm={6} className="pt-3">
-                                        <h6>{t('Model Number')}: {get(product, "model_number")}</h6>
+										<div className="d-flex justify-content-between">
+                                        	<h6>{t('Model Number')}: {get(product, "model_number")}</h6>
+                                          <Link className="py-1 edit-variation mr-3"
+                                                to={`/product-management/${companyId}/components/${component.id}/variation/edit/${product.id}`}>
+                                            <Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer"/>
+                                          </Link>
+                                        </div>
                                         <p className="text-muted">
 											{t('Manufacturer Part Number')}: {get(product, "manufacturer_part_number")}
                                         </p>
@@ -127,25 +139,33 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 								}
 							</>
 						)}
-                      <div className="cursor-pointer d-flex align-items-center justify-content-end mt-2"
-                           onClick={() => setShowMore(!showMore)}>
-                        <Icon name={"eye"} className={"icon icon-xs mr-2"}/>
-                        <h6 className="text-primary mb-0">
-							{showMore ?
-								`${t('Less child products')} (${component.products.length - 1})` :
-								`${t('More child products')} (${component.products.length - 1})`
-							}
-                        </h6>
-                      </div>
+						{component.products && component.products.length > 1 &&
+							<div className="cursor-pointer d-flex align-items-center justify-content-end mt-2"
+								 onClick={() => setShowMore(!showMore)}>
+							  <Icon name={"eye"} className={"icon icon-xs mr-2"}/>
+							  <h6 className="text-primary mb-0">
+								  {showMore ?
+									  `${t('Less child products')} (${component.products.length - 1})` :
+									  `${t('More child products')} (${component.products.length - 1})`
+								  }
+							  </h6>
+							</div>
+						}
                     </Col>
                     <Col lg={4} md={4} sm={12}>
-                      <img className={"component-main-image"} src={get(component, "images[0].image")}
+                      <img className={"component-main-image"}
+						   src={size(component.images) > 0 ?(
+							   find(component.images, img => !!img.main_image) ?
+								   find(component.images, img => !!img.main_image).image :
+								   get(component, "images[0].image") ) :
+							   dummyImage
+							   }
                            alt={component.title}/>
 						{component.images && component.images.length > 0 &&
                         <div>
 							{map(component.images, (image, i) =>
 								<>
-									{i > 0 &&
+									{i > 0 && !image.main_image &&
                                     <img key={i} className={"component-image mt-4 mr-4"} src={image.image}
                                          alt={component.title}/>
 									}

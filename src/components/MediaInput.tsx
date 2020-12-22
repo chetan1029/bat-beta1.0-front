@@ -141,19 +141,36 @@ const AddFileFromUrl = ({ isOpen, onClose, onGetFile }: AddFileFromUrlProps) => 
 
 interface MediaInputProps {
     label?: string;
+    defaultImages?: [any];
+    inputRef?: any;
     onSetFiles: (any) => void;
 }
 
 const MediaInput = (props: MediaInputProps) => {
     const { t } = useTranslation();
-    const { label, onSetFiles } = props
+    const { label, defaultImages, onSetFiles, inputRef } = props
     const [files, setFiles] = useState<any>([]);
+    const [images, setImages] = useState<any>([]);
     const [selectedFiles, setSelectedFiles] = useState<any>([]);
+    const [selectedImages, setSelectedImages] = useState<any>([]);
+    const [deletedImagesIds, setDeletedImagesIds] = useState<any>([]);
     const [addFileFromUrlModal, setAddFileFromUrlModal] = useState<any>(false);
 
     useEffect(() => {
-        onSetFiles(files)
-    },[size(files)]) // eslint-disable-line react-hooks/exhaustive-deps
+        if (defaultImages && defaultImages.length > 0) {
+            setImages(defaultImages);
+        }
+    },[defaultImages]);
+
+    useEffect(() => {
+        onSetFiles(files);
+    },[size(files)]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (inputRef) {
+            inputRef.current = { deletedImagesIds };
+        }
+    },[deletedImagesIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: "image/*",
@@ -167,6 +184,14 @@ const MediaInput = (props: MediaInputProps) => {
         }
     });
 
+    const onSelectImage = (e: any, image: any) => {
+        if (e.target.checked) {
+            setSelectedImages([...selectedImages, image]);
+        } else {
+            setSelectedImages(selectedImages.filter(img => img.id !== image.id))
+        }
+    }
+
     const onSelectFile = (e: any, file: any) => {
         if (e.target.checked) {
             setSelectedFiles([...selectedFiles, file]);
@@ -174,12 +199,17 @@ const MediaInput = (props: MediaInputProps) => {
             setSelectedFiles(selectedFiles.filter(sf => sf.name !== file.name))
         }
     }
-    
+
     const handleDeleteFile = () => {
         const selectedFileNames: Set<any> = new Set(selectedFiles.map(({ name }) => name));
+        const selectedImageIds: Set<any> = new Set(selectedImages.map(({ id }) => id));
+        setDeletedImagesIds(selectedImages.map(({ id }) => id));
         const newFiles: Array<any> = files.filter(({ name }) => !selectedFileNames.has(name));
+        const newImages: Array<any> = images.filter(({ id }) => !selectedImageIds.has(id));
         setFiles(newFiles);
+        setImages(newImages);
         setSelectedFiles([]);
+        setSelectedImages([]);
     }
 
     return (
@@ -192,13 +222,13 @@ const MediaInput = (props: MediaInputProps) => {
             <div className="d-flex justify-content-between align-items-center mt-3">
                 <h4>{label}</h4>
                 <div className="d-flex justify-content-between align-items-center">
-                    {size(selectedFiles) > 0 &&
+                    {(size(selectedFiles) > 0 || size(selectedImages) > 0) &&
                         <h6 
                           className="link text-danger mr-3 d-flex justify-content-between align-items-center"
                           onClick={handleDeleteFile}
                         >
                             <Icon name="delete" className="mx-1 svg-outline-danger" />
-                            {`${t('Delete file')} (${size(selectedFiles)})`}
+                            {`${t('Delete file')} (${size(selectedFiles) + size(selectedImages)})`}
                         </h6>
                     }
                     <h6 className="text-blue link" onClick={() => setAddFileFromUrlModal(true)}>
@@ -207,6 +237,17 @@ const MediaInput = (props: MediaInputProps) => {
                 </div>
             </div>
             <div className={"react-dropzone row"}>
+                {map(images, (image: any, index: number) => (
+                    <div className={"files"} key={index}>
+                        <Form.Check
+                            type='checkbox'
+                            id={`${image.id}${index}`}
+                            className={"pl-0"}
+                            label={<img src={image.image} alt={image.id}/>}
+                            onChange={(e: any) => onSelectImage(e, image)}
+                        />
+                    </div>
+                ))}
                 {map(files, (file: any, index: number) => (
                     <div className={"files"} key={index}>
                         <Form.Check
@@ -221,7 +262,7 @@ const MediaInput = (props: MediaInputProps) => {
                 <div className="dropzone" {...getRootProps()}>
                     <input {...getInputProps()} />
                     <Icon name={"upload"}/>
-                    <p>Drag files here or <span className={"link"}>click to browse</span></p>
+                    <p>{t('Drag files here or')} <span className={"link"}>{t('click to browse')}</span></p>
                 </div>
             </div>
         </>

@@ -121,6 +121,12 @@
       margin: 1em 0;
     }
   }
+
+  .export {
+    &:after {
+      content: none;
+   }
+  }
 }
 
 .active-label {
@@ -174,4 +180,9 @@
   &:hover {
     background: $gray-200;
   }
+}
+
+.edit-variation {
+  background-color: $gray-200 !important;
+  border-radius: 7px;
 }

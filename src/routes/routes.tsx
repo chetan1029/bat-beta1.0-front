@@ -15,6 +15,7 @@ import EditCompany from "../pages/Companies/EditCompany";
 import AddEditComponent from "../pages/ProductManagement/Components/AddEditComponent";
 import Components from "../pages/ProductManagement/Components";
 import ComponentDetails from "../pages/ProductManagement/Components/ComponentDetails";
+import EditProductVariation from "../pages/ProductManagement/Components/EditProductVariation";
 
 import InviteVendor from "../pages/Vendors/InviteVendor";
 import VendorDetails from "../pages/Vendors/Details";
@@ -44,8 +45,9 @@ import Root from "../pages/Root";
 
 const authProtectedRoutes = [
   { path: "/product-management/:companyId/components/add", component: AddEditComponent },
-  { path: "/product-management/:companyId/components/edit/:componentId", component: AddEditComponent },
+  { path: "/product-management/:companyId/components/:componentId/variation/edit/:variationId", component: EditProductVariation },
   { path: "/product-management/:companyId/components/:componentId", component: ComponentDetails },
+  { path: "/product-management/:companyId/components/:componentId/variation/:variationId", component: ComponentDetails },
   { path: "/product-management/:companyId/components", component: Components },
 
   { path: "/settings/:companyId/members/add", component: AddEditMember },
