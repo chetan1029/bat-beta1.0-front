@@ -40,10 +40,12 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 		loading,
 		component,
 		isComponentArchived,
+		isComponentDiscontinued
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		component: Components.component,
 		isComponentArchived: Components.isComponentArchived,
+		isComponentDiscontinued: Components.isComponentDiscontinued,
 	}));
 
 	const companyId = props.match.params.companyId;
@@ -58,7 +60,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 
 	return (
 		<>
-			{isComponentArchived ? <Redirect to={`/product-management/${companyId}/components`}/> : null}
+			{(isComponentArchived || isComponentDiscontinued) ? <Redirect to={`/product-management/${companyId}/components`}/> : null}
 			{loading ? <Loader/> : null}
 			{component &&
             <div className="py-4 px-3">
@@ -78,7 +80,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 					  </Link>
                       <Link to={"#"}
                             onClick={() => dispatch(discontinueComponent(companyId, component.id, component))}>
-                        <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
+                        <Icon name="archive" className="mx-1 svg-outline-danger cursor-pointer"/>
                       </Link>
                     </div>
                   </div>

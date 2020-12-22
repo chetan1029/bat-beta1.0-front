@@ -302,11 +302,6 @@ const Components = (props: ComponentsProps) => {
 												<Icon name="archive"
 													  className="mx-1 svg-outline-primary cursor-pointer"/>
 											</Link>
-											<Link to={"#"}
-												  onClick={() => dispatch(discontinueComponent(companyId, component.id, component, filters))}>
-												<Icon name="delete"
-													  className="mx-1 svg-outline-danger cursor-pointer"/>
-											</Link>
 										</Col>
 									</Row>
 									<Row className={"extra-info"}>

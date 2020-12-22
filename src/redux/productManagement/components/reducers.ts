@@ -218,6 +218,7 @@ const Components = (state = INIT_STATE, action: any) => {
                 isComponentEdited: false,
                 isComponentDeleted: false,
                 isComponentArchived: false,
+                isComponentDiscontinued: false,
                 isExported: false,
                 isVariationEdited: false,
             }
