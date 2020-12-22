@@ -1,5 +1,11 @@
 .components {
 
+  .view-icon {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+  }
+
   .search {
     width: 25%;
   }
@@ -62,7 +68,7 @@
     }
   }
 
-  .data-table {
+  .list-view {
     .body-row {
       box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
       border: 1px $gray-200;
@@ -120,6 +126,65 @@
       padding: 1em 2em;
       margin: 1em 0;
     }
+  }
+
+  .grid-view {
+    display: flex;
+    flex-wrap: wrap;
+
+    .card {
+      height: 20em;
+      width: 24em;
+      margin: 0 3em 1.5em 0;
+    }
+
+    .image img {
+      height: 3.5em;
+      width: 3.5em;
+      object-fit: cover;
+      border: 1px solid $gray-200;
+      border-radius: 0.7em;
+    }
+
+    .description p {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .description {
+      width: 100%;
+      margin: 0 auto;
+      min-height: 18px;
+    }
+
+    .tags {
+      width: auto;
+      padding: 4px 8px;
+      font-size: 14px;
+      list-style: none;
+      border-radius: 6px;
+      margin: 0 8px 8px 0;
+      background: $gray-200;
+      &:hover {
+        background: $gray-200;
+      }
+    }
+
+    .product-detail {
+      padding: 16px 10px;
+    }
+
+    .archive {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $gray-200;
+      border-radius: 0.7em;
+      height: 3em;
+    }
+
   }
 
   .export {
