@@ -39,8 +39,15 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
                     name: 'Vendors', url: `/supply-chain/${companyId}/vendors`, icon: 'shop', label: 'Vendors', id: 'supplyVendors', parentId: 'supplyChain',
                     children: supplierChainVendors
                 },
-                { name: 'Orders', url: `/supply-chain/${companyId}/orders`, icon: 'shopping-cart', label: 'Orders', id: 'supplyChainOrders', parentId: 'supplyChain' },
-                { name: 'Shipment', url: `/supply-chain/${companyId}/shipment`, icon: 'shipment', label: 'Shipment', id: 'supplyChainShipments', parentId: 'supplyChain' },
+                { name: 'Orders', url: `/supply-chain/${companyId}/orders`, icon: 'shopping-cart', label: 'Orders', id: 'supplyChainOrders', parentId: 'supplyChain',
+                  children: [
+                      { name: 'ManageOrders', url: `/supply-chain/${companyId}/orders/manage`, icon: 'circle', label: 'Manage Orders', id: 'ManageOrders', parentId: 'supplyChainOrders' },
+                      { name: 'PlanOrders', url: `/supply-chain/${companyId}/orders/plan`, icon: 'circle', label: 'Plan Orders', id: 'PlanOrders', parentId: 'supplyChainOrders' },
+                  ]
+               },
+                { name: 'Shipment', url: `/supply-chain/${companyId}/shipment`, icon: 'shipment', label: 'Shipment', id: 'supplyChainShipments', parentId: 'supplyChain',
+                  
+               },
                 {
                     name: 'Inventory', url: `/supply-chain/${companyId}/inventory`, icon: 'inventory', label: 'Inventory', id: 'supplyChainInventory', parentId: 'supplyChain',
                     children: [

@@ -85,7 +85,7 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
         validator.resetForm();
         onClose();
     }
-  
+
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
@@ -95,24 +95,15 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
             <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
-
-<<<<<<< HEAD
-                    <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{paymentTerm ? t("Edit Payment Terms") : t("Add Payment Terms")}</h1>
-
-                        {createPaymentTermError && createPaymentTermError['existing_items'] ? <ExistingDataWarning 
+                    <div>
+                        {createPaymentTermError && createPaymentTermError['existing_items'] ? <ExistingDataWarning
                             name={t('Payment Term(s)')}
                             message={createPaymentTermError}
                             onConfirm={() => {
-                                dispatch(createPaymentTerm(companyId, {...validator.values, force_create: true})); 
+                                dispatch(createPaymentTerm(companyId, {...validator.values, force_create: true}));
                             }} onClose={() => {}} displayField={'title'} /> : null}
 
                         {(!isPaymentTermCreated && createPaymentTermError) && !createPaymentTermError['existing_items'] ? <AlertMessage error={createPaymentTermError} /> : null}
-=======
-                    <div>
-                        {(!isPaymentTermCreated && createPaymentTermError) && <AlertMessage error={createPaymentTermError} />}
->>>>>>> fix/setting_layouts
-                        {(!isPaymentTermUpdated && editPaymentTermError) && <AlertMessage error={editPaymentTermError} />}
                         {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
