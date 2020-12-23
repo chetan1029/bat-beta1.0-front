@@ -54,7 +54,7 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/edit", component: EditCompany },
 
-  { path: "/clients/:companyId", component: Clients },
+  { path: "/clients/:companyId", component: Clients, layoutProps: { 'mainSidebar': true } },
 
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },

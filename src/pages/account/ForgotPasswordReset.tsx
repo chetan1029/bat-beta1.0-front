@@ -12,7 +12,7 @@ import Loader from '../../components/Loader';
 import AlertMessage from "../../components/AlertMessage";
 
 
-import { forgotPasswordChange } from "../../redux/actions";
+import { forgotPasswordChange, resetAuth } from "../../redux/actions";
 
 const ForgotPasswordReset = ({ match }) => {
     const dispatch = useDispatch();
@@ -29,6 +29,10 @@ const ForgotPasswordReset = ({ match }) => {
     })
 
     const { t } = useTranslation();
+
+    useEffect(() => {
+        dispatch(resetAuth());
+    }, [dispatch]);
 
     // validation
     const validator = useFormik({

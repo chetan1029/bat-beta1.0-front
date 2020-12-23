@@ -103,7 +103,7 @@ const Topbar = (props: TopbarProps) => {
                     <span>{t('My Clients')}</span>
                   </Dropdown.Item>
 
-                  <Dropdown.Item to={`/settings/${companyId}`} as={Link}>
+                  <Dropdown.Item to={`/settings/${companyId}`} as={Link} className='icon-settings'>
                     <Icon name="settings" className='icon icon-xs' />
                     <span>{t('Settings')}</span>
                   </Dropdown.Item>

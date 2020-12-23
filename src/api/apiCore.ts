@@ -28,7 +28,12 @@ axios.interceptors.response.use(response => {
                 message = error.response && error.response.data ? error.response.data['message'] || error.response.data['non_field_errors'] || error.response.data['detail'] || error.response.data : error.message || error;
             }
         }
-        return Promise.reject(message);
+
+        if (error.response && error.response.data && error.response.data['existing_items']) {
+            return Promise.reject({ message, existing_items: error.response.data['existing_items'] });
+        }
+        else
+            return Promise.reject(message);
     }
 });
 

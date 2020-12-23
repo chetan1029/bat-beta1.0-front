@@ -12,7 +12,7 @@ import CountriesDropdown from "../../components/CountriesDropdown";
 import AlertMessage from "../../components/AlertMessage";
 import { useQuery } from "../../components/Hooks";
 
-import { signupUser, createCompany } from "../../redux/actions";
+import { signupUser, createCompany, resetAuth } from "../../redux/actions";
 
 import TermsConditions from "./TermsConditions";
 
@@ -358,10 +358,14 @@ const SignUp = ({ match }) => {
 
     const { t } = useTranslation();
 
+    useEffect(() => {
+        dispatch(resetAuth());
+    }, [dispatch]);
+
     const { loading, userSignUp, userLoggedIn, user, error, companyCreated, companyError } = useSelector((state: any) => ({
         loading: state.Auth.loading || state.Company.Common.loading,
         user: state.Auth.user,
-        error: state.Auth.error,
+        error: state.Auth.registerError,
         userSignUp: state.Auth.userSignUp,
         userLoggedIn: state.Auth.userLoggedIn,
         companyCreated: state.Company.Common.companyCreated,
