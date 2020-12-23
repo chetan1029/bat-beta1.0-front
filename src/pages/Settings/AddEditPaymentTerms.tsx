@@ -85,7 +85,7 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
         validator.resetForm();
         onClose();
     }
-    
+  
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
@@ -97,13 +97,14 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{paymentTerm ? t("Edit Payment Terms") : t("Add Payment Terms")}</h1>
 
-                        {createPaymentTermError && createPaymentTermError['existing_items'] ? <ExistingDataWarning message={createPaymentTermError} onConfirm={() => {
+                        {createPaymentTermError && createPaymentTermError['existing_items'] ? <ExistingDataWarning 
+                            name={t('Payment Term(s)')}
+                            message={createPaymentTermError}
+                            onConfirm={() => {
+                                dispatch(createPaymentTerm(companyId, {...validator.values, force_create: true})); 
+                            }} onClose={() => {}} displayField={'title'} /> : null}
 
-                        }} onClose={() => {
-                            
-                        }} /> : null}
-
-                        {(!isPaymentTermCreated && createPaymentTermError) && <AlertMessage error={createPaymentTermError && createPaymentTermError['existing_items'] ? createPaymentTermError['message'] : createPaymentTermError} />}
+                        {(!isPaymentTermCreated && createPaymentTermError) && !createPaymentTermError['existing_items'] ? <AlertMessage error={createPaymentTermError} /> : null}
                         {(!isPaymentTermUpdated && editPaymentTermError) && <AlertMessage error={editPaymentTermError} />}
                         {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
 
