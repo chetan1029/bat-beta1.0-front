@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../../components/Loader';
 import Icon from "../../components/Icon";
 
-import { forgotPassword } from "../../redux/actions";
+import { forgotPassword, resetAuth } from "../../redux/actions";
 
 const ForgotPassword = () => {
     const dispatch = useDispatch();
@@ -24,6 +24,10 @@ const ForgotPassword = () => {
     })
 
     const { t } = useTranslation();
+
+    useEffect(() => {
+        dispatch(resetAuth());
+    }, [dispatch]);
 
     // validation
     const validator = useFormik({

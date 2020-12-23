@@ -51,3 +51,8 @@ export const changePassword = (new_password1: string, new_password2: string) => 
     type: AuthActionTypes.CHANGE_PASSWORD,
     payload: { new_password1, new_password2 }
 });
+
+export const resetAuth = () => ({
+    type: AuthActionTypes.RESET,
+    payload: {}
+});

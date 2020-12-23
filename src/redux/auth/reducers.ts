@@ -131,6 +131,8 @@ const Auth = (state = INIT_STATE, action: any) => {
         case AuthActionTypes.UPDATE_PROFILE_PICTURE: {
             return { ...state, loading: true, profileUpdated: false, };
         }
+        case AuthActionTypes.RESET:
+            return { ...state, loading: false, profileUpdated: false, error: false, userSignUp: false, userLoggedIn: false, passwordChange: false };
         default: return { ...state };
     }
 }

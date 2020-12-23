@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../../components/Loader';
 import { useQuery } from "../../components/Hooks";
 
-import { loginUser } from "../../redux/actions";
+import { loginUser, resetAuth } from "../../redux/actions";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -26,6 +26,10 @@ const Login = () => {
             document['body'].classList.remove('auth-bg');
         }
     }, []);
+
+    useEffect(() => {
+        dispatch(resetAuth());
+    }, [dispatch]);
 
     const { t } = useTranslation();
 
