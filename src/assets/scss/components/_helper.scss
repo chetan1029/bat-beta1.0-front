@@ -20,6 +20,7 @@
 ul {
   padding-left: 0;
   list-style: none;
+
   &.list {
     list-style: disc;
   }
@@ -136,4 +137,16 @@ main {
 
 .show {
   display: block !important;
+}
+
+.icon-settings {
+  &:hover {
+    .icon {
+      >svg {
+        ellipse {
+          stroke: $white !important;
+        }
+      }
+    }
+  }
 }
