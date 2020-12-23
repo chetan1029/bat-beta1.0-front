@@ -224,7 +224,7 @@ const Tax = (props: TaxProps) => {
                             <Link to={`/settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
-                            <h1 className="m-0">{t('Taxs')}</h1>
+                            <h1 className="m-0">{t('Taxes')}</h1>
                             <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">
                                     {t('Show archived')}
@@ -243,7 +243,7 @@ const Tax = (props: TaxProps) => {
                         <Button variant="primary" onClick={() => {
                             openModal();
                             setselectedTax(null);
-                        }}>{t('Add Taxs')}</Button>
+                        }}>{t('Add Tax')}</Button>
                     </Col>
                 </Row>
             </div>

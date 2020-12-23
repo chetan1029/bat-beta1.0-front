@@ -85,14 +85,14 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-bank-modal-header"></Modal.Header>
-            <Modal.Body className="p-0">
+            <Modal.Header closeButton className="add-bank-modal-header">
+              <Modal.Title>{bank ? t("Edit Bank") : t("Add Bank")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
 
-                    <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{bank ? t("Edit Bank") : t("Add Bank")}</h1>
-
+                    <div>
                         {(!isBankCreated && createBankError) && <AlertMessage error={createBankError} />}
                         {(!isBankUpdated && editBankError) && <AlertMessage error={editBankError} />}
 

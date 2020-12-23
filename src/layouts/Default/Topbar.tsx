@@ -88,7 +88,7 @@ const Topbar = (props: TopbarProps) => {
               <Dropdown className="header_ropdown">
                 <Dropdown.Toggle id="dropdown-profile" className="p-0" variant="none">
                   <div className="header_dropdown_trigger_img">
-                    <img src={user ? user.profile_picture : personImg} alt="" />
+                    <img src={user.profile_picture ? user.profile_picture : personImg} alt="" />
                   </div>
                 </Dropdown.Toggle>
 

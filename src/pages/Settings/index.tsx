@@ -46,10 +46,10 @@ const DefaultView = ({ items, companyId }: DefaultViewProps) => {
                                         <Row>
                                             {
                                                 item['items'].map((subItem, key) => {
-                                                    
+
                                                     return <Col md={4} xs={12} key={key}>
                                                         <Link to={`/settings/${companyId}/${subItem.key}`}>
-                                                            <Media className={classNames('mt-4')}>
+                                                            <Media className={classNames('mt-3 mb-2')}>
                                                                 <div className="pt-1">
                                                                     <Icon name={subItem.icon} className="icon icon-sm svg-outline-primary" />
                                                                 </div>
@@ -105,8 +105,8 @@ const Index = ({ match }: IndexProps) => {
                 { title: "Payment Terms", key: "payment_terms", icon: "wallet", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
                 { title: "Banks", key: "bank", icon: "bank", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
                 { title: "Taxes", key: "tax", icon: "tax", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-                { title: "Delivery Terms", key: "delivery_terms", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
-                { title: "Assets", key: "asset", icon: "ticket", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." }]
+                { title: "Delivery Terms", key: "delivery_terms", icon: "shipment", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." },
+                { title: "Assets", key: "asset", icon: "finance", desc: "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id." }]
         },
         {
             label: 'Logistic', items: [

@@ -89,11 +89,14 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-payment-modal-header"></Modal.Header>
-            <Modal.Body className="p-0">
+            <Modal.Header closeButton className="add-payment-modal-header">
+              <Modal.Title>{paymentTerm ? t("Edit Payment Term") : t("Add Payment Term")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
 
+<<<<<<< HEAD
                     <div className="px-5 pb-5">
                         <h1 className="mb-2 mt-0">{paymentTerm ? t("Edit Payment Terms") : t("Add Payment Terms")}</h1>
 
@@ -105,6 +108,10 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
                             }} onClose={() => {}} displayField={'title'} /> : null}
 
                         {(!isPaymentTermCreated && createPaymentTermError) && !createPaymentTermError['existing_items'] ? <AlertMessage error={createPaymentTermError} /> : null}
+=======
+                    <div>
+                        {(!isPaymentTermCreated && createPaymentTermError) && <AlertMessage error={createPaymentTermError} />}
+>>>>>>> fix/setting_layouts
                         {(!isPaymentTermUpdated && editPaymentTermError) && <AlertMessage error={editPaymentTermError} />}
                         {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
 

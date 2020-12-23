@@ -72,17 +72,13 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
                         <Card.Body>
                             <div className="p-2">
                                 <Row>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Length')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.length}&nbsp;{packingbox.length_unit}</h6>
+                                    <Col xs={6} lg={6}>
+                                        <h6 className="m-0 text-muted font-weight-bold">{t('Size')}</h6>
+                                        <h6 className="m-0 font-weight-bold">{packingbox.length}x{packingbox.width}x{packingbox.depth} {packingbox.length_unit}</h6>
                                     </Col>
-                                    <Col xs={6} lg={3}>
+                                    <Col xs={6} lg={6}>
                                         <h6 className="m-0 text-muted font-weight-bold">{t('Weight')}</h6>
                                         <h6 className="m-0 font-weight-bold">{packingbox.weight ? packingbox.weight['value'] + ' ' + packingbox.weight['unit']: ''}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Depth')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.depth}</h6>
                                     </Col>
                                 </Row>
                             </div>

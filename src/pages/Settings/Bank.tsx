@@ -245,7 +245,7 @@ const Bank = (props: BankProps) => {
                         <Button variant="primary" onClick={() => {
                             openModal();
                             setselectedBank(null);
-                        }}>{t('Add Banks')}</Button>
+                        }}>{t('Add Bank')}</Button>
                     </Col>
                 </Row>
             </div>

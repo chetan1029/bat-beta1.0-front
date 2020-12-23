@@ -28,7 +28,7 @@ const EmptyState = ({ showArchived }) => {
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived hscode available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no hscode available')}</h5>}
+                    {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived HsCode available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no HsCode available')}</h5>}
                 </div>
             </Card.Body>
         </Card>
@@ -243,7 +243,7 @@ const Hscode = (props: HscodeProps) => {
                         <Button variant="primary" onClick={() => {
                             openModal();
                             setselectedHscode(null);
-                        }}>{t('Add Hscodes')}</Button>
+                        }}>{t('Add Hscode')}</Button>
                     </Col>
                 </Row>
             </div>
