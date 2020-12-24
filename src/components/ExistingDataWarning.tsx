@@ -26,7 +26,7 @@ const ExistingDataWarning = ({ name, message, onConfirm, onClose, confirmBtnVari
         <Modal show={show} onHide={onModalClose}>
             <Modal.Header closeButton className="h5 font-weight-normal my-0 border-0"></Modal.Header>
             <Modal.Body className="px-4 pb-4">
-                <h5 className="my-0">{t(`Following are an existing archived ${name} already available with the same data. Would you like to still create it?`)}</h5>
+                <h5 className="my-0">{t(`Following are an existing ${name} already available with the same data. Would you like to still create it?`)}</h5>
 
                 <div className='mt-3'>
                     <ol className='pl-3'>
