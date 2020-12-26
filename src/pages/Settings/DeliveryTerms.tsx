@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Media, Table } from "react-bootstrap";
+import { Row, Col, Card, Media, Table, Collapse, Accordion } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -62,44 +62,35 @@ const DeliveryCardItem = ({ delivery, companyId }: DeliveryCardItemProps) => {
 
 
     return (<>
-        <Row>
-            <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" className="payment-terms-link">
-                        <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Name')}</h6>
-                                <h6 className="m-0 font-weight-bold">{delivery.code} ({delivery.name})</h6>
-                            </div>
-                        </Card.Header>
-                        <Card.Body>
-                            <div className="p-2">
-                              <Table bordered responsive hover>
-                                <thead>
-                                  <tr>
-                                    <th>Services</th>
-                                    <th>Buyer</th>
-                                    <th>Seller</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {
-                                    delivery["deliveryterms"].map((term, key) =>
-                                    <tr>
-                                      <td>{term.service_name}</td>
-                                      <td><BuyerPays whopays={term.who_pays}  /></td>
-                                      <td><SellerPays whopays={term.who_pays}  /></td>
-                                    </tr>
-                                  )
-                                  }
-                                </tbody>
-                              </Table>
-                            </div>
-                        </Card.Body>
-                    </Link>
-                </Card>
-            </Col>
-        </Row>
+            <Card className="mb-2">
+              <Accordion.Toggle as={Card.Header} eventKey={delivery.id}>
+                <span className="font-weight-bold">{delivery.code} ({delivery.name})</span>
+              </Accordion.Toggle>
+              <Accordion.Collapse eventKey={delivery.id}>
+                <Card.Body>
+                <Table bordered responsive>
+                  <thead>
+                    <tr>
+                      <th>Services</th>
+                      <th>Buyer</th>
+                      <th>Seller</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      delivery["deliveryterms"].map((term, key) =>
+                      <tr>
+                        <td>{term.service_name}</td>
+                        <td><BuyerPays whopays={term.who_pays}  /></td>
+                        <td><SellerPays whopays={term.who_pays}  /></td>
+                      </tr>
+                    )
+                    }
+                  </tbody>
+                </Table>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
     </>
     )
 }
@@ -161,6 +152,7 @@ const DeliveryTerms = (props: DeliveryTermsProps) => {
                                 <div className="p-2">
                                     <Row>
                                         <Col lg={6} xs={12}>
+                                          <Accordion>
                                             {
                                                 deliveryTerms['results'].length > 0 ?
                                                     deliveryTerms['results'].map((delivery, key) =>
@@ -169,6 +161,8 @@ const DeliveryTerms = (props: DeliveryTermsProps) => {
                                                         />
                                                     ) : <EmptyState />
                                             }
+
+                                          </Accordion>
                                         </Col>
                                         <Col lg={6} xs={12}>
                                             <div>

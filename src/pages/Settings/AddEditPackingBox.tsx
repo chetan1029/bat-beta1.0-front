@@ -80,14 +80,14 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-payment-modal-header"></Modal.Header>
-            <Modal.Body className="p-0">
+            <Modal.Header closeButton className="add-payment-modal-header">
+              <Modal.Title>{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader /> : null}
 
-                    <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</h1>
-
+                    <div>
                         {(!isPackingBoxCreated && createPackingBoxError) && <AlertMessage error={createPackingBoxError} />}
                         {(!isPackingBoxUpdated && editPackingBoxError) && <AlertMessage error={editPackingBoxError} />}
                         {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
@@ -188,8 +188,10 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
                                                 id="input-group-dropdown-2"
                                                 className='btn-dropdown'
                                             >
-                                                <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "lb")}>{t("lb")}</Dropdown.Item>
                                                 <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "kg")}>{t("kg")}</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "g")}>{t("g")}</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "lb")}>{t("lb")}</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => validator.setFieldValue('weight.unit', "oz")}>{t("oz")}</Dropdown.Item>
                                             </DropdownButton>
                                         </InputGroup>
                                         {validator.touched.weight && validator.errors.weight && validator.errors.weight['value'] ? (

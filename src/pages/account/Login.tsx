@@ -41,7 +41,7 @@ const Login = () => {
         },
         validationSchema: Yup.object({
             username: Yup.string()
-                .required(t('Username is required')),
+                .required(t('Username or Email is required')),
             password: Yup.string()
                 .required(t('Password is required'))
         }),
@@ -92,9 +92,9 @@ const Login = () => {
 
                                         <Form noValidate onSubmit={validator.handleSubmit} className="">
                                             <Form.Group>
-                                                <Form.Label>{t('Username')}</Form.Label>
+                                                <Form.Label>{t('Username or Email')}</Form.Label>
 
-                                                <Form.Control type="text" placeholder={t("Your username")}
+                                                <Form.Control type="text" placeholder={t("Your username or Email")}
                                                     name="username" id="username"
                                                     onChange={validator.handleChange}
                                                     onBlur={validator.handleBlur}

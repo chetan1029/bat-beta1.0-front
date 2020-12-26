@@ -74,14 +74,14 @@ const AddEditTax = ({ isOpen, onClose, tax, companyId }: AddEditTaxProps) => {
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-tax-modal-header"></Modal.Header>
-            <Modal.Body className="p-0">
+            <Modal.Header closeButton className="add-tax-modal-header">
+              <Modal.Title>{tax ? t("Edit Tax") : t("Add Tax")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
 
-                    <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{tax ? t("Edit Tax") : t("Add Tax")}</h1>
-
+                    <div>
                         {(!isTaxCreated && createTaxError) && <AlertMessage error={createTaxError} />}
                         {(!isTaxUpdated && editTaxError) && <AlertMessage error={editTaxError} />}
 
