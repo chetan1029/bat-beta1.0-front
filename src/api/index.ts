@@ -441,12 +441,12 @@ function getTagsAndTypes(companyId: number) {
     return api.get(`${componentUrl(companyId)}tags-types/`);
 }
 
-function exportCSVFile(companyId: number) {
-    return api.get(`${componentUrl(companyId)}csvexport/` );
+function exportCSVFile(companyId: number, filters?: any) {
+    return api.get(`${componentUrl(companyId)}csvexport/`, filters);
 }
 
-function exportXLSFile(companyId: number) {
-    return api.get(`${componentUrl(companyId)}xlsxeport/` );
+function exportXLSFile(companyId: number, filters?: any) {
+    return api.getFile(`${componentUrl(companyId)}xlsxeport/`, filters);
 }
 
 /*variations*/

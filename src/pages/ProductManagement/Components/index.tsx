@@ -17,7 +17,7 @@ import GridView from "./GridView";
 
 const FILETYPES: Array<any> = [
 	{ label: "As csv", value: "csv" },
-	{ label: "As xls", value: "xls" },
+	{ label: "As xlsx", value: "xlsx" },
 ];
 
 const TabMenu = ({ onChange, selectedTab }) => {
@@ -181,8 +181,7 @@ const Components = (props: ComponentsProps) => {
                             </span>
 
 							<Dropdown>
-								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export'
-												 as={Link}>
+								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export' as={'button'}>
 									<Icon name="export" className="icon icon-xs  mr-2"/>
 									<span className='font-weight-bold'>{t('Export')}</span>
 								</Dropdown.Toggle>
@@ -190,7 +189,7 @@ const Components = (props: ComponentsProps) => {
 								<Dropdown.Menu>
 									{map(FILETYPES, (file, index) => (
 										<Dropdown.Item key={index}
-													   onClick={() => dispatch(exportComponent(companyId, file.value))}>
+													   onClick={() => dispatch(exportComponent(companyId, file.value, filters))}>
 											{file.label}
 										</Dropdown.Item>
 									))}
