@@ -73,66 +73,119 @@
     }
   }
 
+  // .list-view {
+  //   .table-component-list {
+  //     td {
+  //       vertical-align: middle;
+  //     }
+
+  //     thead {
+  //       background-color: $gray-200;
+  //       // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+  //       border: 1px $gray-200;
+  //       border-radius: 10px;
+  //       padding: 1em 2em;
+  //       margin: 1em 0;
+  //     }
+
+  //     tbody {
+  //       // background: $white !important;
+  //     }
+
+  //     td.main-table-cell {
+  //       padding: 0 0.75rem 1rem;
+  //     }
+
+  //     tr.component-row {
+  //       td {
+  //         .inner-table {
+  //           // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+  //           border-radius: 10px;
+  //           border: 1px $gray-200;
+
+  //           td {
+  //             padding: 1em;
+  //           }
+  //         }
+
+  //         .component-body {
+  //           .image img {
+  //             height: 3.5em;
+  //             width: 3.5em;
+  //             object-fit: cover;
+  //             border: 1px solid $gray-200;
+  //             border-radius: 0.7em;
+  //           }
+
+  //           .product-detail {
+  //             padding: 5px 30px;
+  //           }
+
+  //           .description {
+  //             white-space: nowrap;
+  //             overflow: hidden;
+  //             text-overflow: ellipsis;
+  //             width: 90%;
+  //           }
+  //         }
+  //       }
+  //     }
+
+  //     tr.extra-info {
+  //       border-top: 2px solid $gray-200;
+
+  //       .tags {
+  //         width: auto;
+  //         padding: 4px 8px;
+  //         font-size: 14px;
+  //         list-style: none;
+  //         border-radius: 6px;
+  //         margin: 0 8px 8px 0;
+  //         background: $gray-200;
+
+  //         &:hover {
+  //           background: $gray-200;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
+
   .list-view {
-    .table-component-list {
-      td {
-        vertical-align: middle;
-      }
-
-      thead {
-        background-color: $gray-200;
-        // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
-        border: 1px $gray-200;
-        border-radius: 10px;
-        padding: 1em 2em;
-        margin: 1em 0;
-      }
-
-      tbody {
-        // background: $white !important;
-      }
-
-      td.main-table-cell {
-        padding: 0 0.75rem 1rem;
-      }
-
-      tr.component-row {
-        td {
-          .inner-table {
-            // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
-            border-radius: 10px;
-            border: 1px $gray-200;
-
-            td {
-              padding: 1em;
-            }
-          }
-          
-          .component-body {
-            .image img {
-              height: 3.5em;
-              width: 3.5em;
-              object-fit: cover;
-              border: 1px solid $gray-200;
-              border-radius: 0.7em;
-            }
     
-            .product-detail {
-              padding: 5px 30px;
-            }
-    
-            .description {
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              width: 90%;
-            }
-          }
-        }
+    .body-row {
+      box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+      border: 1px $gray-200;
+      border-radius: 10px;
+      padding: 1em 2em;
+      margin: 1em 0;
+
+      .image img {
+        height: 3.5em;
+        width: 3.5em;
+        object-fit: cover;
+        border: 1px solid $gray-200;
+        border-radius: 0.7em;
       }
 
-      tr.extra-info {
+      .product-detail {
+        padding: 5px 30px;
+      }
+
+      .description {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 90%;
+      }
+
+      .extra-info {
+        margin: 0 !important;
+        padding: 1em 0 !important;
         border-top: 2px solid $gray-200;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .tags {
           width: auto;
@@ -148,6 +201,15 @@
           }
         }
       }
+    }
+
+    .header-row {
+      background-color: $gray-200;
+      // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+      border: 1px $gray-200;
+      border-radius: 10px;
+      padding: 1em 2em;
+      margin: 1em 0;
     }
   }
 
@@ -188,6 +250,7 @@
       border-radius: 6px;
       margin: 0 8px 8px 0;
       background: $gray-200;
+
       &:hover {
         background: $gray-200;
       }
@@ -207,9 +270,10 @@
 
   .export {
     background: transparent !important;
+
     &:after {
       content: none;
-   }
+    }
   }
 }
 
@@ -261,6 +325,7 @@
   border-radius: 6px;
   margin: 0 8px 8px 0;
   background: $gray-200;
+
   &:hover {
     background: $gray-200;
   }

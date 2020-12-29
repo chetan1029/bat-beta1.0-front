@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Table, Badge } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { find, get, map, size } from "lodash";
 import { Link } from "react-router-dom";
@@ -21,96 +21,87 @@ const ListView = (props: ListViewProps) => {
 	const { t } = useTranslation();
 	return (
 		<div className={"list-view"}>
-			<Table responsive className='table-component-list'>
-				<thead>
-					<tr>
-						<th style={{ width: '5%' }}>
+			<Row className={"header-row"}>
+				<Col lg={1}>
+					<Form.Check
+						type="checkbox"
+						id={"checkbox"}
+						label=""
+						onChange={(e: any) => onSelectAllComponents(e)}
+					/>
+				</Col>
+				<Col lg={2}>
+					{t("Image")}
+				</Col>
+				<Col lg={4}>
+					{t("Title")}
+				</Col>
+				<Col lg={2}>
+					{t("Status")}
+				</Col>
+				<Col lg={2}>
+					{t("SKU")}
+				</Col>
+				<Col lg={1}>
+					{t("Action")}
+				</Col>
+			</Row>
+
+			{map(components.results, (component, i) => (
+				<div className={"body-row"} key={i}>
+					<Row className={"m-0 pb-4"}>
+						<Col lg={1}>
 							<Form.Check
 								type="checkbox"
-								id={"checkbox"}
+								key={component.id}
+								id={`checkbox${component.id}`}
 								label=""
-								onChange={(e: any) => onSelectAllComponents(e)}
+								checked={!!find(selectedComponents, _component => _component.id === component.id)}
+								onChange={(e: any) => onSelectComponent(e, component)}
 							/>
-						</th>
-						<th className='font-weight-normal text-dark' style={{ width: '10%' }}>{t("Image")}</th>
-						<th className='font-weight-normal text-dark' style={{ width: '30%' }}>{t("Title")}</th>
-						<th className='font-weight-normal text-dark' style={{ width: '20%' }}>{t("Status")}</th>
-						<th className='font-weight-normal text-dark' style={{ width: '15%' }}>{t("SKU")}</th>
-						<th className='font-weight-normal text-dark' style={{ width: '10%' }}>{t("Action")}</th>
-					</tr>
-				</thead>
-				<tbody>
-					{map(components.results, (component, i) => (
-						<React.Fragment key={i}>
-							<tr className="component-row">
-								<td colSpan={6} className="main-table-cell">
-									<div className="component-body">
-										<Table className="inner-table mt-3 mb-0 shadow">
-											<tbody>
-												<tr className="component-top">
-													<td style={{ width: '5%' }}>
-														<Form.Check
-															type="checkbox"
-															key={component.id}
-															id={`checkbox${component.id}`}
-															label=""
-															checked={!!find(selectedComponents, _component => _component.id === component.id)}
-															onChange={(e: any) => onSelectComponent(e, component)}
-														/>
-													</td>
-													<td style={{ width: '10%' }}>
-														<div className={"image"}>
-															<img src={size(component.images) > 0 ? (
-																find(component.images, img => !!img.main_image) ?
-																	find(component.images, img => !!img.main_image).image :
-																	get(component, "images[0].image")) :
-																dummyImage}
-																alt={component.title} />
-														</div>
-													</td>
-													<td style={{ width: '30%' }}>
-														<b>{component.title}</b>
-														<p className="description text-muted">{component.description ? component.description.substring(0, 100) + "..." : ''}</p>
-													</td>
-													<td style={{ width: '20%' }}>
-														<Badge variant='outline-primary' pill className='capitalize font-12'>
-															{component.status && t(component.status.name)}
-														</Badge>
-													</td>
-													<td style={{ width: '15%' }}>
-														{component.sku}
-													</td>
-													<td className='text-right' style={{ width: '10%' }}>
-														<Link to={"#"} onClick={() => archiveComponent(component)}>
-															<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer" />
-														</Link>
-													</td>
-												</tr>
-
-												<tr className="extra-info">
-													<td colSpan={3}>
-														<div className="p-0">
-															{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
-																<span key={i} className={"tags"}>{tag}</span>
-															))}
-														</div>
-													</td>
-													<td colSpan={3} className="text-right">
-														<Link className="product-detail btn btn-outline-primary btn-sm"
-															to={`/product-management/${companyId}/components/${component.id}`}>
-															{t("Component Details")}
-														</Link>
-													</td>
-												</tr>
-											</tbody>
-										</Table>
-									</div>
-								</td>
-							</tr>
-						</React.Fragment>
-					))}
-				</tbody>
-			</Table>
+						</Col>
+						<Col lg={2} className="px-4">
+							<div className={"image"}>
+								<img src={size(component.images) > 0 ? (
+									find(component.images, img => !!img.main_image) ?
+										find(component.images, img => !!img.main_image).image :
+										get(component, "images[0].image")) :
+									dummyImage}
+									alt={component.title} />
+							</div>
+						</Col>
+						<Col lg={4} className="p-0">
+							<b>{component.title}</b><br />
+							<p className="description text-muted">{component.description}</p>
+						</Col>
+						<Col lg={2} className="p-0">
+							<Link to={"#"} className="active-label btn btn-outline-primary">
+								{component.status && t(component.status.name)}
+							</Link>
+						</Col>
+						<Col lg={2} className="p-0">
+							{component.sku}
+						</Col>
+						<Col lg={1} className="p-0">
+							{component['is_active'] ?
+								<Link to={"#"} onClick={() => archiveComponent(component)}>
+									<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer" />
+								</Link> : null}
+						</Col>
+					</Row>
+					<Row className={"extra-info"}>
+						<div className="p-0">
+							{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+								<span key={i} className={"tags"}>{tag}</span>
+							))}
+						</div>
+						<Link className="product-detail btn btn-outline-primary"
+							to={`/product-management/${companyId}/components/${component.id}`}>
+							{t("Component Details")}
+						</Link>
+					</Row>
+				</div>
+			))}
 		</div>
 	);
 };

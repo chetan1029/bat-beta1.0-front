@@ -4,6 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { filter, findIndex, get, isEqual, map } from "lodash";
+import { isMobileOnly } from "react-device-detect";
 
 import Icon from "../../../components/Icon";
 import { archiveComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
@@ -94,7 +95,13 @@ const Components = (props: ComponentsProps) => {
 
 	useEffect(() => {
 		prevFiltersRef.current = filters;
-	});
+	}, [filters]);
+
+	useEffect(() => {
+		if (isMobileOnly) {
+			setSelectedView('grid');
+		}
+	}, []);
 
 	const prevFilters = prevFiltersRef.current;
 
@@ -152,7 +159,13 @@ const Components = (props: ComponentsProps) => {
 
 	const handleOnTabChange = (tab) => {
 		setSelectedTab(tab);
-		setFilters({ ...filters, status: tab, limit, offset: 0 });
+		if (tab !== 'archive') {
+			setFilters({ ...filters, status: tab, limit, offset: 0, is_active: true });
+		} else {
+			const f = { ...filters, limit, offset: 0, is_active: false };
+			delete f['status'];
+			setFilters(f);
+		}
 	};
 
 	const onChangeView = () => {
@@ -208,7 +221,8 @@ const Components = (props: ComponentsProps) => {
 				<Card.Body>
 					{loading ? <Loader/> : null}
 					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab}/>
-					<Link to={"#"} className={"view-icon p-3"} onClick={onChangeView}>
+
+					<Link to={"#"} className={"view-icon p-3 d-none d-sm-block"} onClick={onChangeView}>
 						<Icon name="components" className="icon icon-xs svg-outline-primary mr-2"/>
 					</Link>
 					

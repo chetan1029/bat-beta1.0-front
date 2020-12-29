@@ -26,7 +26,7 @@ const GridView = (props: GridViewProps) => {
 					<Card className='mb-3'>
 						<Card.Body className='px-4 pt-4'>
 							<Row>
-								<Col lg={3}>
+								<Col lg={3} xs={6}>
 									<div className={"image"}>
 										<img src={size(component.images) > 0 ? (
 											find(component.images, img => !!img.main_image) ?
@@ -36,7 +36,7 @@ const GridView = (props: GridViewProps) => {
 											alt={component.title} />
 									</div>
 								</Col>
-								<Col lg={9}>
+								<Col lg={9} xs={6}>
 									<div className="description text-muted">{t('SKU')}</div>
 									<div className="d-flex">
 										{component.sku}
@@ -72,16 +72,16 @@ const GridView = (props: GridViewProps) => {
 								</Col>
 							</Row>
 							<Row className="mt-4 align-items-center">
-								<Col lg={'auto'}>
+								<Col lg={'auto'} xs={8}>
 									<Link className="product-detail btn btn-outline-primary product-detail"
 										to={`/product-management/${companyId}/components/${component.id}`}>
 										{t("Component Details")}
 									</Link>
 								</Col>
-								<Col lg={2}>
-									<Link to={"#"} onClick={() => archiveComponent(component)} className='archive product-detail ml-1'>
+								<Col lg={2} xs={4}>
+									{component['is_active'] ? <Link to={"#"} onClick={() => archiveComponent(component)} className='archive product-detail ml-1'>
 										<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer" />
-									</Link>
+									</Link> : null}
 								</Col>
 							</Row>
 						</Card.Body>
