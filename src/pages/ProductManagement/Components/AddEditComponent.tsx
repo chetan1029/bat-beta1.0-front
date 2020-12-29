@@ -106,18 +106,20 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 		});
 
 		if (!valid.includes(false)) {
+			const tags = values.tags.map(tag => tag.value).toString();
+			
 			let data = {
 				...values,
 				...{
 					is_component: true,
-					tags: values.tags.map(tag => tag.value).toString(),
+					tags: tags,
 					type: values.type['value'],
 					series: values.series['value'],
 					status: values.status['value'],
 					products: map(variationOptions, opt => ({
 						title: `${values.title} ${opt.name}`,
 						type: values.type['value'],
-						tags: values.tags.map(tag => tag.value).toString(),
+						tags: tags,
 						model_number: opt.model_number,
 						manufacturer_part_number: opt.manufacturer_part_number,
 						weight: opt.weight,
