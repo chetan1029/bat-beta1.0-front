@@ -7,7 +7,7 @@ import { filter, findIndex, get, isEqual, map } from "lodash";
 import { isMobileOnly } from "react-device-detect";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
+import { archiveComponent, restoreComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
@@ -80,6 +80,8 @@ const Components = (props: ComponentsProps) => {
 		tagsAndTypes,
 		isExported,
 		isComponentDiscontinued,
+		isComponentRestored,
+		restoreComponentError
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		components: Components.components,
@@ -89,6 +91,8 @@ const Components = (props: ComponentsProps) => {
 		tagsAndTypes: Components.tagsAndTypes,
 		isExported: Components.isExported,
 		isComponentDiscontinued: Components.isComponentDiscontinued,
+		isComponentRestored: Components.isComponentRestored,
+		restoreComponentError: Components.restoreComponentError,
 	}));
 
 	const prevFiltersRef = useRef();
@@ -260,6 +264,10 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
                                                             icon={"x"} showAsNotification={false}/>}
+
+					{restoreComponentError && <MessageAlert message={restoreComponentError}
+						icon={"x"} showAsNotification={false} />}
+
 					{get(components, "results") && get(components, "results").length > 0 ?
 						<>
 							{selectedView === "list" ?
@@ -270,6 +278,7 @@ const Components = (props: ComponentsProps) => {
 									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
 									onSelectComponent={handleOnSelectComponents}
 									onSelectAllComponents={handleOnSelectAllComponents}
+									restoreComponent={(component) => dispatch(restoreComponent(companyId, component.id, filters))}
 								/> :
 								<GridView
 									companyId={companyId}
@@ -277,6 +286,7 @@ const Components = (props: ComponentsProps) => {
 									selectedComponents={selectedComponents}
 									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
 									onSelectComponent={handleOnSelectComponents}
+									restoreComponent={(component) => dispatch(restoreComponent(companyId, component.id, filters))}
 								/>
 							}
 							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
@@ -290,6 +300,9 @@ const Components = (props: ComponentsProps) => {
 												iconWrapperClass="bg-success text-white p-2 rounded-circle"
 												iconClass="icon-sm"/> : null}
 			{isComponentArchived ? <MessageAlert message={t('Component is archived')} icon={"check"}
+												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
+												 iconClass="icon-sm"/> : null}
+			{isComponentRestored ? <MessageAlert message={t('Component is restored')} icon={"check"}
 												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
 												 iconClass="icon-sm"/> : null}
 			{isComponentDiscontinued ? <MessageAlert message={t('Component is discontinued')} icon={"check"}

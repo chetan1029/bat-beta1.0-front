@@ -12,12 +12,14 @@ interface ListViewProps {
 	companyId: any;
 	selectedComponents: any;
 	archiveComponent: (any) => void;
+	restoreComponent: (any) => void;
 	onSelectComponent: any;
 	onSelectAllComponents: (any) => void;
 }
 
 const ListView = (props: ListViewProps) => {
-	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent, onSelectAllComponents } = props;
+	const { components, companyId, selectedComponents, archiveComponent,
+		onSelectComponent, onSelectAllComponents, restoreComponent } = props;
 	const { t } = useTranslation();
 	return (
 		<div className={"list-view"}>
@@ -86,7 +88,9 @@ const ListView = (props: ListViewProps) => {
 							{component['is_active'] ?
 								<Link to={"#"} onClick={() => archiveComponent(component)}>
 									<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer" />
-								</Link> : null}
+								</Link> : <Link to={"#"} onClick={() => restoreComponent(component)}>
+									<Icon name="un-archive" className="mx-1 svg-outline-primary cursor-pointer" />
+								</Link>}
 						</Col>
 					</Row>
 					<Row className={"extra-info"}>

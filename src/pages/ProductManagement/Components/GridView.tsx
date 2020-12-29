@@ -12,12 +12,13 @@ interface GridViewProps {
 	companyId: any;
 	selectedComponents: any;
 	archiveComponent: (any) => void;
+	restoreComponent: (any) => void;
 	onSelectComponent: any;
 }
 
 const GridView = (props: GridViewProps) => {
 	const { t } = useTranslation();
-	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent } = props;
+	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent, restoreComponent } = props;
 
 	return (
 		<Row className={"grid-view"}>
@@ -81,7 +82,9 @@ const GridView = (props: GridViewProps) => {
 								<Col lg={2} xs={4}>
 									{component['is_active'] ? <Link to={"#"} onClick={() => archiveComponent(component)} className='archive product-detail ml-1'>
 										<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer" />
-									</Link> : null}
+									</Link> : <Link to={"#"} onClick={() => restoreComponent(component)} className='archive product-detail ml-1'>
+										<Icon name="un-archive" className="mx-1 svg-outline-primary cursor-pointer" />
+									</Link>}
 								</Col>
 							</Row>
 						</Card.Body>
