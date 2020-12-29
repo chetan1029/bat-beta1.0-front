@@ -23,7 +23,7 @@ const GridView = (props: GridViewProps) => {
 		<div className={"grid-view"}>
 			{map(components.results, (component, i) => (
 			<Card key={i}>
-				<Card.Body>
+				<Card.Body className='px-4 pt-4'>
 					<Row>
 						<Col lg={3}>
 							<div className={"image"}>
@@ -70,15 +70,15 @@ const GridView = (props: GridViewProps) => {
 							</div>
 						</Col>
 					</Row>
-					<Row className="mt-3 align-items-center">
-						<Col lg={8}>
-							<Link className="product-detail btn btn-outline-primary"
+					<Row className="mt-4 align-items-center">
+						<Col lg={'auto'}>
+							<Link className="product-detail btn btn-outline-primary product-detail"
 								  to={`/product-management/${companyId}/components/${component.id}`}>
 								{t("Component Details")}
 							</Link>
 						</Col>
-						<Col lg={2} className="archive">
-							<Link to={"#"} onClick={() => archiveComponent(component)}>
+						<Col lg={2}>
+							<Link to={"#"} onClick={() => archiveComponent(component)} className='archive product-detail ml-1'>
 								<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
 							</Link>
 						</Col>

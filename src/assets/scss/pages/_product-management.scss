@@ -173,21 +173,19 @@
     }
 
     .product-detail {
-      padding: 16px 10px;
+      padding: 14px;
     }
 
     .archive {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       background-color: $gray-200;
       border-radius: 0.7em;
-      height: 3em;
+      // height: 3em;
     }
 
   }
 
   .export {
+    background: transparent !important;
     &:after {
       content: none;
    }

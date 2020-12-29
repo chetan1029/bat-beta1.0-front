@@ -19,6 +19,8 @@ import {
 	discontinueComponent
 } from "../../../api";
 
+import { downloadFile} from "../../../api/utils";
+
 import { componentsApiResponseError, componentsApiResponseSuccess } from "./actions";
 import { ComponentsTypes } from './constants';
 
@@ -141,17 +143,22 @@ function* getTagsAndTypesById({ payload: { companyId } }: any) {
 /**
  * export component
  */
-function* exportComponent({ payload: { companyId, fileType } }: any) {
+function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 	try {
 		if (fileType) {
-			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId);
-			const url = window.URL.createObjectURL(new Blob([response.data]));
-			const link = document.createElement('a');
-			link.href = url;
-			link.setAttribute('download', `components.${fileType}`);
-			document.body.appendChild(link);
-			link.click();
-			yield put(componentsApiResponseSuccess(ComponentsTypes.EXPORT_COMPONENT, response.data));
+			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId, filters);
+			// const url = window.URL.createObjectURL(new Blob([response.data]));
+			// const link = document.createElement('a');
+			// link.href = url;
+			// link.setAttribute('download', `components.${fileType}`);
+			// document.body.appendChild(link);
+			// link.click();
+			if (fileType === 'csv') {
+				downloadFile(response.data, `components.${fileType}`);
+			} else {
+				downloadFile(response.data, `components.${fileType}`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			}
+			yield put(componentsApiResponseSuccess(ComponentsTypes.EXPORT_COMPONENT, true));
 		}
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.EXPORT_COMPONENT, error));
