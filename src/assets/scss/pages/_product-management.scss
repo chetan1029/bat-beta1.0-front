@@ -6,8 +6,13 @@
     right: 6px;
   }
 
+  .filter-left {
+    width: 100%;
+  }
+
   .search {
-    width: 25%;
+    width: auto;
+    height: 46px;
   }
 
   .dropdown {
@@ -69,39 +74,65 @@
   }
 
   .list-view {
-    .body-row {
-      box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
-      border: 1px $gray-200;
-      border-radius: 10px;
-      padding: 1em 2em;
-      margin: 1em 0;
-
-      .image img {
-        height: 3.5em;
-        width: 3.5em;
-        object-fit: cover;
-        border: 1px solid $gray-200;
-        border-radius: 0.7em;
+    .table-component-list {
+      td {
+        vertical-align: middle;
       }
 
-      .product-detail {
-        padding: 5px 30px;
+      thead {
+        background-color: $gray-200;
+        // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+        border: 1px $gray-200;
+        border-radius: 10px;
+        padding: 1em 2em;
+        margin: 1em 0;
       }
 
-      .description {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 90%;
+      tbody {
+        // background: $white !important;
       }
 
-      .extra-info {
-        margin: 0 !important;
-        padding: 1em 0 !important;
+      td.main-table-cell {
+        padding: 0 0.75rem 1rem;
+      }
+
+      tr.component-row {
+        td {
+          .inner-table {
+            // box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
+            border-radius: 10px;
+            border: 1px $gray-200;
+
+            td {
+              padding: 1em;
+            }
+          }
+          
+          .component-body {
+            .image img {
+              height: 3.5em;
+              width: 3.5em;
+              object-fit: cover;
+              border: 1px solid $gray-200;
+              border-radius: 0.7em;
+            }
+    
+            .product-detail {
+              padding: 5px 30px;
+            }
+    
+            .description {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              width: 90%;
+            }
+          }
+        }
+      }
+
+      tr.extra-info {
         border-top: 2px solid $gray-200;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
 
         .tags {
           width: auto;
@@ -111,31 +142,21 @@
           border-radius: 6px;
           margin: 0 8px 8px 0;
           background: $gray-200;
+
           &:hover {
             background: $gray-200;
           }
         }
       }
     }
-
-    .header-row {
-      background-color: $gray-200;
-      box-shadow: 0 4px 30px rgba(140, 157, 202, 0.15);
-      border: 1px $gray-200;
-      border-radius: 10px;
-      padding: 1em 2em;
-      margin: 1em 0;
-    }
   }
 
   .grid-view {
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
 
     .card {
-      height: 20em;
-      width: 24em;
-      margin: 0 3em 1.5em 0;
+      min-height: 290px;
     }
 
     .image img {

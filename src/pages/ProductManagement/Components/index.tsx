@@ -167,22 +167,22 @@ const Components = (props: ComponentsProps) => {
 		<div className={"components"}>
 			<div className="pt-4 pb-3 px-3">
 				<Row>
-					<Col>
+					<Col md={6}>
 						<div className="d-flex align-items-center">
 							<Icon name="components" className="icon icon-xs  mr-2"/>
 							<h1 className="m-0">{t('Components')}</h1>
 						</div>
 					</Col>
-					<Col className="text-right d-flex flex-row align-items-center justify-content-end">
+					<Col className="text-md-right d-flex flex-row align-items-center justify-content-md-end mt-2 mt-md-0" md={6}>
 						<div className="d-flex align-items-center">
                             <span>
-                                <Icon name="import" className="icon icon-xs  mr-2"/>
+                                <Icon name="import" className="icon icon-xs mr-1"/>
                                 <b>{t('Import')}</b>
                             </span>
 
 							<Dropdown>
 								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export' as={'button'}>
-									<Icon name="export" className="icon icon-xs  mr-2"/>
+									<Icon name="export" className="icon icon-xs mr-1"/>
 									<span className='font-weight-bold'>{t('Export')}</span>
 								</Dropdown.Toggle>
 
@@ -197,7 +197,9 @@ const Components = (props: ComponentsProps) => {
 							</Dropdown>
 						</div>
 						<Link to={`/product-management/${companyId}/components/add`}
-							  className="btn btn-primary">{t('Add Component')}</Link>
+							  className="btn btn-primary d-none d-md-block">{t('Add Component')}</Link>
+						<Link to={`/product-management/${companyId}/components/add`}
+							  className="btn btn-primary btn-sm d-block d-md-none">{t('Add Component')}</Link>
 					</Col>
 				</Row>
 			</div>
@@ -206,11 +208,12 @@ const Components = (props: ComponentsProps) => {
 				<Card.Body>
 					{loading ? <Loader/> : null}
 					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab}/>
-					<Link to={"#"} className={"view-icon"} onClick={onChangeView}>
-						<Icon name="components" className="icon icon-xs svg-outline-primary  mr-2"/>
+					<Link to={"#"} className={"view-icon p-3"} onClick={onChangeView}>
+						<Icon name="components" className="icon icon-xs svg-outline-primary mr-2"/>
 					</Link>
-					<div className="d-flex align-items-center justify-content-between mb-3">
-						<div className="d-flex align-items-center w-75">
+					
+					<div className="d-md-flex align-items-md-center justify-content-md-between mb-3">
+						<div className="d-flex align-items-center filter-left">
 							<DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
 								<Dropdown.Item
 									onClick={() => handleOnClickOrderBy("create_date")}>{t('Created Date- ASC')}</Dropdown.Item>
@@ -221,6 +224,7 @@ const Components = (props: ComponentsProps) => {
 								<Dropdown.Item
 									onClick={() => handleOnClickOrderBy("-title")}>{t('Title- DESC')}</Dropdown.Item>
 							</DropdownButton>
+							
 							<div className="search ml-4">
 								<input type="text" placeholder="Search"
 									   onChange={(e: any) => setSearch(e.target.value)}
@@ -231,6 +235,7 @@ const Components = (props: ComponentsProps) => {
 								</button>
 							</div>
 						</div>
+						
 						<FilterDropDown
 							filters={{
 								"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
