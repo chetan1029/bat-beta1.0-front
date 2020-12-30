@@ -24,26 +24,26 @@ const ListView = (props: ListViewProps) => {
 			<Row className={"header-row"}>
 				<div>
 					<Form.Check
-						type="checkbox"
+						type="switch"
 						id={"checkbox"}
 						label=""
 						onChange={(e: any) => onSelectAllComponents(e)}
 					/>
 				</div>
-				<Col lg={2} className="px-4">
-					{t("Image")}
+				<Col lg={1} className="px-4">
+					<b>{t("Image")}</b>
 				</Col>
 				<Col lg={4} className="p-0">
-					{t("Title")}
+					<b>{t("Title")}</b>
 				</Col>
 				<Col lg={2} className="p-0">
-					{t("Status")}
+					<b>{t("Type")}</b>
 				</Col>
 				<Col lg={2} className="p-0">
-					{t("SKU")}
+					<b>{t("Status")}</b>
 				</Col>
-				<Col lg={1} className="p-0">
-					{t("Action")}
+				<Col lg={2} className="p-0">
+					<b>{t("Model Number")}</b>
 				</Col>
 			</Row>
 			{map(components.results, (component, i) => (
@@ -51,7 +51,7 @@ const ListView = (props: ListViewProps) => {
 					<Row className={"m-0 pb-4"}>
 						<div>
 							<Form.Check
-								type="checkbox"
+								type="switch"
 								key={component.id}
 								id={`checkbox${component.id}`}
 								label=""
@@ -59,7 +59,7 @@ const ListView = (props: ListViewProps) => {
 								onChange={(e: any) => onSelectComponent(e, component)}
 							/>
 						</div>
-						<Col lg={2} className="px-4">
+						<Col lg={1} className="px-4">
 							<div className={"image"}>
 								<img src={size(component.images) > 0 ? (
 										find(component.images, img => !!img.main_image) ?
@@ -70,8 +70,13 @@ const ListView = (props: ListViewProps) => {
 							</div>
 						</Col>
 						<Col lg={4} className="p-0">
-							<b>{component.title}</b><br/>
-							<p className="description text-muted">{component.description}</p>
+							<Link className="h5"
+								  to={`/product-management/${companyId}/components/${component.id}`}>
+								{component.title}
+							</Link>
+						</Col>
+						<Col lg={2} className="p-0">
+							{component.type}
 						</Col>
 						<Col lg={2} className="p-0">
 							<Link to={"#"} className="active-label btn btn-outline-primary">
@@ -79,12 +84,7 @@ const ListView = (props: ListViewProps) => {
 							</Link>
 						</Col>
 						<Col lg={2} className="p-0">
-							{component.sku}
-						</Col>
-						<Col lg={1} className="p-0">
-							<Link to={"#"} onClick={() => archiveComponent(component)}>
-								<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
-							</Link>
+							{component.model_number}
 						</Col>
 					</Row>
 					<Row className={"extra-info"}>
@@ -93,10 +93,14 @@ const ListView = (props: ListViewProps) => {
 								<span key={i} className={"tags"}>{tag}</span>
 							))}
 						</div>
-						<Link className="product-detail btn btn-outline-primary"
-							  to={`/product-management/${companyId}/components/${component.id}`}>
-							{t("Component Details")}
-						</Link>
+						<div className="d-flex align-items-center">
+							<Link to={"#"} onClick={() => archiveComponent(component)}>
+								<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
+							</Link>
+							<Link to={"#"} onClick={() => archiveComponent(component)}>
+								<Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
+							</Link>
+						</div>
 					</Row>
 				</div>
 			))}
