@@ -409,9 +409,13 @@ const VariationDetails = (props: VariationDetailsProps) => {
 											id="input-group-dropdown-2"
 										>
 											<Dropdown.Item
+												onClick={() => handleWeightChange("unit", "kg", index)}>{t("kg")}</Dropdown.Item>
+											<Dropdown.Item
+												onClick={() => handleWeightChange("unit", "g", index)}>{t("g")}</Dropdown.Item>
+											<Dropdown.Item
 												onClick={() => handleWeightChange("unit", "lb", index)}>{t("lb")}</Dropdown.Item>
 											<Dropdown.Item
-												onClick={() => handleWeightChange("unit", "kg", index)}>{t("kg")}</Dropdown.Item>
+												onClick={() => handleWeightChange("unit", "oz", index)}>{t("oz")}</Dropdown.Item>
 										</DropdownButton>
 									</InputGroup>
 									{(numberInvalidError || get(errors, `variationOptions[${index}].weight`)) &&

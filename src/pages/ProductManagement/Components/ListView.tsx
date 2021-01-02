@@ -30,10 +30,10 @@ const ListView = (props: ListViewProps) => {
 						onChange={(e: any) => onSelectAllComponents(e)}
 					/>
 				</div>
-				<Col lg={1} className="px-4">
+				<Col lg={2} className="px-4">
 					<b>{t("Image")}</b>
 				</Col>
-				<Col lg={4} className="p-0">
+				<Col lg={3} className="p-0">
 					<b>{t("Title")}</b>
 				</Col>
 				<Col lg={2} className="p-0">
@@ -59,7 +59,7 @@ const ListView = (props: ListViewProps) => {
 								onChange={(e: any) => onSelectComponent(e, component)}
 							/>
 						</div>
-						<Col lg={1} className="px-4">
+						<Col lg={2} className="px-4">
 							<div className={"image"}>
 								<img src={size(component.images) > 0 ? (
 										find(component.images, img => !!img.main_image) ?
@@ -69,7 +69,7 @@ const ListView = (props: ListViewProps) => {
 									 alt={component.title}/>
 							</div>
 						</Col>
-						<Col lg={4} className="p-0">
+						<Col lg={3} className="p-0">
 							<Link className="h5"
 								  to={`/product-management/${companyId}/components/${component.id}`}>
 								{component.title}
