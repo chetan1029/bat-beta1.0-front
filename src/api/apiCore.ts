@@ -62,6 +62,17 @@ class APICore {
         return response;
     }
 
+    getFile = (url, params?: any) => {
+        let response;
+        if (params) {
+            var queryString = params ? Object.keys(params).map(key => key + '=' + params[key]).join('&') : "";
+            response = axios.get(`${url}?${queryString}`, { responseType: 'blob' });
+        } else {
+            response = axios.get(`${url}`, { responseType: 'blob' });
+        }
+        return response;
+    }
+
     getMultiple = (urls: Array<string>, params?: {}) => {
         const reqs: Array<any> = [];
         let queryString = "";

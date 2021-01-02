@@ -310,9 +310,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
               </Card.Body>
             </Card>
 			}
-			{variationOptError && <Alert variant="danger" className="my-2">{variationOptError}</Alert>}
+			{variationOptError && <Alert variant="danger" className="my-2 text-white">{variationOptError}</Alert>}
 			{get(errors, "options") && variationOptions.length === 0 &&
-            <Alert variant="danger" className="my-2">{get(errors, "options")}</Alert>}
+            <Alert variant="danger" className="my-2 text-white">{get(errors, "options")}</Alert>}
 			{map(variationOptions, (option, index) => (
 				<Row key={index} className="mt-2 mx-0">
 					{!!option.show ?

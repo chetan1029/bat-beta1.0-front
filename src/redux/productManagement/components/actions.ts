@@ -37,6 +37,11 @@ export const archiveComponent = (companyId: string | number, componentId: number
     payload: { companyId, componentId, data, filters }
 });
 
+export const restoreComponent = (companyId: string | number, componentId: number | string, filters:any = {}) => ({
+    type: ComponentsTypes.RESTORE_COMPONENT,
+    payload: { companyId, componentId, filters }
+});
+
 export const discontinueComponent = (companyId: string | number, componentId: number | string, data: any, filters:any = {}) => ({
     type: ComponentsTypes.DISCONTINUE_COMPONENT,
     payload: { companyId, componentId, data, filters }
@@ -52,9 +57,9 @@ export const getTagsAndTypes = (companyId: string | number) => ({
     payload: { companyId }
 });
 
-export const exportComponent = (companyId: string | number, fileType: string) => ({
+export const exportComponent = (companyId: string | number, fileType: string, filters?: any) => ({
     type: ComponentsTypes.EXPORT_COMPONENT,
-    payload: { companyId, fileType }
+    payload: { companyId, fileType, filters }
 });
 
 export const resetComponents = () => ({

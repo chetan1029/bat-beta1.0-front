@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Form, Row } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { find, get, map, size } from "lodash";
 import { Link } from "react-router-dom";
@@ -12,17 +12,19 @@ interface ListViewProps {
 	companyId: any;
 	selectedComponents: any;
 	archiveComponent: (any) => void;
+	restoreComponent: (any) => void;
 	onSelectComponent: any;
 	onSelectAllComponents: (any) => void;
 }
 
 const ListView = (props: ListViewProps) => {
-	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent, onSelectAllComponents } = props;
+	const { components, companyId, selectedComponents, archiveComponent,
+		onSelectComponent, onSelectAllComponents, restoreComponent } = props;
 	const { t } = useTranslation();
 	return (
 		<div className={"list-view"}>
 			<Row className={"header-row"}>
-				<div>
+				<Col lg={1}>
 					<Form.Check
 						type="switch"
 						id={"checkbox"}
@@ -46,10 +48,11 @@ const ListView = (props: ListViewProps) => {
 					<b>{t("Model Number")}</b>
 				</Col>
 			</Row>
+
 			{map(components.results, (component, i) => (
 				<div className={"body-row"} key={i}>
 					<Row className={"m-0 pb-4"}>
-						<div>
+						<Col lg={1}>
 							<Form.Check
 								type="switch"
 								key={component.id}
@@ -58,15 +61,15 @@ const ListView = (props: ListViewProps) => {
 								checked={!!find(selectedComponents, _component => _component.id === component.id)}
 								onChange={(e: any) => onSelectComponent(e, component)}
 							/>
-						</div>
+						</Col>
 						<Col lg={2} className="px-4">
 							<div className={"image"}>
 								<img src={size(component.images) > 0 ? (
-										find(component.images, img => !!img.main_image) ?
-											find(component.images, img => !!img.main_image).image :
-											get(component, "images[0].image")) :
+									find(component.images, img => !!img.main_image) ?
+										find(component.images, img => !!img.main_image).image :
+										get(component, "images[0].image")) :
 									dummyImage}
-									 alt={component.title}/>
+									alt={component.title} />
 							</div>
 						</Col>
 						<Col lg={3} className="p-0">

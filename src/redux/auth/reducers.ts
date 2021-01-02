@@ -81,7 +81,7 @@ const Auth = (state = INIT_STATE, action: any) => {
                 case AuthActionTypes.SIGNUP_USER: {
                     return {
                         ...state,
-                        error: action.payload.error,
+                        registerError: action.payload.error,
                         userSignUp: false,
                         loading: false
                     }

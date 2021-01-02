@@ -3,6 +3,7 @@ import { get, isEmpty, map, size, forEach } from 'lodash';
 
 import {
 	archiveComponent,
+	restoreComponent,
 	createComponent,
 	deleteComponent,
 	editComponent,
@@ -18,6 +19,8 @@ import {
 	deleteVariationImages,
 	discontinueComponent
 } from "../../../api";
+
+import { downloadFile } from "../../../api/utils";
 
 import { componentsApiResponseError, componentsApiResponseSuccess } from "./actions";
 import { ComponentsTypes } from './constants';
@@ -57,8 +60,8 @@ function* createNewComponent({ payload: { companyId, data, images } }: any) {
 		const response = yield call(createComponent, companyId, data);
 		if (response.data && response.data.id) {
 			if (size(images.productImages) > 0) {
-				let imagesData:any = {};
-				forEach(images.productImages, (image, i) => imagesData[i === 0 ? "main_image" : i]= image);
+				let imagesData: any = {};
+				forEach(images.productImages, (image, i) => imagesData[i === 0 ? "main_image" : i] = image);
 				yield call(uploadComponentImages, companyId, response.data.id, imagesData);
 			}
 			const variationIds: any[] = map(get(response, "data.products"), product => product.id);
@@ -113,6 +116,20 @@ function* archiveComponentById({ payload: { companyId, componentId, data, filter
 }
 
 /**
+ * restore component
+ */
+function* restoreComponentById({ payload: { companyId, componentId, filters } }: any) {
+	try {
+		const response = yield call(restoreComponent, companyId, componentId);
+		const res = yield call(getComponents, companyId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENTS, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.RESTORE_COMPONENT, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.RESTORE_COMPONENT, error));
+	}
+}
+
+/**
  * discontinue component
  */
 function* discontinueComponentById({ payload: { companyId, componentId, data, filters } }: any) {
@@ -141,17 +158,16 @@ function* getTagsAndTypesById({ payload: { companyId } }: any) {
 /**
  * export component
  */
-function* exportComponent({ payload: { companyId, fileType } }: any) {
+function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 	try {
 		if (fileType) {
-			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId);
-			const url = window.URL.createObjectURL(new Blob([response.data]));
-			const link = document.createElement('a');
-			link.href = url;
-			link.setAttribute('download', `components.${fileType}`);
-			document.body.appendChild(link);
-			link.click();
-			yield put(componentsApiResponseSuccess(ComponentsTypes.EXPORT_COMPONENT, response.data));
+			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId, filters);
+			if (fileType === 'csv') {
+				downloadFile(response.data, `components.${fileType}`);
+			} else {
+				downloadFile(response.data, `components.${fileType}`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			}
+			yield put(componentsApiResponseSuccess(ComponentsTypes.EXPORT_COMPONENT, true));
 		}
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.EXPORT_COMPONENT, error));
@@ -180,8 +196,8 @@ function* editVariationById({ payload: { companyId, variationId, data, images } 
 			yield call(deleteVariationImages, companyId, variationId, images.deletedImages.toString());
 		}
 		if (size(images.newImages) > 0) {
-			let imagesData:any = {};
-			forEach(images.newImages, (image, i) => imagesData[i === 0 ? "main_image" : i]= image);
+			let imagesData: any = {};
+			forEach(images.newImages, (image, i) => imagesData[i === 0 ? "main_image" : i] = image);
 			yield call(uploadVariationImages, companyId, variationId, imagesData);
 		}
 		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_VARIATION, response.data));
@@ -234,6 +250,10 @@ export function* watchEditVariation() {
 	yield takeEvery(ComponentsTypes.EDIT_VARIATION, editVariationById);
 }
 
+export function* watchRestoreComponent() {
+	yield takeEvery(ComponentsTypes.RESTORE_COMPONENT, restoreComponentById);
+}
+
 
 function* componentsSaga() {
 	yield all([
@@ -248,6 +268,7 @@ function* componentsSaga() {
 		fork(watchGetVariation),
 		fork(watchEditVariation),
 		fork(watchDiscontinueComponent),
+		fork(watchRestoreComponent)
 	]);
 }
 

@@ -95,15 +95,18 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
             <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
+
+
                     <div>
                         {createPaymentTermError && createPaymentTermError['existing_items'] ? <ExistingDataWarning
-                            name={t('Payment Term(s)')}
-                            message={createPaymentTermError}
-                            onConfirm={() => {
-                                dispatch(createPaymentTerm(companyId, {...validator.values, force_create: true}));
-                            }} onClose={() => {}} displayField={'title'} /> : null}
-
+                        name={t('Payment Term(s)')}
+                        message={createPaymentTermError}
+                        onConfirm={() => {
+                            dispatch(createPaymentTerm(companyId, {...validator.values, force_create: true}));
+                        }} onClose={() => {}} displayField={'title'} /> : null}
                         {(!isPaymentTermCreated && createPaymentTermError) && !createPaymentTermError['existing_items'] ? <AlertMessage error={createPaymentTermError} /> : null}
+                        {(!isPaymentTermUpdated && editPaymentTermError) && <AlertMessage error={editPaymentTermError} />}
+
                         {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
