@@ -112,7 +112,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 																		find(product.images, img => !!img.main_image) ?
 																			find(product.images, img => !!img.main_image).image :
 																			product.images[0].image) :
-																			(component.products && component.products.length > 1 ? dummyImage: 
+																			(component.products && component.products.length > 1 ? dummyImage:
 																				(size(component.images) > 0 ? (
 																				find(component.images, img => !!img.main_image) ?
 																					find(component.images, img => !!img.main_image).image :
@@ -125,7 +125,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 															<Col lg={10} sm={6} className="py-3">
 																<div className="d-flex justify-content-between px-3">
 																	<h6>{t('Model Number')}: {get(product, "model_number")}</h6>
-																	<Link className="py-1 edit-variation mr-3"
+																	<Link className="py-1"
 																		to={`/product-management/${companyId}/components/${component.id}/variation/edit/${product.id}`}>
 																		<Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer" />
 																	</Link>
