@@ -420,6 +420,10 @@ function archiveComponent(companyId: number, componentId: number | string, data:
     return api.create(`${componentUrl(companyId)}${componentId}/archive/`, data);
 }
 
+function restoreComponent(companyId: number, componentId: number | string) {
+    return api.create(`${componentUrl(companyId)}${componentId}/restore/`, {});
+}
+
 function discontinueComponent(companyId: number, componentId: number | string, data: any) {
     return api.create(`${componentUrl(companyId)}${componentId}/discontinued/`, data);
 }
@@ -441,12 +445,12 @@ function getTagsAndTypes(companyId: number) {
     return api.get(`${componentUrl(companyId)}tags-types/`);
 }
 
-function exportCSVFile(companyId: number) {
-    return api.get(`${componentUrl(companyId)}csvexport/` );
+function exportCSVFile(companyId: number, filters?: any) {
+    return api.get(`${componentUrl(companyId)}csvexport/`, filters);
 }
 
-function exportXLSFile(companyId: number) {
-    return api.get(`${componentUrl(companyId)}xlsxeport/` );
+function exportXLSFile(companyId: number, filters?: any) {
+    return api.getFile(`${componentUrl(companyId)}xlsxeport/`, filters);
 }
 
 /*variations*/
@@ -479,7 +483,7 @@ export {
     getHscode, createHscode, updateHscode, deleteHscode, archiveHscode, restoreHscode,
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
     getDeliveryTerms,
-    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent,
+    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent, restoreComponent,
     uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile,
     getVariation, editVariation, deleteVariationImages, discontinueComponent,
     getClients, getClient, archiveClient,

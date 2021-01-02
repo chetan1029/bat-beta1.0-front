@@ -427,12 +427,12 @@ const EditCompany = (props: EditCompanyProps) => {
                                 <Row className='align-items-center'>
                                     <Col md={6}>
                                         <Form.Group>
-                                            <Form.Label>{t('License File')}</Form.Label>
+                                            <Form.Label>{t('Business License')}</Form.Label>
                                             <Form.Control type="file" name="license_file" id="license_file"
                                                 onChange={onLicenseFile} custom />
 
                                             {company && company['license_file'] ? <p className="mb-0">
-                                                {t('Current File')}: <a href={company['license_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View file')}</a>
+                                                {t('Business License')}: <a href={company['license_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View Business License')}</a>
                                             </p> : null}
                                         </Form.Group>
                                     </Col>

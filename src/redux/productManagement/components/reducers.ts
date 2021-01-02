@@ -53,6 +53,13 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.RESTORE_COMPONENT: {
+                    return {
+                        ...state,
+                        isComponentRestored: true,
+                        loading: false
+                    }
+                }
                 case ComponentsTypes.DISCONTINUE_COMPONENT: {
                     return {
                         ...state,
@@ -139,6 +146,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.RESTORE_COMPONENT: {
+                    return {
+                        ...state,
+                        restoreComponentError: action.payload.error,
+                        isComponentRestored: false,
+                        loading: false
+                    }
+                }
                 case ComponentsTypes.DISCONTINUE_COMPONENT: {
                     return {
                         ...state,
@@ -192,6 +207,9 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.ARCHIVE_COMPONENT:
             return { ...state, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
+        case ComponentsTypes.RESTORE_COMPONENT:
+            return { ...state, isComponentRestored: false, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
+
         case ComponentsTypes.DISCONTINUE_COMPONENT:
             return { ...state, isComponentDiscontinued: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
@@ -221,6 +239,8 @@ const Components = (state = INIT_STATE, action: any) => {
                 isComponentDiscontinued: false,
                 isExported: false,
                 isVariationEdited: false,
+                isComponentRestored: false,
+                restoreComponentError: null
             }
         }
         default: return { ...state };

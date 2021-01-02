@@ -233,7 +233,7 @@ const Location = (props: LocationProps) => {
                         <Button variant="primary" onClick={() => {
                             openModal();
                             setselectedLocation(null);
-                        }}>{t('Add Locations')}</Button>
+                        }}>{t('Add Location')}</Button>
                     </Col>
                 </Row>
             </div>

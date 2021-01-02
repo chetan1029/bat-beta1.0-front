@@ -4,9 +4,10 @@ import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { filter, findIndex, get, isEqual, map } from "lodash";
+import { isMobileOnly } from "react-device-detect";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
+import { archiveComponent, restoreComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
@@ -17,7 +18,7 @@ import GridView from "./GridView";
 
 const FILETYPES: Array<any> = [
 	{ label: "As csv", value: "csv" },
-	{ label: "As xls", value: "xls" },
+	{ label: "As xlsx", value: "xlsx" },
 ];
 
 const TabMenu = ({ onChange, selectedTab }) => {
@@ -79,6 +80,8 @@ const Components = (props: ComponentsProps) => {
 		tagsAndTypes,
 		isExported,
 		isComponentDiscontinued,
+		isComponentRestored,
+		restoreComponentError
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		components: Components.components,
@@ -88,13 +91,21 @@ const Components = (props: ComponentsProps) => {
 		tagsAndTypes: Components.tagsAndTypes,
 		isExported: Components.isExported,
 		isComponentDiscontinued: Components.isComponentDiscontinued,
+		isComponentRestored: Components.isComponentRestored,
+		restoreComponentError: Components.restoreComponentError,
 	}));
 
 	const prevFiltersRef = useRef();
 
 	useEffect(() => {
 		prevFiltersRef.current = filters;
-	});
+	}, [filters]);
+
+	useEffect(() => {
+		if (isMobileOnly) {
+			setSelectedView('grid');
+		}
+	}, []);
 
 	const prevFilters = prevFiltersRef.current;
 
@@ -152,7 +163,13 @@ const Components = (props: ComponentsProps) => {
 
 	const handleOnTabChange = (tab) => {
 		setSelectedTab(tab);
-		setFilters({ ...filters, status: tab, limit, offset: 0 });
+		if (tab !== 'archive') {
+			setFilters({ ...filters, status: tab, limit, offset: 0, is_active: true });
+		} else {
+			const f = { ...filters, limit, offset: 0, is_active: false };
+			delete f['status'];
+			setFilters(f);
+		}
 	};
 
 	const onChangeView = () => {
@@ -167,30 +184,29 @@ const Components = (props: ComponentsProps) => {
 		<div className={"components"}>
 			<div className="pt-4 pb-3 px-3">
 				<Row>
-					<Col>
+					<Col md={6}>
 						<div className="d-flex align-items-center">
 							<Icon name="components" className="icon icon-xs  mr-2"/>
 							<h1 className="m-0">{t('Components')}</h1>
 						</div>
 					</Col>
-					<Col className="text-right d-flex flex-row align-items-center justify-content-end">
+					<Col className="text-md-right d-flex flex-row align-items-center justify-content-md-end mt-2 mt-md-0" md={6}>
 						<div className="d-flex align-items-center">
                             <span>
-                                <Icon name="import" className="icon icon-xs  mr-2"/>
+                                <Icon name="import" className="icon icon-xs mr-1"/>
                                 <b>{t('Import')}</b>
                             </span>
 
 							<Dropdown>
-								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export'
-												 as={Link}>
-									<Icon name="export" className="icon icon-xs  mr-2"/>
+								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export' as={'button'}>
+									<Icon name="export" className="icon icon-xs mr-1"/>
 									<span className='font-weight-bold'>{t('Export')}</span>
 								</Dropdown.Toggle>
 
 								<Dropdown.Menu>
 									{map(FILETYPES, (file, index) => (
 										<Dropdown.Item key={index}
-													   onClick={() => dispatch(exportComponent(companyId, file.value))}>
+													   onClick={() => dispatch(exportComponent(companyId, file.value, filters))}>
 											{file.label}
 										</Dropdown.Item>
 									))}
@@ -198,7 +214,9 @@ const Components = (props: ComponentsProps) => {
 							</Dropdown>
 						</div>
 						<Link to={`/product-management/${companyId}/components/add`}
-							  className="btn btn-primary">{t('Add Component')}</Link>
+							  className="btn btn-primary d-none d-md-block">{t('Add Component')}</Link>
+						<Link to={`/product-management/${companyId}/components/add`}
+							  className="btn btn-primary btn-sm d-block d-md-none">{t('Add Component')}</Link>
 					</Col>
 				</Row>
 			</div>
@@ -207,11 +225,13 @@ const Components = (props: ComponentsProps) => {
 				<Card.Body>
 					{loading ? <Loader/> : null}
 					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab}/>
-					<Link to={"#"} className={"view-icon"} onClick={onChangeView}>
-						<Icon name="components" className="icon icon-xs svg-outline-primary  mr-2"/>
+
+					<Link to={"#"} className={"view-icon p-3 d-none d-sm-block"} onClick={onChangeView}>
+						<Icon name="components" className="icon icon-xs svg-outline-primary mr-2"/>
 					</Link>
-					<div className="d-flex align-items-center justify-content-between mb-3">
-						<div className="d-flex align-items-center w-75">
+					
+					<div className="d-md-flex align-items-md-center justify-content-md-between mb-3">
+						<div className="d-flex align-items-center filter-left">
 							<DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
 								<Dropdown.Item
 									onClick={() => handleOnClickOrderBy("create_date")}>{t('Created Date- ASC')}</Dropdown.Item>
@@ -222,6 +242,7 @@ const Components = (props: ComponentsProps) => {
 								<Dropdown.Item
 									onClick={() => handleOnClickOrderBy("-title")}>{t('Title- DESC')}</Dropdown.Item>
 							</DropdownButton>
+							
 							<div className="search ml-4">
 								<input type="text" placeholder="Search"
 									   onChange={(e: any) => setSearch(e.target.value)}
@@ -232,6 +253,7 @@ const Components = (props: ComponentsProps) => {
 								</button>
 							</div>
 						</div>
+						
 						<FilterDropDown
 							filters={{
 								"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
@@ -242,6 +264,10 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
                                                             icon={"x"} showAsNotification={false}/>}
+
+					{restoreComponentError && <MessageAlert message={restoreComponentError}
+						icon={"x"} showAsNotification={false} />}
+
 					{get(components, "results") && get(components, "results").length > 0 ?
 						<>
 							{selectedView === "list" ?
@@ -252,6 +278,7 @@ const Components = (props: ComponentsProps) => {
 									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
 									onSelectComponent={handleOnSelectComponents}
 									onSelectAllComponents={handleOnSelectAllComponents}
+									restoreComponent={(component) => dispatch(restoreComponent(companyId, component.id, filters))}
 								/> :
 								<GridView
 									companyId={companyId}
@@ -259,6 +286,7 @@ const Components = (props: ComponentsProps) => {
 									selectedComponents={selectedComponents}
 									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
 									onSelectComponent={handleOnSelectComponents}
+									restoreComponent={(component) => dispatch(restoreComponent(companyId, component.id, filters))}
 								/>
 							}
 							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
@@ -272,6 +300,9 @@ const Components = (props: ComponentsProps) => {
 												iconWrapperClass="bg-success text-white p-2 rounded-circle"
 												iconClass="icon-sm"/> : null}
 			{isComponentArchived ? <MessageAlert message={t('Component is archived')} icon={"check"}
+												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
+												 iconClass="icon-sm"/> : null}
+			{isComponentRestored ? <MessageAlert message={t('Component is restored')} icon={"check"}
 												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
 												 iconClass="icon-sm"/> : null}
 			{isComponentDiscontinued ? <MessageAlert message={t('Component is discontinued')} icon={"check"}

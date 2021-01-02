@@ -86,34 +86,12 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 		validationSchema: Yup.object({
 			title: Yup.string().required(t('Title is required')),
 		}),
-		onSubmit: (values: any) => {
-			let data = {
-				...values,
-				...{
-					is_component: true,
-					tags: values.tags.map(tag => tag.value).toString(),
-					type: values.type['value'],
-					series: values.series['value'],
-					status: values.status['value'],
-					products: map(variationOptions, opt => ({
-						title: `${values.title} ${opt.name}`,
-						type: values.type['value'],
-						tags: values.tags.map(tag => tag.value).toString(),
-						model_number: opt.model_number,
-						manufacturer_part_number: opt.manufacturer_part_number,
-						weight: opt.weight,
-						product_variation_options: map(opt.value, value => ({ productoption: value })),
-					}))
-				}
-			};
-			dispatch(createComponent(companyId, data, {
-				productImages: files,
-				variationImages: map(variationOptions, opt => opt.image)
-			}));
+		onSubmit: (values: any, { setSubmitting }) => {
+			onHandleSubmit(values, setSubmitting);
 		},
 	});
 
-	const onHandleSubmit = (event: any) => {
+	const onHandleSubmit = (values: any, setSubmitting: any) => {
 		let valid: boolean[] = [];
 		const hasMultiVariations = variationRef.current && !!variationRef.current["hasMultiVariations"];
 		variationRef.current && variationRef.current["onSubmit"]();
@@ -128,8 +106,33 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 		});
 
 		if (!valid.includes(false)) {
-			validator.handleSubmit(event);
+			const tags = values.tags.map(tag => tag.value).toString();
+			
+			let data = {
+				...values,
+				...{
+					is_component: true,
+					tags: tags,
+					type: values.type['value'],
+					series: values.series['value'],
+					status: values.status['value'],
+					products: map(variationOptions, opt => ({
+						title: `${values.title} ${opt.name}`,
+						type: values.type['value'],
+						tags: tags,
+						model_number: opt.model_number,
+						manufacturer_part_number: opt.manufacturer_part_number,
+						weight: opt.weight,
+						product_variation_options: map(opt.value, value => ({ productoption: value })),
+					}))
+				}
+			};
+			dispatch(createComponent(companyId, data, {
+				productImages: files,
+				variationImages: map(variationOptions, opt => opt.image)
+			}));			
 		}
+		setSubmitting(false);
 	};
 
 	return (
@@ -154,7 +157,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 				<Card>
 					<Card.Body>
 						<div className="p-2">
-							<Form className="mt-0" noValidate>
+							<Form noValidate onSubmit={validator.handleSubmit} className="mt-0">
 								<h4 className="mt-0 mb-3">{t('Component detail')}</h4>
 								<Row>
 									<Col lg={6} xs={12}>
@@ -286,7 +289,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
                                   showAsNotification={false}
                                 />}
 								<Form.Group className="mt-2 mb-0">
-									<Button variant="primary" type="button" onClick={onHandleSubmit}>
+									<Button variant="primary" type="submit">
 										{t('Submit')}
 									</Button>
 								</Form.Group>

@@ -70,13 +70,14 @@ const AddEditHscode = ({ isOpen, onClose, hscode, companyId }: AddEditHscodeProp
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
-            <Modal.Header closeButton className="add-hscode-modal-header"></Modal.Header>
-            <Modal.Body className="p-0">
+            <Modal.Header closeButton className="add-hscode-modal-header">
+              <Modal.Title>{hscode ? t("Edit Hscode") : t("Add Hscode")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
                 <div className="position-relative">
                     {loading ? <Loader />: null}
 
-                    <div className="px-5 pb-5">
-                        <h1 className="mb-2 mt-0">{hscode ? t("Edit Hscode") : t("Add Hscode")}</h1>
+                    <div>
 
                         {(!isHscodeCreated && createHscodeError) && <AlertMessage error={createHscodeError} />}
                         {(!isHscodeUpdated && editHscodeError) && <AlertMessage error={editHscodeError} />}
