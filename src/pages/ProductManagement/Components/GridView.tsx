@@ -19,10 +19,82 @@ const GridView = (props: GridViewProps) => {
 	const { t } = useTranslation();
 	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent } = props;
 
+	// return (
+	// 	<div className={"grid-view"}>
+	// 		{map(components.results, (component, i) => (
+	// 		<Card key={i}>
+	// 			<Card.Body>
+	// 				<Row>
+	// 					<Col lg={3}>
+	// 						<div className={"image"}>
+	// 							<img src={size(component.images) > 0 ? (
+	// 									find(component.images, img => !!img.main_image) ?
+	// 										find(component.images, img => !!img.main_image).image :
+	// 										get(component, "images[0].image")) :
+	// 								dummyImage}
+	// 								 alt={component.title}/>
+	// 						</div>
+	// 					</Col>
+	// 					<Col lg={9}>
+	// 						<Link to={"#"} className="active-label btn btn-outline-primary">
+	// 							{component.status && t(component.status.name)}
+	// 						</Link>
+	// 						<Form.Check
+	// 							className="ml-2 float-right"
+	// 							type="switch"
+	// 							key={component.id}
+	// 							id={`checkbox${component.id}`}
+	// 							label=""
+	// 							checked={!!find(selectedComponents, _component => _component.id === component.id)}
+	// 							onChange={(e: any) => onSelectComponent(e, component)}
+	// 						/>
+	//
+	// 						<div className="description text-muted mt-1">{t('Model Number')}
+	// 						</div>
+	// 						<div className="d-flex">
+	// 							{component.model_number}
+	// 						</div>
+	// 					</Col>
+	// 				</Row>
+	// 				<Row className="mt-3">
+	// 					<Col className="col-12">
+	// 						<Link className="h5"
+	// 								to={`/product-management/${companyId}/components/${component.id}`}>
+	// 							{component.title}
+	// 						</Link>
+	// 						<div className="description text-muted mt-1">{t('Type')}
+	// 						</div>
+	// 						<div className="d-flex">
+	// 							{component.type}
+	// 						</div>
+	// 					</Col>
+	// 				</Row>
+	// 				<Row className="mt-3">
+	// 					<Col>
+	// 						<div className="p-0">
+	// 							{component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+	// 								<span key={i} className={"tags"}>{tag}</span>
+	// 							))}
+	// 						</div>
+	// 					</Col>
+	// 				</Row>
+	// 				<div className="d-flex align-items-center mt-5 extra-info">
+	// 					<Link to={"#"} onClick={() => archiveComponent(component)}>
+	// 						<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
+	// 					</Link>
+	// 					<Link to={"#"} onClick={() => archiveComponent(component)}>
+	// 						<Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
+	// 					</Link>
+	// 				</div>
+	// 			</Card.Body>
+	// 		</Card>
+	// 		))}
+	// 	</div>
+	// );
 	return (
 		<div className={"grid-view"}>
 			{map(components.results, (component, i) => (
-			<Card key={i}>
+			<Card key={i} className="payment-terms-card mb-2">
 				<Card.Body>
 					<Row>
 						<Col lg={3}>
@@ -36,28 +108,36 @@ const GridView = (props: GridViewProps) => {
 							</div>
 						</Col>
 						<Col lg={9}>
-							<div className="description text-muted">{t('SKU')}</div>
+							<Link to={"#"} className="active-label btn btn-outline-primary">
+								{component.status && t(component.status.name)}
+							</Link>
+							<Form.Check
+								className="ml-2 float-right"
+								type="switch"
+								key={component.id}
+								id={`checkbox${component.id}`}
+								label=""
+								checked={!!find(selectedComponents, _component => _component.id === component.id)}
+								onChange={(e: any) => onSelectComponent(e, component)}
+							/>
+
+							<div className="description text-muted mt-1">{t('Model Number')}
+							</div>
 							<div className="d-flex">
-								{component.sku}
-								<Form.Check
-									className="ml-2"
-									type="checkbox"
-									key={component.id}
-									id={`checkbox${component.id}`}
-									label=""
-									checked={!!find(selectedComponents, _component => _component.id === component.id)}
-									onChange={(e: any) => onSelectComponent(e, component)}
-								/>
+								{component.model_number}
 							</div>
 						</Col>
 					</Row>
 					<Row className="mt-3">
 						<Col className="col-12">
-							<div className="font-weight-bold">{component.title}</div>
-						</Col>
-						<Col className="col-12 mt-3">
-							<div className="description text-muted">
-								<p>{component.description}</p>
+							<Link className="h5"
+									to={`/product-management/${companyId}/components/${component.id}`}>
+								{component.title}
+							</Link>
+							<div className="description text-muted mt-1">{t('Type')}
+							</div>
+							<div className="d-flex">
+								{component.type}
 							</div>
 						</Col>
 					</Row>
@@ -70,20 +150,19 @@ const GridView = (props: GridViewProps) => {
 							</div>
 						</Col>
 					</Row>
-					<Row className="mt-3 align-items-center">
-						<Col lg={8}>
-							<Link className="product-detail btn btn-outline-primary"
-								  to={`/product-management/${companyId}/components/${component.id}`}>
-								{t("Component Details")}
-							</Link>
-						</Col>
-						<Col lg={2} className="archive">
-							<Link to={"#"} onClick={() => archiveComponent(component)}>
-								<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
-							</Link>
-						</Col>
-					</Row>
 				</Card.Body>
+				<Card.Footer className="payment-card-footer">
+						<div className="p-2 float-right">
+								<div className="d-flex align-items-center">
+									<Link to={"#"} onClick={() => archiveComponent(component)}>
+										<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer"/>
+									</Link>
+									<Link to={"#"} onClick={() => archiveComponent(component)}>
+										<Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
+									</Link>
+								</div>
+						</div>
+				</Card.Footer>
 			</Card>
 			))}
 		</div>

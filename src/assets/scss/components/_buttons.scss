@@ -1,9 +1,10 @@
-// 
+//
 // buttons.scss
 //
 
 .btn {
     transition: 0.3s all ease;
+    padding: 13px 20px;
 }
 
 
@@ -31,7 +32,7 @@ $value in $theme-colors {
             border: 1px solid darken($value, 8%);
         }
     }
-    
+
     .bg-soft-#{$color} {
         background-color: rgba($value, 0.25) !important;
     }

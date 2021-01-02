@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
+import { Form,Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
@@ -155,10 +155,10 @@ const Components = (props: ComponentsProps) => {
 		setFilters({ ...filters, status: tab, limit, offset: 0 });
 	};
 
-	const onChangeView = () => {
-		if(selectedView === "list") {
+	const onChangeView = (checked: boolean) => {
+		if(checked) {
 			setSelectedView("grid");
-		} else if(selectedView === "grid") {
+		} else {
 			setSelectedView("list");
 		}
 	};
@@ -207,11 +207,40 @@ const Components = (props: ComponentsProps) => {
 				<Card.Body>
 					{loading ? <Loader/> : null}
 					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab}/>
-					<Link to={"#"} className={"view-icon"} onClick={onChangeView}>
-						<Icon name="components" className="icon icon-xs svg-outline-primary  mr-2"/>
-					</Link>
+
 					<div className="d-flex align-items-center justify-content-between mb-3">
-						<div className="d-flex align-items-center w-75">
+
+						<div className="d-flex align-items-center w-50">
+							<div className="search">
+								<input type="text" placeholder="Search"
+									   onChange={(e: any) => setSearch(e.target.value)}
+									   onKeyDown={handleSearchKeyDown}/>
+								<button type="submit">
+									<img src={searchIcon} alt=""
+										 onClick={() => setFilters({ ...filters, search, offset: 0 })}/>
+								</button>
+							</div>
+						</div>
+
+						<div className="d-flex align-items-center">
+
+							<span className="m-0 font-16 mr-2">
+									{t('Show Grid')}
+							</span>
+							<Form.Check
+									type="switch"
+									id="custom-switch"
+									label=""
+									onChange={(e: any) => onChangeView(e.target.checked)}
+							/>
+
+							<FilterDropDown
+								filters={{
+									"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
+									"Component type": tagsAndTypes && filter(tagsAndTypes.type_data, type => type !== ""),
+								}}
+								onChangeFilters={handleOnSelectFilters}
+							/>
 							<DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
 								<Dropdown.Item
 									onClick={() => handleOnClickOrderBy("create_date")}>{t('Created Date- ASC')}</Dropdown.Item>
@@ -222,23 +251,7 @@ const Components = (props: ComponentsProps) => {
 								<Dropdown.Item
 									onClick={() => handleOnClickOrderBy("-title")}>{t('Title- DESC')}</Dropdown.Item>
 							</DropdownButton>
-							<div className="search ml-4">
-								<input type="text" placeholder="Search"
-									   onChange={(e: any) => setSearch(e.target.value)}
-									   onKeyDown={handleSearchKeyDown}/>
-								<button type="submit">
-									<img src={searchIcon} alt=""
-										 onClick={() => setFilters({ ...filters, search, offset: 0 })}/>
-								</button>
-							</div>
 						</div>
-						<FilterDropDown
-							filters={{
-								"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
-								"Component type": tagsAndTypes && filter(tagsAndTypes.type_data, type => type !== ""),
-							}}
-							onChangeFilters={handleOnSelectFilters}
-						/>
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
                                                             icon={"x"} showAsNotification={false}/>}
@@ -264,7 +277,7 @@ const Components = (props: ComponentsProps) => {
 							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
 						</> :
 						get(components, "results") && get(components, "results").length === 0 &&
-                      <h3 className="d-flex justify-content-center">{t('No components found')}</h3>
+                      <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
 					}
 				</Card.Body>
 			</Card>
