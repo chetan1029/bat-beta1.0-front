@@ -107,7 +107,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 
 		if (!valid.includes(false)) {
 			const tags = values.tags.map(tag => tag.value).toString();
-			
+
 			let data = {
 				...values,
 				...{
@@ -130,7 +130,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 			dispatch(createComponent(companyId, data, {
 				productImages: files,
 				variationImages: map(variationOptions, opt => opt.image)
-			}));			
+			}));
 		}
 		setSubmitting(false);
 	};
@@ -181,11 +181,11 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 
 									<Col lg={6} xs={12}>
 										<Form.Group className="mb-4">
-											<Form.Label htmlFor="usr">{t('Type')}</Form.Label>
+											<Form.Label htmlFor="usr">{t('Component Type')}</Form.Label>
 											<CreatableSelect
 												id={"type"}
 												name={"type"}
-												placeholder={t('Type')}
+												placeholder={t('Component Type')}
 												isClearable
 												options={defaultTypes || []}
 												onChange={(value: any) => validator.setFieldValue('type', value)}
