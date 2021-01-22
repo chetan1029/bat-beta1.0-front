@@ -100,8 +100,12 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
                 { name: 'OverduePayments', url: `/supply-chain/${companyId}/finance/payments/overdue`, icon: 'circle', label: 'Overdue', id: 'OverduePayments', parentId: 'supplyChainInventory' },
             ]
             },
-        ]
-    }]];
+        ],
+    },
+    {
+        name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings',
+    }
+    ]];
 
     return menuItems;
 }

@@ -200,13 +200,6 @@ const Sidebar = (props: SideProps) => {
 
           </div>
 
-
-          <div className="bottom-link">
-            <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center">
-              <Icon name='settings' />
-              <p>{t('Settings')}</p>
-            </Link>
-          </div>
         </div>
       </div>
     </React.Fragment>
