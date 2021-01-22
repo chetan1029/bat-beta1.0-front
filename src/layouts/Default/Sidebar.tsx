@@ -71,7 +71,7 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
 
 /**
  * Menu component
- * @param 
+ * @param
  */
 const Menu = ({ menuItems, className, uId, onToggle, activeMenuItemIds }) => {
 
@@ -202,7 +202,7 @@ const Sidebar = (props: SideProps) => {
 
 
           <div className="bottom-link">
-            <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center selected_link">
+            <Link to={`/settings/${companyId}`} className="side_bar_link menu_item d-flex align-items-center">
               <Icon name='settings' />
               <p>{t('Settings')}</p>
             </Link>

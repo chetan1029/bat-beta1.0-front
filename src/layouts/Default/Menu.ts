@@ -41,19 +41,23 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
                 },
                 { name: 'Orders', url: `/supply-chain/${companyId}/orders`, icon: 'shopping-cart', label: 'Orders', id: 'supplyChainOrders', parentId: 'supplyChain',
                   children: [
-                      { name: 'ManageOrders', url: `/supply-chain/${companyId}/orders/manage`, icon: 'circle', label: 'Manage Orders', id: 'ManageOrders', parentId: 'supplyChainOrders' },
                       { name: 'PlanOrders', url: `/supply-chain/${companyId}/orders/plan`, icon: 'circle', label: 'Plan Orders', id: 'PlanOrders', parentId: 'supplyChainOrders' },
+                      { name: 'ManageOrders', url: `/supply-chain/${companyId}/orders/manage`, icon: 'circle', label: 'Manage Orders', id: 'ManageOrders', parentId: 'supplyChainOrders' },
+                      { name: 'ProductPlan', url: `/supply-chain/${companyId}/product-plan`, icon: 'circle', label: 'Product Plan', id: 'ProductPlan', parentId: 'supplyChainOrders' },
                   ]
                },
-                { name: 'Shipment', url: `/supply-chain/${companyId}/shipment`, icon: 'shipment', label: 'Shipment', id: 'supplyChainShipments', parentId: 'supplyChain',
-                  
+                { name: 'Logistics', url: `/supply-chain/${companyId}/logistics`, icon: 'shipment', label: 'Logistics', id: 'supplyChainLogistics', parentId: 'supplyChain',
+                  children: [
+                      { name: 'Shipments', url: `/supply-chain/${companyId}/logistics/shipments`, icon: 'circle', label: 'Shipments', id: 'Shipments', parentId: 'supplyChainLogistics' },
+                      { name: 'Transfers', url: `/supply-chain/${companyId}/logistics/transfers`, icon: 'circle', label: 'Transfers', id: 'Transfers', parentId: 'supplyChainLogistics' },
+                  ]
                },
                 {
                     name: 'Inventory', url: `/supply-chain/${companyId}/inventory`, icon: 'inventory', label: 'Inventory', id: 'supplyChainInventory', parentId: 'supplyChain',
                     children: [
                         { name: 'InventoryValuation', url: `/supply-chain/${companyId}/inventory/valuation`, icon: 'circle', label: 'Inventory Valuation', id: 'InventoryValuation', parentId: 'supplyChainInventory' },
-                        { name: 'WarehouseLocation', url: `/supply-chain/${companyId}/inventory/locations`, icon: 'circle', label: 'Warehouse Location', id: 'WarehouseLocation', parentId: 'supplyChainInventory' },
                         { name: 'InventoryOverview', url: `/supply-chain/${companyId}/inventory/overview`, icon: 'circle', label: 'Inventory Overview', id: 'InventoryOverview', parentId: 'supplyChainInventory' },
+                        { name: 'InventoryHighlights', url: `/supply-chain/${companyId}/inventory/highlights`, icon: 'circle', label: 'Inventory Highlights', id: 'InventoryHighlights', parentId: 'supplyChainInventory' },
                     ]
                 },
             ]
@@ -71,24 +75,31 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
         children: [
             { name: 'Dashboard', url: '/sales/dashboard', icon: 'box-2', label: 'Dashboard', id: 'salesDs', parentId: 'sales' },
             { name: 'CostControl', url: '/sales/cost-control', icon: 'cost_control', label: 'Cost Control', id: 'salesCC', parentId: 'sales' },
-            {
-                name: 'SalesChannel', url: `/sales/${companyId}/channels`, icon: 'shop', label: 'Sales Channels', id: 'salesChanels', parentId: 'sales',
-                children: salesCats
-            },
-            {
-                name: 'Optimization', url: '/sales/optimization', icon: 'optimization', label: 'Optimization', id: 'salesOpt', parentId: 'sales',
-                children: [
-                    { name: 'Dashboard', url: '/sales/optimization/dashboard', icon: 'circle', label: 'Dashboard', id: 'salesOptDS', parentId: 'salesOpt' },
-                    { name: 'KeywordResearch', url: '/sales/optimization/keyword-research', icon: 'circle', label: 'Keyword Research', id: 'salesOptKS', parentId: 'salesOpt' },
-
-                ]
-            },
+            // {
+            //     name: 'SalesChannel', url: `/sales/${companyId}/channels`, icon: 'shop', label: 'Sales Channels', id: 'salesChanels', parentId: 'sales',
+            //     children: salesCats
+            // },
+            // {
+            //     name: 'Optimization', url: '/sales/optimization', icon: 'optimization', label: 'Optimization', id: 'salesOpt', parentId: 'sales',
+            //     children: [
+            //         { name: 'Dashboard', url: '/sales/optimization/dashboard', icon: 'circle', label: 'Dashboard', id: 'salesOptDS', parentId: 'salesOpt' },
+            //         { name: 'KeywordResearch', url: '/sales/optimization/keyword-research', icon: 'circle', label: 'Keyword Research', id: 'salesOptKS', parentId: 'salesOpt' },
+            //
+            //     ]
+            // },
         ]
     },
     {
         name: 'Finance', url: '/finance', icon: 'finance', label: 'Finance', id: 'finance',
         children: [
-            { name: 'CashFlow', url: '/finance/cashflow', icon: 'cash_flow', label: 'Cash Flow', id: 'financeCF', parentId: 'finance' },
+            { name: 'Dashboard', url: '/finance/dashboard', icon: 'box-2', label: 'Dashboard', id: 'FinanceDashboard', parentId: 'finance' },
+            { name: 'Payments', url: '/finance/payments', icon: 'cash_flow', label: 'Payments', id: 'FinancePayments', parentId: 'finance',
+            children: [
+                { name: 'UpcomingPayments', url: `/supply-chain/${companyId}/finance/payments/upcoming`, icon: 'circle', label: 'Upcoming', id: 'UpcomingPayments', parentId: 'supplyChainInventory' },
+                { name: 'PaidPayments', url: `/supply-chain/${companyId}/finance/payments/paid`, icon: 'circle', label: 'Paid', id: 'PaidPayments', parentId: 'supplyChainInventory' },
+                { name: 'OverduePayments', url: `/supply-chain/${companyId}/finance/payments/overdue`, icon: 'circle', label: 'Overdue', id: 'OverduePayments', parentId: 'supplyChainInventory' },
+            ]
+            },
         ]
     }]];
 
