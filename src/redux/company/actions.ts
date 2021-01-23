@@ -10,3 +10,4 @@ export * from "./deliveryTerms/actions";
 export * from "./vendors/actions";
 export * from "./clients/actions";
 export * from "./salesChannels/actions";
+export * from "./assets/actions";

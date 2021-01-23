@@ -93,23 +93,23 @@ function createPaymentTerm(companyId: number, params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 
-function updatePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
-    const baseUrl = `/companies/${companyId}/payment-terms/${paymentTermId}/`;
+function updatePaymentTerm(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/payment-terms/${assetId}/`;
     return api.update(`${baseUrl}`, params);
 }
 
-function deletePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
-    const baseUrl = `/companies/${companyId}/payment-terms/${paymentTermId}/`;
+function deletePaymentTerm(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/payment-terms/${assetId}/`;
     return api.delete(`${baseUrl}`);
 }
 
-function archivePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
-    const baseUrl = `/companies/${companyId}/payment-terms/${paymentTermId}/archive/`;
+function archivePaymentTerm(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/payment-terms/${assetId}/archive/`;
     return api.create(`${baseUrl}`, params);
 }
 
-function restorePaymentTerm(companyId: number, paymentTermId: number, params?: any) {
-    const baseUrl = `/companies/${companyId}/payment-terms/${paymentTermId}/restore/`;
+function restorePaymentTerm(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/payment-terms/${assetId}/restore/`;
     return api.create(`${baseUrl}`, params);
 }
 
@@ -468,6 +468,45 @@ function deleteVariationImages(companyId: number, variationId: number | string, 
     return api.delete(`${variationUrl(companyId)}${variationId}/images/destroy_bulk/?ids=${ids}`);
 }
 
+
+/*
+Assets
+*/
+function getAssets(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getLocations(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/location/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function createAsset(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateAsset(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/${assetId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
+function deleteAsset(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/${assetId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+function archiveAsset(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/${assetId}/archive/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function restoreAsset(companyId: number, assetId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/${assetId}/restore/`;
+    return api.create(`${baseUrl}`, params);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -487,5 +526,6 @@ export {
     uploadComponentImages, uploadVariationImages, getTagsAndTypes, exportCSVFile, exportXLSFile,
     getVariation, editVariation, deleteVariationImages, discontinueComponent,
     getClients, getClient, archiveClient,
-    getSalesChannels, getSalesChannel
+    getSalesChannels, getSalesChannel,
+    getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations
 }

@@ -10,7 +10,8 @@ import tax from "./tax/saga";
 import hscode from "./hscode/saga";
 import location from "./location/saga";
 import packingBox from "./packingBox/saga";
-import deliveryTerms from "./deliveryTerms/saga";
+import deliveryTerms from "./deliveryTerms/saga"; 
+import assetsSaga from "./assets/saga"
 
 export default function* companySaga() {
     yield all([
@@ -26,5 +27,6 @@ export default function* companySaga() {
         packingBox(),
         hscode(),
         deliveryTerms(),
+        assetsSaga()
     ]);
 }

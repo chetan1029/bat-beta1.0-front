@@ -11,6 +11,7 @@ import Hscode from "./hscode/reducers";
 import Location from "./location/reducers";
 import PackingBox from "./packingBox/reducers";
 import DeliveryTerms from "./deliveryTerms/reducers";
+import AssetsState from "./assets/reducers" 
 
 export default combineReducers({
     PaymentTerms,
@@ -25,4 +26,5 @@ export default combineReducers({
     PackingBox,
     Tax,
     DeliveryTerms,
+    AssetsState
 });
