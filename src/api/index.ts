@@ -284,6 +284,14 @@ function getDeliveryTerms(companyId: number, params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
+/*
+Get Membership Plan
+*/
+function getMembershipPlan(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/subscription`;
+    return api.get(`${baseUrl}`, params);
+}
+
 /* members */
 function getMembers(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/members/`;
@@ -482,6 +490,11 @@ function getLocations(companyId: number, params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
+function getAssetType(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asset/types`;
+    return api.get(`${baseUrl}`, params);
+}
+
 function createAsset(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/asset/`;
     return api.create(`${baseUrl}`, params);
@@ -527,5 +540,6 @@ export {
     getVariation, editVariation, deleteVariationImages, discontinueComponent,
     getClients, getClient, archiveClient,
     getSalesChannels, getSalesChannel,
-    getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations
+    getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType,
+    getMembershipPlan,
 }

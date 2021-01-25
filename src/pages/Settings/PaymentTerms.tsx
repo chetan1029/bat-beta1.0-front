@@ -61,39 +61,35 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
     return (<>
         <Row>
             <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditPaymentTerm(payment)} className="payment-terms-link">
-                        <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Title')}</h6>
-                                <h6 className="m-0 font-weight-bold">{payment.title}</h6>
-                            </div>
+                <Card className="mb-2">
+                    <Link to="#" onClick={() => onEditPaymentTerm(payment)} className="card-link">
+                        <Card.Header>
+                            <p className="m-0 text-muted">{t('Title')}</p>
+                            <h6 className="m-0">{payment.title}</h6>
                         </Card.Header>
                         <Card.Body>
-                            <div className="p-2">
-                                <Row>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Deposit')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{payment.deposit}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('On Delivery')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{payment.on_delivery}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Receiving')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{payment.receiving}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={3}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Remaining')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{payment.remaining}% in {payment.payment_days} Days</h6>
-                                    </Col>
-                                </Row>
-                            </div>
+                            <Row>
+                                <Col xs={6} lg={3}>
+                                    <p className="m-0 text-muted">{t('Deposit')}</p>
+                                    <p className="m-0">{payment.deposit}</p>
+                                </Col>
+                                <Col xs={6} lg={3}>
+                                    <p className="m-0 text-muted">{t('On Delivery')}</p>
+                                    <p className="m-0">{payment.on_delivery}</p>
+                                </Col>
+                                <Col xs={6} lg={3}>
+                                    <p className="m-0 text-muted">{t('Receiving')}</p>
+                                    <p className="m-0">{payment.receiving}</p>
+                                </Col>
+                                <Col xs={6} lg={3}>
+                                    <p className="m-0 text-muted">{t('Remaining')}</p>
+                                    <p className="m-0">{payment.remaining}% in {payment.payment_days} Days</p>
+                                </Col>
+                            </Row>
                         </Card.Body>
                     </Link>
-                    <Card.Footer className="payment-card-footer">
-                        <div className="p-2 float-right">
+                    <Card.Footer>
+                        <div className="float-right">
                             <div className="d-flex align-items-center">
                                 {
                                     !payment.is_active ?

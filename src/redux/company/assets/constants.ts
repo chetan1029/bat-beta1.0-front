@@ -10,5 +10,6 @@ export enum AssetType {
     ARCHIVE_ASSET = '@@company/assets/ARCHIVE_ASSET',
     RESTORE_ASSET = '@@company/assets/RESTORE_ASSET',
     GET_LOCATIONS = '@@company/assets/GET_LOCATIONS',
+    GET_ASSET_TYPE = '@@company/assets/GET_ASSET_TYPE',
     RESET = '@@company/assets/RESET',
 }

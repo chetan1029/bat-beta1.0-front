@@ -64,7 +64,7 @@ const DeliveryCardItem = ({ delivery, companyId }: DeliveryCardItemProps) => {
     return (<>
             <Card className="mb-2">
               <Accordion.Toggle as={Card.Header} eventKey={delivery.id}>
-                <span className="font-weight-bold">{delivery.code} ({delivery.name})</span>
+                <span>{delivery.code} ({delivery.name})</span>
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={delivery.id}>
                 <Card.Body>

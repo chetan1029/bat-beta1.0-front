@@ -15,7 +15,8 @@ import {
   archiveAsset,
   restoreAsset,
   resetAsset,
-  getLocations
+  getLocations,
+  getAssetType,
 } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
@@ -86,45 +87,39 @@ const AssetsCardItem = ({
             <Link
               to="#"
               onClick={() => onEditAsset(asset)}
-              className="payment-terms-link"
+              className="card-link"
             >
-              <Card.Header className="payment-card-title">
-                <div className="p-2">
-                  <h6 className="m-0 text-muted font-weight-bold">
+              <Card.Header>
+                <p className="m-0 text-muted">
                     {t("Title")}
-                  </h6>
-                  <h6 className="m-0 font-weight-bold">{asset.title}</h6>
-                </div>
+                  </p>
+                <h6 className="m-0">{asset.title}</h6>
               </Card.Header>
               <Card.Body>
-                <div className="p-2">
-                  <Row>
-                    <Col xs={6} lg={6}>
-                      <h6 className="m-0 text-muted font-weight-bold">
-                        {t("Detail")}
-                      </h6>
-                      <h6 className="m-0 font-weight-bold">{asset.detail}</h6>
-                    </Col>
-                    <Col xs={6} lg={6}>
-                      <h6 className="m-0 text-muted font-weight-bold">
-                        {t("Type")}
-                      </h6>
-                      <h6 className="m-0 font-weight-bold">{asset.type}</h6>
-                    </Col>
-                  </Row>
-                  <Row className="mt-3">
+                <Row>
                     <Col xs={6} lg={3}>
-                      <h6 className="m-0 text-muted font-weight-bold">
+                      <p className="m-0 text-muted">
+                        {t("Type")}
+                      </p>
+                      <p className="m-0">{asset.type}</p>
+                    </Col>
+                    <Col xs={6} lg={3}>
+                      <p className="m-0 text-muted">
                         {t("Price")}
-                      </h6>
-                      <h6 className="m-0 font-weight-bold">{asset.price}</h6>
+                      </p>
+                      <p className="m-0">{asset.price}</p>
+                    </Col>
+                    <Col xs={12} lg={6}>
+                      <p className="m-0 text-muted">
+                        {t("Current Location")}
+                      </p>
+                      <p className="m-0">{asset.current_location.name}</p>
                     </Col>
                   </Row>
-                </div>
               </Card.Body>
             </Link>
-            <Card.Footer className="payment-card-footer">
-              <div className="p-2 float-right">
+            <Card.Footer>
+              <div className="float-right">
                 <div className="d-flex align-items-center">
                   {!asset.is_active ? (
                     <Link to="#" onClick={() => onClickArchiveUnArchive(true)}>
@@ -176,16 +171,19 @@ const Assets = (props: AssetsProps) => {
   const {
     assets,
     locations,
+    assettypes,
     isAssetsFetched,
     isAssetCreated,
     isAssetUpdated,
     isAssetDeleted,
     isAssetArchived,
     isAssetRestored,
-    isLocationFetched
+    isLocationFetched,
+    isAssettypeFetched,
   } = useSelector((state: any) => ({
     assets: state.Company.AssetsState.assets,
     locations: state.Company.AssetsState.locations,
+    assettypes: state.Company.AssetsState.assettypes,
     //flags
     isAssetsFetched: state.Company.AssetsState.isAssetsFetched,
     isAssetCreated: state.Company.AssetsState.isAssetCreated,
@@ -194,6 +192,7 @@ const Assets = (props: AssetsProps) => {
     isAssetArchived: state.Company.AssetsState.isAssetArchived,
     isAssetRestored: state.Company.AssetsState.isAssetRestored,
     isLocationFetched: state.Company.AssetsState.isLocationFetched,
+    isAssettypeFetched: state.Company.AssetsState.isAssettypeFetched,
   }));
   const companyId = props.match.params.companyId;
   /*
@@ -204,6 +203,7 @@ const Assets = (props: AssetsProps) => {
     if (companyId) {
       dispatch(getAssets(companyId, { is_active: true }));
       dispatch(getLocations(companyId, { is_active: true }));
+      dispatch(getAssetType(companyId, { is_active: true }));
     }
   }, [props.match.params.companyId]);
 
@@ -242,7 +242,7 @@ const Assets = (props: AssetsProps) => {
   };
 
   /*
-        asset 
+        asset
     */
   const [selectedAsset, setSelectedAsset] = useState<any>();
 
@@ -437,6 +437,7 @@ const Assets = (props: AssetsProps) => {
           companyId={companyId}
           asset={selectedAsset}
           locations={locations}
+          assettypes={assettypes}
         />
       ) : null}
     </>

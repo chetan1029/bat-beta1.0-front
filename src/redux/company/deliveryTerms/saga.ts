@@ -21,13 +21,13 @@ function* getDeliveryTerms({ payload: { companyId, filters } }: any) {
 }
 
 
-export function* watchGetPaymentTerms() {
+export function* watchGetDeliveryTerms() {
     yield takeEvery(DeliveryTermsTypes.GET_DELIVERY_TERMS, getDeliveryTerms)
 }
 
 function* deliveryTermsSaga() {
     yield all([
-        fork(watchGetPaymentTerms),
+        fork(watchGetDeliveryTerms),
     ]);
 }
 

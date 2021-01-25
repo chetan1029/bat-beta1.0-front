@@ -7,7 +7,8 @@ import {
     deleteAsset as deleteAssetApi,
     archiveAsset as archiveAssetApi,
     restoreAsset as restoreAssetApi,
-    getLocations as getLocationsApi
+    getLocations as getLocationsApi,
+    getAssetType as getAssetTypeApi,
 } from "../../../api/index";
 
 import { assetsApiResponseSuccess, assetsApiResponseError } from "./actions";
@@ -27,7 +28,7 @@ function* getAssets({ payload: { companyId, filters } }: any) {
 }
 
 /**
- * get all assets
+ * get all Locations
  */
 function* getLocations({ payload: { companyId, filters } }: any) {
     try {
@@ -35,6 +36,18 @@ function* getLocations({ payload: { companyId, filters } }: any) {
         yield put(assetsApiResponseSuccess(AssetType.GET_LOCATIONS, response.data));
     } catch (error) {
         yield put(assetsApiResponseError(AssetType.GET_LOCATIONS, error));
+    }
+}
+
+/**
+ * get all AssetType
+ */
+function* getAssetType({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getAssetTypeApi, companyId, filters);
+        yield put(assetsApiResponseSuccess(AssetType.GET_ASSET_TYPE, response.data));
+    } catch (error) {
+        yield put(assetsApiResponseError(AssetType.GET_ASSET_TYPE, error));
     }
 }
 
@@ -110,6 +123,10 @@ export function* watchGetLocations() {
     yield takeEvery(AssetType.GET_ASSETS, getLocations)
 }
 
+export function* watchGetAssetType() {
+    yield takeEvery(AssetType.GET_ASSET_TYPE, getAssetType)
+}
+
 export function* watchAsset() {
     yield takeEvery(AssetType.CREATE_ASSET, createAsset)
 }
@@ -138,7 +155,8 @@ function* assetsSaga() {
         fork(watchDeleteAsset),
         fork(watchArchiveAsset),
         fork(watchRestoreAsset),
-        fork(watchGetLocations)
+        fork(watchGetLocations),
+        fork(watchGetAssetType)
     ]);
 }
 

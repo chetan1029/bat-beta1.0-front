@@ -61,35 +61,31 @@ const BankCardItem = ({ bank, onArchiveDeleteAction, onEditBank, companyId }: Ba
     return (<>
         <Row>
             <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditBank(bank)} className="payment-terms-link">
-                        <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Bank Name')}</h6>
-                                <h6 className="m-0 font-weight-bold">{bank.name}</h6>
-                            </div>
+                <Card className="mb-2">
+                    <Link to="#" onClick={() => onEditBank(bank)} className="card-link">
+                        <Card.Header>
+                            <p className="m-0 text-muted">{t('Bank Name')}</p>
+                            <h6 className="m-0">{bank.name}</h6>
                         </Card.Header>
                         <Card.Body>
-                            <div className="p-2">
-                                <Row>
-                                    <Col xs={6} lg={4}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Benificary name')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{bank.benificary}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={4}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Account number')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{bank.account_number}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={4}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Currency Accepted')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{bank.currency.join(", ")}</h6>
-                                    </Col>
-                                </Row>
-                            </div>
+                            <Row>
+                              <Col xs={6} lg={4}>
+                                  <p className="m-0 text-muted">{t('Benificary name')}</p>
+                                  <p className="m-0">{bank.benificary}</p>
+                              </Col>
+                              <Col xs={6} lg={4}>
+                                  <p className="m-0 text-muted">{t('Account number')}</p>
+                                  <p className="m-0">{bank.account_number}</p>
+                              </Col>
+                              <Col xs={6} lg={4}>
+                                  <p className="m-0 text-muted">{t('Currency Accepted')}</p>
+                                  <p className="m-0">{bank.currency.join(", ")}</p>
+                              </Col>
+                            </Row>
                         </Card.Body>
                     </Link>
-                    <Card.Footer className="payment-card-footer">
-                        <div className="p-2 float-right">
+                    <Card.Footer>
+                        <div className="float-right">
                             <div className="d-flex align-items-center">
                                 {
                                     !bank.is_active ?

@@ -61,23 +61,19 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
     return (<>
         <Row>
             <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditLocation(location)} className="payment-terms-link">
-                        <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Location Name')}</h6>
-                                <h6 className="m-0 font-weight-bold">{location.name}</h6>
-                            </div>
+                <Card className="mb-2">
+                    <Link to="#" onClick={() => onEditLocation(location)} className="card-link">
+                        <Card.Header>
+                          <p className="m-0 text-muted">{t('Location Name')}</p>
+                          <h6 className="m-0">{location.name}</h6>
                         </Card.Header>
                         <Card.Body>
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Address')}</h6>
-                                <h6 className="m-0 font-weight-bold">{location.address1}{location.address2 ? ' '+location.address2:''}, {location.city} {location.zip}, {COUNTRIES[location.country]}</h6>
-                            </div>
+                          <p className="m-0 text-muted">{t('Address')}</p>
+                          <p className="m-0">{location.address1}{location.address2 ? ' '+location.address2:''}, {location.city} {location.zip}, {COUNTRIES[location.country]}</p>
                         </Card.Body>
                     </Link>
-                    <Card.Footer className="payment-card-footer">
-                        <div className="p-2 float-right">
+                    <Card.Footer>
+                        <div className="float-right">
                             <div className="d-flex align-items-center">
                                 {
                                     !location.is_active ?

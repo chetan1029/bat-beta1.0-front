@@ -2,7 +2,8 @@ import { AssetType } from './constants';
 
 const INIT_STATE: any = {
     assets: [],
-    locations: []
+    locations: [],
+    assettypes: [],
 };
 
 const AssetsState = (state = INIT_STATE, action: any) => {
@@ -18,7 +19,10 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 }
                 case AssetType.GET_LOCATIONS:
                     return { ...state, locations: action.payload.data, isLocationFetched: false };
-            
+
+                case AssetType.GET_ASSET_TYPE:
+                    return { ...state, assettypes: action.payload.data, isAssettypeFetched: false };
+
                 case AssetType.CREATE_ASSET: {
                     return {
                         ...state,
@@ -72,6 +76,9 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 case AssetType.GET_LOCATIONS:
                     return { ...state, error: action.payload.error, isLocationFetched: false };
 
+                case AssetType.GET_ASSET_TYPE:
+                    return { ...state, error: action.payload.error, isAssettypeFetched: false };
+
                 case AssetType.CREATE_ASSET: {
                     return {
                         ...state,
@@ -118,16 +125,19 @@ const AssetsState = (state = INIT_STATE, action: any) => {
 
         case AssetType.GET_ASSETS:
             return { ...state, isAssetsFetched: false };
-        
+
         case AssetType.GET_LOCATIONS:
             return { ...state, isLocationFetched: true };
+
+        case AssetType.GET_ASSET_TYPE:
+            return { ...state, isAssettypeFetched: true };
 
         case AssetType.CREATE_ASSET:
             return { ...state, isAssetCreated: false, loading: true, createAssetError: null };
 
         case AssetType.EDIT_ASSET:
             return {
-                ...state, 
+                ...state,
                 isAssetUpdated: false, isAssetCreated: false,
                 isAssetDeleted: false, isAssetRestored: false, isAssetArchived: false,
                 createAssetError: null, editAssetError: null,
@@ -152,7 +162,7 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 loading: true
             }
         }
-        
+
         case AssetType.RESTORE_ASSET: {
             return {
                 ...state,

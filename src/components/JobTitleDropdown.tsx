@@ -3,16 +3,9 @@ import React from 'react';
 import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
+import { JOB_TITLES } from "../constants";
 
 
-const TITLES: any = {
-    "CEO": "CEO",
-    "Supply Chain Manager": "Supply Chain Manager",
-    "Sales Manager": "Sales Manager",
-    "IT Developer": "IT Developer",
-    "Admin": "Admin",
-    "Sales": "Sales"
-}
 
 interface JobTitleDropdownProps {
     placeholder?: string,
@@ -28,9 +21,9 @@ const JobTitleDropdown = ({ placeholder, value, onChange, className }: JobTitleD
 
 
     let countryOpts: Array<any> = [];
-    for (const c in TITLES) {
+    for (const c in JOB_TITLES) {
         countryOpts.push({
-            label: t(TITLES[c]),
+            label: t(JOB_TITLES[c]),
             value: c
         });
     }

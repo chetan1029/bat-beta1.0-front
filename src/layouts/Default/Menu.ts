@@ -117,6 +117,9 @@ const getMainMenuItems = (companyId: number | string) => {
         { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
         { name: 'My Profile', url: `/profile/${companyId}/general`, icon: 'user', label: 'My Profile', id: 'myProfile' },
         { name: 'My Clients', url: `/clients/${companyId}`, icon: 'bag', label: 'My Clients', id: 'myClients' },
+        {
+            name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings',
+        }
     ];
 
     return mainMenuItems;

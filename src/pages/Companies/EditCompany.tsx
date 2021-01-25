@@ -113,7 +113,6 @@ const EditCompany = (props: EditCompanyProps) => {
             } else {
                 delete newData['license_file'];
             }
-
             dispatch(editCompany(companyId, newData));
         },
     });

@@ -114,7 +114,7 @@
     min-height: 120px;
 }
 
-.payment-terms-link {
+.card-link {
     color: inherit !important;
     width: 100%;
 
@@ -123,14 +123,14 @@
     }
 }
 
-.payment-terms-card {
+.card {
 
-    .payment-card-title {
+    .card-header {
         border-bottom: 1px solid rgba(#9D9EAD, 0.3);
         background-color: transparent;
     }
 
-    .payment-card-footer {
+    .card-footer {
         border-top: 1px solid rgba(#9D9EAD, 0.3);
         background-color: transparent;
     }
@@ -192,4 +192,3 @@ add new payment form
         z-index: $zIndexContent;
     }
 }
-  

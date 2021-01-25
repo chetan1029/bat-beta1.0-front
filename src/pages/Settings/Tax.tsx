@@ -61,33 +61,27 @@ const TaxCardItem = ({ tax, onArchiveDeleteAction, onEditTax, companyId }: TaxCa
     return (<>
         <Row>
             <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditTax(tax)} className="payment-terms-link">
-                        <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Tax')}</h6>
-                                <h6 className="m-0 font-weight-bold">{COUNTRIES[tax.from_country]} to {COUNTRIES[tax.to_country]}</h6>
-                            </div>
+                <Card className="mb-2">
+                    <Link to="#" onClick={() => onEditTax(tax)} className="card-link">
+                        <Card.Header>
+                            <p className="m-0 text-muted">{t('Tax')}</p>
+                            <h6 className="m-0">{COUNTRIES[tax.from_country]} to {COUNTRIES[tax.to_country]}</h6>
                         </Card.Header>
                         <Card.Body>
                           <Row>
                               <Col lg={6}>
-                                <div className="p-2">
-                                    <h6 className="m-0 text-muted font-weight-bold">{t('Custom Duty')}</h6>
-                                    <h6 className="m-0 font-weight-bold">{tax.custom_duty}%</h6>
-                                </div>
+                                <p className="m-0 text-muted">{t('Custom Duty')}</p>
+                                <p className="m-0">{tax.custom_duty}%</p>
                               </Col>
                               <Col lg={6}>
-                                <div className="p-2">
-                                    <h6 className="m-0 text-muted font-weight-bold">{t('VAT')}</h6>
-                                    <h6 className="m-0 font-weight-bold">{tax.vat}%</h6>
-                                </div>
+                                <p className="m-0 text-muted">{t('VAT')}</p>
+                                <p className="m-0">{tax.vat}%</p>
                               </Col>
                           </Row>
                         </Card.Body>
                     </Link>
-                    <Card.Footer className="payment-card-footer">
-                        <div className="p-2 float-right">
+                    <Card.Footer>
+                        <div className="float-right">
                             <div className="d-flex align-items-center">
                                 {
                                     !tax.is_active ?

@@ -3,7 +3,7 @@ import { AssetType } from './constants';
 // common success
 export const assetsApiResponseSuccess = (actionType: string, data: any) => ({
     type: AssetType.API_RESPONSE_SUCCESS,
-    payload: { actionType, data } 
+    payload: { actionType, data }
 });
 // common error
 export const assetsApiResponseError = (actionType: string, error: string) => ({
@@ -18,6 +18,11 @@ export const getAssets = (companyId: string | number, filters?: any) => ({
 
 export const getLocations = (companyId: string | number, filters?: any) => ({
     type: AssetType.GET_LOCATIONS,
+    payload: { companyId, filters }
+});
+
+export const getAssetType = (companyId: string | number, filters?: any) => ({
+    type: AssetType.GET_ASSET_TYPE,
     payload: { companyId, filters }
 });
 

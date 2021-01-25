@@ -3,12 +3,8 @@ import React from 'react';
 import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
+import { LANGS } from "../constants";
 
-
-const LANGS: any = {
-    "en": "English",
-    "sv": "Swedish"
-}
 
 interface LanguageDropdownProps {
     placeholder?: string,

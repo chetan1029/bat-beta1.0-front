@@ -15,6 +15,7 @@ import PackingBox from "./PackingBox";
 import Hscode from "./Hscode";
 import Tax from "./Tax";
 import DeliveryTerms from "./DeliveryTerms";
+import Membership from "./Membership";
 
 interface DefaultViewProps {
   items: any;
@@ -123,7 +124,7 @@ const Index = ({ match }: IndexProps) => {
         },
         {
           title: "Membership Plan",
-          key: "membership_plan",
+          key: "membership",
           icon: "document",
           desc:
             "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
@@ -234,6 +235,8 @@ const Index = ({ match }: IndexProps) => {
             return <Tax />;
           case "delivery_terms":
             return <DeliveryTerms />;
+          case "membership":
+            return <Membership />;
           case "profile":
             return <Redirect to={`/settings/${companyId}/edit`} />;
 

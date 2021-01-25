@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
-import { Form, Modal, Button } from "react-bootstrap";
+import { Row, Col, Form, Modal, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -22,6 +22,7 @@ interface AddEditAssetsProps {
   asset?: any;
   companyId: any;
   locations: any;
+  assettypes: any;
 }
 const AddEditAssets = ({
   isOpen,
@@ -29,6 +30,7 @@ const AddEditAssets = ({
   asset,
   companyId,
   locations,
+  assettypes,
 }: AddEditAssetsProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -54,7 +56,14 @@ const AddEditAssets = ({
 
   const [showTotalError, setshowTotalError] = useState(false);
 
-  const defaultTypes = [];
+  const defaultTypes =
+  assettypes.type_data.length > 0 &&
+    assettypes.type_data.map((assettype) => {
+      return {
+        label: assettype,
+        value: assettype,
+      };
+    });
 
   const defaultLocations =
   locations.results.length > 0 &&
@@ -90,9 +99,15 @@ const AddEditAssets = ({
             option.value === asset.current_location
         )
       : "" : "",
-      type: asset ? asset.type : "",
+      type: asset ? defaultTypes
+      ? defaultTypes.find(
+          (option) =>
+            option.value === asset.type
+        )
+      : "" : "",
       price: asset ? asset.price : "",
-      asset_id: asset ? asset.asset_id : ""
+      asset_id: asset ? asset.asset_id : "",
+      receipt: asset ? asset.receipt : "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required(t("Asset title is required")),
@@ -101,7 +116,7 @@ const AddEditAssets = ({
       price: Yup.number().required(t("Asset price is required")),
       type: Yup.object().required(t("Asset type is required")),
       current_location: Yup.object().required(t("Asset location is required")),
-      asset_id: Yup.string().required(t("Required")),
+      asset_id: Yup.string().required(t("A unique ID for the asset is required. You can put order number as a Asset ID also.")),
     }),
     onSubmit: (values) => {
         // React-select retrun object issue
@@ -115,6 +130,12 @@ const AddEditAssets = ({
         if(values.date){
             values.date = new Date(values.date)
         }
+
+        if (receiptFile) {
+            values.receipt = receiptFile;
+        } else {
+            delete values.receipt;
+        }
       if (asset) {
         dispatch(editAsset(companyId, asset.id, values));
       } else {
@@ -127,6 +148,14 @@ const AddEditAssets = ({
     validator.resetForm();
     onClose();
   };
+
+  const [receiptFile, setreceiptFile] = useState<any>();
+  const onReceiptFile = (e: any) => {
+      const file = e.target.files[0];
+      if (file){
+          setreceiptFile(file);
+        }
+  }
 
   return (
     <Modal show={isOpen} onHide={onClose} size="lg">
@@ -225,11 +254,12 @@ const AddEditAssets = ({
               <Form.Group className="mb-4">
                 <Form.Label htmlFor="usr">{t("Asset Detail")}</Form.Label>
                 <Form.Control
-                  type="text"
+                  as="textarea"
                   className="form-control"
                   id="detail"
                   name="detail"
                   placeholder="Enter asset detail"
+                  rows={5}
                   onBlur={validator.handleBlur}
                   value={validator.values.detail}
                   onChange={validator.handleChange}
@@ -248,105 +278,124 @@ const AddEditAssets = ({
                   </Form.Control.Feedback>
                 ) : null}
               </Form.Group>
+              <Row>
+                <Col>
+                <Form.Group className="mb-4">
+                  <Form.Label htmlFor="usr">{t("Asset Type")}</Form.Label>
+                  <Select
+                    id="type"
+                    name="type"
+                    placeholder={t("Select asset type")}
+                    isClearable
+                    options={defaultTypes || []}
+                    onChange={(value: any) => {
+                      validator.setFieldValue("type", value);
+                    }}
+                    value={validator.values.type}
+                    className={classNames(
+                      "react-select",
+                      "react-select-regular",
+                      validator.touched.type &&
+                        validator.errors.type &&
+                        "is-invalid"
+                    )}
+                    classNamePrefix="react-select"
+                  />
+                </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-4">
+                    <Form.Label htmlFor="usr">{t("Asset Price")}</Form.Label>
+                    <Form.Control
+                      type="number"
+                      className="form-control"
+                      id="price"
+                      name="price"
+                      placeholder="Enter asset price"
+                      onBlur={validator.handleBlur}
+                      value={validator.values.price}
+                      onChange={validator.handleChange}
+                      isInvalid={
+                        validator.touched.price &&
+                        validator.errors &&
+                        validator.errors.price
+                          ? true
+                          : false
+                      }
+                    />
 
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset Type")}</Form.Label>
-                <CreatableSelect
-                  id="type"
-                  name="type"
-                  placeholder={t("Select asset type")}
-                  isClearable
-                  options={defaultTypes || []}
-                  onChange={(value: any) => {
-                    validator.setFieldValue("type", value);
-                  }}
-                  value={validator.values.type}
-                  className={classNames(
-                    "react-select",
-                    "react-select-regular",
-                    validator.touched.type &&
-                      validator.errors.type &&
-                      "is-invalid"
-                  )}
-                  classNamePrefix="react-select"
-                />
-              </Form.Group>
+                    {validator.touched.price && validator.errors.price ? (
+                      <Form.Control.Feedback type="invalid">
+                        {validator.errors.price}
+                      </Form.Control.Feedback>
+                    ) : null}
+                  </Form.Group>
+                </Col>
+              </Row>
 
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset Price")}</Form.Label>
-                <Form.Control
-                  type="number"
-                  className="form-control"
-                  id="price"
-                  name="price"
-                  placeholder="Enter asset price"
-                  onBlur={validator.handleBlur}
-                  value={validator.values.price}
-                  onChange={validator.handleChange}
-                  isInvalid={
-                    validator.touched.price &&
-                    validator.errors &&
-                    validator.errors.price
-                      ? true
-                      : false
-                  }
-                />
+              <Row>
+                <Col>
+                  <Form.Group className="mb-4">
+                    <Form.Label htmlFor="usr">{t("Asset Date")}</Form.Label>
+                    <Form.Control
+                      type="date"
+                      className="form-control"
+                      id="date"
+                      name="date"
+                      placeholder="Select asset date"
+                      onBlur={validator.handleBlur}
+                      value={validator.values.date}
+                      onChange={validator.handleChange}
+                      isInvalid={
+                        validator.touched.date &&
+                        validator.errors &&
+                        validator.errors.date
+                          ? true
+                          : false
+                      }
+                    />
 
-                {validator.touched.price && validator.errors.price ? (
-                  <Form.Control.Feedback type="invalid">
-                    {validator.errors.price}
-                  </Form.Control.Feedback>
-                ) : null}
-              </Form.Group>
+                    {validator.touched.date && validator.errors.date ? (
+                      <Form.Control.Feedback type="invalid">
+                        {validator.errors.date}
+                      </Form.Control.Feedback>
+                    ) : null}
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group className="mb-4">
+                    <Form.Label htmlFor="usr">{t("Asset Location")}</Form.Label>
+                    <Select
+                      id="current_location"
+                      name="current_location"
+                      placeholder={t("Select asset location")}
+                      isClearable
+                      options={defaultLocations || []}
+                      onChange={(value: any) => {
+                        validator.setFieldValue("current_location", value);
+                      }}
+                      value={validator.values.current_location}
+                      className={classNames(
+                        "react-select",
+                        "react-select-regular",
+                        validator.touched.current_location &&
+                          validator.errors.current_location &&
+                          "is-invalid"
+                      )}
+                      classNamePrefix="react-select"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset Date")}</Form.Label>
-                <Form.Control
-                  type="date"
-                  className="form-control"
-                  id="date"
-                  name="date"
-                  placeholder="Select asset date"
-                  onBlur={validator.handleBlur}
-                  value={validator.values.date}
-                  onChange={validator.handleChange}
-                  isInvalid={
-                    validator.touched.date &&
-                    validator.errors &&
-                    validator.errors.date
-                      ? true
-                      : false
-                  }
-                />
+              <Form.Group>
+                  <Form.Label>{t('Asset Receipt')}</Form.Label>
+                  <Form.Control type="file" name="receipt" id="receipt"
+                      onChange={onReceiptFile} custom />
 
-                {validator.touched.date && validator.errors.date ? (
-                  <Form.Control.Feedback type="invalid">
-                    {validator.errors.date}
-                  </Form.Control.Feedback>
-                ) : null}
-              </Form.Group>
-
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset Location")}</Form.Label>
-                <Select
-                  id="current_location"
-                  name="current_location"
-                  placeholder={t("Select asset location")}
-                  isClearable
-                  options={defaultLocations || []}
-                  onChange={(value: any) => {
-                    validator.setFieldValue("current_location", value);
-                  }}
-                  value={validator.values.current_location}
-                  className={classNames(
-                    "react-select",
-                    "react-select-regular",
-                    validator.touched.current_location &&
-                      validator.errors.current_location &&
-                      "is-invalid"
-                  )}
-                  classNamePrefix="react-select"
-                />
+                  {asset && asset.receipt ? <p className="mb-0">
+                      {t('Asset Receipt')}: <a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a>
+                  </p> : null}
               </Form.Group>
 
               <div>

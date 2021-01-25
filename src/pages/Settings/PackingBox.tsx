@@ -61,31 +61,27 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
     return (<>
         <Row>
             <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditPackingBox(packingbox)} className="payment-terms-link">
-                        <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Name')}</h6>
-                                <h6 className="m-0 font-weight-bold">{packingbox.name}</h6>
-                            </div>
+                <Card className="mb-2">
+                    <Link to="#" onClick={() => onEditPackingBox(packingbox)} className="card-link">
+                        <Card.Header>
+                            <p className="m-0 text-muted">{t('Name')}</p>
+                            <h6 className="m-0">{packingbox.name}</h6>
                         </Card.Header>
                         <Card.Body>
-                            <div className="p-2">
-                                <Row>
-                                    <Col xs={6} lg={6}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Size')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.length}x{packingbox.width}x{packingbox.depth} {packingbox.length_unit}</h6>
-                                    </Col>
-                                    <Col xs={6} lg={6}>
-                                        <h6 className="m-0 text-muted font-weight-bold">{t('Weight')}</h6>
-                                        <h6 className="m-0 font-weight-bold">{packingbox.weight ? packingbox.weight['value'] + ' ' + packingbox.weight['unit']: ''}</h6>
-                                    </Col>
-                                </Row>
-                            </div>
+                            <Row>
+                                <Col xs={6} lg={6}>
+                                    <p className="m-0 text-muted">{t('Size')}</p>
+                                    <p className="m-0">{packingbox.length}x{packingbox.width}x{packingbox.depth} {packingbox.length_unit}</p>
+                                </Col>
+                                <Col xs={6} lg={6}>
+                                    <p className="m-0 text-muted">{t('Weight')}</p>
+                                    <p className="m-0">{packingbox.weight ? packingbox.weight['value'] + ' ' + packingbox.weight['unit']: ''}</p>
+                                </Col>
+                            </Row>
                         </Card.Body>
                     </Link>
-                    <Card.Footer className="payment-card-footer">
-                        <div className="p-2 float-right">
+                    <Card.Footer>
+                        <div className="float-right">
                             <div className="d-flex align-items-center">
                                 {
                                     !packingbox.is_active ?

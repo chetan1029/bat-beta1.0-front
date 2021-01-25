@@ -3,13 +3,8 @@ import React from 'react';
 import Select from 'react-select';
 import { useTranslation } from 'react-i18next';
 import classNames from "classnames";
+import { LENGTHS } from "../constants";
 
-
-const TITLES: any = {
-    "cm": "cm",
-    "in": "in",
-    "m": "m",
-}
 
 interface LengthUnitDropdownProps {
     placeholder?: string,
@@ -25,9 +20,9 @@ const LengthUnitDropdown = ({ placeholder, value, onChange, className }: LengthU
 
 
     let opts: Array<any> = [];
-    for (const c in TITLES) {
+    for (const c in LENGTHS) {
         opts.push({
-            label: t(TITLES[c]),
+            label: t(LENGTHS[c]),
             value: c
         });
     }

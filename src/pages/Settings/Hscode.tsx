@@ -61,33 +61,27 @@ const HscodeCardItem = ({ hscode, onArchiveDeleteAction, onEditHscode, companyId
     return (<>
         <Row>
             <Col lg={12}>
-                <Card className="payment-terms-card mb-2">
-                    <Link to="#" onClick={() => onEditHscode(hscode)} className="payment-terms-link">
+                <Card className="mb-2">
+                    <Link to="#" onClick={() => onEditHscode(hscode)} className="card-link">
                         <Card.Header className="payment-card-title">
-                            <div className="p-2">
-                                <h6 className="m-0 text-muted font-weight-bold">{t('Hscode')}</h6>
-                                <h6 className="m-0 font-weight-bold">{hscode.hscode}</h6>
-                            </div>
+                            <p className="m-0 text-muted">{t('Hscode')}</p>
+                            <h6 className="m-0">{hscode.hscode}</h6>
                         </Card.Header>
                         <Card.Body>
                           <Row>
                               <Col lg={6}>
-                                <div className="p-2">
-                                    <h6 className="m-0 text-muted font-weight-bold">{t('Material')}</h6>
-                                    <h6 className="m-0 font-weight-bold">{hscode.material}</h6>
-                                </div>
+                                <p className="m-0 text-muted">{t('Material')}</p>
+                                <p className="m-0">{hscode.material}</p>
                               </Col>
                               <Col lg={6}>
-                                <div className="p-2">
-                                    <h6 className="m-0 text-muted font-weight-bold">{t('Use')}</h6>
-                                    <h6 className="m-0 font-weight-bold">{hscode.use}</h6>
-                                </div>
+                                <p className="m-0 text-muted">{t('Use')}</p>
+                                <p className="m-0">{hscode.use}</p>
                               </Col>
                           </Row>
                         </Card.Body>
                     </Link>
-                    <Card.Footer className="payment-card-footer">
-                        <div className="p-2 float-right">
+                    <Card.Footer>
+                        <div className="float-right">
                             <div className="d-flex align-items-center">
                                 {
                                     !hscode.is_active ?
