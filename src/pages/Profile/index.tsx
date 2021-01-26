@@ -41,6 +41,7 @@ const Profile = (props: ProfileProp) => {
         setprofile(user);
     }, [user]);
 
+
     const { loading, profileUpdated, error, updatedUser } = useSelector((state: any) => ({
         loading: state.Auth.loading,
         profileUpdated: state.Auth.profileUpdated,

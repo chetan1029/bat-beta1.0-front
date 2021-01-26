@@ -112,12 +112,13 @@ const Location = (state = INIT_STATE, action: any) => {
         case LocationTypes.GET_LOCATION:
             return { ...state, isLocationFetched: false };
         case LocationTypes.CREATE_LOCATION:
-            return { ...state, isLocationCreated: false, loading: true };
+            return { ...state, isLocationCreated: false, loading: true, createLocationError: null };
         case LocationTypes.EDIT_LOCATION:
             return {
                 ...state,
                 isLocationUpdated: false, isLocationCreated: false,
                 isLocationDeleted: false, isLocationRestored: false, isLocationArchived: false,
+                createLocationError: null, editLocationError: null,
                 loading: true
             };
         case LocationTypes.DELETE_LOCATION:
@@ -125,6 +126,7 @@ const Location = (state = INIT_STATE, action: any) => {
                 ...state, isLocationDeleted: false, loading: true,
                 isLocationUpdated: false, isLocationCreated: false,
                 isLocationRestored: false, isLocationArchived: false,
+                createLocationError: null
             };
         case LocationTypes.ARCHIVE_LOCATION: {
             return {
@@ -132,6 +134,7 @@ const Location = (state = INIT_STATE, action: any) => {
                 isLocationArchived: false, isLocationRestored: false,
                 isLocationUpdated: false, isLocationCreated: false,
                 isLocationDeleted: false,
+                createLocationError: null,
                 loading: true
             }
         }
@@ -141,12 +144,13 @@ const Location = (state = INIT_STATE, action: any) => {
                 isLocationRestored: false, isLocationArchived: false,
                 isLocationUpdated: false, isLocationCreated: false,
                 isLocationDeleted: false,
-                loading: true
+                loading: true, createLocationError: null
             }
         }
         case LocationTypes.RESET: {
             return {
                 ...state,
+                createLocationError: null,
                 editLocationError: null,
                 isLocationCreated: false,
                 isLocationDeleted: false,

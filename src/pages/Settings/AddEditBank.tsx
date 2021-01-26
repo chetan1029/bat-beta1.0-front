@@ -13,7 +13,7 @@ import AlertMessage from "../../components/AlertMessage";
 import CountriesDropdown from "../../components/CountriesDropdown";
 import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 import { COUNTRIES, CURRENCIES } from "../../constants";
-
+import ExistingDataWarning from "../../components/ExistingDataWarning";
 //action
 import { createBank, editBank, reset } from "../../redux/actions";
 interface AddEditBankProps {
@@ -93,7 +93,13 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
                     {loading ? <Loader />: null}
 
                     <div>
-                        {(!isBankCreated && createBankError) && <AlertMessage error={createBankError} />}
+                        {createBankError && createBankError['existing_items'] ? <ExistingDataWarning
+                        name={t('Bank(s)')}
+                        message={createBankError}
+                        onConfirm={() => {
+                            dispatch(createBank(companyId, {...validator.values, country: validator.values['country']['value'], currency: validator.values['currency'].map(({value})=>value), force_create: true}));
+                        }} onClose={() => {}} displayField={'name'} /> : null}
+                        {(!isBankCreated && createBankError) && !createBankError['existing_items'] ? <AlertMessage error={createBankError} /> : null}
                         {(!isBankUpdated && editBankError) && <AlertMessage error={editBankError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>

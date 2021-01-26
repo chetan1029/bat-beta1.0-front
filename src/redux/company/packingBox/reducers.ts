@@ -112,12 +112,13 @@ const PackingBox = (state = INIT_STATE, action: any) => {
         case PackingBoxTypes.GET_PACKING_BOX:
             return { ...state, isPackingBoxFetched: false };
         case PackingBoxTypes.CREATE_PACKING_BOX:
-            return { ...state, isPackingBoxCreated: false, loading: true };
+            return { ...state, isPackingBoxCreated: false, loading: true, createPackingBoxError: null };
         case PackingBoxTypes.EDIT_PACKING_BOX:
             return {
                 ...state,
                 isPackingBoxUpdated: false, isPackingBoxCreated: false,
                 isPackingBoxDeleted: false, isPackingBoxRestored: false, isPackingBoxArchived: false,
+                createPackingBoxError: null, editPackingBoxError: null,
                 loading: true
             };
         case PackingBoxTypes.DELETE_PACKING_BOX:
@@ -125,6 +126,7 @@ const PackingBox = (state = INIT_STATE, action: any) => {
                 ...state, isPackingBoxDeleted: false, loading: true,
                 isPackingBoxUpdated: false, isPackingBoxCreated: false,
                 isPackingBoxRestored: false, isPackingBoxArchived: false,
+                createPackingBoxError: null
             };
         case PackingBoxTypes.ARCHIVE_PACKING_BOX: {
             return {
@@ -132,6 +134,7 @@ const PackingBox = (state = INIT_STATE, action: any) => {
                 isPackingBoxArchived: false, isPackingBoxRestored: false,
                 isPackingBoxUpdated: false, isPackingBoxCreated: false,
                 isPackingBoxDeleted: false,
+                createPackingBoxError: null,
                 loading: true
             }
         }
@@ -141,12 +144,13 @@ const PackingBox = (state = INIT_STATE, action: any) => {
                 isPackingBoxRestored: false, isPackingBoxArchived: false,
                 isPackingBoxUpdated: false, isPackingBoxCreated: false,
                 isPackingBoxDeleted: false,
-                loading: true
+                loading: true, createPackingBoxError: null
             }
         }
         case PackingBoxTypes.RESET: {
             return {
                 ...state,
+                createPackingBoxError: null,
                 editPackingBoxError: null,
                 isPackingBoxCreated: false,
                 isPackingBoxDeleted: false,

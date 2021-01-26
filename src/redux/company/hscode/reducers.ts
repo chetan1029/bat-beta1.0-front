@@ -112,12 +112,13 @@ const Hscode = (state = INIT_STATE, action: any) => {
         case HscodeTypes.GET_HSCODE:
             return { ...state, isHscodeFetched: false };
         case HscodeTypes.CREATE_HSCODE:
-            return { ...state, isHscodeCreated: false, loading: true };
+            return { ...state, isHscodeCreated: false, loading: true, createHscodeError: null };
         case HscodeTypes.EDIT_HSCODE:
             return {
                 ...state,
                 isHscodeUpdated: false, isHscodeCreated: false,
                 isHscodeDeleted: false, isHscodeRestored: false, isHscodeArchived: false,
+                createHscodeError: null, editHscodeError: null,
                 loading: true
             };
         case HscodeTypes.DELETE_HSCODE:
@@ -125,6 +126,7 @@ const Hscode = (state = INIT_STATE, action: any) => {
                 ...state, isHscodeDeleted: false, loading: true,
                 isHscodeUpdated: false, isHscodeCreated: false,
                 isHscodeRestored: false, isHscodeArchived: false,
+                createHscodeError: null
             };
         case HscodeTypes.ARCHIVE_HSCODE: {
             return {
@@ -132,6 +134,7 @@ const Hscode = (state = INIT_STATE, action: any) => {
                 isHscodeArchived: false, isHscodeRestored: false,
                 isHscodeUpdated: false, isHscodeCreated: false,
                 isHscodeDeleted: false,
+                createHscodeError: null,
                 loading: true
             }
         }
@@ -141,12 +144,13 @@ const Hscode = (state = INIT_STATE, action: any) => {
                 isHscodeRestored: false, isHscodeArchived: false,
                 isHscodeUpdated: false, isHscodeCreated: false,
                 isHscodeDeleted: false,
-                loading: true
+                loading: true, createHscodeError: null
             }
         }
         case HscodeTypes.RESET: {
             return {
                 ...state,
+                createHscodeError: null,
                 editHscodeError: null,
                 isHscodeCreated: false,
                 isHscodeDeleted: false,

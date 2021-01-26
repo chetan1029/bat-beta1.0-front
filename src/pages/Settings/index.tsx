@@ -169,13 +169,6 @@ const Index = ({ match }: IndexProps) => {
           desc:
             "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
         },
-        {
-          title: "Logistic Lead Time",
-          key: "logistic_lead_time",
-          icon: "document",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
       ],
     },
     {

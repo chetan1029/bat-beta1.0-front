@@ -68,7 +68,7 @@ const DeliveryCardItem = ({ delivery, companyId }: DeliveryCardItemProps) => {
               </Accordion.Toggle>
               <Accordion.Collapse eventKey={delivery.id}>
                 <Card.Body>
-                <Table bordered responsive>
+                <Table bordered>
                   <thead>
                     <tr>
                       <th>Services</th>

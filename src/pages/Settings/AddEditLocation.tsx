@@ -12,6 +12,7 @@ import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import CountriesDropdown from "../../components/CountriesDropdown";
 import { COUNTRIES } from "../../constants";
+import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 //action
 import { createLocation, editLocation, reset } from "../../redux/actions";
@@ -86,8 +87,13 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
                     {loading ? <Loader />: null}
 
                     <div>
-
-                        {(!isLocationCreated && createLocationError) && <AlertMessage error={createLocationError} />}
+                        {createLocationError && createLocationError['existing_items'] ? <ExistingDataWarning
+                        name={t('Location(s)')}
+                        message={createLocationError}
+                        onConfirm={() => {
+                            dispatch(createLocation(companyId, {...validator.values, country: validator.values['country']['value'], force_create: true}));
+                        }} onClose={() => {}} displayField={'name'} /> : null}
+                        {(!isLocationCreated && createLocationError) && !createLocationError['existing_items'] ? <AlertMessage error={createLocationError} />: null}
                         {(!isLocationUpdated && editLocationError) && <AlertMessage error={editLocationError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>

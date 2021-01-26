@@ -93,8 +93,8 @@ const PaymentCardItem = ({ payment, onArchiveDeleteAction, onEditPaymentTerm, co
                             <div className="d-flex align-items-center">
                                 {
                                     !payment.is_active ?
-                                        <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-warning mr-2" /></Link> :
-                                        <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-primary mr-2" /></Link>
+                                        <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-primary mr-2" /></Link> :
+                                        <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-warning mr-2" /></Link>
                                 }
                                 <Link to="#" onClick={() => onDeletePaymentTerm(payment.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
 
@@ -302,7 +302,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
 
             {isPaymentTermArchived ? <MessageAlert
                 message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
-                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
+                iconWrapperClass="bg-warning text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(restorePaymentTerm(companyId, archiveUnarchiveItem.id))
                 }}
@@ -310,7 +310,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
 
             {isPaymentTermRestored ? <MessageAlert
                 message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
-                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
+                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(archivePaymentTerm(companyId, archiveUnarchiveItem.id))
                 }}

@@ -112,12 +112,13 @@ const Bank = (state = INIT_STATE, action: any) => {
         case BankTypes.GET_BANK:
             return { ...state, isBankFetched: false };
         case BankTypes.CREATE_BANK:
-            return { ...state, isBankCreated: false, loading: true };
+            return { ...state, isBankCreated: false, loading: true, createBankError: null };
         case BankTypes.EDIT_BANK:
             return {
                 ...state,
                 isBankUpdated: false, isBankCreated: false,
                 isBankDeleted: false, isBankRestored: false, isBankArchived: false,
+                createBankError: null, editBankError: null,
                 loading: true
             };
         case BankTypes.DELETE_BANK:
@@ -125,6 +126,7 @@ const Bank = (state = INIT_STATE, action: any) => {
                 ...state, isBankDeleted: false, loading: true,
                 isBankUpdated: false, isBankCreated: false,
                 isBankRestored: false, isBankArchived: false,
+                createBankError: null
             };
         case BankTypes.ARCHIVE_BANK: {
             return {
@@ -132,6 +134,7 @@ const Bank = (state = INIT_STATE, action: any) => {
                 isBankArchived: false, isBankRestored: false,
                 isBankUpdated: false, isBankCreated: false,
                 isBankDeleted: false,
+                createBankError: null,
                 loading: true
             }
         }
@@ -141,12 +144,13 @@ const Bank = (state = INIT_STATE, action: any) => {
                 isBankRestored: false, isBankArchived: false,
                 isBankUpdated: false, isBankCreated: false,
                 isBankDeleted: false,
-                loading: true
+                loading: true, createBankError: null
             }
         }
         case BankTypes.RESET: {
             return {
                 ...state,
+                createBankError: null,
                 editBankError: null,
                 isBankCreated: false,
                 isBankDeleted: false,

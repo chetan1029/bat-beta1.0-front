@@ -12,6 +12,7 @@ import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import CountriesDropdown from "../../components/CountriesDropdown";
 import { COUNTRIES } from "../../constants";
+import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 //action
 import { createHscode, editHscode, reset } from "../../redux/actions";
@@ -78,8 +79,13 @@ const AddEditHscode = ({ isOpen, onClose, hscode, companyId }: AddEditHscodeProp
                     {loading ? <Loader />: null}
 
                     <div>
-
-                        {(!isHscodeCreated && createHscodeError) && <AlertMessage error={createHscodeError} />}
+                        {createHscodeError && createHscodeError['existing_items'] ? <ExistingDataWarning
+                        name={t('HS Code(s)')}
+                        message={createHscodeError}
+                        onConfirm={() => {
+                            dispatch(createHscode(companyId, {...validator.values, force_create: true}));
+                        }} onClose={() => {}} displayField={'hscode'} /> : null}
+                        {(!isHscodeCreated && createHscodeError) && !createHscodeError['existing_items'] ? <AlertMessage error={createHscodeError} /> : null}
                         {(!isHscodeUpdated && editHscodeError) && <AlertMessage error={editHscodeError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>

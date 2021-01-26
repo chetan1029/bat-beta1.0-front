@@ -13,6 +13,7 @@ import { createPackingBox, editPackingBox, reset } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import LengthUnitDropdown from "../../components/LengthUnitDropdown";
+import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 interface AddEditPackingBoxProps {
     isOpen: boolean;
@@ -88,9 +89,14 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
                     {loading ? <Loader /> : null}
 
                     <div>
-                        {(!isPackingBoxCreated && createPackingBoxError) && <AlertMessage error={createPackingBoxError} />}
+                        {createPackingBoxError && createPackingBoxError['existing_items'] ? <ExistingDataWarning
+                        name={t('Packing Box(s)')}
+                        message={createPackingBoxError}
+                        onConfirm={() => {
+                            dispatch(createPackingBox(companyId, { ...validator.values, length_unit: validator.values['length_unit']['value'], force_create: true }));
+                        }} onClose={() => {}} displayField={'name'} /> : null}
+                        {(!isPackingBoxCreated && createPackingBoxError) && !createPackingBoxError['existing_items'] ? <AlertMessage error={createPackingBoxError} /> : null}
                         {(!isPackingBoxUpdated && editPackingBoxError) && <AlertMessage error={editPackingBoxError} />}
-                        {showTotalError && <AlertMessage error={t('Total can not be greater than 100%')} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
                             <Form.Group className="mb-4">
@@ -111,7 +117,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
                                 <Col lg={3}>
                                     <Form.Group className="mb-4">
                                         <Form.Label htmlFor="usr">{t('Length')}</Form.Label>
-                                        <Form.Control type="text" className="form-control" id="length" name="length" placeholder="Lenth"
+                                        <Form.Control type="text" className="form-control" id="length" name="length" placeholder="Length"
                                             onBlur={validator.handleBlur}
                                             value={validator.values.length}
                                             onChange={validator.handleChange}

@@ -192,39 +192,13 @@ const Icon = ({ name, className }: Props) => {
 
       case 'shipment':
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g>
-            <path
-              d="M3.19961 11.4004C3.79961 11.4004 4.29961 11.9004 4.29961 12.6004C4.29961 13.2004 3.79961 13.8004 3.19961 13.8004C2.59961 13.8004 2.09961 13.3004 2.09961 12.6004C2.09961 11.9004 2.59961 11.4004 3.19961 11.4004Z"
-              stroke="#0A0C32"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M11.8998 11.4004C12.4998 11.4004 12.9998 11.9004 12.9998 12.6004C12.9998 13.2004 12.4998 13.8004 11.8998 13.8004C11.2998 13.8004 10.7998 13.3004 10.7998 12.6004C10.7998 11.9004 11.2998 11.4004 11.8998 11.4004Z"
-              stroke="#0A0C32"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path d="M9.10039 11.6006H5.90039" stroke="#0A0C32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M0.799805 7.5V10.9" stroke="#0A0C32" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path
-              d="M14.7996 11.1V8C14.7996 7.7 14.5996 7.5 14.3996 7.4C13.5996 7.2 13.0996 6.5 13.0996 5.7L13.0998 4C13.0998 3.7 12.8998 3.5 12.5998 3.5H9.2998C8.9998 3.4 8.7998 3.7 8.7998 4"
-              stroke="#0A0C32"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M0.799805 7.5002V3.0002C0.799805 2.3002 1.3998 1.7002 2.0998 1.7002H7.4998C8.1998 1.7002 8.7998 2.3002 8.7998 3.0002V7.5002"
-              stroke="#0A0C32"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </g>
-        </svg>;
+<path d="M3.19961 11.4004C3.79961 11.4004 4.29961 11.9004 4.29961 12.6004C4.29961 13.2004 3.79961 13.8004 3.19961 13.8004C2.59961 13.8004 2.09961 13.3004 2.09961 12.6004C2.09961 11.9004 2.59961 11.4004 3.19961 11.4004Z" stroke="#396AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.8998 11.4004C12.4998 11.4004 12.9998 11.9004 12.9998 12.6004C12.9998 13.2004 12.4998 13.8004 11.8998 13.8004C11.2998 13.8004 10.7998 13.3004 10.7998 12.6004C10.7998 11.9004 11.2998 11.4004 11.8998 11.4004Z" stroke="#396AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M9.10039 11.6006H5.90039" stroke="#396AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M0.799805 7.5V10.9" stroke="#396AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M14.7996 11.1V8C14.7996 7.7 14.5996 7.5 14.3996 7.4C13.5996 7.2 13.0996 6.5 13.0996 5.7L13.0998 4C13.0998 3.7 12.8998 3.5 12.5998 3.5H9.2998C8.9998 3.4 8.7998 3.7 8.7998 4" stroke="#396AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M0.799805 7.5002V3.0002C0.799805 2.3002 1.3998 1.7002 2.0998 1.7002H7.4998C8.1998 1.7002 8.7998 2.3002 8.7998 3.0002V7.5002" stroke="#396AFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>;
 
       case 'inventory':
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

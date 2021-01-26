@@ -192,3 +192,7 @@ add new payment form
         z-index: $zIndexContent;
     }
 }
+/* Accordion */
+.accordion > .card > .card-header{
+  cursor: pointer;
+}

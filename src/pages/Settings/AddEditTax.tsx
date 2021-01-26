@@ -12,7 +12,7 @@ import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import CountriesDropdown from "../../components/CountriesDropdown";
 import { COUNTRIES } from "../../constants";
-
+import ExistingDataWarning from "../../components/ExistingDataWarning";
 //action
 import { createTax, editTax, reset } from "../../redux/actions";
 interface AddEditTaxProps {
@@ -82,7 +82,13 @@ const AddEditTax = ({ isOpen, onClose, tax, companyId }: AddEditTaxProps) => {
                     {loading ? <Loader />: null}
 
                     <div>
-                        {(!isTaxCreated && createTaxError) && <AlertMessage error={createTaxError} />}
+                        {createTaxError && createTaxError['existing_items'] ? <ExistingDataWarning
+                        name={t('Tax(s)')}
+                        message={createTaxError}
+                        onConfirm={() => {
+                            dispatch(createTax(companyId, {...validator.values, from_country: validator.values['from_country']['value'], to_country: validator.values['to_country']['value'], force_create: true}));
+                        }} onClose={() => {}} displayField={'from_country'} /> : null}
+                        {(!isTaxCreated && createTaxError) && !createTaxError['existing_items'] ? <AlertMessage error={createTaxError} /> : null}
                         {(!isTaxUpdated && editTaxError) && <AlertMessage error={editTaxError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>

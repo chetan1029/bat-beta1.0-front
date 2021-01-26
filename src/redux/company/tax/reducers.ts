@@ -112,12 +112,13 @@ const Tax = (state = INIT_STATE, action: any) => {
         case TaxTypes.GET_TAX:
             return { ...state, isTaxFetched: false };
         case TaxTypes.CREATE_TAX:
-            return { ...state, isTaxCreated: false, loading: true };
+            return { ...state, isTaxCreated: false, loading: true, createTaxError: null };
         case TaxTypes.EDIT_TAX:
             return {
                 ...state,
                 isTaxUpdated: false, isTaxCreated: false,
                 isTaxDeleted: false, isTaxRestored: false, isTaxArchived: false,
+                createTaxError: null, editTaxError: null,
                 loading: true
             };
         case TaxTypes.DELETE_TAX:
@@ -125,6 +126,7 @@ const Tax = (state = INIT_STATE, action: any) => {
                 ...state, isTaxDeleted: false, loading: true,
                 isTaxUpdated: false, isTaxCreated: false,
                 isTaxRestored: false, isTaxArchived: false,
+                createTaxError: null
             };
         case TaxTypes.ARCHIVE_TAX: {
             return {
@@ -132,6 +134,7 @@ const Tax = (state = INIT_STATE, action: any) => {
                 isTaxArchived: false, isTaxRestored: false,
                 isTaxUpdated: false, isTaxCreated: false,
                 isTaxDeleted: false,
+                createTaxError: null,
                 loading: true
             }
         }
@@ -141,12 +144,13 @@ const Tax = (state = INIT_STATE, action: any) => {
                 isTaxRestored: false, isTaxArchived: false,
                 isTaxUpdated: false, isTaxCreated: false,
                 isTaxDeleted: false,
-                loading: true
+                loading: true, createTaxError: null
             }
         }
         case TaxTypes.RESET: {
             return {
                 ...state,
+                createTaxError: null,
                 editTaxError: null,
                 isTaxCreated: false,
                 isTaxDeleted: false,
