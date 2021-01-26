@@ -14,7 +14,7 @@ import CountriesDropdown from "../../components/CountriesDropdown";
 import { COUNTRIES } from "../../constants";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
 //action
-import { createTax, editTax, reset } from "../../redux/actions";
+import { createTax, editTax, resetTax } from "../../redux/actions";
 interface AddEditTaxProps {
     isOpen: boolean;
     onClose: any;
@@ -26,7 +26,7 @@ const AddEditTax = ({ isOpen, onClose, tax, companyId }: AddEditTaxProps) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(reset());
+        dispatch(resetTax());
     }, [dispatch]);
 
     const { createTaxError, isTaxCreated, editTaxError, isTaxUpdated, loading } = useSelector((state: any) => ({

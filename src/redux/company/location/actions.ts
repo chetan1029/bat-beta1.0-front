@@ -43,6 +43,6 @@ export const restoreLocation = (companyId: string | number, locationId) => ({
     payload: { companyId, locationId }
 });
 
-export const locationreset = () => ({
+export const resetLocation = () => ({
     type: LocationTypes.RESET,
 });

@@ -43,6 +43,6 @@ export const restorePaymentTerm = (companyId: string | number, paymentTermId) =>
     payload: { companyId, paymentTermId }
 });
 
-export const reset = () => ({
+export const resetPaymentTerm = () => ({
     type: PaymentTermsTypes.RESET,
 });

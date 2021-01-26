@@ -9,7 +9,7 @@ import Icon from "../../components/Icon";
 import AddEditPackingBox from "./AddEditPackingBox";
 
 //actions
-import { getPackingBox, deletePackingBox, archivePackingBox, restorePackingBox, reset } from "../../redux/actions";
+import { getPackingBox, deletePackingBox, archivePackingBox, restorePackingBox, resetPackingBox } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -85,8 +85,8 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
                             <div className="d-flex align-items-center">
                                 {
                                     !packingbox.is_active ?
-                                        <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-warning mr-2" /></Link> :
-                                        <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-primary mr-2" /></Link>
+                                        <Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-primary mr-2" /></Link> :
+                                        <Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-warning mr-2" /></Link>
                                 }
                                 <Link to="#" onClick={() => onDeletePackingBox(packingbox.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
 
@@ -96,7 +96,7 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
                 </Card>
             </Col>
         </Row>
-        {selectedTermForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTermForDelete.title}?`} onConfirm={() => {
+        {selectedTermForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTermForDelete.name}?`} onConfirm={() => {
             dispatch(deletePackingBox(companyId, selectedTermForDelete.id));
         }} onClose={() => setselectedTermForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
     </>
@@ -166,7 +166,7 @@ const PackingBox = (props: PackingBoxProps) => {
     }
     const closeModal = () => {
         setisopen(false);
-        dispatch(reset());
+        dispatch(resetPackingBox());
     }
 
     /*
@@ -187,7 +187,7 @@ const PackingBox = (props: PackingBoxProps) => {
             setisopen(false);
             dispatch(getPackingBox(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetPackingBox());
             }, 10000);
         }
     }, [isPackingBoxCreated, isPackingBoxUpdated, dispatch, props.match.params.companyId]);
@@ -197,14 +197,10 @@ const PackingBox = (props: PackingBoxProps) => {
     */
     useEffect(() => {
         if (isPackingBoxDeleted || isPackingBoxArchived || isPackingBoxRestored) {
-            dispatch(getPackingBox(props.match.params.companyId, { is_active: true }));
-
-            if (isPackingBoxRestored) {
-                setshowArchived(false);
-            }
+            dispatch(getPackingBox(props.match.params.companyId, { is_active: !showArchived }));
 
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetPackingBox());
             }, 10000);
         }
     }, [isPackingBoxDeleted, isPackingBoxArchived, isPackingBoxRestored, dispatch, props.match.params.companyId]);
@@ -293,17 +289,17 @@ const PackingBox = (props: PackingBoxProps) => {
             {isPackingBoxDeleted && (!isPackingBoxCreated && !isPackingBoxRestored) ? <MessageAlert message={t('Selected Packing Box is deleted')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
             {isPackingBoxArchived ? <MessageAlert
-                message={`${t('Packing Box')} ${archiveUnarchiveItem.title} ${t('is archived. You can undo this action.')}`}
-                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
+                message={`${t('Packing Box')} ${archiveUnarchiveItem.name} ${t('is archived. You can undo this action.')}`}
+                iconWrapperClass="bg-warning text-white p-2 rounded-circle" iconClass="svg-outline-white"
                 icon="archive" undo={true} onUndo={() => {
                     dispatch(restorePackingBox(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}
 
             {isPackingBoxRestored ? <MessageAlert
-                message={`${t('Packing Box')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
-                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="text-white"
-                icon="archive" undo={true} onUndo={() => {
+                message={`${t('Packing Box')} ${archiveUnarchiveItem.name} ${t('is restored. You can undo this action.')}`}
+                iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="svg-outline-white"
+                icon="un-archive" undo={true} onUndo={() => {
                     dispatch(archivePackingBox(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}

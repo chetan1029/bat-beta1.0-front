@@ -9,7 +9,7 @@ import Icon from "../../components/Icon";
 import AddEditPaymentTerms from "./AddEditPaymentTerms";
 
 //actions
-import { getPaymentTerms, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm, reset } from "../../redux/actions";
+import { getPaymentTerms, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm, resetPaymentTerm } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -25,7 +25,7 @@ interface PaymentCardItemProps {
 const EmptyState = ({ showArchived }) => {
     const { t } = useTranslation();
     return (
-        <Card className="payment-terms-card mb-2">
+        <Card className="mb-2">
             <Card.Body>
                 <div className="p-2">
                     {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived payment terms available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no payment terms available')}</h5>}
@@ -174,7 +174,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
     }
     const closeModal = () => {
         setisopen(false);
-        dispatch(reset());
+        dispatch(resetPaymentTerm());
     }
 
     /*
@@ -195,7 +195,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
             setisopen(false);
             dispatch(getPaymentTerms(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetPaymentTerm());
             }, 10000);
         }
     }, [isPaymentTermCreated, isPaymentTermUpdated, dispatch, props.match.params.companyId]);
@@ -207,12 +207,8 @@ const PaymentTerms = (props: PaymentTermsProps) => {
         if (isPaymentTermDeleted || isPaymentTermArchived || isPaymentTermRestored) {
             dispatch(getPaymentTerms(props.match.params.companyId, { is_active: !showArchived }));
 
-            if (isPaymentTermRestored) {
-                setshowArchived(false);
-            }
-
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetPaymentTerm());
             }, 10000);
         }
     }, [isPaymentTermDeleted, isPaymentTermArchived, isPaymentTermRestored, dispatch, props.match.params.companyId]);
@@ -311,7 +307,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
             {isPaymentTermRestored ? <MessageAlert
                 message={`${t('Payment Term')} ${archiveUnarchiveItem.title} ${t('is restored. You can undo this action.')}`}
                 iconWrapperClass="bg-primary text-white p-2 rounded-circle" iconClass="svg-outline-white"
-                icon="archive" undo={true} onUndo={() => {
+                icon="un-archive" undo={true} onUndo={() => {
                     dispatch(archivePaymentTerm(companyId, archiveUnarchiveItem.id))
                 }}
             /> : null}

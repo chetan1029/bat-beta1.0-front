@@ -15,7 +15,7 @@ import { COUNTRIES } from "../../constants";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 //action
-import { createHscode, editHscode, reset } from "../../redux/actions";
+import { createHscode, editHscode, resetHscode } from "../../redux/actions";
 interface AddEditHscodeProps {
     isOpen: boolean;
     onClose: any;
@@ -27,7 +27,7 @@ const AddEditHscode = ({ isOpen, onClose, hscode, companyId }: AddEditHscodeProp
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(reset());
+        dispatch(resetHscode());
     }, [dispatch]);
 
     const { createHscodeError, isHscodeCreated, editHscodeError, isHscodeUpdated, loading } = useSelector((state: any) => ({

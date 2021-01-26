@@ -15,7 +15,7 @@ import { COUNTRIES } from "../../constants";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 //action
-import { createLocation, editLocation, reset } from "../../redux/actions";
+import { createLocation, editLocation, resetLocation } from "../../redux/actions";
 interface AddEditLocationProps {
     isOpen: boolean;
     onClose: any;
@@ -27,7 +27,7 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(reset());
+        dispatch(resetLocation());
     }, [dispatch]);
 
     const { createLocationError, isLocationCreated, editLocationError, isLocationUpdated, loading } = useSelector((state: any) => ({

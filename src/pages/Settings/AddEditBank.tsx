@@ -15,7 +15,7 @@ import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 import { COUNTRIES, CURRENCIES } from "../../constants";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
 //action
-import { createBank, editBank, reset } from "../../redux/actions";
+import { createBank, editBank, resetBank } from "../../redux/actions";
 interface AddEditBankProps {
     isOpen: boolean;
     onClose: any;
@@ -27,7 +27,7 @@ const AddEditBank = ({ isOpen, onClose, bank, companyId }: AddEditBankProps) => 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(reset());
+        dispatch(resetBank());
     }, [dispatch]);
 
     const { createBankError, isBankCreated, editBankError, isBankUpdated, loading } = useSelector((state: any) => ({

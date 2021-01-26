@@ -275,10 +275,6 @@ const Assets = (props: AssetsProps) => {
         })
       );
 
-      if (isAssetRestored) {
-        setshowArchived(false);
-      }
-
       setTimeout(() => {
         dispatch(resetAsset());
       }, 10000);

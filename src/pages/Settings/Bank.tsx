@@ -9,7 +9,7 @@ import Icon from "../../components/Icon";
 import AddEditBank from "./AddEditBank";
 
 //actions
-import { getBank, deleteBank, archiveBank, restoreBank, reset } from "../../redux/actions";
+import { getBank, deleteBank, archiveBank, restoreBank, resetBank } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -25,7 +25,7 @@ interface BankCardItemProps {
 const EmptyState = ({ showArchived }) => {
     const { t } = useTranslation();
     return (
-        <Card className="payment-terms-card mb-2">
+        <Card className="mb-2">
             <Card.Body>
                 <div className="p-2">
                     {showArchived ? <h5 className="font-weight-normal my-0">{t('There are no archived bank available')}</h5> : <h5 className="font-weight-normal my-0">{t('There are no bank available')}</h5>}
@@ -170,7 +170,7 @@ const Bank = (props: BankProps) => {
     }
     const closeModal = () => {
         setisopen(false);
-        dispatch(reset());
+        dispatch(resetBank());
     }
 
     /*
@@ -191,7 +191,7 @@ const Bank = (props: BankProps) => {
             setisopen(false);
             dispatch(getBank(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetBank());
             }, 10000);
         }
     }, [isBankCreated, isBankUpdated, dispatch, props.match.params.companyId]);
@@ -201,14 +201,11 @@ const Bank = (props: BankProps) => {
     */
     useEffect(() => {
         if (isBankDeleted || isBankArchived || isBankRestored) {
-            dispatch(getBank(props.match.params.companyId, { is_active: true }));
+            dispatch(getBank(props.match.params.companyId, { is_active: !showArchived }));
 
-            if (isBankRestored) {
-                setshowArchived(false);
-            }
 
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetBank());
             }, 10000);
         }
     }, [isBankDeleted, isBankArchived, isBankRestored, dispatch, props.match.params.companyId]);

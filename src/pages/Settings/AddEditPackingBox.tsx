@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 
 
 //action
-import { createPackingBox, editPackingBox, reset } from "../../redux/actions";
+import { createPackingBox, editPackingBox, resetPackingBox } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import LengthUnitDropdown from "../../components/LengthUnitDropdown";
@@ -26,7 +26,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(reset());
+        dispatch(resetPackingBox());
     }, [dispatch]);
 
     const { createPackingBoxError, isPackingBoxCreated, editPackingBoxError, isPackingBoxUpdated, loading } = useSelector((state: any) => ({

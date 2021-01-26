@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 
 
 //action
-import { createPaymentTerm, editPaymentTerm, reset } from "../../redux/actions";
+import { createPaymentTerm, editPaymentTerm, resetPaymentTerm } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
@@ -25,7 +25,7 @@ const AddEditPaymentTerms = ({ isOpen, onClose, paymentTerm, companyId }: AddEdi
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(reset());
+        dispatch(resetPaymentTerm());
     }, [dispatch]);
 
     const { createPaymentTermError, isPaymentTermCreated, editPaymentTermError, isPaymentTermUpdated, loading } = useSelector((state: any) => ({

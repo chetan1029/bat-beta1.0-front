@@ -43,6 +43,6 @@ export const restoreBank = (companyId: string | number, bankId) => ({
     payload: { companyId, bankId }
 });
 
-export const bankreset = () => ({
+export const resetBank = () => ({
     type: BankTypes.RESET,
 });

@@ -43,6 +43,6 @@ export const restorePackingBox = (companyId: string | number, packingBoxId) => (
     payload: { companyId, packingBoxId }
 });
 
-export const packingboxreset = () => ({
+export const resetPackingBox = () => ({
     type: PackingBoxTypes.RESET,
 });

@@ -9,7 +9,7 @@ import Icon from "../../components/Icon";
 import AddEditTax from "./AddEditTax";
 
 //actions
-import { getTax, deleteTax, archiveTax, restoreTax, reset } from "../../redux/actions";
+import { getTax, deleteTax, archiveTax, restoreTax, resetTax } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -166,7 +166,7 @@ const Tax = (props: TaxProps) => {
     }
     const closeModal = () => {
         setisopen(false);
-        dispatch(reset());
+        dispatch(resetTax());
     }
 
     /*
@@ -187,7 +187,7 @@ const Tax = (props: TaxProps) => {
             setisopen(false);
             dispatch(getTax(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetTax());
             }, 10000);
         }
     }, [isTaxCreated, isTaxUpdated, dispatch, props.match.params.companyId]);
@@ -197,14 +197,10 @@ const Tax = (props: TaxProps) => {
     */
     useEffect(() => {
         if (isTaxDeleted || isTaxArchived || isTaxRestored) {
-            dispatch(getTax(props.match.params.companyId, { is_active: true }));
-
-            if (isTaxRestored) {
-                setshowArchived(false);
-            }
+            dispatch(getTax(props.match.params.companyId, { is_active: !showArchived }));
 
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetTax());
             }, 10000);
         }
     }, [isTaxDeleted, isTaxArchived, isTaxRestored, dispatch, props.match.params.companyId]);

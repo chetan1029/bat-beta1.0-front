@@ -9,7 +9,7 @@ import Icon from "../../components/Icon";
 import AddEditLocation from "./AddEditLocation";
 
 //actions
-import { getLocation, deleteLocation, archiveLocation, restoreLocation, reset } from "../../redux/actions";
+import { getLocation, deleteLocation, archiveLocation, restoreLocation, resetLocation } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -158,7 +158,7 @@ const Location = (props: LocationProps) => {
     }
     const closeModal = () => {
         setisopen(false);
-        dispatch(reset());
+        dispatch(resetLocation());
     }
 
     /*
@@ -179,7 +179,7 @@ const Location = (props: LocationProps) => {
             setisopen(false);
             dispatch(getLocation(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetLocation());
             }, 10000);
         }
     }, [isLocationCreated, isLocationUpdated, dispatch, props.match.params.companyId]);
@@ -189,14 +189,10 @@ const Location = (props: LocationProps) => {
     */
     useEffect(() => {
         if (isLocationDeleted || isLocationArchived || isLocationRestored) {
-            dispatch(getLocation(props.match.params.companyId, { is_active: true }));
-
-            if (isLocationRestored) {
-                setshowArchived(false);
-            }
+            dispatch(getLocation(props.match.params.companyId, { is_active: !showArchived }));
 
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetLocation());
             }, 10000);
         }
     }, [isLocationDeleted, isLocationArchived, isLocationRestored, dispatch, props.match.params.companyId]);

@@ -43,6 +43,6 @@ export const restoreTax = (companyId: string | number, taxId) => ({
     payload: { companyId, taxId }
 });
 
-export const taxreset = () => ({
+export const resetTax = () => ({
     type: TaxTypes.RESET,
 });

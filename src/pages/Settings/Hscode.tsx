@@ -9,7 +9,7 @@ import Icon from "../../components/Icon";
 import AddEditHscode from "./AddEditHscode";
 
 //actions
-import { getHscode, deleteHscode, archiveHscode, restoreHscode, reset } from "../../redux/actions";
+import { getHscode, deleteHscode, archiveHscode, restoreHscode, resetHscode } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -166,7 +166,7 @@ const Hscode = (props: HscodeProps) => {
     }
     const closeModal = () => {
         setisopen(false);
-        dispatch(reset());
+        dispatch(resetHscode());
     }
 
     /*
@@ -187,7 +187,7 @@ const Hscode = (props: HscodeProps) => {
             setisopen(false);
             dispatch(getHscode(props.match.params.companyId, { is_active: true }));
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetHscode());
             }, 10000);
         }
     }, [isHscodeCreated, isHscodeUpdated, dispatch, props.match.params.companyId]);
@@ -197,14 +197,10 @@ const Hscode = (props: HscodeProps) => {
     */
     useEffect(() => {
         if (isHscodeDeleted || isHscodeArchived || isHscodeRestored) {
-            dispatch(getHscode(props.match.params.companyId, { is_active: true }));
-
-            if (isHscodeRestored) {
-                setshowArchived(false);
-            }
+            dispatch(getHscode(props.match.params.companyId, { is_active: !showArchived }));
 
             setTimeout(() => {
-                dispatch(reset());
+                dispatch(resetHscode());
             }, 10000);
         }
     }, [isHscodeDeleted, isHscodeArchived, isHscodeRestored, dispatch, props.match.params.companyId]);

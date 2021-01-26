@@ -43,6 +43,6 @@ export const restoreHscode = (companyId: string | number, hscodeId) => ({
     payload: { companyId, hscodeId }
 });
 
-export const hscodereset = () => ({
+export const resetHscode = () => ({
     type: HscodeTypes.RESET,
 });
