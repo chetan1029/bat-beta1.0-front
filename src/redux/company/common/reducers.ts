@@ -102,7 +102,7 @@ const Common = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
-                case CommonTypes.GET_CATEGORIES: 
+                case CommonTypes.GET_CATEGORIES:
                 case CommonTypes.GET_VENDOR_CATEGORIES:
                 case CommonTypes.GET_SALES_CATEGORIES: {
                     return {
@@ -126,9 +126,16 @@ const Common = (state = INIT_STATE, action: any) => {
             return { ...state, loading: true, companyEdited: false };
         case CommonTypes.GET_CATEGORIES:
         case CommonTypes.GET_VENDOR_CATEGORIES:
-        case CommonTypes.GET_SALES_CATEGORIES: 
+        case CommonTypes.GET_SALES_CATEGORIES:
             return { ...state, isCategoriesFetched: false, loading: true };
 
+        case CommonTypes.RESET: {
+            return {
+                ...state,
+                companyEdited: false,
+                companyCreated: false,
+            }
+        }
         default: return { ...state };
     }
 }

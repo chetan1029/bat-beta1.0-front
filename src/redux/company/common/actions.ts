@@ -48,3 +48,7 @@ export const getSalesCategories = (companyId: string | number) => ({
     type: CommonTypes.GET_SALES_CATEGORIES,
     payload: { companyId }
 });
+
+export const resetCompany = () => ({
+    type: CommonTypes.RESET,
+});

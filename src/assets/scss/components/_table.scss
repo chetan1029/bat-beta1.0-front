@@ -1,7 +1,29 @@
-.table {
+.table{
+  background: $white;
+  box-shadow: $box-shadow;
+  border-radius: $border-radius;
 
-    th,
-    td {
-        border-top: none;
-    }
+  thead th {
+      vertical-align: bottom;
+      border-bottom: $table-border-width solid $table-border-color;
+      font-weight: $font-weight-normal;
+      color: $text-muted;
+  }
+  tbody td{
+    vertical-align: bottom;
+    border-bottom: $table-border-width solid $table-border-color;
+  }
+  th,
+  td {
+      border-top: none;
+  }
+  tbody > tr:last-child > td {
+      border-bottom: 0;
+  }
+  tr td:first-child, tr th:first-child{
+    padding-left: $table-tr-padding;
+  }
+  tr td:last-child, tr th:last-child{
+    padding-right: $table-tr-padding;
+  }
 }

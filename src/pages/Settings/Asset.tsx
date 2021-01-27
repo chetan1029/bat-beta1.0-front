@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, Form, Button, Media } from "react-bootstrap";
+import { Row, Col, Card, Form, Button, Media, Table } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 //components
 import Icon from "../../components/Icon";
 import AddEditAssets from "./AddEditAssets";
-
+import TransferAsset from "./TransferAsset";
 //actions
 import {
   getAssets,
@@ -22,32 +22,31 @@ import {
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
-
+import DisplayDate from "../../components/DisplayDate";
 interface AssetsCardItemProps {
   asset: any;
   onArchiveDeleteAction: any;
   onEditAsset: any;
+  onTransferAsset: any;
   companyId: any;
 }
 
 const EmptyState = ({ showArchived }) => {
   const { t } = useTranslation();
   return (
-    <Card className="payment-terms-card mb-2">
-      <Card.Body>
-        <div className="p-2">
+    <tr>
+      <td colSpan={7}>
           {showArchived ? (
-            <h5 className="font-weight-normal my-0">
+            <p className="font-weight-normal my-0">
               {t("There are no archived assets available")}
-            </h5>
+            </p>
           ) : (
-            <h5 className="font-weight-normal my-0">
+            <p className="font-weight-normal my-0">
               {t("There are no asset available")}
-            </h5>
+            </p>
           )}
-        </div>
-      </Card.Body>
-    </Card>
+      </td>
+    </tr>
   );
 };
 
@@ -55,6 +54,7 @@ const AssetsCardItem = ({
   asset,
   onArchiveDeleteAction,
   onEditAsset,
+  onTransferAsset,
   companyId,
 }: AssetsCardItemProps) => {
   const { t } = useTranslation();
@@ -81,70 +81,41 @@ const AssetsCardItem = ({
 
   return (
     <>
-      <Row>
-        <Col lg={12}>
-          <Card className="payment-terms-card mb-2">
-            <Link
-              to="#"
-              onClick={() => onEditAsset(asset)}
-              className="card-link"
-            >
-              <Card.Header>
-                <p className="m-0 text-muted">
-                    {t("Title")}
-                  </p>
-                <h6 className="m-0">{asset.title}</h6>
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                    <Col xs={6} lg={3}>
-                      <p className="m-0 text-muted">
-                        {t("Type")}
-                      </p>
-                      <p className="m-0">{asset.type}</p>
-                    </Col>
-                    <Col xs={6} lg={3}>
-                      <p className="m-0 text-muted">
-                        {t("Price")}
-                      </p>
-                      <p className="m-0">{asset.price}</p>
-                    </Col>
-                    <Col xs={12} lg={6}>
-                      <p className="m-0 text-muted">
-                        {t("Current Location")}
-                      </p>
-                      <p className="m-0">{asset.current_location.name}</p>
-                    </Col>
-                  </Row>
-              </Card.Body>
-            </Link>
-            <Card.Footer>
-              <div className="float-right">
-                <div className="d-flex align-items-center">
-                  {!asset.is_active ? (
-                    <Link to="#" onClick={() => onClickArchiveUnArchive(true)}>
-                      <Icon
-                        name="un-archive"
-                        className="svg-outline-primary mr-2"
-                      />
-                    </Link>
-                  ) : (
-                    <Link to="#" onClick={() => onClickArchiveUnArchive(false)}>
-                      <Icon
-                        name="archive"
-                        className="svg-outline-warning mr-2"
-                      />
-                    </Link>
-                  )}
-                  <Link to="#" onClick={() => ondeleteAsset(asset.id)}>
-                    <Icon name="delete" className="ml-2 svg-outline-danger" />
-                  </Link>
-                </div>
-              </div>
-            </Card.Footer>
-          </Card>
-        </Col>
-      </Row>
+    <tr>
+      <td>{asset.title}</td>
+      <td>{asset.type}</td>
+      <td>{asset.price ? asset.price['amount'] + ' ' + asset.price['currency']: ''}</td>
+      <td>{asset.current_location.name}
+      <Link to="#" onClick={() => onTransferAsset(asset)}>
+        <Icon name="transfer" className="svg-outline-primary pl-2" />
+      </Link>
+      </td>
+      <td><a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a></td>
+      <td><DisplayDate dateStr={asset.date} timeClass={"ml-1"} /></td>
+      <td>
+        <Link to="#" onClick={() => onEditAsset(asset)}>
+          <Icon name="edit" className="svg-outline-primary pr-2" />
+        </Link>
+        {!asset.is_active ? (
+          <Link to="#" onClick={() => onClickArchiveUnArchive(true)}>
+            <Icon
+              name="un-archive"
+              className="svg-outline-primary pr-2"
+            />
+          </Link>
+        ) : (
+          <Link to="#" onClick={() => onClickArchiveUnArchive(false)}>
+            <Icon
+              name="archive"
+              className="svg-outline-warning pr-2"
+            />
+          </Link>
+        )}
+        <Link to="#" onClick={() => ondeleteAsset(asset.id)}>
+          <Icon name="delete" className="svg-outline-danger" />
+        </Link>
+      </td>
+    </tr>
       {selectedTermForDelete ? (
         <ConfirmMessage
           message={`Are you sure you want to delete ${selectedTermForDelete.title}?`}
@@ -242,6 +213,18 @@ const Assets = (props: AssetsProps) => {
   };
 
   /*
+    Transfer Assets
+    */
+  const [isTransferOpen, setistransferopen] = useState(false);
+  const openTransferModal = () => {
+    setistransferopen(true);
+  };
+  const closeTransferModal = () => {
+    setistransferopen(false);
+    dispatch(resetAsset());
+  };
+
+  /*
         asset
     */
   const [selectedAsset, setSelectedAsset] = useState<any>();
@@ -331,45 +314,36 @@ const Assets = (props: AssetsProps) => {
             <Card.Body className="">
               <div className="p-2">
                 <Row>
-                  <Col lg={6} xs={12}>
-                    {assets.results.length > 0 ? (
-                      assets.results.map((asset, key) => (
-                        <AssetsCardItem
-                          asset={asset}
-                          key={key}
-                          companyId={companyId}
-                          onArchiveDeleteAction={onArchiveDeleteAction}
-                          onEditAsset={setAsset}
-                        />
-                      ))
-                    ) : (
-                      <EmptyState showArchived={showArchived} />
-                    )}
-                  </Col>
-                  <Col lg={6} xs={12}>
-                    <div>
-                      <Media>
-                        <div className="pt-1">
-                          <Icon
-                            name="info"
-                            className="icon icon-sm svg-outline-secondary"
-                          />
-                        </div>
-                        <Media.Body>
-                          <div className="px-3">
-                            <h2 className="m-0 mb-2">
-                              Luctus sed ut elit nibh
-                            </h2>
-                            <p className="text-wrap pb-0 text-muted">
-                              Some quick example text to build on the card title
-                              and make up the bulk of the card's content.Some
-                              quick example text to build on the card title and
-                              make up the bulk of the card's content.
-                            </p>
-                          </div>
-                        </Media.Body>
-                      </Media>
-                    </div>
+                  <Col xs={12}>
+                    <Table >
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Type</th>
+                          <th>Price</th>
+                          <th>Current Location</th>
+                          <th>Receipt</th>
+                          <th>Purchase Date</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {assets.results.length > 0 ? (
+                          assets.results.map((asset, key) => (
+                            <AssetsCardItem
+                              asset={asset}
+                              key={key}
+                              companyId={companyId}
+                              onArchiveDeleteAction={onArchiveDeleteAction}
+                              onEditAsset={setAsset}
+                              onTransferAsset={setAsset}
+                            />
+                          ))
+                        ) : (
+                          <EmptyState showArchived={showArchived} />
+                        )}
+                      </tbody>
+                    </Table>
                   </Col>
                 </Row>
               </div>
@@ -434,6 +408,16 @@ const Assets = (props: AssetsProps) => {
           asset={selectedAsset}
           locations={locations}
           assettypes={assettypes}
+        />
+      ) : null}
+
+      {isTransferOpen ? (
+        <TransferAsset
+          isOpen={isOpen}
+          onClose={closeModal}
+          companyId={companyId}
+          asset={selectedAsset}
+          locations={locations}
         />
       ) : null}
     </>

@@ -39,7 +39,7 @@ function forgotPasswordConfirm(params: any) {
 
 function updateProfile(username: string, data: any) {
     const baseUrl = `/user/${username}/`;
-    return api.updatePatch(`${baseUrl}`, data);
+    return api.updateWithFile(`${baseUrl}`, data);
 }
 
 function updateProfilePicture(username: string, data: any) {
@@ -179,7 +179,7 @@ function restoreLocation(companyId: number, locationId: number, params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 /*
-Location
+Hs Code
 */
 function getHscode(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/hscode/`;
@@ -497,12 +497,12 @@ function getAssetType(companyId: number, params?: any) {
 
 function createAsset(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/asset/`;
-    return api.create(`${baseUrl}`, params);
+    return api.createWithFile(`${baseUrl}`, params);
 }
 
 function updateAsset(companyId: number, assetId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/asset/${assetId}/`;
-    return api.update(`${baseUrl}`, params);
+    return api.updateWithFile(`${baseUrl}`, params);
 }
 
 function deleteAsset(companyId: number, assetId: number, params?: any) {

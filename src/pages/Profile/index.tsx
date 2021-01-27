@@ -20,7 +20,7 @@ import TimezoneDropdown from "../../components/TimezoneDropdown";
 
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
-import { updateProfile, updateProfilePicture } from "../../redux/actions";
+import { updateProfile, updateProfilePicture, resetAuth } from "../../redux/actions";
 
 
 interface ProfileProp {
@@ -66,6 +66,10 @@ const Profile = (props: ProfileProp) => {
         if (profileUpdated) {
             setprofile({ ...updatedUser });
             setshowEditName(false);
+
+            setTimeout(() => {
+                dispatch(resetAuth());
+            }, 10000);
         }
     }, [profileUpdated, updatedUser]);
 
@@ -90,7 +94,14 @@ const Profile = (props: ProfileProp) => {
         },
         validationSchema: Yup.object({}),
         onSubmit: values => {
-            dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'], por_file: porFile }));
+
+            if (porFile){
+              values['por_file'] = porFile;
+            } else {
+              delete values['por_file'];
+            }
+
+            dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'] }));
         },
     });
 

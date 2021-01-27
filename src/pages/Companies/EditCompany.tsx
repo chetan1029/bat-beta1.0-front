@@ -19,7 +19,7 @@ import Icon from "../../components/Icon";
 import MessageAlert from "../../components/MessageAlert";
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
-import { editCompany, getCompany } from "../../redux/actions";
+import { editCompany, getCompany, resetCompany } from "../../redux/actions";
 
 import { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS } from "../../constants";
 
@@ -46,6 +46,14 @@ const EditCompany = (props: EditCompanyProps) => {
         error: state.Company.Common.error,
         company: state.Company.Common.company,
     }));
+
+    useEffect(() => {
+        if (companyEdited) {
+            setTimeout(() => {
+                dispatch(resetCompany());
+            }, 10000);
+        }
+    }, [companyEdited]);
 
 
     const validator = useFormik({

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Row, Col, Card, Form, Media, Button } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,7 +12,7 @@ import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import TabMenu from "../../components/TabMenu";
 
-import { changePassword } from "../../redux/actions";
+import { changePassword, resetAuth } from "../../redux/actions";
 
 interface ChangePasswordProps {
     match: any
@@ -30,6 +30,15 @@ const ChangePassword = (props: ChangePasswordProps) => {
         passwordChange: state.Auth.passwordChange,
         error: state.Auth.error
     }));
+
+    useEffect(() => {
+        if (passwordChange) {
+
+            setTimeout(() => {
+                dispatch(resetAuth());
+            }, 10000);
+        }
+    }, [passwordChange]);
 
 
     const menuItems: Array<any> = [

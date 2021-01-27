@@ -126,12 +126,12 @@
 .card {
 
     .card-header {
-        border-bottom: 1px solid rgba(#9D9EAD, 0.3);
+        border-bottom: $card-border-width solid $border-color;
         background-color: transparent;
     }
 
     .card-footer {
-        border-top: 1px solid rgba(#9D9EAD, 0.3);
+        border-top: $card-border-width solid $border-color;
         background-color: transparent;
     }
 }

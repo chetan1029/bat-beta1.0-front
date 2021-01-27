@@ -17,7 +17,7 @@ import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 
-interface AddEditAssetsProps {
+interface TransferAssetProps {
   isOpen: boolean;
   onClose: any;
   asset?: any;
@@ -25,14 +25,14 @@ interface AddEditAssetsProps {
   locations: any;
   assettypes: any;
 }
-const AddEditAssets = ({
+const TransferAsset = ({
   isOpen,
   onClose,
   asset,
   companyId,
   locations,
   assettypes,
-}: AddEditAssetsProps) => {
+}: TransferAssetProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
@@ -146,7 +146,7 @@ const AddEditAssets = ({
   return (
     <Modal show={isOpen} onHide={onClose} size="lg">
       <Modal.Header closeButton className="add-payment-modal-header">
-        <Modal.Title>{asset ? t("Edit Asset") : t("Add Asset")}</Modal.Title>
+        <Modal.Title>{asset ? t("Transfer Asset") : t("Transfer Asset")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="position-relative">
@@ -397,4 +397,4 @@ const AddEditAssets = ({
   );
 };
 
-export default AddEditAssets;
+export default TransferAsset;
