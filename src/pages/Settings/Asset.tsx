@@ -125,14 +125,14 @@ const AssetsCardItem = ({
                     <Link to="#" onClick={() => onClickArchiveUnArchive(true)}>
                       <Icon
                         name="un-archive"
-                        className="svg-outline-warning mr-2"
+                        className="svg-outline-primary mr-2"
                       />
                     </Link>
                   ) : (
                     <Link to="#" onClick={() => onClickArchiveUnArchive(false)}>
                       <Icon
                         name="archive"
-                        className="svg-outline-primary mr-2"
+                        className="svg-outline-warning mr-2"
                       />
                     </Link>
                   )}
@@ -401,8 +401,8 @@ const Assets = (props: AssetsProps) => {
           message={`${t("Asset")} ${archiveUnarchiveItem.title} ${t(
             "is archived. You can undo this action."
           )}`}
-          iconWrapperClass="bg-primary text-white p-2 rounded-circle"
-          iconClass="text-white"
+          iconWrapperClass="bg-warning text-white p-2 rounded-circle"
+          iconClass="svg-outline-white"
           icon="archive"
           undo={true}
           onUndo={() => {
@@ -417,8 +417,8 @@ const Assets = (props: AssetsProps) => {
             "is restored. You can undo this action."
           )}`}
           iconWrapperClass="bg-primary text-white p-2 rounded-circle"
-          iconClass="text-white"
-          icon="archive"
+          iconClass="svg-outline-white"
+          icon="un-archive"
           undo={true}
           onUndo={() => {
             dispatch(archiveAsset(companyId, archiveUnarchiveItem.id));

@@ -5,13 +5,13 @@ import { Row, Col, Form, Modal, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-
+import { map } from "lodash";
 //plug-ins
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
 //action
-import { createAsset, editAsset, resetAsset } from "../../redux/actions";
+import { createAsset, editAsset, resetAsset, getAssetType, getLocations } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
@@ -56,14 +56,10 @@ const AddEditAssets = ({
 
   const [showTotalError, setshowTotalError] = useState(false);
 
-  const defaultTypes =
-  assettypes.type_data.length > 0 &&
-    assettypes.type_data.map((assettype) => {
-      return {
-        label: assettype,
-        value: assettype,
-      };
-    });
+  const defaultTypes = assettypes && map(assettypes.type_data, (type: any) => ({
+		label: type,
+		value: type
+	}));
 
   const defaultLocations =
   locations.results.length > 0 &&
@@ -99,12 +95,7 @@ const AddEditAssets = ({
             option.value === asset.current_location
         )
       : "" : "",
-      type: asset ? defaultTypes
-      ? defaultTypes.find(
-          (option) =>
-            option.value === asset.type
-        )
-      : "" : "",
+      type: asset ? { label: asset.type, value: asset.type } : "",
       price: asset ? asset.price : "",
       asset_id: asset ? asset.asset_id : "",
       receipt: asset ? asset.receipt : "",
@@ -120,9 +111,7 @@ const AddEditAssets = ({
     }),
     onSubmit: (values) => {
         // React-select retrun object issue
-        if(values.type && values.type.value){
-            values.type = values.type.value
-        }
+        values.type = values.type["value"]
         if(values.current_location && values.current_location.value){
             values.current_location = values.current_location.value
         }
@@ -282,23 +271,15 @@ const AddEditAssets = ({
                 <Col>
                 <Form.Group className="mb-4">
                   <Form.Label htmlFor="usr">{t("Asset Type")}</Form.Label>
-                  <Select
-                    id="type"
-                    name="type"
-                    placeholder={t("Select asset type")}
+                  <CreatableSelect
+                    id={"type"}
+                    name={"type"}
+                    placeholder={t('Asset type')}
                     isClearable
                     options={defaultTypes || []}
-                    onChange={(value: any) => {
-                      validator.setFieldValue("type", value);
-                    }}
+                    onChange={(value: any) => validator.setFieldValue('type', value)}
                     value={validator.values.type}
-                    className={classNames(
-                      "react-select",
-                      "react-select-regular",
-                      validator.touched.type &&
-                        validator.errors.type &&
-                        "is-invalid"
-                    )}
+                    className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.type && "is-invalid")}
                     classNamePrefix="react-select"
                   />
                 </Form.Group>

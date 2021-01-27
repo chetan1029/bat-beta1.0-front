@@ -90,9 +90,16 @@ const Profile = (props: ProfileProp) => {
         },
         validationSchema: Yup.object({}),
         onSubmit: values => {
-            dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'] }));
+            dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'], por_file: porFile }));
         },
     });
+
+    const [porFile, setporFile] = useState<any>();
+    const onPorFile = (e: any) => {
+        const file = e.target.files[0];
+        if (file)
+            setporFile(file);
+    }
 
 
     return <>
@@ -245,6 +252,21 @@ const Profile = (props: ProfileProp) => {
                                           </Form.Group>
                                         </Col>
                                       </Row>
+
+                                      <Row className='align-items-center'>
+                                          <Col md={6}>
+                                              <Form.Group>
+                                                  <Form.Label>{t('Power of Representation')}</Form.Label>
+                                                  <Form.Control type="file" name="license_file" id="license_file"
+                                                      onChange={onPorFile} custom />
+
+                                                  {profile && profile['por_file'] ? <p className="mb-0">
+                                                      {t('Power of Representation')}: <a href={profile['por_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View Power of Representation')}</a>
+                                                  </p> : null}
+                                              </Form.Group>
+                                          </Col>
+                                      </Row>
+
                                       <Form.Group className="mb-0">
                                           <Button variant="primary" type="submit">{t('Submit')}</Button>
                                       </Form.Group>
