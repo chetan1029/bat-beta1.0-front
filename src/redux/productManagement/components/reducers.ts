@@ -94,6 +94,50 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.CREATE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        newComponentPackingBox: action.payload.data,
+                        isComponentPackingBoxCreated: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.GET_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        componentsPackingBox: action.payload.data,
+                        isComponentsPackingBoxFetched: true,
+                        loading: false,
+                    }
+                }
+                case ComponentsTypes.DELETE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        isComponentPackingBoxDeleted: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        isComponentPackingBoxArchived: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        isComponentPackingBoxRestored: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.EDIT_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        isComponentPackingBoxEdited: true,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -185,6 +229,53 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.CREATE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        createComponentPackingBoxError: action.payload.error,
+                        isComponentPackingBoxCreated: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.GET_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        getComponentPackingBoxError: action.payload.error,
+                        isComponentsPackingBoxFetched: false
+                    }
+                }
+                case ComponentsTypes.DELETE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        deleteComponentPackingBoxError: action.payload.error,
+                        isComponentPackingBoxDeleted: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        archiveComponentPackingBoxError: action.payload.error,
+                        isComponentPackingBoxArchived: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        restoreComponentPackingBoxError: action.payload.error,
+                        isComponentPackingBoxRestored: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.EDIT_COMPONENT_PACKING_BOX: {
+                    return {
+                        ...state,
+                        editComponentPackingBoxError: action.payload.error,
+                        isComponentPackingBoxEdited: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -221,6 +312,24 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.EDIT_VARIATION:
             return { ...state, isVariationEdited: false, loading: true };
+        
+        case ComponentsTypes.CREATE_COMPONENT_PACKING_BOX:
+                return { ...state, isComponentPackingBoxCreated: false, loading: true };
+        
+        case ComponentsTypes.GET_COMPONENT_PACKING_BOX:
+                return { ...state, isComponentPackingBoxCreated: false, loading: true };
+        
+        case ComponentsTypes.DELETE_COMPONENT_PACKING_BOX:
+            return { ...state, isComponentPackingBoxDeleted: false, isComponentCreated: false, isComponentEdited: false, loading: true };
+
+        case ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX:
+            return { ...state, isComponentPackingBoxArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
+
+        case ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX:
+            return { ...state, isComponentPackingBoxRestored: false, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
+        
+        case ComponentsTypes.EDIT_COMPONENT_PACKING_BOX:
+            return { ...state, isComponentPackingBoxEdited: false, loading: true };
 
         case ComponentsTypes.RESET: {
             return {
@@ -228,6 +337,7 @@ const Components = (state = INIT_STATE, action: any) => {
                 component: null,
                 variation: null,
                 createComponentError: null,
+                createComponentPackingBoxError: null,
                 editComponentError: null,
                 editVariationError: null,
                 archiveComponentError: null,
@@ -240,7 +350,8 @@ const Components = (state = INIT_STATE, action: any) => {
                 isExported: false,
                 isVariationEdited: false,
                 isComponentRestored: false,
-                restoreComponentError: null
+                restoreComponentError: null,
+                isComponentPackingBoxEdited: false
             }
         }
         default: return { ...state };
