@@ -71,10 +71,9 @@ const VendorDetails = (props: VendorsProps) => {
                 <Col lg={12}>
                     <Card>
                         <Card.Body className="">
+                          <TabMenu items={tabMenuItems} defaultSelectedItem={'details'} />
+
                             {loading ? <Loader /> : <div>
-
-                                <TabMenu items={tabMenuItems} defaultSelectedItem={'details'} />
-
                                 <Row>
                                     <Col lg={6}></Col>
                                     <Col lg={6}>

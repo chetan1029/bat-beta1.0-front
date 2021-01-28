@@ -45,6 +45,14 @@ const Vendors = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case VendorsTypes.GET_VENDOR_MEMBERS: {
+                    return {
+                        ...state,
+                        vendormembers: action.payload.data,
+                        isVendorMembersFetched: true,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -90,6 +98,14 @@ const Vendors = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case VendorsTypes.GET_VENDOR_MEMBERS: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                        isVendorMembersFetched: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -104,6 +120,9 @@ const Vendors = (state = INIT_STATE, action: any) => {
         case VendorsTypes.EDIT_VENDOR:
         case VendorsTypes.INVITE_VENDOR:
             return { ...state, isVendorAdded: false, isVendorEdited: false, isVendorInvited: false, loading: true };
+
+        case VendorsTypes.GET_VENDOR_MEMBERS:
+            return { ...state, isVendorMembersFetched: false, loading: true };
 
         case VendorsTypes.RESET: {
             return {

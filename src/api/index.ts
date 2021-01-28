@@ -376,6 +376,10 @@ function updateVendor(companyId: number, vendorId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+function getVendorMembers(companyId: number, vendorId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/vendors/${vendorId}/members/`;
+    return api.get(`${baseUrl}`, params);
+}
 
 /* sales channels */
 function getSalesChannels(companyId: number, params?: any) {
@@ -528,7 +532,7 @@ export {
     getCompaniesList, createCompany, editCompany, getCompany,
     getPaymentTerms, createPaymentTerm, updatePaymentTerm, deletePaymentTerm, archivePaymentTerm, restorePaymentTerm,
     getMembers, getMember, createMember, deleteMember, editMember, getCompanyInvitataions, resendCompanyInvite, getCompanyPartners,
-    getVendors, getVendor, createVendor, updateVendor, archiveCompanyPartner,
+    getVendors, getVendor, createVendor, updateVendor, archiveCompanyPartner, getVendorMembers,
     getBank, createBank, updateBank, deleteBank, archiveBank, restoreBank,
     getLocation, createLocation, updateLocation, deleteLocation, archiveLocation, restoreLocation,
     getPackingBox, createPackingBox, updatePackingBox, deletePackingBox, archivePackingBox, restorePackingBox,

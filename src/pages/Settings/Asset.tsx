@@ -418,6 +418,7 @@ const Assets = (props: AssetsProps) => {
           companyId={companyId}
           asset={selectedAsset}
           locations={locations}
+          assettypes={assettypes}
         />
       ) : null}
     </>

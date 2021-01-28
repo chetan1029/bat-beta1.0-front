@@ -71,10 +71,8 @@ const VendorGoldenSamples = (props: VendorsProps) => {
                 <Col lg={12}>
                     <Card>
                         <Card.Body className="">
+                          <TabMenu items={tabMenuItems} defaultSelectedItem={'golden_samples'} />
                             {loading ? <Loader /> : <div>
-
-                                <TabMenu items={tabMenuItems} defaultSelectedItem={'golden_samples'} />
-
                                 <Row>
                                     <Col lg={6}>Golden Samples</Col>
                                     <Col lg={6}></Col>

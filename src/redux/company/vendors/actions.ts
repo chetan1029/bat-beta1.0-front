@@ -40,3 +40,8 @@ export const inviteVendor = (companyId: string | number, data: any) => ({
     type: VendorsTypes.INVITE_VENDOR,
     payload: { companyId, data }
 });
+
+export const getVendorMembers = (companyId: string | number, filters?: any) => ({
+    type: VendorsTypes.GET_VENDOR_MEMBERS,
+    payload: { companyId, filters }
+});

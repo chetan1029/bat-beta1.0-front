@@ -103,6 +103,11 @@
     border: $card-border-width solid $border-color;
     border-radius: 0.3em;
 }
+.card .media img.img-sm{
+  height: 3em;
+  width: 3em;
+}
+
 
 .card-body{
   min-height: 100px;

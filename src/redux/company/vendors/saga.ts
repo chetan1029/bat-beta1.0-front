@@ -1,7 +1,7 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
 import {
-    getVendors, createVendor, updateVendor, getVendor, createMember
+    getVendors, createVendor, updateVendor, getVendor, createMember, getVendorMembers
 } from "../../../api/index";
 
 import { vendorsApiResponseSuccess, vendorsApiResponseError } from "./actions";
@@ -56,6 +56,15 @@ function* inviteNewVendor({ payload: { companyId, data } }: any) {
     }
 }
 
+function* getAllVendorMembers({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getVendorMembers, companyId, filters);
+        yield put(vendorsApiResponseSuccess(VendorsTypes.GET_VENDOR_MEMBERS, response.data));
+    } catch (error) {
+        yield put(vendorsApiResponseError(VendorsTypes.GET_VENDOR_MEMBERS, error));
+    }
+}
+
 export function* watchGetVendors() {
     yield takeEvery(VendorsTypes.GET_VENDORS, getAllVendors)
 }
@@ -78,6 +87,9 @@ export function* watchinviteNewVendor() {
     yield takeEvery(VendorsTypes.INVITE_VENDOR, inviteNewVendor)
 }
 
+export function* watchGetVendorMembers() {
+    yield takeEvery(VendorsTypes.GET_VENDOR_MEMBERS, getAllVendorMembers)
+}
 
 function* vendorsSaga() {
     yield all([
@@ -85,7 +97,8 @@ function* vendorsSaga() {
         fork(watchgetVendorDetails),
         fork(watchAddVendor),
         fork(watchEditVendor),
-        fork(watchinviteNewVendor)
+        fork(watchinviteNewVendor),
+        fork(watchGetVendorMembers)
     ]);
 }
 

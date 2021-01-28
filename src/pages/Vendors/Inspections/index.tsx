@@ -71,11 +71,9 @@ const VendorInspections = (props: VendorsProps) => {
                 <Col lg={12}>
                     <Card>
                         <Card.Body className="">
-                            {loading ? <Loader /> : <div>
-
-                                <TabMenu items={tabMenuItems} defaultSelectedItem={'inspections'} />
-
-                                <Row>
+                        <TabMenu items={tabMenuItems} defaultSelectedItem={'inspections'} />
+                          {loading ? <Loader /> : <div>
+                            <Row>
                                     <Col lg={6}>Inspections</Col>
                                     <Col lg={6}></Col>
                                 </Row>

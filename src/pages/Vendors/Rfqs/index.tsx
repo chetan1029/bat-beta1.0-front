@@ -71,9 +71,8 @@ const VendorRfqs = (props: VendorsProps) => {
                 <Col lg={12}>
                     <Card>
                         <Card.Body className="">
-                            {loading ? <Loader /> : <div>
-
-                                <TabMenu items={tabMenuItems} defaultSelectedItem={'rfqs'} />
+                          <TabMenu items={tabMenuItems} defaultSelectedItem={'rfqs'} />
+                          {loading ? <Loader /> : <div>
 
                                 <Row>
                                     <Col lg={6}>RFq's</Col>

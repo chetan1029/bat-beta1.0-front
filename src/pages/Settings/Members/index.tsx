@@ -60,7 +60,7 @@ const MemberItem = ({ member, companyId, onDeleteMember, loggedInUser }: MemberI
                 <Card className="mb-2">
                     <Card.Body className='p-0'>
                         <Media className='p-3'>
-                            <img width={32} height={32} className={classNames("mr-3", "rounded-circle", "align-self-center", { "border": !member['user']['profile_picture'] })}
+                            <img className={classNames("mr-3", "rounded-circle", "align-self-center", "img-sm", { "border": !member['user']['profile_picture'] })}
                                 src={member['user']['profile_picture'] || avatarPlaceholder} alt="" />
                             <Media.Body>
                                 <h6 className="text-muted my-0">{fullName}</h6>
