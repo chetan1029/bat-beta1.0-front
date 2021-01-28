@@ -8,12 +8,12 @@ import { useTranslation } from 'react-i18next';
 //components
 import Loader from "../../components/Loader";
 import TabMenu from "../../components/TabMenu";
-
+import Icon from "../../components/Icon";
 
 //actions
 import { getVendor } from "../../redux/actions";
 import DisplayDate from "../../components/DisplayDate";
-
+import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
 interface VendorsProps {
     match: any;
@@ -45,19 +45,23 @@ const VendorDetails = (props: VendorsProps) => {
 
     const tabMenuItems: Array<any> = [
         { label: t('Details'), name: 'details', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}` },
-        { label: t('Members'), name: 'members', to: `/settings/${vendorId}/members` },
-        { label: t('Bank'), name: 'banks', to: `/settings/${vendorId}/banks` },
-        { label: t('Location'), name: 'locations', to: `/settings/${vendorId}/locations` },
-        { label: t('Contracts'), name: 'contracts', to: `/settings/${vendorId}/contracts` }
+        { label: t('Members'), name: 'members', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/members` },
+        { label: t('RFQ\'s'), name: 'rfqs', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/rfqs` },
+        { label: t('Golden Samples'), name: 'golden_samples', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/golden-samples` },
+        { label: t('Contracts'), name: 'contracts', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/contracts` },
+        { label: t('Inspections'), name: 'inspections', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/inspections` }
     ]
 
     return (
-        <>
+        <>{vendorDetails ? <>
             <div className="py-4 px-3">
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <h1 className="m-0">{t('Vendor Details')}</h1>
+                            <Link to={`/supply-chain/${companyId}/vendors/${categoryId}`}>
+                                <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
+                            </Link>
+                            <h1 className="m-0">{vendorDetails['name']}</h1>
                         </div>
                     </Col>
                 </Row>
@@ -72,12 +76,14 @@ const VendorDetails = (props: VendorsProps) => {
                                 <TabMenu items={tabMenuItems} defaultSelectedItem={'details'} />
 
                                 <Row>
+                                    <Col lg={6}></Col>
                                     <Col lg={6}>
                                         <Card>
-                                            <Card.Body className="">
-                                                {vendorDetails ? <>
+                                            <Card.Body>
+
                                                     <div className="">
-                                                        <Media className='pb-3 px-2'>
+                                                        <Media>
+                                                            <img width={120} height={120} className="mr-3" src={vendorDetails['logo'] || avatarPlaceholder} alt="" />
                                                             <Media.Body>
                                                                 <h5 className="my-0">{vendorDetails['name']}</h5>
                                                                 <p className="my-0 text-muted" dangerouslySetInnerHTML={rawAddress()}></p>
@@ -87,19 +93,40 @@ const VendorDetails = (props: VendorsProps) => {
                                                                 {t('Edit')}
                                                             </Link> */}
                                                         </Media>
-
-                                                        <div className="pt-3 px-2 border-top">
-                                                            <Row>
-                                                                <Col>
-                                                                    <span className="text-muted">{t('Created')}: </span> {vendorDetails['create_date'] ? <DisplayDate dateStr={vendorDetails['create_date']} /> : null}
-                                                                </Col>
-                                                                <Col>
-                                                                    <span className="text-muted">{t('Updated')}: </span> {vendorDetails['update_date'] ? <DisplayDate dateStr={vendorDetails['update_date']} /> : null}
-                                                                </Col>
-                                                            </Row>
-                                                        </div>
+                                                        <Row className="mt-3">
+                                                            <Col>
+                                                                <p className="m-0 text-muted">{t('Organization Number')}</p>
+                                                                <p className="m-0">{vendorDetails['organization_number']}</p>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className="mt-3">
+                                                            <Col>
+                                                                <p className="m-0 text-muted">{t('Email')}</p>
+                                                                <p className="m-0">{vendorDetails['email']}</p>
+                                                            </Col>
+                                                            <Col>
+                                                                <p className="m-0 text-muted">{t('Phone Number')}</p>
+                                                                <p className="m-0">{vendorDetails['phone_number'] ? vendorDetails['phone_number']:"---"}</p>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className="mt-3">
+                                                            <Col>
+                                                                <p className="m-0 text-muted">{t('Business License')}</p>
+                                                                <p className="m-0">{vendorDetails['license_file'] ? <p className="mb-0">
+                                                                    <a href={vendorDetails['license_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View Business License')}</a>
+                                                                </p> : "----"}</p>
+                                                            </Col>
+                                                        </Row>
+                                                        <Row className="mt-4">
+                                                            <Col>
+                                                                <span className="text-muted">{t('Created')}: </span> {vendorDetails['create_date'] ? <DisplayDate dateStr={vendorDetails['create_date']} /> : null}
+                                                            </Col>
+                                                            <Col>
+                                                                <span className="text-muted">{t('Updated')}: </span> {vendorDetails['update_date'] ? <DisplayDate dateStr={vendorDetails['update_date']} /> : null}
+                                                            </Col>
+                                                        </Row>
                                                     </div>
-                                                </> : null}
+
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -109,6 +136,7 @@ const VendorDetails = (props: VendorsProps) => {
                     </Card>
                 </Col>
             </Row>
+            </> : null}
         </>
     );
 }

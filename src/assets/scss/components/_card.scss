@@ -96,6 +96,17 @@
   }
 }
 
+.card .media img{
+    height: 6em;
+    width: 6em;
+    object-fit: cover;
+    border: $card-border-width solid $border-color;
+    border-radius: 0.3em;
+}
+
+.card-body{
+  min-height: 100px;
+}
 
 // Responsive
 @media(min-width:1500px) {

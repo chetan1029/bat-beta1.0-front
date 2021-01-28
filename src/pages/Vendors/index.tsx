@@ -13,7 +13,7 @@ import MessageAlert from "../../components/MessageAlert";
 //actions
 import { getVendors, resetVendors } from "../../redux/actions";
 import DisplayDate from "../../components/DisplayDate";
-
+import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
 const EmptyState = () => {
     const { t } = useTranslation();
@@ -55,8 +55,9 @@ const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
         <Row>
             <Col lg={12}>
                 <Card className="mb-2">
-                    <Card.Body className='p-0'>
-                        <Media className='p-3'>
+                    <Card.Body>
+                        <Media>
+                            <img width={120} height={120} className="mr-3" src={vendor['logo'] || avatarPlaceholder} alt="" />
                             <Media.Body>
                                 <h5 className="my-0">{vendor['name']}</h5>
                                 <p className="my-0 text-muted" dangerouslySetInnerHTML={rawAddress()}></p>
@@ -68,16 +69,8 @@ const VendorItem = ({ vendor, companyId, categoryId }: VendorItemProp) => {
                             </Link>
                         </Media>
 
-                        <div className="p-3 border-top">
-                            <Row>
-                                <Col>
-                                    <span className="text-muted">{t('Created')}: </span> {vendor['create_date'] ? <DisplayDate dateStr={vendor['create_date']} /> : null}
-                                </Col>
-                                {/* <Col className="text-right">
-                                    <Link to="#" onClick={onDelete}><Icon name="archive" className="ml-2 svg-outline-danger" /></Link>
-                                </Col> */}
-                            </Row>
-                        </div>
+                        <p className="mt-4"><span className="text-muted">{t('Created')}: </span> {vendor['create_date'] ? <DisplayDate dateStr={vendor['create_date']} /> : null}</p>
+
                     </Card.Body>
                 </Card>
             </Col>
@@ -147,6 +140,7 @@ const Vendors = (props: VendorsProps) => {
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
+                            <Icon name="shop" className="icon icon-xs  mr-2"/>
                             <h1 className="m-0">{t('Vendors')}</h1>
                             {/* <div className="d-flex align-items-center pl-3">
                                 <span className="m-0 font-16 mr-2">

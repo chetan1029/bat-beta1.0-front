@@ -17,10 +17,28 @@ import Components from "../pages/ProductManagement/Components";
 import ComponentDetails from "../pages/ProductManagement/Components/ComponentDetails";
 import EditProductVariation from "../pages/ProductManagement/Components/EditProductVariation";
 
+// Vendor
+
+// Vendor - Members
+import VendorMembers from "../pages/Vendors/Members";
+
+// Vendor - RFQ's
+import VendorRfqs from "../pages/Vendors/Rfqs/";
+
+// Vendor - Golden Samples
+import VendorGoldenSamples from "../pages/Vendors/GoldenSamples/";
+
+// Vendor - Contracts
+import VendorContracts from "../pages/Vendors/Contracts/";
+
+// Vendor - Inspections
+import VendorInspections from "../pages/Vendors/Inspections/";
+
 import InviteVendor from "../pages/Vendors/InviteVendor";
 import VendorDetails from "../pages/Vendors/Details";
 import EditVendor from "../pages/Vendors/EditVendor";
 import Vendors from "../pages/Vendors/";
+
 
 // sales channels
 import SalesChannels from "../pages/SalesChannels/";
@@ -62,6 +80,16 @@ const authProtectedRoutes = [
 
   { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: InviteVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/members", component: VendorMembers },
+
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/rfqs", component: VendorRfqs },
+
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/golden-samples", component: VendorGoldenSamples },
+
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/contracts", component: VendorContracts },
+
+  { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/inspections", component: VendorInspections },
+
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId", component: VendorDetails },
   { path: "/supply-chain/:companyId/vendors/:categoryId", component: Vendors },
 
