@@ -75,3 +75,34 @@ export const editVariation = (companyId: string | number, variationId: number | 
     type: ComponentsTypes.EDIT_VARIATION,
     payload: { companyId, variationId, data, images }
 });
+
+// component packing box
+export const createComponentPackingBox = (companyId: string | number, componentId: any, data: any) => ({
+    type: ComponentsTypes.CREATE_COMPONENT_PACKING_BOX,
+    payload: { companyId, componentId, data }
+});
+
+export const getComponentsPackingBox = (companyId: string | number, componentId: any, filters?: any) => ({
+    type: ComponentsTypes.GET_COMPONENT_PACKING_BOX,
+    payload: { companyId, componentId, filters }
+});
+
+export const archiveComponentPackingBox = (companyId: string | number, componentId: number | string,  id: any, data: any, filters) => ({
+    type: ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX,
+    payload: { companyId, componentId, id, data, filters }
+});
+
+export const restoreComponentPackingBox = (companyId: string | number, componentId: number | string, id: any, data: any, filters) => ({
+    type: ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX,
+    payload: { companyId, componentId, id, data, filters }
+});
+
+export const deleteComponentPackingBox = (companyId: string | number, componentId: number | string, id: any, filters) => ({
+    type: ComponentsTypes.DELETE_COMPONENT_PACKING_BOX,
+    payload: { companyId, componentId, id, filters }
+});
+
+export const editComponentPackingBox = (companyId: string | number, componentId: number | string, id: any, data: any) => ({
+    type: ComponentsTypes.EDIT_COMPONENT_PACKING_BOX,
+    payload: { companyId, componentId, id, data }
+});

@@ -15,6 +15,12 @@ export enum ComponentsTypes {
     GET_TAGS_TYPES = '@@productManagement/components/GET_TAGS_TYPES',
     EXPORT_COMPONENT = '@@productManagement/components/EXPORT_COMPONENT',
     EDIT_VARIATION = '@@productManagement/components/EDIT_VARIATION',
+    CREATE_COMPONENT_PACKING_BOX = '@@productManagement/components/CREATE_COMPONENT_PACKING_BOX',
+    EDIT_COMPONENT_PACKING_BOX = '@@productManagement/components/EDIT_COMPONENT_PACKING_BOX',
+    GET_COMPONENT_PACKING_BOX = '@@productManagement/components/GET_COMPONENT_PACKING_BOX',
+    ARCHIVE_COMPONENT_PACKING_BOX = '@@productManagement/components/ARCHIVE_COMPONENT_PACKING_BOX',
+    RESTORE_COMPONENT_PACKING_BOX = '@@productManagement/components/RESTORE_COMPONENT_PACKING_BOX',
+    DELETE_COMPONENT_PACKING_BOX = '@@productManagement/components/DELETE_COMPONENT_PACKING_BOX',
 
     RESET = '@@productManagement/components/RESET',
 }

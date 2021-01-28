@@ -17,7 +17,13 @@ import {
 	getVariation,
 	editVariation,
 	deleteVariationImages,
-	discontinueComponent
+	discontinueComponent,
+	createComponentPackingBox,
+	getComponentpackingboxes,
+	deleteComponentPackingBox,
+	archiveComponentPackingBox,
+	restoreComponentPackingBox,
+	editComponentPackingBox,
 } from "../../../api";
 
 import { downloadFile } from "../../../api/utils";
@@ -206,6 +212,85 @@ function* editVariationById({ payload: { companyId, variationId, data, images } 
 	}
 }
 
+/**
+ * create new component packing box
+ */
+function* createNewComponentPackingBox({ payload: { companyId, componentId, data } }: any) {
+	try {
+		const response = yield call(createComponentPackingBox, companyId, componentId, data);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT_PACKING_BOX, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.CREATE_COMPONENT_PACKING_BOX, error));
+	}
+}
+
+
+/**
+ * get all components packing box
+ */
+function* getAllComponentsPackingBox({ payload: { companyId, componentId, filters } }: any) {
+	try {
+		const response = yield call(getComponentpackingboxes, companyId, componentId, filters); 
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PACKING_BOX, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT_PACKING_BOX, error));
+	}
+}
+
+/**
+ * delete component packing box
+ */
+function* deleteComponentByIdPackingBox({ payload: { companyId, componentId, id, filters } }: any) {
+	try {
+		const response = yield call(deleteComponentPackingBox, companyId, componentId, id);
+		const res = yield call(getComponentpackingboxes, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PACKING_BOX, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.DELETE_COMPONENT_PACKING_BOX, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.DELETE_COMPONENT_PACKING_BOX, error));
+	}
+}
+
+/**
+ * archive component packing box
+ */
+function* archiveComponentByIdPackingBox({ payload: { companyId, componentId, id, data , filters} }: any) {
+	try {
+		const response = yield call(archiveComponentPackingBox, companyId, componentId, id, data);
+		const res = yield call(getComponentpackingboxes, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PACKING_BOX, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX, error));
+	}
+}
+
+/**
+ * restore component packing box
+ */
+function* restoreComponentByIdPackingBox({ payload: { companyId, componentId, id, data, filters } }: any) {
+	try {
+		const response = yield call(restoreComponentPackingBox, companyId, componentId, id, data);
+		const res = yield call(getComponentpackingboxes, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PACKING_BOX, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX, error));
+	}
+}
+
+/**
+ * update component packing box
+ */
+function* updateComponentPackingBox({ payload: { companyId, componentId, id, data } }: any) {
+	try {
+		const response = yield call(editComponentPackingBox, companyId, componentId, id, data);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_COMPONENT_PACKING_BOX, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.EDIT_COMPONENT_PACKING_BOX, error));
+	}
+}
+
 export function* watchGetComponents() {
 	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
@@ -254,6 +339,31 @@ export function* watchRestoreComponent() {
 	yield takeEvery(ComponentsTypes.RESTORE_COMPONENT, restoreComponentById);
 }
 
+export function* watchAddComponentPackingBox() {
+	yield takeEvery(ComponentsTypes.CREATE_COMPONENT_PACKING_BOX, createNewComponentPackingBox);
+}
+
+
+export function* watchGetAllComponentPackingBox() {
+	yield takeEvery(ComponentsTypes.GET_COMPONENT_PACKING_BOX, getAllComponentsPackingBox);
+}
+
+export function* watchDeleteComponentByIdPackingBox() {
+	yield takeEvery(ComponentsTypes.DELETE_COMPONENT_PACKING_BOX, deleteComponentByIdPackingBox);
+}
+
+export function* watchArchiveComponentByIdPackingBox() {
+	yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX, archiveComponentByIdPackingBox);
+}
+
+export function* watchRestoreComponentByIdPackingBox() {
+	yield takeEvery(ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX, restoreComponentByIdPackingBox);
+}
+
+export function* watchUpdateComponentPackingBox() {
+	yield takeEvery(ComponentsTypes.EDIT_COMPONENT_PACKING_BOX, updateComponentPackingBox);
+}
+
 
 function* componentsSaga() {
 	yield all([
@@ -268,7 +378,13 @@ function* componentsSaga() {
 		fork(watchGetVariation),
 		fork(watchEditVariation),
 		fork(watchDiscontinueComponent),
-		fork(watchRestoreComponent)
+		fork(watchRestoreComponent),
+		fork(watchAddComponentPackingBox),
+		fork(watchGetAllComponentPackingBox),
+		fork(watchDeleteComponentByIdPackingBox),
+		fork(watchArchiveComponentByIdPackingBox),
+		fork(watchRestoreComponentByIdPackingBox),
+		fork(watchUpdateComponentPackingBox),
 	]);
 }
 
