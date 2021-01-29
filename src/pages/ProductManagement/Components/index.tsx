@@ -26,6 +26,9 @@ const TabMenu = ({ onChange, selectedTab }) => {
 	return <div className="px-2 pb-2 mb-4">
 		<Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedTab} onSelect={onChange} as='ul'>
 			<Nav.Item as="li">
+				<Nav.Link className="pt-1" eventKey="all">{t('All')}</Nav.Link>
+			</Nav.Item>
+			<Nav.Item as="li">
 				<Nav.Link className="pt-1" eventKey="active">{t('Active')}</Nav.Link>
 			</Nav.Item>
 			<Nav.Item as="li">
@@ -223,16 +226,6 @@ const Components = (props: ComponentsProps) => {
 						</div>
 
 						<div className="d-flex align-items-center">
-
-							<span className="m-0 font-16 mr-2">
-									{t('Show Grid')}
-							</span>
-							<Form.Check
-									type="switch"
-									id="custom-switch"
-									label=""
-									onChange={(e: any) => onChangeView(e.target.checked)}
-							/>
 
 							<FilterDropDown
 								filters={{

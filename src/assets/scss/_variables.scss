@@ -368,7 +368,7 @@ $table-color:                 $body-color;
 $table-bg:                    null;
 $table-accent-bg:             $gray-200;
 $table-hover-color:           $table-color;
-$table-hover-bg:              $gray-200;
+$table-hover-bg:              $body-bg;
 $table-active-bg:             $table-hover-bg;
 
 $table-border-width:          $border-width;
@@ -1149,3 +1149,6 @@ $print-body-min-width:              map-get($grid-breakpoints, "lg");
 $btn-soft-bg-opacity: 0.1;
 
 $dropdown-lg-width: 300;
+
+// Sizing
+$w-1: 0.5em;

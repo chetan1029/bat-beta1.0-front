@@ -4,14 +4,17 @@
   border-radius: $border-radius;
 
   thead th {
-      vertical-align: bottom;
+      vertical-align: middle;
       border-bottom: $table-border-width solid $table-border-color;
       font-weight: $font-weight-normal;
       color: $text-muted;
   }
   tbody td{
-    vertical-align: bottom;
+    vertical-align: middle;
     border-bottom: $table-border-width solid $table-border-color;
+  }
+  thead th.index{
+    width: $w-1;
   }
   th,
   td {
@@ -25,5 +28,11 @@
   }
   tr td:last-child, tr th:last-child{
     padding-right: $table-tr-padding;
+  }
+}
+
+.table-hover{
+  td{
+    cursor: pointer;
   }
 }

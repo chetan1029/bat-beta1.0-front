@@ -1,0 +1,267 @@
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { Card, Col, Nav, Row, Media } from "react-bootstrap";
+import { Link, Redirect, withRouter } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
+import { get, map, find, size } from 'lodash';
+
+//components
+import Icon from "../../../components/Icon";
+import Loader from "../../../components/Loader";
+import dummyImage from "../../../assets/images/dummy_image.svg";
+
+//actions
+import { archiveComponent, discontinueComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
+
+const TabMenu = ({ onChange, selectedView }) => {
+	const { t } = useTranslation();
+
+	return <div className="px-2 pb-2 mb-4">
+		<Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedView} onSelect={onChange} as='ul'>
+			<Nav.Item as="li">
+				<Nav.Link className="pt-1" eventKey="description">{t('Details')}</Nav.Link>
+			</Nav.Item>
+			<Nav.Item as="li">
+				<Nav.Link className="pt-1" eventKey="products">{t('Products')}</Nav.Link>
+			</Nav.Item>
+			<Nav.Item as="li">
+				<Nav.Link className="pt-1" eventKey="packing-box">{t('Packing Box')}</Nav.Link>
+			</Nav.Item>
+			<Nav.Item as="li">
+				<Nav.Link className="pt-1" eventKey="me">{t('ME')}</Nav.Link>
+			</Nav.Item>
+		</Nav>
+	</div>;
+};
+
+
+interface ComponentDetailsProps {
+	match: any;
+}
+
+const ComponentDetails = (props: ComponentDetailsProps) => {
+	const { t } = useTranslation();
+	const dispatch = useDispatch();
+	const [selectedView, setSelectedView] = useState<any>("description");
+	const [showMore, setShowMore] = useState<any>(false);
+
+	const {
+		loading,
+		component,
+		isComponentArchived,
+		isComponentDiscontinued
+	} = useSelector(({ ProductManagement: { Components } }: any) => ({
+		loading: Components.loading,
+		component: Components.component,
+		isComponentArchived: Components.isComponentArchived,
+		isComponentDiscontinued: Components.isComponentDiscontinued,
+	}));
+
+	const companyId = props.match.params.companyId;
+	const componentId = props.match.params.componentId;
+
+	useEffect(() => {
+		dispatch(resetComponents());
+		if (companyId && componentId) {
+			dispatch(getComponentDetails(companyId, componentId));
+		}
+	}, [dispatch, companyId, componentId]);
+
+	return (
+		<>
+			{(isComponentArchived || isComponentDiscontinued) ? <Redirect to={`/product-management/${companyId}/components`} /> : null}
+			{loading ? <Loader /> : null}
+			{component &&
+				<div className="py-4 px-3">
+					<Row>
+						<Col>
+							<div className="d-flex align-items-center justify-content-between">
+								<div className="d-flex align-items-center">
+									<Link to={`/product-management/${companyId}/components`}>
+										<Icon name="arrow_left_2" className="icon icon-xs mr-2" />
+									</Link>
+									<h1 className="m-0">{component && component.title}</h1>
+								</div>
+								<div className="d-flex align-items-center">
+									<Link to={"#"}
+										onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+										<Icon name="archive" className="mx-2 svg-outline-primary cursor-pointer" />
+									</Link>
+									<Link to={"#"}
+										onClick={() => dispatch(discontinueComponent(companyId, component.id, component))}>
+										<Icon name="archive" className="mx-1 svg-outline-danger cursor-pointer" />
+									</Link>
+								</div>
+							</div>
+						</Col>
+					</Row>
+
+					<Card className="mt-3">
+						<Card.Body className={"pt-3"}>
+						<TabMenu onChange={setSelectedView} selectedView={selectedView} />
+						<Row>
+								<Col lg={6}></Col>
+								<Col lg={6}>
+										<Card>
+												<Card.Body>
+
+																<div className="">
+																		<Media>
+																				<img width={120} height={120} className="mr-3" src=src={size(component.images) > 0 ? (
+																					find(component.images, img => !!img.main_image) ?
+																						find(component.images, img => !!img.main_image).image :
+																						get(component, "images[0].image")) :
+																					dummyImage 	}
+																						alt={component.title} />
+																				<Media.Body>
+																						<h5 className="my-0">{vendorDetails['name']}</h5>
+																						<p className="my-0 text-muted" dangerouslySetInnerHTML={rawAddress()}></p>
+																				</Media.Body>
+																				{/* <Link to={`/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}/edit`}
+																						className='btn btn-primary'>
+																						{t('Edit')}
+																				</Link> */}
+																		</Media>
+																		<Row className="mt-3">
+																				<Col>
+																						<p className="m-0 text-muted">{t('Organization Number')}</p>
+																						<p className="m-0">{vendorDetails['organization_number']}</p>
+																				</Col>
+																		</Row>
+																		<Row className="mt-3">
+																				<Col>
+																						<p className="m-0 text-muted">{t('Email')}</p>
+																						<p className="m-0">{vendorDetails['email']}</p>
+																				</Col>
+																				<Col>
+																						<p className="m-0 text-muted">{t('Phone Number')}</p>
+																						<p className="m-0">{vendorDetails['phone_number'] ? vendorDetails['phone_number']:"---"}</p>
+																				</Col>
+																		</Row>
+																		<Row className="mt-3">
+																				<Col>
+																						<p className="m-0 text-muted">{t('Business License')}</p>
+																						<p className="m-0">{vendorDetails['license_file'] ? <p className="mb-0">
+																								<a href={vendorDetails['license_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View Business License')}</a>
+																						</p> : "----"}</p>
+																				</Col>
+																		</Row>
+																		<Row className="mt-4">
+																				<Col>
+																						<span className="text-muted">{t('Created')}: </span> {vendorDetails['create_date'] ? <DisplayDate dateStr={vendorDetails['create_date']} /> : null}
+																				</Col>
+																				<Col>
+																						<span className="text-muted">{t('Updated')}: </span> {vendorDetails['update_date'] ? <DisplayDate dateStr={vendorDetails['update_date']} /> : null}
+																				</Col>
+																		</Row>
+																</div>
+
+												</Card.Body>
+										</Card>
+								</Col>
+						</Row>
+						<Row>
+								<Col lg={8} md={8} sm={12} className="pr-5">
+									<div className="d-flex justify-content-between align-items-center">
+										<h2>{t('Component Detail')}</h2>
+										{component.status &&
+											<span className="active-label">
+												{t(component.status.name)}
+											</span>
+										}
+									</div>
+									{map(component.products, (product, index) =>
+										<React.Fragment key={index}>
+											{((!showMore && index === 0) || (!!showMore)) &&
+												<Card className={"mt-3"} key={product.id}>
+													<Card.Body className="p-0">
+														<Row>
+															<Col lg={2} sm={6} style={{ maxWidth: "14% !important" }}>
+																<img className={"product-image"}
+																	src={product.images.length > 0 ? (
+																		find(product.images, img => !!img.main_image) ?
+																			find(product.images, img => !!img.main_image).image :
+																			product.images[0].image) :
+																			(component.products && component.products.length > 1 ? dummyImage:
+																				(size(component.images) > 0 ? (
+																				find(component.images, img => !!img.main_image) ?
+																					find(component.images, img => !!img.main_image).image :
+																					get(component, "images[0].image")) :
+																				dummyImage))
+																	}
+																	alt={product.title} />
+															</Col>
+
+															<Col lg={10} sm={6} className="py-3">
+																<div className="d-flex justify-content-between px-3">
+																	<h6>{t('Model Number')}: {get(product, "model_number")}</h6>
+																	<Link className="py-1"
+																		to={`/product-management/${companyId}/components/${component.id}/variation/edit/${product.id}`}>
+																		<Icon name="edit" className="mx-2 svg-outline-primary cursor-pointer" />
+																	</Link>
+																</div>
+																<p className="text-muted px-3">
+																	{t('Manufacturer Part Number')}: {get(product, "manufacturer_part_number")}
+																</p>
+																{get(product, "weight.value") &&
+																	<p className="mt-2 text-muted px-3">
+																		{t('Weight')}: {get(product, "weight.value")} {get(product, "weight.unit")}
+																	</p>
+																}
+															</Col>
+														</Row>
+													</Card.Body>
+												</Card>
+											}
+										</React.Fragment>
+									)}
+									{component.products && component.products.length > 1 &&
+										<div className="cursor-pointer d-flex align-items-center justify-content-end mt-2"
+											onClick={() => setShowMore(!showMore)}>
+											<Icon name={"eye"} className={"icon icon-xs mr-2"} />
+											<h6 className="text-primary mb-0">
+												{showMore ?
+													`${t('Less child products')} (${component.products.length - 1})` :
+													`${t('More child products')} (${component.products.length - 1})`
+												}
+											</h6>
+										</div>
+									}
+								</Col>
+								<Col lg={4} md={4} sm={12}>
+									<img className={"component-main-image"}
+										src={size(component.images) > 0 ? (
+											find(component.images, img => !!img.main_image) ?
+												find(component.images, img => !!img.main_image).image :
+												get(component, "images[0].image")) :
+											dummyImage
+										}
+										alt={component.title} />
+									{component.images && component.images.length > 0 &&
+										<div>
+											{map(component.images, (image, i) =>
+												<React.Fragment key={i}>
+													{i > 0 && !image.main_image &&
+														<img key={i} className={"component-image mt-4 mr-4"} src={image.image}
+															alt={component.title} />
+													}
+												</React.Fragment>
+											)}
+										</div>
+									}
+									<h2 className="mt-4">{t('Description')}</h2>
+									<p className="mt-2 mb-4 text-muted">{component.description}</p>
+									{component.tags && component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+										<span key={i} className={"component-tags"}>{tag}</span>
+									))}
+								</Col>
+							</Row>
+						</Card.Body>
+					</Card>
+				</div>
+			}
+		</>
+	);
+};
+
+export default withRouter(ComponentDetails);

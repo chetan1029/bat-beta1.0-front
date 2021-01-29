@@ -318,13 +318,13 @@ const Assets = (props: AssetsProps) => {
                     <Table >
                       <thead>
                         <tr>
-                          <th>Title</th>
-                          <th>Type</th>
-                          <th>Price</th>
-                          <th>Current Location</th>
-                          <th>Receipt</th>
-                          <th>Purchase Date</th>
-                          <th>Action</th>
+                          <th>{t("Title")}</th>
+                          <th>{t("Type")}</th>
+                          <th>{t("Price")}</th>
+                          <th>{t("Current Location")}</th>
+                          <th>{t("Receipt")}</th>
+                          <th>{t("Purchase Date")}</th>
+                          <th>{t("Action")}</th>
                         </tr>
                       </thead>
                       <tbody>
