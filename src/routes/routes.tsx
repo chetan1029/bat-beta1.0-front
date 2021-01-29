@@ -64,6 +64,7 @@ import Root from "../pages/Root";
 const authProtectedRoutes = [
   { path: "/product-management/:companyId/components/add", component: AddEditComponent },
   { path: "/product-management/:companyId/components/:componentId/variation/edit/:variationId", component: EditProductVariation },
+  { path: "/product-management/:companyId/components/:componentId/:tabName", component: ComponentDetails },
   { path: "/product-management/:companyId/components/:componentId", component: ComponentDetails },
   { path: "/product-management/:companyId/components/:componentId/variation/:variationId", component: ComponentDetails },
   { path: "/product-management/:companyId/components", component: Components },
