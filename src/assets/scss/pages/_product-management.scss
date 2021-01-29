@@ -12,63 +12,6 @@
     width: 100%;
   }
 
-  .dropdown {
-
-    .dropdown-toggle {
-      display: flex;
-      align-items: center;
-      color: $black;
-      border: 1px solid rgba($primary, 0.5);
-
-      &:after {
-        font-size: 16px;
-        margin-left: 5px;
-        color: $primary;
-      }
-    }
-
-    &.show {
-      .dropdown-toggle {
-        color: $black;
-        background: $white;
-
-        &:after {
-          transform: scaleY(-1);
-          font-size: 16px;
-        }
-      }
-    }
-
-    .btn-outline-secondary {
-      &:focus {
-        color: $black;
-        background: $white;
-        border: 1px solid rgba($primary, 0.5);
-        outline: none;
-        box-shadow: none;
-      }
-    }
-
-    .dropdown-menu {
-      background: $white !important;
-      box-shadow: $box-shadow !important;
-      border-radius: $border-radius !important;
-      padding: 1em;
-
-      .dropdown-item {
-        background: $white;
-        font-size: 0.875rem;
-        font-weight: 600;
-        padding: 1em 3em 1em 1em;
-
-        &:hover {
-          border-radius: $border-radius !important;
-          background: $primary;
-          color: $white;
-        }
-      }
-    }
-  }
 
   // .list-view {
   //   .table-component-list {
@@ -334,4 +277,61 @@
 .edit-variation {
   background-color: $gray-200 !important;
   border-radius: 7px;
+}
+
+.dropdown {
+
+  .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    color: $black;
+
+    &:after {
+      font-size: 16px;
+      margin-left: 5px;
+      color: $primary;
+    }
+  }
+
+  &.show {
+    .dropdown-toggle {
+      color: $black;
+      background: $tranparent;
+
+      &:after {
+        transform: scaleY(-1);
+        font-size: 16px;
+      }
+    }
+  }
+
+  .btn-outline-secondary {
+    &:focus {
+      color: $black;
+      background: $white;
+      border: 1px solid rgba($primary, 0.5);
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  .dropdown-menu {
+    background: $white !important;
+    box-shadow: $box-shadow !important;
+    border-radius: $border-radius*0.5 !important;
+    padding: 0.5em;
+
+    .dropdown-item {
+      background: $white;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 0.65em 1em;
+
+      &:hover {
+        border-radius: $border-radius*0.5 !important;
+        background: $primary;
+        color: $white;
+      }
+    }
+  }
 }

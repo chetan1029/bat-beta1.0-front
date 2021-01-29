@@ -8,7 +8,7 @@ interface DisplayDateProps {
 }
 
 const DisplayDate = ({ dateStr, timeClass }: DisplayDateProps) => {
-    const tClass = timeClass || 'text-muted ml-3';
+    const tClass = timeClass || 'text-muted ml-2';
 
     return <>
         <span>{dayjs(dateStr).format('DD MMMM YYYY')}</span>

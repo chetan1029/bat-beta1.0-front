@@ -516,7 +516,12 @@ const Icon = ({ name, className }: Props) => {
         <path d="M2 3.3335H14V7.3335" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
 
-
+      case 'more':
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="3.33335" cy="7.99992" rx="0.666667" ry="0.666667" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="7.99998" cy="7.99992" r="0.666667" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <ellipse cx="12.6667" cy="7.99992" rx="0.666667" ry="0.666667" stroke="#E2E8F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
 
 
 

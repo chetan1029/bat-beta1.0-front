@@ -161,13 +161,13 @@
         padding: 0 !important;
 
         .filter-name {
-            padding: 1.5em 1em;
+            padding: 1.5em 0.5em;
             .dropdown-item {
                 background: $white;
                 margin-top: 5px;
 
                 &.active {
-                    border-radius: $border-radius !important;
+                    border-radius: $border-radius*0.5 !important;
                     background: $primary !important;
                     color: $white !important;
                 }

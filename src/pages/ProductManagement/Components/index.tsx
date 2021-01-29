@@ -229,8 +229,8 @@ const Components = (props: ComponentsProps) => {
 
 							<FilterDropDown
 								filters={{
-									"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
 									"Component type": tagsAndTypes && filter(tagsAndTypes.type_data, type => type !== ""),
+									"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
 								}}
 								onChangeFilters={handleOnSelectFilters}
 							/>
