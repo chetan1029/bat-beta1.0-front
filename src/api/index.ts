@@ -465,6 +465,30 @@ function exportXLSFile(companyId: number, filters?: any) {
     return api.getFile(`${componentUrl(companyId)}xlsxeport/`, filters);
 }
 
+function createComponentPackingBox(companyId: number, componentId, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/packingboxes/`, data);
+}
+
+function getComponentpackingboxes(companyId: number, componentId: number | string, filters?: any) {
+    return api.get(`${componentUrl(companyId)}${componentId}/packingboxes/`, filters);
+}
+
+function deleteComponentPackingBox(companyId: number, componentId: number | string, id: any) {
+    return api.delete(`${componentUrl(companyId)}${componentId}/packingboxes/${id}/`);
+}
+
+function archiveComponentPackingBox(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/packingboxes/${id}/archive/`, data);
+}
+
+function restoreComponentPackingBox(companyId: number, componentId: number | string, id: any, data) {
+    return api.create(`${componentUrl(companyId)}${componentId}/packingboxes/${id}/restore/`, data);
+}
+
+function editComponentPackingBox(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.updatePatch(`${componentUrl(companyId)}${componentId}/packingboxes/${id}/`, data);
+}
+
 /*variations*/
 const variationUrl = (companyId) => `/companies/${companyId}/product-variations/`;
 
@@ -546,4 +570,5 @@ export {
     getSalesChannels, getSalesChannel,
     getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType,
     getMembershipPlan,
+    createComponentPackingBox, getComponentpackingboxes, deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox, editComponentPackingBox,
 }
