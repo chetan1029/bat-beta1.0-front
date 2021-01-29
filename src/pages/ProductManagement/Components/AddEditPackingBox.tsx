@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 import classNames from "classnames";
 
 //action
-import { createComponentPackingBox, editComponentPackingBox, resetComponents, getPackingBox } from "../../../redux/actions";
+import { createComponentPackingBox, editComponentPackingBox, getPackingBox, resetComponents } from "../../../redux/actions";
 import Loader from "../../../components/Loader";
 import AlertMessage from "../../../components/AlertMessage";
 
@@ -40,9 +40,9 @@ const AddEditPackingBox = ({ isOpen, onClose, defaultPackingBox, companyId, comp
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(resetComponents());
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(resetComponents());
+    // }, [dispatch]);
 
     useEffect(() => {
         if (companyId) {
@@ -60,10 +60,16 @@ const AddEditPackingBox = ({ isOpen, onClose, defaultPackingBox, companyId, comp
     /*
     validation
     */
+    const packingboxSelect = defaultPackingBox ? {
+        ...defaultPackingBox.packingbox,
+        label: defaultPackingBox.packingbox.name,
+        value: defaultPackingBox.packingbox.id,
+    } : '';
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
-            packingbox: get(defaultPackingBox, 'packingbox.id', ''),
+            // packingbox: get(defaultPackingBox, 'packingbox', ''),
+            packingbox: packingboxSelect,
             units: get(defaultPackingBox, 'units', ''),
             weight: { value: get(defaultPackingBox, 'weight.value', ''), unit: get(defaultPackingBox, 'weight.unit', "lb") },
         },
@@ -76,7 +82,6 @@ const AddEditPackingBox = ({ isOpen, onClose, defaultPackingBox, companyId, comp
             }),
         }),
         onSubmit: values => {
-            console.log(values)
             if (!!defaultPackingBox) {
                 dispatch(editComponentPackingBox(companyId, componentId, defaultPackingBox.id, { ...values, packingbox: get(values, 'packingbox.value'), product: productId }));
             } else {
