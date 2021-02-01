@@ -218,7 +218,11 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 									<Link to={`/product-management/${companyId}/components`}>
 										<Icon name="arrow_left_2" className="icon icon-xs mr-2" />
 									</Link>
-									<h1 className="m-0">{component && component.title}</h1>
+									<h1 className="m-0">{component && component.title}
+									<Link to={"#"} className="active-label btn btn-outline-primary ml-3">
+										{component.status && t(component.status.name)}
+									</Link>
+									</h1>
 								</div>
 								<div className="d-flex align-items-center">
 									<Dropdown>
