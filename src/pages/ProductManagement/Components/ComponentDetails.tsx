@@ -142,11 +142,11 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 													<Row className="mt-3">
 															<Col>
 																	<p className="m-0 text-muted">{t('Dimensions')}</p>
-																	<p className="m-0">{component.length}x{component.width}x{component.depth} {component.length_unit}</p>
+																	<p className="m-0">{component.length ? component.length: "--"}x{component.width ? component.width: "--"}x{component.depth ? component.depth: "--"} {component.length_unit ? component.length_unit: "--"}</p>
 															</Col>
 															<Col>
 																	<p className="m-0 text-muted">{t('Weight')}</p>
-																	<p className="m-0">{component.weight.value} {component.weight.unit}</p>
+																	<p className="m-0">{component.weight ? component.weight.value+" "+component.weight.unit : "----"}</p>
 															</Col>
 													</Row>
 													<Row className="mt-3">

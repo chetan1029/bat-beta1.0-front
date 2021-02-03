@@ -210,6 +210,20 @@
     }
 }
 
+.dropdown .dropdown-toggle{
+   border: 1px solid rgba(57, 106, 255, 0.5);
+}
+.btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active, .show > .btn-outline-secondary.dropdown-toggle{
+   border: 1px solid rgba(57, 106, 255, 0.5);
+}
+.btn-outline-secondary:not(:disabled):not(.disabled):active:focus, .btn-outline-secondary:not(:disabled):not(.disabled).active:focus, .show > .btn-outline-secondary.dropdown-toggle:focus{
+  box-shadow: none;
+}
+
+.dropdown .header_notify{
+  border: none;
+}
+
 // .form-group {
 //     position: relative;
 

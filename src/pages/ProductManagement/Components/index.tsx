@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { filter, findIndex, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, exportComponent, getComponents, getTagsAndTypes } from "../../../redux/actions";
+import { archiveComponent, exportComponent, getComponents, getTagsAndTypes, resetComponents } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
@@ -106,6 +106,18 @@ const Components = (props: ComponentsProps) => {
 			dispatch(getComponents(companyId, filters));
 		}
 	}, [filters, prevFilters]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	/*
+	reset for all the notification
+	*/
+	useEffect(() => {
+			if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported) {
+					setTimeout(() => {
+							dispatch(resetComponents());
+					}, 10000);
+			}
+	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, dispatch]);
+
 
 	const onChangePage = (page) => {
 		setFilters({ ...filters, offset: (page - 1) * 5 });
