@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
-import { get, isEmpty, map, size, forEach } from 'lodash';
+import { get, isEmpty, map, size, forEach, omit } from 'lodash';
 
 import {
 	archiveComponent,
@@ -24,6 +24,7 @@ import {
 	archiveComponentPackingBox,
 	restoreComponentPackingBox,
 	editComponentPackingBox,
+	createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile
 } from "../../../api";
 
 import { downloadFile } from "../../../api/utils";
@@ -230,7 +231,7 @@ function* createNewComponentPackingBox({ payload: { companyId, componentId, data
  */
 function* getAllComponentsPackingBox({ payload: { companyId, componentId, filters } }: any) {
 	try {
-		const response = yield call(getComponentpackingboxes, companyId, componentId, filters); 
+		const response = yield call(getComponentpackingboxes, companyId, componentId, filters);
 		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PACKING_BOX, response.data));
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT_PACKING_BOX, error));
@@ -254,7 +255,7 @@ function* deleteComponentByIdPackingBox({ payload: { companyId, componentId, id,
 /**
  * archive component packing box
  */
-function* archiveComponentByIdPackingBox({ payload: { companyId, componentId, id, data , filters} }: any) {
+function* archiveComponentByIdPackingBox({ payload: { companyId, componentId, id, data, filters } }: any) {
 	try {
 		const response = yield call(archiveComponentPackingBox, companyId, componentId, id, data);
 		const res = yield call(getComponentpackingboxes, companyId, componentId, filters);
@@ -288,6 +289,107 @@ function* updateComponentPackingBox({ payload: { companyId, componentId, id, dat
 		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_COMPONENT_PACKING_BOX, response.data));
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.EDIT_COMPONENT_PACKING_BOX, error));
+	}
+}
+
+/**
+ * create new component ME
+ */
+function* createNewComponentME({ payload: { companyId, componentId, data } }: any) {
+	try {
+		const response = yield call(createComponentME, companyId, componentId, omit(data, ['files']));
+		if (response.data && response.data.id) {
+			if (data.files.length > 0) {
+				yield* data.files.map(function (v) {
+					if (!!v.file) {
+						return call(uploadComponentMEFile, companyId, response.data.id, v);
+					}
+				});
+			}
+		}
+		yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.CREATE_COMPONENT_ME, error));
+	}
+}
+
+/**
+ * get all components ME
+ */
+function* getAllComponentsME({ payload: { companyId, componentId, filters } }: any) {
+	try {
+		const response = yield call(getComponentME, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT_ME, error));
+	}
+}
+
+/**
+ * delete component ME
+ */
+function* deleteComponentByIdME({ payload: { companyId, componentId, id, files = [], filters } }: any) {
+	try {
+		const response = yield call(deleteComponentME, companyId, componentId, id);
+		// if (files.length > 0) {
+		// 	yield* files.map(function (fileId) {
+		// 		return call(deleteComponentMEFile, companyId, id, fileId);
+		// 	});
+		// }
+		const res = yield call(getComponentME, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_ME, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.DELETE_COMPONENT_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.DELETE_COMPONENT_ME, error));
+	}
+}
+
+/**
+ * archive component ME
+ */
+function* archiveComponentByIdME({ payload: { companyId, componentId, id, data, filters } }: any) {
+	try {
+		const response = yield call(archiveComponentME, companyId, componentId, id, data);
+		const res = yield call(getComponentME, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_ME, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT_ME, error));
+	}
+}
+
+/**
+ * restore component ME
+ */
+function* restoreComponentByIdME({ payload: { companyId, componentId, id, data, filters } }: any) {
+	try {
+		const response = yield call(restoreComponentME, companyId, componentId, id, data);
+		const res = yield call(getComponentME, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_ME, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.RESTORE_COMPONENT_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.RESTORE_COMPONENT_ME, error));
+	}
+}
+
+/**
+ * update component ME
+ */
+function* updateComponentME({ payload: { companyId, componentId, id, data } }: any) {
+	try {
+		const response = yield call(editComponentME, companyId, componentId, id, omit(data, ['files']));
+		if (response.data && response.data.id) {
+			if (data.files.length > 0) {
+				yield* data.files.map(function (v) {
+					if (!!v.file) {
+						return call(uploadComponentMEFile, companyId, response.data.id, v);
+					}
+				});
+			}
+		}
+		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_COMPONENT_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.EDIT_COMPONENT_ME, error));
 	}
 }
 
@@ -364,6 +466,29 @@ export function* watchUpdateComponentPackingBox() {
 	yield takeEvery(ComponentsTypes.EDIT_COMPONENT_PACKING_BOX, updateComponentPackingBox);
 }
 
+export function* watchCreateNewComponentME() {
+	yield takeEvery(ComponentsTypes.CREATE_COMPONENT_ME, createNewComponentME);
+}
+
+export function* watchGetAllComponentsME() {
+	yield takeEvery(ComponentsTypes.GET_COMPONENT_ME, getAllComponentsME);
+}
+
+export function* watchDeleteComponentByIdME() {
+	yield takeEvery(ComponentsTypes.DELETE_COMPONENT_ME, deleteComponentByIdME);
+}
+
+export function* watchArchiveComponentByIdME() {
+	yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT_ME, archiveComponentByIdME);
+}
+
+export function* watchRestoreComponentByIdME() {
+	yield takeEvery(ComponentsTypes.RESTORE_COMPONENT_ME, restoreComponentByIdME);
+}
+
+export function* watchUpdateComponentME() {
+	yield takeEvery(ComponentsTypes.EDIT_COMPONENT_ME, updateComponentME);
+}
 
 function* componentsSaga() {
 	yield all([
@@ -379,12 +504,20 @@ function* componentsSaga() {
 		fork(watchEditVariation),
 		fork(watchDiscontinueComponent),
 		fork(watchRestoreComponent),
+
 		fork(watchAddComponentPackingBox),
 		fork(watchGetAllComponentPackingBox),
 		fork(watchDeleteComponentByIdPackingBox),
 		fork(watchArchiveComponentByIdPackingBox),
 		fork(watchRestoreComponentByIdPackingBox),
 		fork(watchUpdateComponentPackingBox),
+
+		fork(watchCreateNewComponentME),
+		fork(watchGetAllComponentsME),
+		fork(watchDeleteComponentByIdME),
+		fork(watchArchiveComponentByIdME),
+		fork(watchRestoreComponentByIdME),
+		fork(watchUpdateComponentME),
 	]);
 }
 

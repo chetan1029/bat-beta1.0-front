@@ -1,7 +1,31 @@
+.ME-items {
+  margin: 7px 0;
+  .ME-item {
+    border: 1px solid rgba(157, 158, 173, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    place-content: space-between;
+    place-items: center;
+    .ME-item__left {
+      display: flex;
+      place-items: center;
+      .title {
+        color: $blue;
+      }
+      i {
+        background-color: $blue;
+        color: $white;
+        padding: 5px;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+    }
+  }
+}
+
 .components {
-
   .view-icon {
-
   }
 
   .filter-left {
@@ -11,7 +35,6 @@
   .search {
     width: 100%;
   }
-
 
   // .list-view {
   //   .table-component-list {
@@ -92,7 +115,6 @@
   // }
 
   .list-view {
-
     .body-row {
       box-shadow: 0 4px 20px rgba(140, 157, 202, 0.15);
       border: 1px $gray-200;
@@ -165,7 +187,7 @@
     }
 
     .image img {
-      height:4em;
+      height: 4em;
       width: 4em;
       object-fit: cover;
       border: 1px solid $gray-400;
@@ -208,7 +230,6 @@
       border-radius: 0.7em;
       // height: 3em;
     }
-
   }
 
   .export {
@@ -280,7 +301,6 @@
 }
 
 .dropdown {
-
   .dropdown-toggle {
     display: flex;
     align-items: center;
@@ -318,7 +338,7 @@
   .dropdown-menu {
     background: $white !important;
     box-shadow: $box-shadow !important;
-    border-radius: $border-radius*0.5 !important;
+    border-radius: $border-radius * 0.5 !important;
     padding: 0.5em;
 
     .dropdown-item {
@@ -328,7 +348,7 @@
       padding: 0.65em 1em;
 
       &:hover {
-        border-radius: $border-radius*0.5 !important;
+        border-radius: $border-radius * 0.5 !important;
         background: $primary;
         color: $white;
       }
