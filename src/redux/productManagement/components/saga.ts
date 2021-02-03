@@ -373,6 +373,18 @@ function* restoreComponentByIdME({ payload: { companyId, componentId, id, data, 
 }
 
 /**
+ * delete component File ME
+ */
+function* deleteComponentFileME({ payload: { companyId, meId, fileId } }: any) {
+	try {
+		const response = yield call(deleteComponentMEFile, companyId, meId, fileId);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.DELETE_COMPONENT_FILE_ME, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.DELETE_COMPONENT_FILE_ME, error));
+	}
+}
+
+/**
  * update component ME
  */
 function* updateComponentME({ payload: { companyId, componentId, id, data } }: any) {
@@ -490,6 +502,10 @@ export function* watchUpdateComponentME() {
 	yield takeEvery(ComponentsTypes.EDIT_COMPONENT_ME, updateComponentME);
 }
 
+export function* watchDeleteComponentFileME() {
+	yield takeEvery(ComponentsTypes.DELETE_COMPONENT_FILE_ME, deleteComponentFileME);
+}
+
 function* componentsSaga() {
 	yield all([
 		fork(watchGetComponents),
@@ -518,6 +534,7 @@ function* componentsSaga() {
 		fork(watchArchiveComponentByIdME),
 		fork(watchRestoreComponentByIdME),
 		fork(watchUpdateComponentME),
+		fork(watchDeleteComponentFileME),
 	]);
 }
 

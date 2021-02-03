@@ -36,6 +36,16 @@
         }
     }
 
+    &.is-invalid {
+        .invalid-feedback {
+            display: block !important;
+            position: absolute;
+        }
+        .dropzone {
+            border-color: $danger;
+        }
+    }
+
     .files {
         input[type="checkbox"] {
             display: block;

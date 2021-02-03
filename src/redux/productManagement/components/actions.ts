@@ -137,3 +137,8 @@ export const editComponentME = (companyId: string | number, componentId: number 
     type: ComponentsTypes.EDIT_COMPONENT_ME,
     payload: { companyId, componentId, id, data }
 });
+
+export const deleteComponentFileME = (companyId: number, meId: number | string, fileId: any) => ({
+    type: ComponentsTypes.DELETE_COMPONENT_FILE_ME,
+    payload: { companyId, meId, fileId }
+});

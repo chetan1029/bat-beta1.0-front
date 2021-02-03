@@ -65,32 +65,32 @@ const CardItem = ({ data, onArchiveDeleteAction, onEditPackingBox, companyId, co
 	return (<>
 		<Col lg={12}>
 			<Card className="mb-2">
-					<Card.Header onClick={() => onEditPackingBox(data)} role="button" className="card-link">
-						<h6 className="m-0">{t('Version')} {get(data, 'version')}</h6>
-						<p className="m-0 text-muted">{get(data, 'revision_history')}</p>
-					</Card.Header>
-					<Card.Body>
-						<Row className="m-0">
-							{
-								data.files.map((v, k) => (
-									<Col xs={6} lg={4} key={k} className="ME-items">
-										<div className="ME-item">
-											<div className="ME-item__left">
-												<Icon name={"document"} className="svg-outline-white"/>
-												<div>
-													<h6 className="m-0 title">{get(v, 'title')}</h6>
-													<div className="text-muted">{get(v, 'version')}</div>
-												</div>
-											</div>
-											<div  className="ME-item__right">
-												<a role="button" href={get(v, 'file')} target="_blank" download><Icon name={"upload"} /></a>
+				<Card.Header onClick={() => onEditPackingBox(data)} role="button" className="card-link">
+					<h6 className="m-0">{t('Version')} {get(data, 'version')}</h6>
+					<p className="m-0 text-muted">{get(data, 'revision_history')}</p>
+				</Card.Header>
+				<Card.Body>
+					<Row className="m-0">
+						{
+							data.files.map((v, k) => (
+								<Col xs={6} lg={4} key={k} className="ME-items">
+									<div className="ME-item">
+										<div className="ME-item__left">
+											<Icon name={"document"} className="svg-outline-white" />
+											<div>
+												<h6 className="m-0 title">{get(v, 'title')}</h6>
+												<div className="text-muted">{get(v, 'version')}</div>
 											</div>
 										</div>
-									</Col>
-								))
-							}
-						</Row>
-					</Card.Body>
+										<div className="ME-item__right">
+											<a role="button" href={get(v, 'file')} target="_blank" download><Icon name={"upload"} /></a>
+										</div>
+									</div>
+								</Col>
+							))
+						}
+					</Row>
+				</Card.Body>
 				<Card.Footer>
 					<div className="float-right">
 						<div className="d-flex align-items-center">
@@ -249,7 +249,10 @@ const ComponentDetailsME = (props: ComponentDetailsProps) => {
 			{
 				openAddME ? <AddEditME
 					isOpen={openAddME}
-					onClose={() => setOpenAddME(false)}
+					onClose={() => {
+						setOpenAddME(false);
+						getLists();
+					}}
 					companyId={companyId}
 					componentId={componentId}
 					productId={get(component, 'products[0].id')}

@@ -29,6 +29,7 @@ export enum ComponentsTypes {
     ARCHIVE_COMPONENT_ME = '@@productManagement/components/ARCHIVE_COMPONENT_ME',
     RESTORE_COMPONENT_ME = '@@productManagement/components/RESTORE_COMPONENT_ME',
     DELETE_COMPONENT_ME = '@@productManagement/components/DELETE_COMPONENT_ME',
+    DELETE_COMPONENT_FILE_ME = '@@productManagement/components/DELETE_COMPONENT_FILE_ME',
 
     RESET = '@@productManagement/components/RESET',
 }

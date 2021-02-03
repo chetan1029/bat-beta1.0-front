@@ -18,10 +18,11 @@ import {
 	editComponentME,
 	getPackingBox,
 	resetComponents,
+	deleteComponentFileME
 } from "../../../redux/actions";
 import Loader from "../../../components/Loader";
 import AlertMessage from "../../../components/AlertMessage";
-
+import ConfirmMessage from "../../../components/ConfirmMessage";
 
 interface AddEditMEProps {
 	isOpen: boolean;
@@ -43,6 +44,8 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 		})
 	);
 
+	const [selectedForDelete, setSelectedForDelete] = useState<any>();
+	const [defaultDataFiles, setDefaultDataFiles] = useState(get(defaultData, 'files', []));
 
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
@@ -53,21 +56,25 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 		file: null
 	}
 
+	const files_validator = defaultDataFiles.length > 0 ? [] : [defaultFile]
+
 	const validator = {
 		enableReinitialize: true,
 		initialValues: {
 			version: get(defaultData, 'version', ''),
 			revision_history: get(defaultData, 'revision_history', ''),
 			component: componentId,
-			files: [
-				defaultFile,
-				defaultFile,
-			],
+			files: files_validator,
 			status: 'Active',
 		},
 		validationSchema: Yup.object({
 			version: Yup.number().required(t('Version is required')),
 			revision_history: Yup.string().required(t('Revision History is required')),
+			files: Yup.array().of(Yup.object().shape({
+				title: Yup.string().required(t('Title is required')),
+				version: Yup.number().required(t('Version is required')).max(9999, t('Max 5 digits in total')),
+				file: Yup.mixed().required(t('File is required'))
+			}))
 		}),
 		onSubmit: values => {
 			if (!!defaultData) {
@@ -85,7 +92,7 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 	}
 
 	const renderDefaultFiles = () => {
-		return defaultData && defaultData.files.length > 0 && defaultData.files.map((value, index) => (
+		return defaultDataFiles.map((value, index) => (
 			<Row key={index}>
 				<Col lg={6} xs={12}>
 					<Form.Group className="mb-4">
@@ -110,15 +117,15 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 				</Col>
 				<Col lg={3} xs={12}>
 					<Row className="mt-4">
-						<Col lg={9} xs={8}>
+						{/* <Col lg={9} xs={8}>
 							<div className={"react-dropzone m-0"}>
 								<label className="dropzone custom m-0" style={{ minHeight: 'initial' }}>
-										<Icon name={"document"} />
+									<Icon name={"document"} />
 								</label>
 							</div>
-						</Col>
-						<Col lg={3} xs={4} className="d-flex justify-content-right align-items-center">
-							<span role="button" onClick={() => console.log(value)}><Icon name="delete" className="ml-2 svg-outline-danger" /></span>
+						</Col> */}
+						<Col lg={3} xs={4} className="d-flex justify-content-right align-items-center mt-2">
+							<span role="button" onClick={() => setSelectedForDelete(value)}><Icon name="delete" className="ml-2 svg-outline-danger" /></span>
 						</Col>
 					</Row>
 				</Col>
@@ -130,9 +137,21 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 		<div className="position-relative p-2">
 			<div className="d-flex align-items-center">
 				<span role="button" onClick={() => onClose()}><Icon name="arrow_left_2" className="icon icon-xs mr-2" /></span>
-				<h1 className="m-0">{t('Add Manufacturing Expectations')}</h1>
+				<h1 className="m-0">{!!defaultData ? t('Edit Manufacturing Expectations') : t('Add Manufacturing Expectations')}</h1>
 			</div>
 			{/* {loading ? <Loader /> : null} */}
+
+			{
+				selectedForDelete ?
+					<ConfirmMessage message={`Are you sure you want to delete ${get(selectedForDelete, 'title')} (${get(selectedForDelete, 'version')})?`}
+						onConfirm={() => {
+							dispatch(deleteComponentFileME(companyId, selectedForDelete.object_id, selectedForDelete.id));
+							setDefaultDataFiles(defaultDataFiles.filter(v => v.id !== selectedForDelete.id))
+							setSelectedForDelete(null);
+						}}
+						onClose={() => setSelectedForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')} />
+					: null
+			}
 
 			<div>
 				{(!isComponentMECreated && createComponentMEError) && <AlertMessage error={createComponentMEError} />}
@@ -193,32 +212,49 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 														<h6 className="link  text-blue text-right m-3" onClick={() => arrayHelpers.insert(values.files.length, defaultFile)} >+ {t('Add one more')}</h6>
 													</Col>
 												</Row>
-												{/* {renderDefaultFiles()} */}
+												{renderDefaultFiles()}
 												{(values.files && values.files.length > 0) && (
 													values.files.map((friend, index) => (
+														console.log(errors),
 														<Row key={index}>
 															<Col lg={6} xs={12}>
 																<Form.Group className="mb-4">
 																	<Form.Label htmlFor="usr">{t('File Name')}</Form.Label>
-																	<Field type="text" className="form-control" name={`files[${index}].title`} id={`files[${index}].title`}
+																	<Field type="text" name={`files[${index}].title`} id={`files[${index}].title`}
 																		placeholder={t('File Name')}
 																		autoComplete="off"
+																		onBlur={handleBlur}
+																		value={get(values, `files[${index}].title`, '')}
+																		onChange={handleChange}
+																		className={`form-control ${(get(touched, `files[${index}].title`, false) && !!get(errors, `files[${index}].title`, false)) ? 'is-invalid' : null}`}
 																	/>
+																	{
+																		get(touched, `files[${index}].title`, false) && !!get(errors, `files[${index}].title`, false) &&
+																		<Form.Control.Feedback type="invalid">{get(errors, `files[${index}].title`, '')}</Form.Control.Feedback>
+																	}
 																</Form.Group>
 															</Col>
 															<Col lg={3} xs={12}>
 																<Form.Group className="mb-4">
 																	<Form.Label htmlFor="usr">{t('File Version')}</Form.Label>
-																	<Field type="text" className="form-control" name={`files[${index}].version`} id={`files[${index}].version`}
+																	<Field type="text" maxlength={5} name={`files[${index}].version`} id={`files[${index}].version`}
 																		placeholder={t('File Version')}
 																		autoComplete="off"
+																		onBlur={handleBlur}
+																		value={get(values, `files[${index}].version`, '')}
+																		onChange={handleChange}
+																		className={`form-control ${(get(touched, `files[${index}].version`, false) && !!get(errors, `files[${index}].version`, false)) ? 'is-invalid' : null}`}
 																	/>
+																	{
+																		get(touched, `files[${index}].version`, false) && !!get(errors, `files[${index}].version`, false) &&
+																		<Form.Control.Feedback type="invalid">{get(errors, `files[${index}].version`, '')}</Form.Control.Feedback>
+																	}
 																</Form.Group>
 															</Col>
 															<Col lg={3} xs={12}>
 																<Row className="mt-4">
 																	<Col lg={9} xs={8}>
-																		<div className={"react-dropzone m-0"}>
+																		<div className={`react-dropzone m-0 ${(get(touched, `files[${index}].file`, false) && !!get(errors, `files[${index}].file`, false)) ? 'is-invalid' : null}`}>
 																			<label className="dropzone custom m-0" style={{ minHeight: 'initial' }}>
 																				<Field type="file" className="d-none" name={`files[${index}].file_input`}
 																					onChange={(e) => {
@@ -237,19 +273,22 @@ const AddEditME = ({ isOpen, onClose, defaultData, companyId, componentId, produ
 																						</>
 																				}
 																			</label>
+																			{
+																				get(touched, `files[${index}].file`, false) && !!get(errors, `files[${index}].file`, false) &&
+																				<Form.Control.Feedback type="invalid">{get(errors, `files[${index}].file`, '')}</Form.Control.Feedback>
+																			}
 																		</div>
 																	</Col>
-																	<Col lg={3} xs={4} className="d-flex justify-content-right align-items-center">
-																		<span role="button" onClick={() => arrayHelpers.remove(index)}><Icon name="delete" className="ml-2 svg-outline-danger" /></span>
-																	</Col>
+																	{
+																		index > 0 && <Col lg={3} xs={4} className="d-flex justify-content-right align-items-center">
+																			<span role="button" onClick={() => arrayHelpers.remove(index)}><Icon name="delete" className="ml-2 svg-outline-danger" /></span>
+																		</Col>
+																	}
 																</Row>
 															</Col>
 														</Row>
 													))
 												)}
-												<div>
-												</div>
-
 											</div>
 										)}
 									/>
