@@ -143,7 +143,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 													<Row className="mt-3">
 															<Col>
 																	<p className="m-0 text-muted">{t('Dimensions')}</p>
-																	<p className="m-0">{component.length}x{component.width}x{component.depth} {component.length_unit}</p>
+																	<p className="m-0">{component.length ? component.length: "--"}x{component.width ? component.width: "--"}x{component.depth ? component.depth: "--"} {component.length_unit ? component.length_unit: "--"}</p>
 															</Col>
 															<Col>
 																	<p className="m-0 text-muted">{t('Weight')}</p>
@@ -219,7 +219,11 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 									<Link to={`/product-management/${companyId}/components`}>
 										<Icon name="arrow_left_2" className="icon icon-xs mr-2" />
 									</Link>
-									<h1 className="m-0">{component && component.title}</h1>
+									<h1 className="m-0">{component && component.title}
+									<Link to={"#"} className="active-label btn btn-outline-primary ml-3">
+										{component.status && t(component.status.name)}
+									</Link>
+									</h1>
 								</div>
 								<div className="d-flex align-items-center">
 									<Dropdown>

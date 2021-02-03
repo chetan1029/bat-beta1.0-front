@@ -158,8 +158,8 @@ const ComponentDetailsME = (props: ComponentDetailsProps) => {
 		*/
 	useEffect(() => {
 		if (isComponentMECreated || isComponentMEEdited) {
+			setOpenAddME(false);
 			setTimeout(() => {
-				setOpenAddME(false);
 				getLists();
 			}, 1000);
 		}

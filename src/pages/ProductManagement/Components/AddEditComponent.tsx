@@ -68,6 +68,11 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 		value: series
 	}));
 
+	const defaultHscode = tagsAndTypes && map(tagsAndTypes.hscode_data, (hscode: any) => ({
+		label: hscode,
+		value: hscode
+	}));
+
 	const defaultTags = tagsAndTypes && map(tagsAndTypes.tag_data, (tag: any) => ({
 		label: tag,
 		value: tag
@@ -79,6 +84,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 			title: "",
 			type: "",
 			series: "",
+			hscode: "",
 			description: "",
 			status: statusOptions[0],
 			tags: [],
@@ -115,6 +121,7 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 					tags: tags,
 					type: values.type['value'],
 					series: values.series['value'],
+					hscode: values.hscode['value'],
 					status: values.status['value'],
 					products: map(variationOptions, opt => ({
 						title: `${values.title} ${opt.name}`,
@@ -241,6 +248,22 @@ const AddEditComponent = ({ match }: AddEditComponentProps) => {
 												value={validator.values.status}
 												onChange={(value: any) => validator.setFieldValue('status', value)}
 												className={"react-select react-select-regular"}
+												classNamePrefix="react-select"
+											/>
+										</Form.Group>
+									</Col>
+									<Col lg={6} xs={12}>
+										<Form.Group className="mb-4">
+											<Form.Label htmlFor="usr">{t('HS Code')}</Form.Label>
+											<CreatableSelect
+												id={"hscode"}
+												name={"hscode"}
+												placeholder={t('HS Code')}
+												isClearable
+												options={defaultHscode || []}
+												onChange={(value: any) => validator.setFieldValue('hscode', value)}
+												value={validator.values.hscode}
+												className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.hscode && "is-invalid")}
 												classNamePrefix="react-select"
 											/>
 										</Form.Group>

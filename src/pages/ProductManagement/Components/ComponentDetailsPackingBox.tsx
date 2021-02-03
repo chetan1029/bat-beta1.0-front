@@ -33,6 +33,7 @@ import AddEditPackingBox from './AddEditPackingBox';
 const EmptyState = ({ showArchived }) => {
 	const { t } = useTranslation();
 	return (
+		<Col>
 		<Card>
 			<Card.Body>
 				<div className="p-2">
@@ -40,6 +41,7 @@ const EmptyState = ({ showArchived }) => {
 				</div>
 			</Card.Body>
 		</Card>
+		</Col>
 	)
 }
 
@@ -161,8 +163,8 @@ const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 		*/
 	useEffect(() => {
 		if (isComponentPackingBoxCreated || isComponentPackingBoxEdited) {
+			setisOpenAddPackingBox(false);
 			setTimeout(() => {
-				setisOpenAddPackingBox(false);
 				getPackingbox();
 			}, 1000);
 		}
