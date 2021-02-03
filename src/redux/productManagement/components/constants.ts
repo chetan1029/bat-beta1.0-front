@@ -22,5 +22,13 @@ export enum ComponentsTypes {
     RESTORE_COMPONENT_PACKING_BOX = '@@productManagement/components/RESTORE_COMPONENT_PACKING_BOX',
     DELETE_COMPONENT_PACKING_BOX = '@@productManagement/components/DELETE_COMPONENT_PACKING_BOX',
 
+    // ME
+    CREATE_COMPONENT_ME = '@@productManagement/components/CREATE_COMPONENT_ME',
+    EDIT_COMPONENT_ME = '@@productManagement/components/EDIT_COMPONENT_ME',
+    GET_COMPONENT_ME = '@@productManagement/components/GET_COMPONENT_ME',
+    ARCHIVE_COMPONENT_ME = '@@productManagement/components/ARCHIVE_COMPONENT_ME',
+    RESTORE_COMPONENT_ME = '@@productManagement/components/RESTORE_COMPONENT_ME',
+    DELETE_COMPONENT_ME = '@@productManagement/components/DELETE_COMPONENT_ME',
+
     RESET = '@@productManagement/components/RESET',
 }

@@ -138,6 +138,51 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+
+                case ComponentsTypes.CREATE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        newComponentME: action.payload.data,
+                        isComponentMECreated: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.GET_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        componentsME: action.payload.data,
+                        isComponentsMEFetched: true,
+                        loading: false,
+                    }
+                }
+                case ComponentsTypes.DELETE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        isComponentMEDeleted: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.ARCHIVE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        isComponentMEArchived: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.RESTORE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        isComponentMERestored: true,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.EDIT_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        isComponentMEEdited: true,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -276,6 +321,54 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+
+                case ComponentsTypes.CREATE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        createComponentMEError: action.payload.error,
+                        isComponentMECreated: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.GET_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        getComponentMEError: action.payload.error,
+                        isComponentsMEFetched: false
+                    }
+                }
+                case ComponentsTypes.DELETE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        deleteComponentMEError: action.payload.error,
+                        isComponentMEDeleted: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.ARCHIVE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        archiveComponentMEError: action.payload.error,
+                        isComponentMEArchived: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.RESTORE_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        restoreComponentMEError: action.payload.error,
+                        isComponentMERestored: false,
+                        loading: false
+                    }
+                }
+                case ComponentsTypes.EDIT_COMPONENT_ME: {
+                    return {
+                        ...state,
+                        editComponentMEError: action.payload.error,
+                        isComponentMEEdited: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -330,6 +423,24 @@ const Components = (state = INIT_STATE, action: any) => {
         
         case ComponentsTypes.EDIT_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxEdited: false, loading: true };
+
+        case ComponentsTypes.CREATE_COMPONENT_ME:
+            return { ...state, isComponentMECreated: false, loading: true };
+
+        case ComponentsTypes.GET_COMPONENT_ME:
+            return { ...state, isComponentMECreated: false, loading: true };
+
+        case ComponentsTypes.DELETE_COMPONENT_ME:
+            return { ...state, isComponentMEDeleted: false, isComponentMECreated: false, isComponentMEEdited: false, loading: true };
+
+        case ComponentsTypes.ARCHIVE_COMPONENT_ME:
+            return { ...state, isComponentMEArchived: false, isComponentMECreated: false, isComponentMEEdited: false, loading: true };
+
+        case ComponentsTypes.RESTORE_COMPONENT_ME:
+            return { ...state, isComponentMERestored: false, isComponentMEArchived: false, isComponentMECreated: false, isComponentMEEdited: false, loading: true };
+        
+        case ComponentsTypes.EDIT_COMPONENT_ME:
+            return { ...state, isComponentMEEdited: false, loading: true };
 
         case ComponentsTypes.RESET: {
             return {
