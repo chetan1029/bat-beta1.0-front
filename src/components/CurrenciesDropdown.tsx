@@ -7,15 +7,16 @@ import classNames from "classnames";
 import { CURRENCIES } from "../constants";
 
 interface CurrenciesDropdownProps {
-    placeholder?: string,
-    name: string,
-    value: any,
-    onChange: any,
-    className: any,
-    isSingle?: boolean
+    placeholder?: string;
+    name: string;
+    value: any;
+    onChange: any;
+    className: any;
+    isSingle?: boolean;
+    showInternal?: boolean;
 }
 
-const CurrenciesDropdown = ({ placeholder, name, value, onChange, className, isSingle }: CurrenciesDropdownProps) => {
+const CurrenciesDropdown = ({ placeholder, name, value, onChange, className, isSingle, showInternal }: CurrenciesDropdownProps) => {
 
     const { t } = useTranslation();
 
@@ -23,7 +24,7 @@ const CurrenciesDropdown = ({ placeholder, name, value, onChange, className, isS
     let countryOpts: Array<any> = [];
     for (const c in CURRENCIES) {
         countryOpts.push({
-            label: t(CURRENCIES[c]),
+            label: showInternal ? c : t(CURRENCIES[c]),
             value: c
         });
     }

@@ -11,7 +11,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { format } from 'date-fns'
 //action
-import { createAsset, editAsset, resetAsset, getAssetType, getLocations } from "../../redux/actions";
+import { createAsset, editAsset, resetAsset, getLocations } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
@@ -22,22 +22,19 @@ interface TransferAssetProps {
   onClose: any;
   asset?: any;
   companyId: any;
-  locations: any;
-  assettypes: any;
 }
 const TransferAsset = ({
   isOpen,
   onClose,
   asset,
-  companyId,
-  locations,
-  assettypes,
+  companyId
 }: TransferAssetProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(resetAsset());
+    dispatch(getLocations(companyId, { is_active: true }));
   }, [dispatch]);
 
   const {
@@ -46,7 +43,9 @@ const TransferAsset = ({
     editAssetError,
     isAssetUpdated,
     loading,
+    locations,
   } = useSelector((state: any) => ({
+    locations: state.Company.AssetsState.locations,
     createAssetError: state.Company.AssetsState.createAssetError,
     isAssetCreated: state.Company.AssetsState.isAssetCreated,
 
@@ -55,15 +54,9 @@ const TransferAsset = ({
     loading: state.Company.AssetsState.loading,
   }));
 
-  const [showTotalError, setshowTotalError] = useState(false);
-
-  const defaultTypes = assettypes && map(assettypes.type_data, (type: any) => ({
-		label: type,
-		value: type
-	}));
 
   const defaultLocations =
-  locations.results.length > 0 &&
+    locations.results.length > 0 &&
     locations.results.map((location) => {
       return {
         label: location.name,
@@ -75,53 +68,41 @@ const TransferAsset = ({
     validation
     */
 
-    const getDate = (date) => {
-        if(date){
-            var fulldate = date.split('T');
-            return fulldate[0];
-        }else{
-            return "";
-        }
+  const getDate = (date) => {
+    if (date) {
+      var fulldate = date.split('T');
+      return fulldate[0];
+    } else {
+      return "";
     }
+  }
 
   const validator = useFormik({
     enableReinitialize: true,
     initialValues: {
-      title: asset ? asset.title : "",
-      detail: asset ? asset.detail : "",
-      date: asset ? getDate(asset.date) : "",
-      current_location: asset ? { label: asset.current_location.name, value: asset.current_location.id } : "",
-      type: asset ? { label: asset.type, value: asset.type } : "",
-      price: asset ? asset.price : { amount: "", currency: "USD" },
-      asset_id: asset ? asset.asset_id : "",
-      receipt: asset ? asset.receipt : "",
+      from_location: null,
+      to_location: null,
+      date: "",
+      note: ""
     },
     validationSchema: Yup.object({
-      title: Yup.string().required(t("Asset title is required")),
-      detail: Yup.string().required(t("Asset detail is required")),
-      date: Yup.date().required(t("Asset date is required")),
-      price: Yup.object({
-          value: Yup.number().required(t('Price amount is required')),
-          unit: Yup.string().required(t('Price currency is required'))
+      date: Yup.date().required(t("Date is required")),
+      from_location: Yup.object({
+        label: Yup.string(),
+        value: Yup.string().required(t('From Location is required'))
       }),
-      type: Yup.object().required(t("Asset type is required")),
-      current_location: Yup.object().required(t("Asset location is required")),
-      asset_id: Yup.string().required(t("A unique ID for the asset is required. You can put order number as a Asset ID also.")),
+      to_location: Yup.object({
+        label: Yup.string(),
+        value: Yup.string().required(t('To Location is required'))
+      }),
+      note: Yup.string()
     }),
     onSubmit: (values) => {
-        // React-select retrun object issue
-        values.type = values.type["value"]
-        values.current_location = values.current_location["value"]
-        // Date dd/MM/YYYY not accepeted
-        if(values.date){
-            values.date = format(new Date(values.date), 'yyyy-MM-dd hh:mm')
-        }
+      // Date dd/MM/YYYY not accepeted
+      if (values.date) {
+        values.date = format(new Date(values.date), 'yyyy-MM-dd hh:mm')
+      }
 
-        if (receiptFile) {
-            values.receipt = receiptFile;
-        } else {
-            delete values.receipt;
-        }
       if (asset) {
         dispatch(editAsset(companyId, asset.id, values));
       } else {
@@ -130,18 +111,12 @@ const TransferAsset = ({
     },
   });
 
+  console.log(validator);
+
   const onCancel = () => {
     validator.resetForm();
     onClose();
   };
-
-  const [receiptFile, setreceiptFile] = useState<any>();
-  const onReceiptFile = (e: any) => {
-      const file = e.target.files[0];
-      if (file){
-          setreceiptFile(file);
-        }
-  }
 
   return (
     <Modal show={isOpen} onHide={onClose} size="lg">
@@ -165,169 +140,99 @@ const TransferAsset = ({
                     })
                   );
                 }}
-                onClose={() => {}}
+                onClose={() => { }}
                 displayField={"title"}
               />
             ) : null}
             {!isAssetCreated &&
-            createAssetError &&
-            !createAssetError["existing_items"] ? (
-              <AlertMessage error={createAssetError} />
-            ) : null}
+              createAssetError &&
+              !createAssetError["existing_items"] ? (
+                <AlertMessage error={createAssetError} />
+              ) : null}
             {!isAssetUpdated && editAssetError && (
               <AlertMessage error={editAssetError} />
             )}
 
             <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
-            <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset ID")}</Form.Label>
-                <Form.Control
-                  type="text"
-                  className="form-control"
-                  id="asset_id"
-                  name="asset_id"
-                  placeholder="Enter asset id"
-                  onBlur={validator.handleBlur}
-                  value={validator.values.asset_id}
-                  onChange={validator.handleChange}
-                  isInvalid={
-                    validator.touched.asset_id &&
-                    validator.errors &&
-                    validator.errors.asset_id
-                      ? true
-                      : false
-                  }
-                />
 
-                {validator.touched.asset_id && validator.errors.asset_id ? (
-                  <Form.Control.Feedback type="invalid">
-                    {validator.errors.asset_id}
-                  </Form.Control.Feedback>
-                ) : null}
-              </Form.Group>
-
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset Title")}</Form.Label>
-                <Form.Control
-                  type="text"
-                  className="form-control"
-                  id="title"
-                  name="title"
-                  placeholder="Enter asset title"
-                  onBlur={validator.handleBlur}
-                  value={validator.values.title}
-                  onChange={validator.handleChange}
-                  isInvalid={
-                    validator.touched.title &&
-                    validator.errors &&
-                    validator.errors.title
-                      ? true
-                      : false
-                  }
-                />
-
-                {validator.touched.title && validator.errors.title ? (
-                  <Form.Control.Feedback type="invalid">
-                    {validator.errors.title}
-                  </Form.Control.Feedback>
-                ) : null}
-              </Form.Group>
-
-              <Form.Group className="mb-4">
-                <Form.Label htmlFor="usr">{t("Asset Detail")}</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  className="form-control"
-                  id="detail"
-                  name="detail"
-                  placeholder="Enter asset detail"
-                  rows={5}
-                  onBlur={validator.handleBlur}
-                  value={validator.values.detail}
-                  onChange={validator.handleChange}
-                  isInvalid={
-                    validator.touched.detail &&
-                    validator.errors &&
-                    validator.errors.detail
-                      ? true
-                      : false
-                  }
-                />
-
-                {validator.touched.detail && validator.errors.detail ? (
-                  <Form.Control.Feedback type="invalid">
-                    {validator.errors.detail}
-                  </Form.Control.Feedback>
-                ) : null}
-              </Form.Group>
               <Row>
                 <Col>
-                <Form.Group className="mb-4">
-                  <Form.Label htmlFor="usr">{t("Asset Type")}</Form.Label>
-                  <CreatableSelect
-                    id={"type"}
-                    name={"type"}
-                    placeholder={t('Asset type')}
-                    isClearable
-                    options={defaultTypes || []}
-                    onChange={(value: any) => validator.setFieldValue('type', value)}
-                    value={validator.values.type}
-                    className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.type && "is-invalid")}
-                    classNamePrefix="react-select"
-                  />
-                </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Label htmlFor="usr">{t("Price")}</Form.Label>
                   <Form.Group className="mb-4">
-                      <InputGroup>
-                          <Form.Control type="number" className="form-control" id="price" name="price.amount" placeholder="Amount"
-                              onBlur={validator.handleBlur}
-                              value={validator.values.price.amount}
-                              onChange={validator.handleChange}
-                              isInvalid={validator.touched.price && validator.errors && validator.errors.price ? true : false}
-                          />
-                          <DropdownButton
-                              as={InputGroup.Append}
-                              variant="outline-secondary"
-                              title={validator.values.price.currency}
-                              id="input-group-dropdown-2"
-                              className='btn-dropdown'
-                          >
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "USD")}>{t("USD")}</Dropdown.Item>
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "INR")}>{t("INR")}</Dropdown.Item>
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "SEK")}>{t("SEK")}</Dropdown.Item>
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "EUR")}>{t("EUR")}</Dropdown.Item>
-                          </DropdownButton>
-                      </InputGroup>
-                      {validator.touched.price && validator.errors.price && validator.errors.price['amount'] ? (
-                          <Form.Control.Feedback type="invalid" className='show'>{validator.errors.price['amount']}</Form.Control.Feedback>
-                      ) : null}
-                      {validator.touched.price && validator.errors.price && validator.errors.price['currency'] ? (
-                          <Form.Control.Feedback type="invalid" className='show'>{validator.errors.price['currency']}</Form.Control.Feedback>
-                      ) : null}
+                    <Form.Label htmlFor="usr">{t("From Location")}</Form.Label>
+                    <Select
+                      id="current_location"
+                      name="current_location"
+                      placeholder={t("Select location")}
+                      isClearable
+                      options={defaultLocations || []}
+                      onChange={(value: any) => {
+                        validator.setFieldValue("from_location", value);
+                      }}
+                      value={validator.values.from_location}
+                      className={classNames(
+                        "react-select",
+                        "react-select-regular",
+                        validator.touched.from_location &&
+                        validator.errors.from_location &&
+                        "is-invalid"
+                      )}
+                      classNamePrefix="react-select"
+                    />
+                    {validator.touched.to_location && validator.errors.to_location ? (
+                      <Form.Control.Feedback type="invalid">
+                        {t('From Location is required')}
+                      </Form.Control.Feedback>
+                    ) : null}
                   </Form.Group>
                 </Col>
-
+                <Col>
+                  <Form.Group className="mb-4">
+                    <Form.Label htmlFor="usr">{t("To Location")}</Form.Label>
+                    <Select
+                      id="current_location"
+                      name="current_location"
+                      placeholder={t("Select location")}
+                      isClearable
+                      options={defaultLocations || []}
+                      onChange={(value: any) => {
+                        validator.setFieldValue("to_location", value);
+                      }}
+                      value={validator.values.to_location}
+                      className={classNames(
+                        "react-select",
+                        "react-select-regular",
+                        validator.touched.to_location &&
+                        validator.errors.to_location &&
+                        "is-invalid"
+                      )}
+                      classNamePrefix="react-select"
+                    />
+                    {validator.touched.to_location && validator.errors.to_location ? (
+                      <Form.Control.Feedback type="invalid">
+                        {t('To Location is required')}
+                      </Form.Control.Feedback>
+                    ) : null}
+                  </Form.Group>
+                </Col>
               </Row>
 
               <Row>
                 <Col>
                   <Form.Group className="mb-4">
-                    <Form.Label htmlFor="usr">{t("Asset Date")}</Form.Label>
+                    <Form.Label htmlFor="usr">{t("Date")}</Form.Label>
                     <Form.Control
                       type="date"
                       className="form-control"
                       id="date"
                       name="date"
-                      placeholder="Select asset date"
+                      placeholder="Select date"
                       onBlur={validator.handleBlur}
                       value={validator.values.date}
                       onChange={validator.handleChange}
                       isInvalid={
                         validator.touched.date &&
-                        validator.errors &&
-                        validator.errors.date
+                          validator.errors &&
+                          validator.errors.date
                           ? true
                           : false
                       }
@@ -341,40 +246,9 @@ const TransferAsset = ({
                   </Form.Group>
                 </Col>
                 <Col>
-                  <Form.Group className="mb-4">
-                    <Form.Label htmlFor="usr">{t("Asset Location")}</Form.Label>
-                    <Select
-                      id="current_location"
-                      name="current_location"
-                      placeholder={t("Select asset location")}
-                      isClearable
-                      options={defaultLocations || []}
-                      onChange={(value: any) => {
-                        validator.setFieldValue("current_location", value);
-                      }}
-                      value={validator.values.current_location}
-                      className={classNames(
-                        "react-select",
-                        "react-select-regular",
-                        validator.touched.current_location &&
-                          validator.errors.current_location &&
-                          "is-invalid"
-                      )}
-                      classNamePrefix="react-select"
-                    />
-                  </Form.Group>
+
                 </Col>
               </Row>
-
-              <Form.Group>
-                  <Form.Label>{t('Asset Receipt')}</Form.Label>
-                  <Form.Control type="file" name="receipt" id="receipt"
-                      onChange={onReceiptFile} custom />
-
-                  {asset && asset.receipt ? <p className="mb-0">
-                      {t('Asset Receipt')}: <a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a>
-                  </p> : null}
-              </Form.Group>
 
               <div>
                 <Button
@@ -386,7 +260,7 @@ const TransferAsset = ({
                   {t("Cancel")}
                 </Button>
                 <Button type="submit" variant="primary">
-                  {asset ? t("Edit Asset") : t("Add Asset")}
+                  {t("Submit")}
                 </Button>
               </div>
             </Form>
