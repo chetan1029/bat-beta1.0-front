@@ -428,7 +428,7 @@ const Components = (state = INIT_STATE, action: any) => {
             return { ...state, isComponentMECreated: false, loading: true };
 
         case ComponentsTypes.GET_COMPONENT_ME:
-            return { ...state, isComponentMECreated: false, loading: true };
+            return { ...state, isComponentMECreated: false, isComponentMEDeleted: false, isComponentMEEdited: false, loading: true };
 
         case ComponentsTypes.DELETE_COMPONENT_ME:
             return { ...state, isComponentMEDeleted: false, isComponentMECreated: false, isComponentMEEdited: false, loading: true };
@@ -462,7 +462,9 @@ const Components = (state = INIT_STATE, action: any) => {
                 isVariationEdited: false,
                 isComponentRestored: false,
                 restoreComponentError: null,
-                isComponentPackingBoxEdited: false
+                isComponentPackingBoxEdited: false,
+                isComponentMECreated: false,
+                isComponentMEEdited: false,
             }
         }
         default: return { ...state };
