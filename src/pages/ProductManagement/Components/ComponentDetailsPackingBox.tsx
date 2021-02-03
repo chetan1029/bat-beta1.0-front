@@ -163,8 +163,8 @@ const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 		*/
 	useEffect(() => {
 		if (isComponentPackingBoxCreated || isComponentPackingBoxEdited) {
+			setisOpenAddPackingBox(false);
 			setTimeout(() => {
-				setisOpenAddPackingBox(false);
 				getPackingbox();
 			}, 1000);
 		}
