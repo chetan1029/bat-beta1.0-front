@@ -73,6 +73,12 @@ const Components = (state = INIT_STATE, action: any) => {
                         tagsAndTypes: action.payload.data,
                     }
                 }
+                case ComponentsTypes.GET_TYPES_ALL: {
+                    return {
+                        ...state,
+                        typesAll: action.payload.data,
+                    }
+                }
                 case ComponentsTypes.EXPORT_COMPONENT: {
                     return {
                         ...state,
@@ -312,13 +318,13 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.EDIT_VARIATION:
             return { ...state, isVariationEdited: false, loading: true };
-        
+
         case ComponentsTypes.CREATE_COMPONENT_PACKING_BOX:
                 return { ...state, isComponentPackingBoxCreated: false, loading: true };
-        
+
         case ComponentsTypes.GET_COMPONENT_PACKING_BOX:
                 return { ...state, isComponentPackingBoxCreated: false, loading: true };
-        
+
         case ComponentsTypes.DELETE_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxDeleted: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
@@ -327,7 +333,7 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxRestored: false, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
-        
+
         case ComponentsTypes.EDIT_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxEdited: false, loading: true };
 

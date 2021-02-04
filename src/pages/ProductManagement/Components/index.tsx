@@ -6,13 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { filter, findIndex, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, exportComponent, getComponents, getTagsAndTypes, resetComponents } from "../../../redux/actions";
+import { archiveComponent, exportComponent, getComponents, getTagsAndTypes, getTypesAll, resetComponents } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import searchIcon from "../../../assets/images/search_icon.svg";
 import FilterDropDown from "../../../components/FilterDropDown";
 import Loader from "../../../components/Loader";
 import ListView from "./ListView";
 import GridView from "./GridView";
+
+import dummyImage from "../../../assets/images/dummy_image.svg";
 
 const FILETYPES: Array<any> = [
 	{ label: "As csv", value: "csv" },
@@ -71,6 +73,7 @@ const Components = (props: ComponentsProps) => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		dispatch(getTagsAndTypes(companyId));
+		dispatch(getTypesAll(companyId));
 	}, [dispatch, companyId]);
 
 	const {
@@ -80,6 +83,7 @@ const Components = (props: ComponentsProps) => {
 		archiveComponentError,
 		isComponentArchived,
 		tagsAndTypes,
+		typesAll,
 		isExported,
 		isComponentDiscontinued,
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
@@ -89,6 +93,7 @@ const Components = (props: ComponentsProps) => {
 		archiveComponentError: Components.archiveComponentError,
 		isComponentArchived: Components.isComponentArchived,
 		tagsAndTypes: Components.tagsAndTypes,
+		typesAll: Components.typesAll,
 		isExported: Components.isExported,
 		isComponentDiscontinued: Components.isComponentDiscontinued,
 	}));
@@ -185,6 +190,7 @@ const Components = (props: ComponentsProps) => {
 		}
 	};
 
+
 	return (
 		<div className={"components"}>
 			<div className="pt-4 pb-3 px-3">
@@ -267,7 +273,8 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
 						icon={"x"} showAsNotification={false} />}
-					{get(components, "count") && get(components, "count") > 0 ?
+					{selectedTab !== "all" ?
+					[(get(typesAll, "type_data") && get(components, "count") > 0 ?
 						<>
 							{selectedView === "list" ?
 								<ListView
@@ -289,7 +296,37 @@ const Components = (props: ComponentsProps) => {
 								/>
 							}
 						</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
-					}
+					)]
+					:
+					[(get(typesAll, "type_data") ?
+						<>
+						<Row>
+						{map(typesAll.type_data, (value, key) => (
+							<Col lg={4} md={4} sm={6}>
+								<Card className="mb-2">
+									<Card.Body>
+										<Row>
+											<Col>
+												<Icon name="components" className="icon icon-md svg-outline-primary" />
+											</Col>
+											<Col>
+												<div className="position-relative align-self-center image-group">
+														<img width={30} height={30} src={"" || dummyImage} alt="" />
+														<img width={30} height={30} src={"" || dummyImage} alt="" />
+														<img width={30} height={30} src={"" || dummyImage} alt="" />
+												</div>
+											</Col>
+										</Row>
+										<p className="mt-2">{key}</p>
+										<p className="text-muted mt-2">{value.total} Components</p>
+									</Card.Body>
+								</Card>
+							</Col>
+						))}
+						</Row>
+						</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+					)]
+				}
 				</Card.Body>
 			</Card>
 			{isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}

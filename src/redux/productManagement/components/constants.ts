@@ -13,6 +13,7 @@ export enum ComponentsTypes {
     RESTORE_COMPONENT = '@@productManagement/components/RESTORE_COMPONENT',
     DISCONTINUE_COMPONENT = '@@productManagement/components/DISCONTINUE_COMPONENT',
     GET_TAGS_TYPES = '@@productManagement/components/GET_TAGS_TYPES',
+    GET_TYPES_ALL = '@@productManagement/components/GET_TYPES_ALL',
     EXPORT_COMPONENT = '@@productManagement/components/EXPORT_COMPONENT',
     EDIT_VARIATION = '@@productManagement/components/EDIT_VARIATION',
     CREATE_COMPONENT_PACKING_BOX = '@@productManagement/components/CREATE_COMPONENT_PACKING_BOX',

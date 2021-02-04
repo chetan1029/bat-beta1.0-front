@@ -12,6 +12,7 @@ import {
 	getComponent,
 	getComponents,
 	getTagsAndTypes,
+	getTypesAll,
 	uploadComponentImages,
 	uploadVariationImages,
 	getVariation,
@@ -162,6 +163,18 @@ function* getTagsAndTypesById({ payload: { companyId } }: any) {
 }
 
 /**
+ * get Types and Images
+ */
+function* getTypesAllById({ payload: { companyId } }: any) {
+	try {
+		const response = yield call(getTypesAll, companyId);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_TYPES_ALL, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_TYPES_ALL, error));
+	}
+}
+
+/**
  * export component
  */
 function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
@@ -230,7 +243,7 @@ function* createNewComponentPackingBox({ payload: { companyId, componentId, data
  */
 function* getAllComponentsPackingBox({ payload: { companyId, componentId, filters } }: any) {
 	try {
-		const response = yield call(getComponentpackingboxes, companyId, componentId, filters); 
+		const response = yield call(getComponentpackingboxes, companyId, componentId, filters);
 		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PACKING_BOX, response.data));
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT_PACKING_BOX, error));
@@ -323,6 +336,10 @@ export function* watchGetTagsAndTypes() {
 	yield takeEvery(ComponentsTypes.GET_TAGS_TYPES, getTagsAndTypesById);
 }
 
+export function* watchGetTypesAll() {
+	yield takeEvery(ComponentsTypes.GET_TYPES_ALL, getTypesAllById);
+}
+
 export function* watchExportComponent() {
 	yield takeEvery(ComponentsTypes.EXPORT_COMPONENT, exportComponent);
 }
@@ -374,6 +391,7 @@ function* componentsSaga() {
 		fork(watchDeleteComponent),
 		fork(watchArchiveComponent),
 		fork(watchGetTagsAndTypes),
+		fork(watchGetTypesAll),
 		fork(watchExportComponent),
 		fork(watchGetVariation),
 		fork(watchEditVariation),

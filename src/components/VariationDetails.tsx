@@ -164,13 +164,23 @@ const VariationDetails = (props: VariationDetailsProps) => {
 				setVariationOptions([]);
 			}
 
+			const randomString = (length: number) => {
+				var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    		var result = '';
+		    for ( var i = 0; i < length; i++ ) {
+		        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+		    }
+		    return result;
+			};
+
 			if (size(variations) > 1) {
 				forEach(allOptions, (option, index) => {
 					forEach(allOptions, (opt) => {
 						if (!isEmpty(allOptions[index + 1]) && (option.name !== opt.name)) {
 							newOptions.push({
 								name: `${option.value} ${opt.value}`,
-								value: [option, opt]
+								value: [option, opt],
+								random: randomString(10)
 							});
 						}
 					});
@@ -179,7 +189,8 @@ const VariationDetails = (props: VariationDetailsProps) => {
 				forEach(allOptions, (option) => {
 					newOptions.push({
 						name: option.value,
-						value: [option]
+						value: [option],
+						random: randomString(10)
 					});
 				});
 			}
@@ -192,8 +203,8 @@ const VariationDetails = (props: VariationDetailsProps) => {
 					name: varOption.name,
 					value: varOption.value,
 					image: "",
-					model_number: "",
-					manufacturer_part_number: "",
+					model_number: varOption.random,
+					manufacturer_part_number: varOption.random,
 					weight: { value: "", unit: "lb" },
 					show: true,
 				});
@@ -347,7 +358,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										className={classNames("form-control", get(errors, `variationOptions[${index}].model_number`) && "border-danger")}
 										id={`model_number${index}`}
 										name={"model_number"}
-										value={option.modelNo}
+										value={option.model_number}
 										placeholder={`${t("Model Number ")}${option.name}`}
 										autoComplete="off"
 										onChange={(e: any) => {
@@ -372,7 +383,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										className={classNames("form-control", get(errors, `variationOptions[${index}].manufacturer_part_number`) && "border-danger")}
 										id={`manufacturer_part_number${index}`}
 										name={"manufacturer_part_number"}
-										value={option.modelNo}
+										value={option.manufacturer_part_number}
 										placeholder={`${t("Manufacturer Number ")}${option.name}`}
 										autoComplete="off"
 										onChange={(e: any) => {

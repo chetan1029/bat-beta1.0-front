@@ -57,6 +57,11 @@ export const getTagsAndTypes = (companyId: string | number) => ({
     payload: { companyId }
 });
 
+export const getTypesAll = (companyId: string | number) => ({
+    type: ComponentsTypes.GET_TYPES_ALL,
+    payload: { companyId }
+});
+
 export const exportComponent = (companyId: string | number, fileType: string, filters?: any) => ({
     type: ComponentsTypes.EXPORT_COMPONENT,
     payload: { companyId, fileType, filters }
