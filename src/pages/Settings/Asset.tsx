@@ -141,20 +141,16 @@ const Assets = (props: AssetsProps) => {
 
   const {
     assets,
-    locations,
-    assettypes,
     isAssetsFetched,
     isAssetCreated,
     isAssetUpdated,
     isAssetDeleted,
     isAssetArchived,
     isAssetRestored,
-    isLocationFetched,
-    isAssettypeFetched,
+    isAssetTransferred,
   } = useSelector((state: any) => ({
     assets: state.Company.AssetsState.assets,
-    locations: state.Company.AssetsState.locations,
-    assettypes: state.Company.AssetsState.assettypes,
+
     //flags
     isAssetsFetched: state.Company.AssetsState.isAssetsFetched,
     isAssetCreated: state.Company.AssetsState.isAssetCreated,
@@ -162,8 +158,7 @@ const Assets = (props: AssetsProps) => {
     isAssetDeleted: state.Company.AssetsState.isAssetDeleted,
     isAssetArchived: state.Company.AssetsState.isAssetArchived,
     isAssetRestored: state.Company.AssetsState.isAssetRestored,
-    isLocationFetched: state.Company.AssetsState.isLocationFetched,
-    isAssettypeFetched: state.Company.AssetsState.isAssettypeFetched,
+    isAssetTransferred: state.Company.AssetsState.isAssetTransferred,
   }));
   const companyId = props.match.params.companyId;
   /*
@@ -256,7 +251,7 @@ const Assets = (props: AssetsProps) => {
     re-fetch items when item deleted, archived, restored
     */
   useEffect(() => {
-    if (isAssetDeleted || isAssetArchived || isAssetRestored) {
+    if (isAssetDeleted || isAssetArchived || isAssetRestored || isAssetTransferred) {
       dispatch(
         getAssets(props.match.params.companyId, {
           is_active: !showArchived,
@@ -271,9 +266,16 @@ const Assets = (props: AssetsProps) => {
     isAssetDeleted,
     isAssetArchived,
     isAssetRestored,
+    isAssetTransferred,
     dispatch,
     props.match.params.companyId,
   ]);
+
+  useEffect(() => {
+    if (isAssetTransferred) {
+      closeTransferModal();
+    }
+  }, [isAssetTransferred]);
 
   return (
     <>
@@ -375,6 +377,15 @@ const Assets = (props: AssetsProps) => {
         />
       ) : null}
 
+      {isAssetTransferred ? (
+        <MessageAlert
+          message={t("Asset transfer requested")}
+          icon={"check"}
+          iconWrapperClass="bg-success text-white p-2 rounded-circle"
+          iconClass="icon-sm"
+        />
+      ) : null}
+
       {isAssetArchived ? (
         <MessageAlert
           message={`${t("Asset")} ${archiveUnarchiveItem.title} ${t(
@@ -417,7 +428,7 @@ const Assets = (props: AssetsProps) => {
       {isTransferOpen ? (
         <TransferAsset
           isOpen={true}
-          onClose={closeModal}
+          onClose={closeTransferModal}
           companyId={companyId}
           asset={assetSelectedForTransfer}
         />

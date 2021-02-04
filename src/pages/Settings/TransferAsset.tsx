@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from "react";
-import CreatableSelect from "react-select/creatable";
+import React, { useEffect } from "react";
 import Select from "react-select";
-import { Row, Col, Form, Modal, Button, InputGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { Row, Col, Form, Modal, Button, Table } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { map } from "lodash";
 //plug-ins
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { format } from 'date-fns'
 //action
-import { createAsset, editAsset, resetAsset, getLocations } from "../../redux/actions";
+import { fetchAssetTransfers, transferAsset, resetAsset, getLocations } from "../../redux/actions";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
+import { COUNTRIES } from "../../constants";
+import DisplayDate from "../../components/DisplayDate";
 
+const getAddress = (location: any) => {
+  return `${location.address1}${location.address2 ? ' ' + location.address2 : ''}, ${location.city} ${location.zip}, ${COUNTRIES[location.country]}`;
+}
 
 interface TransferAssetProps {
   isOpen: boolean;
@@ -35,23 +38,22 @@ const TransferAsset = ({
   useEffect(() => {
     dispatch(resetAsset());
     dispatch(getLocations(companyId, { is_active: true }));
-  }, [dispatch]);
+    dispatch(fetchAssetTransfers(companyId, asset.id));
+  }, [dispatch, companyId, asset.id]);
 
   const {
-    createAssetError,
-    isAssetCreated,
-    editAssetError,
-    isAssetUpdated,
+    transferAssetError,
+    isAssetTransferred,
     loading,
     locations,
+    assetTransferrs,
   } = useSelector((state: any) => ({
     locations: state.Company.AssetsState.locations,
-    createAssetError: state.Company.AssetsState.createAssetError,
-    isAssetCreated: state.Company.AssetsState.isAssetCreated,
-
-    editAssetError: state.Company.AssetsState.editAssetError,
-    isAssetUpdated: state.Company.AssetsState.isAssetUpdated,
+    transferAssetError: state.Company.AssetsState.transferAssetError,
+    isAssetTransferred: state.Company.AssetsState.isAssetTransferred,
     loading: state.Company.AssetsState.loading,
+    isTransferrsFetched: state.Company.AssetsState.loading,
+    assetTransferrs: state.Company.AssetsState.assetTransferrs,
   }));
 
 
@@ -63,19 +65,6 @@ const TransferAsset = ({
         value: location.id,
       };
     });
-
-  /*
-    validation
-    */
-
-  const getDate = (date) => {
-    if (date) {
-      var fulldate = date.split('T');
-      return fulldate[0];
-    } else {
-      return "";
-    }
-  }
 
   const validator = useFormik({
     enableReinitialize: true,
@@ -97,21 +86,16 @@ const TransferAsset = ({
       }),
       note: Yup.string()
     }),
-    onSubmit: (values) => {
+    onSubmit: (values: any) => {
       // Date dd/MM/YYYY not accepeted
       if (values.date) {
         values.date = format(new Date(values.date), 'yyyy-MM-dd hh:mm')
       }
-
       if (asset) {
-        dispatch(editAsset(companyId, asset.id, values));
-      } else {
-        dispatch(createAsset(companyId, values));
+        dispatch(transferAsset(companyId, { ...values, from_location: values['from_location']['value'], to_location: values['to_location']['value'], asset: asset.id }));
       }
     },
   });
-
-  console.log(validator);
 
   const onCancel = () => {
     validator.resetForm();
@@ -119,39 +103,39 @@ const TransferAsset = ({
   };
 
   return (
-    <Modal show={isOpen} onHide={onClose} size="lg">
+    <Modal show={isOpen} onHide={onClose} size="xl">
       <Modal.Header closeButton className="add-payment-modal-header">
-        <Modal.Title>{asset ? t("Transfer Asset") : t("Transfer Asset")}</Modal.Title>
+        <Modal.Title>{t("Transfer Asset")}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="position-relative">
           {loading ? <Loader /> : null}
 
           <div>
-            {createAssetError && createAssetError["existing_items"] ? (
+            {transferAssetError && transferAssetError["existing_items"] ? (
               <ExistingDataWarning
                 name={t("Asset(s)")}
-                message={createAssetError}
+                message={transferAssetError}
                 onConfirm={() => {
-                  dispatch(
-                    createAsset(companyId, {
-                      ...validator.values,
-                      force_create: true,
-                    })
-                  );
+                  if (validator.values) {
+                    const val: any = validator.values;
+                    dispatch(
+                      transferAsset(companyId, {
+                        ...val, from_location: val['from_location']['value'], to_location: val['to_location']['value'], asset: asset.id,
+                        force_create: true,
+                      })
+                    );
+                  }
                 }}
                 onClose={() => { }}
                 displayField={"title"}
               />
             ) : null}
-            {!isAssetCreated &&
-              createAssetError &&
-              !createAssetError["existing_items"] ? (
-                <AlertMessage error={createAssetError} />
+            {!isAssetTransferred &&
+              transferAssetError &&
+              !transferAssetError["existing_items"] ? (
+                <AlertMessage error={transferAssetError} />
               ) : null}
-            {!isAssetUpdated && editAssetError && (
-              <AlertMessage error={editAssetError} />
-            )}
 
             <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
 
@@ -160,8 +144,8 @@ const TransferAsset = ({
                   <Form.Group className="mb-4">
                     <Form.Label htmlFor="usr">{t("From Location")}</Form.Label>
                     <Select
-                      id="current_location"
-                      name="current_location"
+                      id="from_location"
+                      name="from_location"
                       placeholder={t("Select location")}
                       isClearable
                       options={defaultLocations || []}
@@ -187,10 +171,10 @@ const TransferAsset = ({
                 </Col>
                 <Col>
                   <Form.Group className="mb-4">
-                    <Form.Label htmlFor="usr">{t("To Location")}</Form.Label>
+                    <Form.Label htmlFor="to_location">{t("To Location")}</Form.Label>
                     <Select
-                      id="current_location"
-                      name="current_location"
+                      id="to_location"
+                      name="to_location"
                       placeholder={t("Select location")}
                       isClearable
                       options={defaultLocations || []}
@@ -219,7 +203,7 @@ const TransferAsset = ({
               <Row>
                 <Col>
                   <Form.Group className="mb-4">
-                    <Form.Label htmlFor="usr">{t("Date")}</Form.Label>
+                    <Form.Label htmlFor="date">{t("Date")}</Form.Label>
                     <Form.Control
                       type="date"
                       className="form-control"
@@ -246,7 +230,24 @@ const TransferAsset = ({
                   </Form.Group>
                 </Col>
                 <Col>
-
+                  <Form.Group className="mb-4">
+                    <Form.Label htmlFor="note">{t("Note")}</Form.Label>
+                    <Form.Control
+                      as="textarea"
+                      id="note"
+                      name="note"
+                      rows={3}
+                      onBlur={validator.handleBlur}
+                      value={validator.values.note}
+                      onChange={validator.handleChange}
+                      isInvalid={!!(validator.touched.note && validator.errors && validator.errors.note)}
+                    />
+                    {validator.touched.note && validator.errors.note ? (
+                      <Form.Control.Feedback type="invalid">
+                        {validator.errors.note}
+                      </Form.Control.Feedback>
+                    ) : null}
+                  </Form.Group>
                 </Col>
               </Row>
 
@@ -264,6 +265,44 @@ const TransferAsset = ({
                 </Button>
               </div>
             </Form>
+
+            <Row className='mt-4 border-top py-3'>
+              <Col xs={12}>
+                <h5>{t('Transfer History')}</h5>
+              </Col>
+              <Col xs={12}>
+                <Table hover>
+                  <thead>
+                    <tr>
+                      <th>{t("From Location")}</th>
+                      <th>{t("To Location")}</th>
+                      <th>{t("Date")}</th>
+                      <th>{t("Note")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(assetTransferrs || []).map((transfer, i) => (
+                      <tr key={i}>
+                        <td>
+                          <h6 className="m-0">{transfer['from_location']['name']}</h6>
+                          <p className="m-0">{getAddress(transfer['from_location'])}</p>
+                        </td>
+                        <td>
+                          <h6 className="m-0">{transfer['to_location']['name']}</h6>
+                          <p className="m-0">{getAddress(transfer['to_location'])}</p>
+                        </td>
+                        <td width='15%'>
+                          {transfer['date'] ? <DisplayDate dateStr={transfer['date']} hideTime={true} /> : ''}
+                        </td>
+                        <td width='20%'>
+                          <p className="m-0">{transfer['note']}</p>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Col>
+            </Row>
           </div>
         </div>
       </Modal.Body>
