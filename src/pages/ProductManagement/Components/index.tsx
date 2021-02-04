@@ -51,7 +51,7 @@ const Components = (props: ComponentsProps) => {
 	const [selectedTab, setSelectedTab] = useState<any>("active");
 	const [selectedView, setSelectedView] = useState<any>("list");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
-	const limit = selectedView === "list" ? 1 : 8;
+	const limit = selectedView === "list" ? 6 : 8;
 
 	const [filters, setFilters] = useState<any>({
 		is_component: true,
