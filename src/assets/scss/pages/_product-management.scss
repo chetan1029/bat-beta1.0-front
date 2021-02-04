@@ -1,8 +1,6 @@
 .components {
 
-  .view-icon {
-
-  }
+  .view-icon {}
 
   .filter-left {
     width: 100%;
@@ -141,6 +139,7 @@
           }
         }
       }
+
       div {
         align-self: center;
       }
@@ -165,7 +164,7 @@
     }
 
     .image img {
-      height:4em;
+      height: 4em;
       width: 4em;
       object-fit: cover;
       border: 1px solid $gray-400;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
@@ -93,19 +93,23 @@ const Components = (props: ComponentsProps) => {
 		isComponentDiscontinued: Components.isComponentDiscontinued,
 	}));
 
-	const prevFiltersRef = useRef();
+	// const prevFiltersRef = useRef();
+
+	// useEffect(() => {
+	// 	prevFiltersRef.current = filters;
+	// });
+
+	// const prevFilters = prevFiltersRef.current;
+
+	// useEffect(() => {
+	// 	if (!(isEqual(prevFilters, filters))) {
+	// 		dispatch(getComponents(companyId, filters));
+	// 	}
+	// }, [filters, prevFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		prevFiltersRef.current = filters;
-	});
-
-	const prevFilters = prevFiltersRef.current;
-
-	useEffect(() => {
-		if (!(isEqual(prevFilters, filters))) {
-			dispatch(getComponents(companyId, filters));
-		}
-	}, [filters, prevFilters]); // eslint-disable-line react-hooks/exhaustive-deps
+		dispatch(getComponents(companyId, filters));
+	}, [filters]);
 
 	/*
 	reset for all the notification
@@ -119,10 +123,13 @@ const Components = (props: ComponentsProps) => {
 	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, dispatch]);
 
 
-	const onChangePage = (offset) => {
-		setFilters({ ...filters, offset: offset });
-		window.scrollTo(0, 0);
-	};
+	const onChangePage = useCallback((offset) => {
+		const off = offset ? parseInt(offset) : offset;
+
+		if (filters && off > filters['offset']) {
+			setFilters(prevState => ({ ...prevState, offset: off }));
+		}
+	}, [filters]);
 
 	const handleSearchKeyDown = (event: any) => {
 		const { value } = event.target;
@@ -260,7 +267,7 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
 						icon={"x"} showAsNotification={false} />}
-					{get(components, "results") && get(components, "results").length > 0 ?
+					{get(components, "count") && get(components, "count") > 0 ?
 						<>
 							{selectedView === "list" ?
 								<ListView
@@ -281,9 +288,7 @@ const Components = (props: ComponentsProps) => {
 									onChangePage={onChangePage}
 								/>
 							}
-						</> :
-						get(components, "results") && get(components, "results").length === 0 &&
-						<p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+						</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
 					}
 				</Card.Body>
 			</Card>
