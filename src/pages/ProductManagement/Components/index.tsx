@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form,Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
+import { Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,6 @@ import { filter, findIndex, get, isEqual, map } from "lodash";
 import Icon from "../../../components/Icon";
 import { archiveComponent, exportComponent, getComponents, getTagsAndTypes, resetComponents } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
-import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";
 import FilterDropDown from "../../../components/FilterDropDown";
 import Loader from "../../../components/Loader";
@@ -52,7 +51,8 @@ const Components = (props: ComponentsProps) => {
 	const [selectedTab, setSelectedTab] = useState<any>("active");
 	const [selectedView, setSelectedView] = useState<any>("list");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
-	const limit = selectedView === "list" ? 5 : 8;
+	const limit = selectedView === "list" ? 1 : 8;
+
 	const [filters, setFilters] = useState<any>({
 		is_component: true,
 		is_active: true,
@@ -111,16 +111,16 @@ const Components = (props: ComponentsProps) => {
 	reset for all the notification
 	*/
 	useEffect(() => {
-			if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported) {
-					setTimeout(() => {
-							dispatch(resetComponents());
-					}, 10000);
-			}
+		if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported) {
+			setTimeout(() => {
+				dispatch(resetComponents());
+			}, 10000);
+		}
 	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, dispatch]);
 
 
-	const onChangePage = (page) => {
-		setFilters({ ...filters, offset: (page - 1) * 5 });
+	const onChangePage = (offset) => {
+		setFilters({ ...filters, offset: offset });
 		window.scrollTo(0, 0);
 	};
 
@@ -171,7 +171,7 @@ const Components = (props: ComponentsProps) => {
 	};
 
 	const onChangeView = (checked: boolean) => {
-		if(checked) {
+		if (checked) {
 			setSelectedView("grid");
 		} else {
 			setSelectedView("list");
@@ -184,28 +184,28 @@ const Components = (props: ComponentsProps) => {
 				<Row>
 					<Col>
 						<div className="d-flex align-items-center">
-							<Icon name="components" className="icon icon-xs  mr-2"/>
+							<Icon name="components" className="icon icon-xs  mr-2" />
 							<h1 className="m-0">{t('Components')}</h1>
 						</div>
 					</Col>
 					<Col className="text-right d-flex flex-row align-items-center justify-content-end">
 						<div className="d-flex align-items-center">
-                            <span>
-                                <Icon name="import" className="icon icon-xs  mr-2"/>
-                                <b>{t('Import')}</b>
-                            </span>
+							<span>
+								<Icon name="import" className="icon icon-xs  mr-2" />
+								<b>{t('Import')}</b>
+							</span>
 
 							<Dropdown>
 								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export'
-												 as={Link}>
-									<Icon name="export" className="icon icon-xs  mr-2"/>
+									as={Link}>
+									<Icon name="export" className="icon icon-xs  mr-2" />
 									<span className='font-weight-bold'>{t('Export')}</span>
 								</Dropdown.Toggle>
 
 								<Dropdown.Menu>
 									{map(FILETYPES, (file, index) => (
 										<Dropdown.Item key={index}
-													   onClick={() => dispatch(exportComponent(companyId, file.value))}>
+											onClick={() => dispatch(exportComponent(companyId, file.value))}>
 											{file.label}
 										</Dropdown.Item>
 									))}
@@ -213,26 +213,26 @@ const Components = (props: ComponentsProps) => {
 							</Dropdown>
 						</div>
 						<Link to={`/product-management/${companyId}/components/add`}
-							  className="btn btn-primary">{t('Add Component')}</Link>
+							className="btn btn-primary">{t('Add Component')}</Link>
 					</Col>
 				</Row>
 			</div>
 
 			<Card>
 				<Card.Body>
-					{loading ? <Loader/> : null}
-					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab}/>
+					{loading ? <Loader /> : null}
+					<TabMenu onChange={handleOnTabChange} selectedTab={selectedTab} />
 
 					<div className="d-flex align-items-center justify-content-between mb-3">
 
 						<div className="d-flex align-items-center w-50">
 							<div className="search">
 								<input type="text" placeholder="Search"
-									   onChange={(e: any) => setSearch(e.target.value)}
-									   onKeyDown={handleSearchKeyDown}/>
+									onChange={(e: any) => setSearch(e.target.value)}
+									onKeyDown={handleSearchKeyDown} />
 								<button type="submit">
 									<img src={searchIcon} alt=""
-										 onClick={() => setFilters({ ...filters, search, offset: 0 })}/>
+										onClick={() => setFilters({ ...filters, search, offset: 0 })} />
 								</button>
 							</div>
 						</div>
@@ -259,7 +259,7 @@ const Components = (props: ComponentsProps) => {
 						</div>
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
-                                                            icon={"x"} showAsNotification={false}/>}
+						icon={"x"} showAsNotification={false} />}
 					{get(components, "results") && get(components, "results").length > 0 ?
 						<>
 							{selectedView === "list" ?
@@ -270,6 +270,7 @@ const Components = (props: ComponentsProps) => {
 									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
 									onSelectComponent={handleOnSelectComponents}
 									onSelectAllComponents={handleOnSelectAllComponents}
+									onChangePage={onChangePage}
 								/> :
 								<GridView
 									companyId={companyId}
@@ -277,27 +278,27 @@ const Components = (props: ComponentsProps) => {
 									selectedComponents={selectedComponents}
 									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
 									onSelectComponent={handleOnSelectComponents}
+									onChangePage={onChangePage}
 								/>
 							}
-							<Pagination onPageChange={onChangePage} pageCount={components.count / 5}/>
 						</> :
 						get(components, "results") && get(components, "results").length === 0 &&
-                      <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+						<p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
 					}
 				</Card.Body>
 			</Card>
 			{isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}
-												iconWrapperClass="bg-success text-white p-2 rounded-circle"
-												iconClass="icon-sm"/> : null}
+				iconWrapperClass="bg-success text-white p-2 rounded-circle"
+				iconClass="icon-sm" /> : null}
 			{isComponentArchived ? <MessageAlert message={t('Component is archived')} icon={"check"}
-												 iconWrapperClass="bg-success text-white p-2 rounded-circle"
-												 iconClass="icon-sm"/> : null}
+				iconWrapperClass="bg-success text-white p-2 rounded-circle"
+				iconClass="icon-sm" /> : null}
 			{isComponentDiscontinued ? <MessageAlert message={t('Component is discontinued')} icon={"check"}
-													 iconWrapperClass="bg-success text-white p-2 rounded-circle"
-													 iconClass="icon-sm"/> : null}
+				iconWrapperClass="bg-success text-white p-2 rounded-circle"
+				iconClass="icon-sm" /> : null}
 			{isExported ? <MessageAlert message={t('File exported successfully')} icon={"check"}
-										iconWrapperClass="bg-success text-white p-2 rounded-circle"
-										iconClass="icon-sm"/> : null}
+				iconWrapperClass="bg-success text-white p-2 rounded-circle"
+				iconClass="icon-sm" /> : null}
 		</div>
 	);
 };
