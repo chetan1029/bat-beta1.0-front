@@ -108,3 +108,11 @@
 .react-select__option {
     padding: $dropdown-item-padding-y $dropdown-item-padding-x !important;
 }
+
+.currency-input-group {
+    .react-select__control {
+        border-top-left-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
+        border-left: 0px !important;
+    }
+}

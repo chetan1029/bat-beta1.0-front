@@ -3,16 +3,17 @@ import { default as dayjs } from 'dayjs';
 import classNames from "classnames";
 
 interface DisplayDateProps {
-    dateStr: string,
-    timeClass?: string
+    dateStr: string;
+    timeClass?: string;
+    hideTime?: boolean;
 }
 
-const DisplayDate = ({ dateStr, timeClass }: DisplayDateProps) => {
+const DisplayDate = ({ dateStr, timeClass, hideTime }: DisplayDateProps) => {
     const tClass = timeClass || 'text-muted ml-2';
 
     return <>
         <span>{dayjs(dateStr).format('DD MMMM YYYY')}</span>
-        <span className={classNames(tClass)}>{dayjs(dateStr).format('hh:mm A')}</span>
+        {!hideTime ? <span className={classNames(tClass)}>{dayjs(dateStr).format('hh:mm A')}</span> : null}
     </>;
 }
 

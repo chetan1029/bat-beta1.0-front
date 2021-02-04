@@ -36,11 +36,11 @@ const EmptyState = ({ showArchived }) => {
   return (
     <tr>
       <td colSpan={7}>
-          {showArchived ? (
-            <p className="font-weight-normal my-0">
-              {t("There are no archived assets available")}
-            </p>
-          ) : (
+        {showArchived ? (
+          <p className="font-weight-normal my-0">
+            {t("There are no archived assets available")}
+          </p>
+        ) : (
             <p className="font-weight-normal my-0">
               {t("There are no asset available")}
             </p>
@@ -81,41 +81,41 @@ const AssetsCardItem = ({
 
   return (
     <>
-    <tr>
-      <td>{asset.title}</td>
-      <td>{asset.type}</td>
-      <td>{asset.price ? asset.price['amount'] + ' ' + asset.price['currency']: ''}</td>
-      <td>{asset.current_location.name}
-      <Link to="#" onClick={() => onTransferAsset(asset)}>
-        <Icon name="transfer" className="svg-outline-primary pl-2" />
-      </Link>
-      </td>
-      <td><a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a></td>
-      <td><DisplayDate dateStr={asset.date} timeClass={"ml-1"} /></td>
-      <td>
-        <Link to="#" onClick={() => onEditAsset(asset)}>
-          <Icon name="edit" className="svg-outline-primary pr-2" />
-        </Link>
-        {!asset.is_active ? (
-          <Link to="#" onClick={() => onClickArchiveUnArchive(true)}>
-            <Icon
-              name="un-archive"
-              className="svg-outline-primary pr-2"
-            />
+      <tr>
+        <td>{asset.title}</td>
+        <td>{asset.type}</td>
+        <td>{asset.price ? asset.price['amount'] + ' ' + asset.price['currency'] : ''}</td>
+        <td>{asset.current_location.name}
+          <Link to="#" onClick={() => onTransferAsset(asset)}>
+            <Icon name="transfer" className="svg-outline-primary pl-2" />
           </Link>
-        ) : (
-          <Link to="#" onClick={() => onClickArchiveUnArchive(false)}>
-            <Icon
-              name="archive"
-              className="svg-outline-warning pr-2"
-            />
+        </td>
+        <td><a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a></td>
+        <td><DisplayDate dateStr={asset.date} timeClass={"ml-1"} /></td>
+        <td>
+          <Link to="#" onClick={() => onEditAsset(asset)}>
+            <Icon name="edit" className="svg-outline-primary pr-2" />
           </Link>
-        )}
-        <Link to="#" onClick={() => ondeleteAsset(asset.id)}>
-          <Icon name="delete" className="svg-outline-danger" />
-        </Link>
-      </td>
-    </tr>
+          {!asset.is_active ? (
+            <Link to="#" onClick={() => onClickArchiveUnArchive(true)}>
+              <Icon
+                name="un-archive"
+                className="svg-outline-primary pr-2"
+              />
+            </Link>
+          ) : (
+              <Link to="#" onClick={() => onClickArchiveUnArchive(false)}>
+                <Icon
+                  name="archive"
+                  className="svg-outline-warning pr-2"
+                />
+              </Link>
+            )}
+          <Link to="#" onClick={() => ondeleteAsset(asset.id)}>
+            <Icon name="delete" className="svg-outline-danger" />
+          </Link>
+        </td>
+      </tr>
       {selectedTermForDelete ? (
         <ConfirmMessage
           message={`Are you sure you want to delete ${selectedTermForDelete.title}?`}
@@ -141,20 +141,16 @@ const Assets = (props: AssetsProps) => {
 
   const {
     assets,
-    locations,
-    assettypes,
     isAssetsFetched,
     isAssetCreated,
     isAssetUpdated,
     isAssetDeleted,
     isAssetArchived,
     isAssetRestored,
-    isLocationFetched,
-    isAssettypeFetched,
+    isAssetTransferred,
   } = useSelector((state: any) => ({
     assets: state.Company.AssetsState.assets,
-    locations: state.Company.AssetsState.locations,
-    assettypes: state.Company.AssetsState.assettypes,
+
     //flags
     isAssetsFetched: state.Company.AssetsState.isAssetsFetched,
     isAssetCreated: state.Company.AssetsState.isAssetCreated,
@@ -162,8 +158,7 @@ const Assets = (props: AssetsProps) => {
     isAssetDeleted: state.Company.AssetsState.isAssetDeleted,
     isAssetArchived: state.Company.AssetsState.isAssetArchived,
     isAssetRestored: state.Company.AssetsState.isAssetRestored,
-    isLocationFetched: state.Company.AssetsState.isLocationFetched,
-    isAssettypeFetched: state.Company.AssetsState.isAssettypeFetched,
+    isAssetTransferred: state.Company.AssetsState.isAssetTransferred,
   }));
   const companyId = props.match.params.companyId;
   /*
@@ -216,11 +211,16 @@ const Assets = (props: AssetsProps) => {
     Transfer Assets
     */
   const [isTransferOpen, setistransferopen] = useState(false);
-  const openTransferModal = () => {
+  const [assetSelectedForTransfer, setAssetSelectedForTransfer] = useState<any>(null);
+
+  const openTransferModal = (asset) => {
     setistransferopen(true);
+    setAssetSelectedForTransfer(asset);
   };
+
   const closeTransferModal = () => {
     setistransferopen(false);
+    setAssetSelectedForTransfer(null);
     dispatch(resetAsset());
   };
 
@@ -251,7 +251,7 @@ const Assets = (props: AssetsProps) => {
     re-fetch items when item deleted, archived, restored
     */
   useEffect(() => {
-    if (isAssetDeleted || isAssetArchived || isAssetRestored) {
+    if (isAssetDeleted || isAssetArchived || isAssetRestored || isAssetTransferred) {
       dispatch(
         getAssets(props.match.params.companyId, {
           is_active: !showArchived,
@@ -266,9 +266,16 @@ const Assets = (props: AssetsProps) => {
     isAssetDeleted,
     isAssetArchived,
     isAssetRestored,
+    isAssetTransferred,
     dispatch,
     props.match.params.companyId,
   ]);
+
+  useEffect(() => {
+    if (isAssetTransferred) {
+      closeTransferModal();
+    }
+  }, [isAssetTransferred]);
 
   return (
     <>
@@ -309,48 +316,48 @@ const Assets = (props: AssetsProps) => {
       {!isAssetsFetched ? (
         <Loader />
       ) : (
-        <div>
-          <Card>
-            <Card.Body className="">
-              <div className="p-2">
-                <Row>
-                  <Col xs={12}>
-                    <Table >
-                      <thead>
-                        <tr>
-                          <th>{t("Title")}</th>
-                          <th>{t("Type")}</th>
-                          <th>{t("Price")}</th>
-                          <th>{t("Current Location")}</th>
-                          <th>{t("Receipt")}</th>
-                          <th>{t("Purchase Date")}</th>
-                          <th>{t("Action")}</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {assets.results.length > 0 ? (
-                          assets.results.map((asset, key) => (
-                            <AssetsCardItem
-                              asset={asset}
-                              key={key}
-                              companyId={companyId}
-                              onArchiveDeleteAction={onArchiveDeleteAction}
-                              onEditAsset={setAsset}
-                              onTransferAsset={setAsset}
-                            />
-                          ))
-                        ) : (
-                          <EmptyState showArchived={showArchived} />
-                        )}
-                      </tbody>
-                    </Table>
-                  </Col>
-                </Row>
-              </div>
-            </Card.Body>
-          </Card>
-        </div>
-      )}
+          <div>
+            <Card>
+              <Card.Body className="">
+                <div className="p-2">
+                  <Row>
+                    <Col xs={12}>
+                      <Table >
+                        <thead>
+                          <tr>
+                            <th>{t("Title")}</th>
+                            <th>{t("Type")}</th>
+                            <th>{t("Price")}</th>
+                            <th>{t("Current Location")}</th>
+                            <th>{t("Receipt")}</th>
+                            <th>{t("Purchase Date")}</th>
+                            <th>{t("Action")}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {assets.results.length > 0 ? (
+                            assets.results.map((asset, key) => (
+                              <AssetsCardItem
+                                asset={asset}
+                                key={key}
+                                companyId={companyId}
+                                onArchiveDeleteAction={onArchiveDeleteAction}
+                                onEditAsset={setAsset}
+                                onTransferAsset={openTransferModal}
+                              />
+                            ))
+                          ) : (
+                              <EmptyState showArchived={showArchived} />
+                            )}
+                        </tbody>
+                      </Table>
+                    </Col>
+                  </Row>
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        )}
 
       {isAssetCreated && !isAssetDeleted && !isAssetRestored ? (
         <MessageAlert
@@ -364,6 +371,15 @@ const Assets = (props: AssetsProps) => {
       {isAssetDeleted && !isAssetCreated && !isAssetRestored ? (
         <MessageAlert
           message={t("Selected Asset is deleted")}
+          icon={"check"}
+          iconWrapperClass="bg-success text-white p-2 rounded-circle"
+          iconClass="icon-sm"
+        />
+      ) : null}
+
+      {isAssetTransferred ? (
+        <MessageAlert
+          message={t("Asset transfer requested")}
           icon={"check"}
           iconWrapperClass="bg-success text-white p-2 rounded-circle"
           iconClass="icon-sm"
@@ -406,19 +422,15 @@ const Assets = (props: AssetsProps) => {
           onClose={closeModal}
           companyId={companyId}
           asset={selectedAsset}
-          locations={locations}
-          assettypes={assettypes}
         />
       ) : null}
 
       {isTransferOpen ? (
         <TransferAsset
-          isOpen={isOpen}
-          onClose={closeModal}
+          isOpen={true}
+          onClose={closeTransferModal}
           companyId={companyId}
-          asset={selectedAsset}
-          locations={locations}
-          assettypes={assettypes}
+          asset={assetSelectedForTransfer}
         />
       ) : null}
     </>

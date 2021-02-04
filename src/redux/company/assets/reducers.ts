@@ -60,6 +60,22 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AssetType.TRANSFER_ASSET: {
+                    return {
+                        ...state,
+                        isAssetTransferred: true,
+                        transferAssetError: null,
+                        loading: false
+                    }
+                }
+                case AssetType.FETCH_ASSET_TRANSFERS: {
+                    return {
+                        ...state,
+                        isTransferrsFetched: true,
+                        loading: false,
+                        assetTransferrs: action.payload.data.results
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -119,6 +135,21 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AssetType.TRANSFER_ASSET: {
+                    return {
+                        ...state,
+                        transferAssetError: action.payload.error,
+                        isAssetTransferred: false,
+                        loading: false
+                    }
+                }
+                case AssetType.FETCH_ASSET_TRANSFERS: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isTransferrsFetched: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -140,7 +171,7 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 ...state,
                 isAssetUpdated: false, isAssetCreated: false,
                 isAssetDeleted: false, isAssetRestored: false, isAssetArchived: false,
-                createAssetError: null, editAssetError: null,
+                createAssetError: null, editAssetError: null, isAssetTransferred: false,
                 loading: true
             };
 
@@ -149,7 +180,7 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 ...state, isAssetDeleted: false, loading: true,
                 isAssetUpdated: false, isAssetCreated: false,
                 isAssetRestored: false, isAssetArchived: false,
-                createAssetError: null
+                createAssetError: null, isAssetTransferred: false
             };
 
         case AssetType.ARCHIVE_ASSET: {
@@ -157,18 +188,34 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 ...state,
                 isAssetArchived: false, isAssetRestored: false,
                 isAssetUpdated: false, isAssetCreated: false,
-                isAssetDeleted: false,
+                isAssetDeleted: false, isAssetTransferred: false,
                 createAssetError: null,
                 loading: true
             }
         }
-
         case AssetType.RESTORE_ASSET: {
             return {
                 ...state,
                 isAssetRestored: false, isAssetArchived: false,
                 isAssetUpdated: false, isAssetCreated: false,
-                isAssetDeleted: false, loading: true, createAssetError: null
+                isAssetDeleted: false, loading: true, createAssetError: null,
+                isAssetTransferred: false
+            }
+        }
+        case AssetType.TRANSFER_ASSET: {
+            return {
+                ...state,
+                isAssetRestored: false, isAssetArchived: false,
+                isAssetUpdated: false, isAssetCreated: false,
+                isAssetDeleted: false, loading: true, createAssetError: null,
+                isAssetTransferred: false, transferAssetError: null
+            }
+        }
+        case AssetType.FETCH_ASSET_TRANSFERS: {
+            return {
+                ...state,
+                isTransferrsFetched: false,
+                loading: true
             }
         }
         case AssetType.RESET: {
@@ -180,6 +227,8 @@ const AssetsState = (state = INIT_STATE, action: any) => {
                 isAssetDeleted: false,
                 isAssetRestored: false,
                 isAssetArchived: false,
+                isAssetTransferred: false,
+                transferAssetError: null
             }
         }
         default: return { ...state };
