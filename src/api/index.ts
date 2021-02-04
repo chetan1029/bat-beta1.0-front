@@ -548,6 +548,16 @@ function restoreAsset(companyId: number, assetId: number, params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+function getAssetTransferrs(companyId: number, assetId: number) {
+    const baseUrl = `/companies/${companyId}/asset-transfer/`;
+    return api.get(`${baseUrl}`, { asset: assetId, limit: 10000000 });
+}
+
+function transferAsset(companyId: number, params: any) {
+    const baseUrl = `/companies/${companyId}/asset-transfer/`;
+    return api.create(`${baseUrl}`, params);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -568,7 +578,7 @@ export {
     getVariation, editVariation, deleteVariationImages, discontinueComponent,
     getClients, getClient, archiveClient,
     getSalesChannels, getSalesChannel,
-    getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType,
+    getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType, transferAsset, getAssetTransferrs,
     getMembershipPlan,
     createComponentPackingBox, getComponentpackingboxes, deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox, editComponentPackingBox,
 }

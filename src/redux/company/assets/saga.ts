@@ -9,6 +9,8 @@ import {
     restoreAsset as restoreAssetApi,
     getLocations as getLocationsApi,
     getAssetType as getAssetTypeApi,
+    transferAsset as transferAssetApi,
+    getAssetTransferrs,
 } from "../../../api/index";
 
 import { assetsApiResponseSuccess, assetsApiResponseError } from "./actions";
@@ -115,6 +117,34 @@ function* restoreAsset({ payload: { companyId, assetId, params } }: any) {
     }
 }
 
+
+/**
+ * Transfer records
+ * @param param0 
+ */
+function* fetchAssetTransferrs({ payload: { companyId, assetId } }: any) {
+    try {
+        const response = yield call(getAssetTransferrs, companyId, assetId);
+        yield put(assetsApiResponseSuccess(AssetType.FETCH_ASSET_TRANSFERS, response.data));
+    } catch (error) {
+        yield put(assetsApiResponseError(AssetType.FETCH_ASSET_TRANSFERS, error));
+    }
+}
+
+/**
+ * Transfer
+ * @param param0 
+ */
+function* transferAsset({ payload: { companyId, data } }: any) {
+    try {
+        const response = yield call(transferAssetApi, companyId, data);
+        yield put(assetsApiResponseSuccess(AssetType.TRANSFER_ASSET, response.data));
+    } catch (error) {
+        yield put(assetsApiResponseError(AssetType.TRANSFER_ASSET, error));
+    }
+}
+
+
 export function* watchGetAssets() {
     yield takeEvery(AssetType.GET_ASSETS, getAssets)
 }
@@ -147,6 +177,14 @@ export function* watchRestoreAsset() {
     yield takeEvery(AssetType.RESTORE_ASSET, restoreAsset)
 }
 
+export function* watchTransferAsset() {
+    yield takeEvery(AssetType.TRANSFER_ASSET, transferAsset)
+}
+
+export function* watchAssetTransfers() {
+    yield takeEvery(AssetType.FETCH_ASSET_TRANSFERS, fetchAssetTransferrs)
+}
+
 function* assetsSaga() {
     yield all([
         fork(watchGetAssets),
@@ -156,7 +194,9 @@ function* assetsSaga() {
         fork(watchArchiveAsset),
         fork(watchRestoreAsset),
         fork(watchGetLocations),
-        fork(watchGetAssetType)
+        fork(watchGetAssetType),
+        fork(watchTransferAsset),
+        fork(watchAssetTransfers)
     ]);
 }
 

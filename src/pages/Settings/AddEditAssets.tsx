@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 import Select from "react-select";
-import { Row, Col, Form, Modal, Button, InputGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { Row, Col, Form, Modal, Button, InputGroup } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -12,9 +12,11 @@ import * as Yup from "yup";
 import { format } from 'date-fns'
 //action
 import { createAsset, editAsset, resetAsset, getAssetType, getLocations } from "../../redux/actions";
+import { CURRENCIES } from "../../constants";
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
+import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 
 
 interface AddEditAssetsProps {
@@ -22,22 +24,20 @@ interface AddEditAssetsProps {
   onClose: any;
   asset?: any;
   companyId: any;
-  locations: any;
-  assettypes: any;
 }
 const AddEditAssets = ({
   isOpen,
   onClose,
   asset,
-  companyId,
-  locations,
-  assettypes,
+  companyId
 }: AddEditAssetsProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(resetAsset());
+    dispatch(getLocations(companyId, { is_active: true }));
+    dispatch(getAssetType(companyId, { is_active: true }));
   }, [dispatch]);
 
   const {
@@ -46,10 +46,13 @@ const AddEditAssets = ({
     editAssetError,
     isAssetUpdated,
     loading,
+    locations,
+    assettypes,
   } = useSelector((state: any) => ({
     createAssetError: state.Company.AssetsState.createAssetError,
     isAssetCreated: state.Company.AssetsState.isAssetCreated,
-
+    locations: state.Company.AssetsState.locations,
+    assettypes: state.Company.AssetsState.assettypes,
     editAssetError: state.Company.AssetsState.editAssetError,
     isAssetUpdated: state.Company.AssetsState.isAssetUpdated,
     loading: state.Company.AssetsState.loading,
@@ -58,12 +61,12 @@ const AddEditAssets = ({
   const [showTotalError, setshowTotalError] = useState(false);
 
   const defaultTypes = assettypes && map(assettypes.type_data, (type: any) => ({
-		label: type,
-		value: type
-	}));
+    label: type,
+    value: type
+  }));
 
   const defaultLocations =
-  locations.results.length > 0 &&
+    locations.results.length > 0 &&
     locations.results.map((location) => {
       return {
         label: location.name,
@@ -75,14 +78,14 @@ const AddEditAssets = ({
     validation
     */
 
-    const getDate = (date) => {
-        if(date){
-            var fulldate = date.split('T');
-            return fulldate[0];
-        }else{
-            return "";
-        }
+  const getDate = (date) => {
+    if (date) {
+      var fulldate = date.split('T');
+      return fulldate[0];
+    } else {
+      return "";
     }
+  }
 
   const validator = useFormik({
     enableReinitialize: true,
@@ -101,31 +104,31 @@ const AddEditAssets = ({
       detail: Yup.string().required(t("Asset detail is required")),
       date: Yup.date().required(t("Asset date is required")),
       price: Yup.object({
-          value: Yup.number().required(t('Price amount is required')),
-          unit: Yup.string().required(t('Price currency is required'))
+        amount: Yup.number().required(t('Price amount is required')),
+        currency: Yup.string().required(t('Price currency is required'))
       }),
       type: Yup.object().required(t("Asset type is required")),
       current_location: Yup.object().required(t("Asset location is required")),
       asset_id: Yup.string().required(t("A unique ID for the asset is required. You can put order number as a Asset ID also.")),
     }),
     onSubmit: (values) => {
-        // React-select retrun object issue
-        values.type = values.type["value"]
-        values.current_location = values.current_location["value"]
-        // Date dd/MM/YYYY not accepeted
-        if(values.date){
-            values.date = format(new Date(values.date), 'yyyy-MM-dd hh:mm')
-        }
+      // React-select retrun object issue
+      values.type = values.type["value"]
+      values.current_location = values.current_location["value"]
+      // Date dd/MM/YYYY not accepeted
+      if (values.date) {
+        values.date = format(new Date(values.date), 'yyyy-MM-dd hh:mm')
+      }
 
-        if (receiptFile) {
-            values.receipt = receiptFile;
-        } else {
-            delete values.receipt;
-        }
-      if (asset) {
-        dispatch(editAsset(companyId, asset.id, values));
+      if (receiptFile) {
+        values.receipt = receiptFile;
       } else {
-        dispatch(createAsset(companyId, values));
+        delete values.receipt;
+      }
+      if (asset) {
+        dispatch(editAsset(companyId, asset.id, { ...values, price: JSON.stringify(values['price']) }));
+      } else {
+        dispatch(createAsset(companyId, { ...values, price: JSON.stringify(values['price']) }));
       }
     },
   });
@@ -137,11 +140,14 @@ const AddEditAssets = ({
 
   const [receiptFile, setreceiptFile] = useState<any>();
   const onReceiptFile = (e: any) => {
-      const file = e.target.files[0];
-      if (file){
-          setreceiptFile(file);
-        }
+    const file = e.target.files[0];
+    if (file) {
+      setreceiptFile(file);
+    }
   }
+
+  let selectedCurrency = validator.values && validator.values.price && validator.values.price.currency ? { label: validator.values.price.currency, value: validator.values.price.currency } : null;
+
 
   return (
     <Modal show={isOpen} onHide={onClose} size="lg">
@@ -165,21 +171,21 @@ const AddEditAssets = ({
                     })
                   );
                 }}
-                onClose={() => {}}
+                onClose={() => { }}
                 displayField={"title"}
               />
             ) : null}
             {!isAssetCreated &&
-            createAssetError &&
-            !createAssetError["existing_items"] ? (
-              <AlertMessage error={createAssetError} />
-            ) : null}
+              createAssetError &&
+              !createAssetError["existing_items"] ? (
+                <AlertMessage error={createAssetError} />
+              ) : null}
             {!isAssetUpdated && editAssetError && (
               <AlertMessage error={editAssetError} />
             )}
 
             <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
-            <Form.Group className="mb-4">
+              <Form.Group className="mb-4">
                 <Form.Label htmlFor="usr">{t("Asset ID")}</Form.Label>
                 <Form.Control
                   type="text"
@@ -192,8 +198,8 @@ const AddEditAssets = ({
                   onChange={validator.handleChange}
                   isInvalid={
                     validator.touched.asset_id &&
-                    validator.errors &&
-                    validator.errors.asset_id
+                      validator.errors &&
+                      validator.errors.asset_id
                       ? true
                       : false
                   }
@@ -219,8 +225,8 @@ const AddEditAssets = ({
                   onChange={validator.handleChange}
                   isInvalid={
                     validator.touched.title &&
-                    validator.errors &&
-                    validator.errors.title
+                      validator.errors &&
+                      validator.errors.title
                       ? true
                       : false
                   }
@@ -247,8 +253,8 @@ const AddEditAssets = ({
                   onChange={validator.handleChange}
                   isInvalid={
                     validator.touched.detail &&
-                    validator.errors &&
-                    validator.errors.detail
+                      validator.errors &&
+                      validator.errors.detail
                       ? true
                       : false
                   }
@@ -262,50 +268,42 @@ const AddEditAssets = ({
               </Form.Group>
               <Row>
                 <Col>
-                <Form.Group className="mb-4">
-                  <Form.Label htmlFor="usr">{t("Asset Type")}</Form.Label>
-                  <CreatableSelect
-                    id={"type"}
-                    name={"type"}
-                    placeholder={t('Asset type')}
-                    isClearable
-                    options={defaultTypes || []}
-                    onChange={(value: any) => validator.setFieldValue('type', value)}
-                    value={validator.values.type}
-                    className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.type && "is-invalid")}
-                    classNamePrefix="react-select"
-                  />
-                </Form.Group>
+                  <Form.Group className="mb-4">
+                    <Form.Label htmlFor="usr">{t("Asset Type")}</Form.Label>
+                    <CreatableSelect
+                      id={"type"}
+                      name={"type"}
+                      placeholder={t('Asset type')}
+                      isClearable
+                      options={defaultTypes || []}
+                      onChange={(value: any) => validator.setFieldValue('type', value)}
+                      value={validator.values.type}
+                      className={classNames("react-select", "react-select-regular", validator.touched.type && validator.errors.type && "is-invalid")}
+                      classNamePrefix="react-select"
+                    />
+                  </Form.Group>
                 </Col>
                 <Col>
                   <Form.Label htmlFor="usr">{t("Price")}</Form.Label>
                   <Form.Group className="mb-4">
-                      <InputGroup>
-                          <Form.Control type="number" className="form-control" id="price" name="price.amount" placeholder="Amount"
-                              onBlur={validator.handleBlur}
-                              value={validator.values.price.amount}
-                              onChange={validator.handleChange}
-                              isInvalid={validator.touched.price && validator.errors && validator.errors.price ? true : false}
-                          />
-                          <DropdownButton
-                              as={InputGroup.Append}
-                              variant="outline-secondary"
-                              title={validator.values.price.currency}
-                              id="input-group-dropdown-2"
-                              className='btn-dropdown'
-                          >
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "USD")}>{t("USD")}</Dropdown.Item>
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "INR")}>{t("INR")}</Dropdown.Item>
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "SEK")}>{t("SEK")}</Dropdown.Item>
-                              <Dropdown.Item onClick={() => validator.setFieldValue('price.currency', "EUR")}>{t("EUR")}</Dropdown.Item>
-                          </DropdownButton>
-                      </InputGroup>
-                      {validator.touched.price && validator.errors.price && validator.errors.price['amount'] ? (
-                          <Form.Control.Feedback type="invalid" className='show'>{validator.errors.price['amount']}</Form.Control.Feedback>
-                      ) : null}
-                      {validator.touched.price && validator.errors.price && validator.errors.price['currency'] ? (
-                          <Form.Control.Feedback type="invalid" className='show'>{validator.errors.price['currency']}</Form.Control.Feedback>
-                      ) : null}
+                    <InputGroup>
+                      <Form.Control type="number" className="form-control w-75" id="price" name="price.amount" placeholder="Amount"
+                        onBlur={validator.handleBlur}
+                        value={validator.values.price.amount}
+                        onChange={validator.handleChange}
+                        isInvalid={validator.touched.price && validator.errors && validator.errors.price ? true : false}
+                      />
+                      <CurrenciesDropdown name='currency' placeholder={t('Currency')}
+                        onChange={(value) => validator.setFieldValue('price.currency', value ? value['value'] : value)}
+                        className="w-25 currency-input-group" showInternal={true}
+                        value={selectedCurrency} isSingle={true} />
+                    </InputGroup>
+                    {validator.touched.price && validator.errors.price && validator.errors.price['amount'] ? (
+                      <Form.Control.Feedback type="invalid" className='show'>{validator.errors.price['amount']}</Form.Control.Feedback>
+                    ) : null}
+                    {validator.touched.price && validator.errors.price && validator.errors.price['currency'] ? (
+                      <Form.Control.Feedback type="invalid" className='show'>{validator.errors.price['currency']}</Form.Control.Feedback>
+                    ) : null}
                   </Form.Group>
                 </Col>
 
@@ -326,8 +324,8 @@ const AddEditAssets = ({
                       onChange={validator.handleChange}
                       isInvalid={
                         validator.touched.date &&
-                        validator.errors &&
-                        validator.errors.date
+                          validator.errors &&
+                          validator.errors.date
                           ? true
                           : false
                       }
@@ -357,8 +355,8 @@ const AddEditAssets = ({
                         "react-select",
                         "react-select-regular",
                         validator.touched.current_location &&
-                          validator.errors.current_location &&
-                          "is-invalid"
+                        validator.errors.current_location &&
+                        "is-invalid"
                       )}
                       classNamePrefix="react-select"
                     />
@@ -367,13 +365,13 @@ const AddEditAssets = ({
               </Row>
 
               <Form.Group>
-                  <Form.Label>{t('Asset Receipt')}</Form.Label>
-                  <Form.Control type="file" name="receipt" id="receipt"
-                      onChange={onReceiptFile} custom />
+                <Form.Label>{t('Asset Receipt')}</Form.Label>
+                <Form.Control type="file" name="receipt" id="receipt"
+                  onChange={onReceiptFile} custom />
 
-                  {asset && asset.receipt ? <p className="mb-0">
-                      {t('Asset Receipt')}: <a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a>
-                  </p> : null}
+                {asset && asset.receipt ? <p className="mb-0">
+                  {t('Asset Receipt')}: <a href={asset.receipt} target='_blank' className='text-primary' rel="noreferrer">{t('View Receipt File')}</a>
+                </p> : null}
               </Form.Group>
 
               <div>
