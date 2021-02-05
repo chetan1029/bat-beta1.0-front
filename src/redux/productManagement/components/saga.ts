@@ -195,6 +195,20 @@ function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 	}
 }
 
+
+/**
+ * Import component
+ * @param param0 
+ */
+function* importComponent({ payload: { companyId, file } }: any) {
+	try {
+		// const response = yield call(importComponents, companyId, file);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.IMPORT_COMPONENT, true));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.IMPORT_COMPONENT, error));
+	}
+}
+
 /**
  * get variation
  */
@@ -346,6 +360,10 @@ export function* watchExportComponent() {
 	yield takeEvery(ComponentsTypes.EXPORT_COMPONENT, exportComponent);
 }
 
+export function* watchImportComponent() {
+	yield takeEvery(ComponentsTypes.IMPORT_COMPONENT, importComponent);
+}
+
 export function* watchGetVariation() {
 	yield takeEvery(ComponentsTypes.GET_VARIATION, getVariationById);
 }
@@ -395,6 +413,7 @@ function* componentsSaga() {
 		fork(watchGetTagsAndTypes),
 		fork(watchGetTypesAll),
 		fork(watchExportComponent),
+		fork(watchImportComponent),
 		fork(watchGetVariation),
 		fork(watchEditVariation),
 		fork(watchDiscontinueComponent),

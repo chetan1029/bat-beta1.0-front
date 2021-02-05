@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Media } from "react-bootstrap";
+import { Row, Col, Card } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -12,8 +12,8 @@ import Icon from "../../../components/Icon";
 
 //actions
 import { getVendor } from "../../../redux/actions";
-import DisplayDate from "../../../components/DisplayDate";
-import avatarPlaceholder from "../../../assets/images/avatar-placeholder.jpg";
+// import DisplayDate from "../../../components/DisplayDate";
+// import avatarPlaceholder from "../../../assets/images/avatar-placeholder.jpg";
 
 interface VendorsProps {
     match: any;
@@ -37,11 +37,6 @@ const VendorContracts = (props: VendorsProps) => {
             dispatch(getVendor(companyId, vendorId));
         }
     }, [dispatch, vendorId, companyId]);
-
-
-    const rawAddress = () => {
-        return { __html: vendorDetails['address'] };
-    }
 
     const tabMenuItems: Array<any> = [
         { label: t('Details'), name: 'details', to: `/supply-chain/${companyId}/vendors/${categoryId}/${vendorId}` },
@@ -71,7 +66,7 @@ const VendorContracts = (props: VendorsProps) => {
                 <Col lg={12}>
                     <Card>
                         <Card.Body className="">
-                          <TabMenu items={tabMenuItems} defaultSelectedItem={'contracts'} />
+                            <TabMenu items={tabMenuItems} defaultSelectedItem={'contracts'} />
                             {loading ? <Loader /> : <div>
                                 <Row>
                                     <Col lg={6}>Contracts</Col>
@@ -82,7 +77,7 @@ const VendorContracts = (props: VendorsProps) => {
                     </Card>
                 </Col>
             </Row>
-            </> : null}
+        </> : null}
         </>
     );
 }

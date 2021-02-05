@@ -86,6 +86,13 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case ComponentsTypes.IMPORT_COMPONENT: {
+                    return {
+                        ...state,
+                        isImported: true,
+                        importLoading: false,
+                    }
+                }
                 case ComponentsTypes.GET_VARIATION: {
                     return {
                         ...state,
@@ -220,6 +227,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case ComponentsTypes.IMPORT_COMPONENT: {
+                    return {
+                        ...state,
+                        importComponentError: action.payload.error,
+                        isImported: false,
+                        importLoading: false,
+                    }
+                }
                 case ComponentsTypes.GET_VARIATION: {
                     return {
                         ...state,
@@ -310,6 +325,9 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.DISCONTINUE_COMPONENT:
             return { ...state, isComponentDiscontinued: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
+        case ComponentsTypes.IMPORT_COMPONENT:
+            return { ...state, isImported: false, importLoading: true };
+
         case ComponentsTypes.EXPORT_COMPONENT:
             return { ...state, isExported: false, loading: true };
 
@@ -358,6 +376,7 @@ const Components = (state = INIT_STATE, action: any) => {
                 isComponentRestored: false,
                 restoreComponentError: null,
                 isComponentPackingBoxEdited: false,
+                isImported: false
             }
         }
         case ComponentsTypes.RESET_COMPONENTS: {

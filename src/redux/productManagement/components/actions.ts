@@ -67,6 +67,11 @@ export const exportComponent = (companyId: string | number, fileType: string, fi
     payload: { companyId, fileType, filters }
 });
 
+export const importComponent = (companyId: string | number, file: File) => ({
+    type: ComponentsTypes.IMPORT_COMPONENT,
+    payload: { companyId, file }
+});
+
 export const resetComponents = () => ({
     type: ComponentsTypes.RESET,
 });

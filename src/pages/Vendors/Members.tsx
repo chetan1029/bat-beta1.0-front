@@ -12,7 +12,7 @@ import Icon from "../../components/Icon";
 
 //actions
 import { getVendor, getVendorMembers } from "../../redux/actions";
-import DisplayDate from "../../components/DisplayDate";
+// import DisplayDate from "../../components/DisplayDate";
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";
 
 
@@ -33,9 +33,9 @@ interface MemberItemProp {
     member: any,
 }
 
-const MemberItem = ({ member, companyId}: MemberItemProp) => {
-    const { t } = useTranslation();
-    const dispatch = useDispatch();
+const MemberItem = ({ member, companyId }: MemberItemProp) => {
+    // const { t } = useTranslation();
+    // const dispatch = useDispatch();
 
     const fullName = member ? member['user']['first_name'] + " " + member['user']['last_name'] : "";
 
@@ -76,7 +76,7 @@ const VendorMembers = (props: VendorsProps) => {
 
     const dispatch = useDispatch();
 
-    const { loading, vendorDetails , isVendorMembersFetched, vendorMembers} = useSelector((state: any) => ({
+    const { loading, vendorDetails, isVendorMembersFetched, vendorMembers } = useSelector((state: any) => ({
         loading: state.Company.Vendors.loading,
         vendorDetails: state.Company.Vendors.vendor,
         vendorMembers: state.Company.Vendors.vendormembers,
@@ -123,20 +123,20 @@ const VendorMembers = (props: VendorsProps) => {
                 <Col lg={12}>
                     <Card>
                         <Card.Body className="">
-                              <TabMenu items={tabMenuItems} defaultSelectedItem={'members'} />
-                                {loading ? <Loader /> : <div>
+                            <TabMenu items={tabMenuItems} defaultSelectedItem={'members'} />
+                            {loading ? <Loader /> : <div>
                                 <Row>
                                     <Col lg={6}>
-                                    {isVendorMembersFetched ? <>
-                                        {
-                                            vendorMembers['results'].length > 0 ?
-                                                vendorMembers['results'].map((member: any, key: number) =>
-                                                    <MemberItem member={member}
-                                                        key={key} companyId={companyId}
-                                                    />
-                                                ) : <EmptyState message={t('There are no active members')} />
-                                        }
-                                    </> : null}
+                                        {isVendorMembersFetched ? <>
+                                            {
+                                                vendorMembers['results'].length > 0 ?
+                                                    vendorMembers['results'].map((member: any, key: number) =>
+                                                        <MemberItem member={member}
+                                                            key={key} companyId={companyId}
+                                                        />
+                                                    ) : <EmptyState message={t('There are no active members')} />
+                                            }
+                                        </> : null}
                                     </Col>
                                 </Row>
                             </div>}
@@ -144,7 +144,7 @@ const VendorMembers = (props: VendorsProps) => {
                     </Card>
                 </Col>
             </Row>
-            </> : null}
+        </> : null}
         </>
     );
 }

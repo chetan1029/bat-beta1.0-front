@@ -69,18 +69,18 @@ const BankCardItem = ({ bank, onArchiveDeleteAction, onEditBank, companyId }: Ba
                         </Card.Header>
                         <Card.Body>
                             <Row>
-                              <Col xs={6} lg={4}>
-                                  <p className="m-0 text-muted">{t('Benificary name')}</p>
-                                  <p className="m-0">{bank.benificary}</p>
-                              </Col>
-                              <Col xs={6} lg={4}>
-                                  <p className="m-0 text-muted">{t('Account number')}</p>
-                                  <p className="m-0">{bank.account_number}</p>
-                              </Col>
-                              <Col xs={6} lg={4}>
-                                  <p className="m-0 text-muted">{t('Currency Accepted')}</p>
-                                  <p className="m-0">{bank.currency.join(", ")}</p>
-                              </Col>
+                                <Col xs={6} lg={4}>
+                                    <p className="m-0 text-muted">{t('Benificary name')}</p>
+                                    <p className="m-0">{bank.benificary}</p>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <p className="m-0 text-muted">{t('Account number')}</p>
+                                    <p className="m-0">{bank.account_number}</p>
+                                </Col>
+                                <Col xs={6} lg={4}>
+                                    <p className="m-0 text-muted">{t('Currency Accepted')}</p>
+                                    <p className="m-0">{bank.currency.join(", ")}</p>
+                                </Col>
                             </Row>
                         </Card.Body>
                     </Link>
@@ -208,7 +208,7 @@ const Bank = (props: BankProps) => {
                 dispatch(resetBank());
             }, 10000);
         }
-    }, [isBankDeleted, isBankArchived, isBankRestored, dispatch, props.match.params.companyId]);
+    }, [isBankDeleted, isBankArchived, isBankRestored, dispatch, props.match.params.companyId, showArchived]);
 
     return (
         <>

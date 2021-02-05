@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Media, Table, Collapse, Accordion } from "react-bootstrap";
+import { Row, Col, Card, Accordion } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from "../../components/Icon";
 
 //actions
-import { getMembershipPlan} from "../../redux/actions";
+import { getMembershipPlan } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 
@@ -33,30 +33,30 @@ const EmptyState = () => {
 
 const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemProps) => {
     const { t } = useTranslation();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
 
     return (<>
-      <Row className="mt-3">
-          <Col lg={12}>
-              <Card className="payment-terms-card mb-2">
-                  <Card.Header className="payment-card-title">
-                          <p className="m-0 text-muted">{t('Plan Name')}</p>
-                          <h6 className="m-0">{membershipplan.plan.name} (Free)</h6>
-                      </Card.Header>
-                      <Card.Body>
-                          <p className="m-0 text-muted">{t('Detail')}</p>
-                          <p className="m-0">{membershipplan.plan.description}</p>
-                          <Row className="mt-3">
-                              <Col xs={6} lg={4}>
-                                  <p className="m-0 text-muted">{t('Start Date')}</p>
-                                  <p className="m-0">{membershipplan.billing_start_date}</p>
-                              </Col>
-                          </Row>
-                      </Card.Body>
-              </Card>
-          </Col>
-      </Row>
+        <Row className="mt-3">
+            <Col lg={12}>
+                <Card className="payment-terms-card mb-2">
+                    <Card.Header className="payment-card-title">
+                        <p className="m-0 text-muted">{t('Plan Name')}</p>
+                        <h6 className="m-0">{membershipplan.plan.name} (Free)</h6>
+                    </Card.Header>
+                    <Card.Body>
+                        <p className="m-0 text-muted">{t('Detail')}</p>
+                        <p className="m-0">{membershipplan.plan.description}</p>
+                        <Row className="mt-3">
+                            <Col xs={6} lg={4}>
+                                <p className="m-0 text-muted">{t('Start Date')}</p>
+                                <p className="m-0">{membershipplan.billing_start_date}</p>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+            </Col>
+        </Row>
     </>
     )
 }
@@ -114,22 +114,22 @@ const MembershipPlan = (props: MembershipPlanProps) => {
                     :
                     <div>
                         <div className="p-2">
-                                    <Row>
-                                        <Col md={{ span: 4, offset: 4 }}>
-                                          <Accordion>
-                                            {
-                                                membershipPlan['results'].length > 0 ?
-                                                    membershipPlan['results'].map((membershipplan, key) =>
-                                                        <MembershipPlanItem membershipplan={membershipplan}
-                                                            key={key} companyId={companyId}
-                                                        />
-                                                    ) : <EmptyState />
-                                            }
+                            <Row>
+                                <Col md={{ span: 4, offset: 4 }}>
+                                    <Accordion>
+                                        {
+                                            membershipPlan['results'].length > 0 ?
+                                                membershipPlan['results'].map((membershipplan, key) =>
+                                                    <MembershipPlanItem membershipplan={membershipplan}
+                                                        key={key} companyId={companyId}
+                                                    />
+                                                ) : <EmptyState />
+                                        }
 
-                                          </Accordion>
-                                        </Col>
-                                    </Row>
-                                </div>
+                                    </Accordion>
+                                </Col>
+                            </Row>
+                        </div>
                     </div>
             }
 

@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Card, Col, Dropdown, DropdownButton, Nav, Row } from "react-bootstrap";
+import React, { useCallback, useEffect, useState } from "react";
+import { Card, Col, Dropdown, DropdownButton, Nav, Row, Button } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { filter, findIndex, get, isEqual, map } from "lodash";
+import { filter, findIndex, get, map } from "lodash";
 
 import Icon from "../../../components/Icon";
 import {
@@ -18,6 +18,7 @@ import Loader from "../../../components/Loader";
 import ListView from "./ListView";
 import GridView from "./GridView";
 import TypeView from "./TypeView";
+import Import from "./Import";
 
 
 const FILETYPES: Array<any> = [
@@ -90,6 +91,7 @@ const Components = (props: ComponentsProps) => {
 		tagsAndTypes,
 		typesAll,
 		isExported,
+		isImported,
 		isComponentDiscontinued,
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
@@ -100,6 +102,7 @@ const Components = (props: ComponentsProps) => {
 		tagsAndTypes: Components.tagsAndTypes,
 		typesAll: Components.typesAll,
 		isExported: Components.isExported,
+		isImported: Components.isImported,
 		isComponentDiscontinued: Components.isComponentDiscontinued,
 	}));
 
@@ -129,12 +132,12 @@ const Components = (props: ComponentsProps) => {
 	reset for all the notification
 	*/
 	useEffect(() => {
-		if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported) {
+		if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported || isImported) {
 			setTimeout(() => {
 				dispatch(resetComponents());
 			}, 10000);
 		}
-	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, dispatch]);
+	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, isImported, dispatch]);
 
 
 	const onChangePage = useCallback((offset) => {
@@ -211,6 +214,8 @@ const Components = (props: ComponentsProps) => {
 		}
 	};
 
+	const [openImport, setOpenImport] = useState(false);
+
 	return (
 		<div className={"components"}>
 			<div className="pt-4 pb-3 px-3">
@@ -223,10 +228,10 @@ const Components = (props: ComponentsProps) => {
 					</Col>
 					<Col className="text-right d-flex flex-row align-items-center justify-content-end">
 						<div className="d-flex align-items-center">
-							<span>
+							<Button variant="none" id='import' onClick={() => setOpenImport(true)} className='p-0'>
 								<Icon name="import" className="icon icon-xs  mr-2" />
 								<b>{t('Import')}</b>
-							</span>
+							</Button>
 
 							<Dropdown>
 								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 export'
@@ -348,6 +353,9 @@ const Components = (props: ComponentsProps) => {
 					}
 				</Card.Body>
 			</Card>
+
+			{openImport ? <Import onClose={() => setOpenImport(false)} companyId={companyId} /> : null}
+
 			{isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}
 				iconWrapperClass="bg-success text-white p-2 rounded-circle"
 				iconClass="icon-sm" /> : null}
@@ -360,6 +368,10 @@ const Components = (props: ComponentsProps) => {
 			{isExported ? <MessageAlert message={t('File exported successfully')} icon={"check"}
 				iconWrapperClass="bg-success text-white p-2 rounded-circle"
 				iconClass="icon-sm" /> : null}
+			{isImported ? <MessageAlert message={t('File imported successfully')} icon={"check"}
+				iconWrapperClass="bg-success text-white p-2 rounded-circle"
+				iconClass="icon-sm" /> : null}
+
 		</div>
 	);
 };

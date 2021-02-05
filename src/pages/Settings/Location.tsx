@@ -64,12 +64,12 @@ const LocationCardItem = ({ location, onArchiveDeleteAction, onEditLocation, com
                 <Card className="mb-2">
                     <Link to="#" onClick={() => onEditLocation(location)} className="card-link">
                         <Card.Header>
-                          <p className="m-0 text-muted">{t('Location Name')}</p>
-                          <h6 className="m-0">{location.name}</h6>
+                            <p className="m-0 text-muted">{t('Location Name')}</p>
+                            <h6 className="m-0">{location.name}</h6>
                         </Card.Header>
                         <Card.Body>
-                          <p className="m-0 text-muted">{t('Address')}</p>
-                          <p className="m-0">{location.address1}{location.address2 ? ' '+location.address2:''}, {location.city} {location.zip}, {COUNTRIES[location.country]}</p>
+                            <p className="m-0 text-muted">{t('Address')}</p>
+                            <p className="m-0">{location.address1}{location.address2 ? ' ' + location.address2 : ''}, {location.city} {location.zip}, {COUNTRIES[location.country]}</p>
                         </Card.Body>
                     </Link>
                     <Card.Footer>
@@ -195,7 +195,7 @@ const Location = (props: LocationProps) => {
                 dispatch(resetLocation());
             }, 10000);
         }
-    }, [isLocationDeleted, isLocationArchived, isLocationRestored, dispatch, props.match.params.companyId]);
+    }, [isLocationDeleted, isLocationArchived, isLocationRestored, dispatch, props.match.params.companyId, showArchived]);
 
     return (
         <>

@@ -13,7 +13,6 @@ import ComponentDetailsPackingBox from "./ComponentDetailsPackingBox";
 
 //actions
 import { archiveComponent, discontinueComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
-import { AnyARecord } from "dns";
 
 export const description_tab = 'description';
 export const packing_boxes_tab = 'packing-boxes';
@@ -51,7 +50,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 	const [selectedView, setSelectedView] = useState<any>(description_tab);
-	const [showMore, setShowMore] = useState<any>(false);
+	// const [showMore, setShowMore] = useState<any>(false);
 
 	const {
 		loading,
@@ -77,35 +76,35 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 	}, [dispatch, companyId, componentId]);
 
 	useEffect(() => {
-		if(!!tabName) {
+		if (!!tabName) {
 			setSelectedView(tabName)
-			if(tabName === description_tab){
+			if (tabName === description_tab) {
 				dispatch(getComponentDetails(companyId, componentId));
 			}
 		}
-	}, [tabName]);
+	}, [tabName, dispatch, companyId, componentId]);
 
 
 	const renderDescription = () => {
 		return (
 			<>
-			<Row>
-			<Col lg={6}></Col>
-			<Col lg={6}>
-					<Card>
+				<Row>
+					<Col lg={6}></Col>
+					<Col lg={6}>
+						<Card>
 							<Card.Body>
 
-											<div className="">
-													<Media>
-													{/* main image */}
-															<img className="mr-3" src={size(component.images) > 0 ? (
-												find(component.images, img => !!img.main_image) ?
-													find(component.images, img => !!img.main_image).image :
-													get(component, "images[0].image")) :
-												dummyImage
-											} alt="" />
-											{/* more images */}
-											{component.images && component.images.length > 0 &&
+								<div className="">
+									<Media>
+										{/* main image */}
+										<img className="mr-3" src={size(component.images) > 0 ? (
+											find(component.images, img => !!img.main_image) ?
+												find(component.images, img => !!img.main_image).image :
+												get(component, "images[0].image")) :
+											dummyImage
+										} alt="" />
+										{/* more images */}
+										{component.images && component.images.length > 0 &&
 											<div>
 												{map(component.images, (image, i) =>
 													<React.Fragment key={i}>
@@ -116,72 +115,72 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 													</React.Fragment>
 												)}
 											</div>
-											}
-													</Media>
-													<h5 className="mt-3">General Info</h5>
-													<Row className="mt-3">
-															<Col>
-																	<p className="m-0 text-muted">{t('Model Number')}</p>
-																	<p className="m-0">{component.model_number}</p>
-															</Col>
-															<Col>
-																	<p className="m-0 text-muted">{t('Manufacturer Part Number')}</p>
-																	<p className="m-0">{component.manufacturer_part_number}</p>
-															</Col>
-													</Row>
-													<Row className="mt-3">
-															<Col>
-																	<p className="m-0 text-muted">{t('Component Type')}</p>
-																	<p className="m-0">{component.type}</p>
-															</Col>
-															<Col>
-																	<p className="m-0 text-muted">{t('HS Code')}</p>
-																	<p className="m-0">{component.hscode}</p>
-															</Col>
-													</Row>
-													<Row className="mt-3">
-															<Col>
-																	<p className="m-0 text-muted">{t('Dimensions')}</p>
-																	<p className="m-0">{component.length ? component.length: "--"}x{component.width ? component.width: "--"}x{component.depth ? component.depth: "--"} {component.length_unit ? component.length_unit: "--"}</p>
-															</Col>
-															<Col>
-																	<p className="m-0 text-muted">{t('Weight')}</p>
-																	<p className="m-0">{component.weight ? component.weight.value+" "+component.weight.unit : "----"}</p>
-															</Col>
-													</Row>
-													<Row className="mt-3">
-															<Col>
-																<p className="m-0 text-muted">{t('Tags')}</p>
-																<p className="m-0 mt-2">
-																{component.tags && component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
-																	<span key={i} className={"component-tags"}>{tag}</span>
-																))}
-																</p>
-															</Col>
-													</Row>
-													<h5 className="mt-3">Details</h5>
-													<div className="mt-3">
-														<p className="m-0 text-muted">{t('Bullet Points')}</p>
-														<p className="m-0 mt-2">{component.bullet_points ? component.bullet_points: "---"}</p>
-													</div>
-													<div className="mt-3">
-														<p className="m-0 text-muted">{t('Description')}</p>
-														<p className="m-0 mt-2">{component.description ? component.description: "---"}</p>
-													</div>
-													<Row className="mt-4">
-															<Col>
-																	<span className="text-muted">{t('Created')}: </span> {component.create_date ? <DisplayDate dateStr={component.create_date} /> : null}
-															</Col>
-															<Col>
-																	<span className="text-muted">{t('Updated')}: </span> {component.update_date ? <DisplayDate dateStr={component.update_date} /> : null}
-															</Col>
-													</Row>
-											</div>
+										}
+									</Media>
+									<h5 className="mt-3">General Info</h5>
+									<Row className="mt-3">
+										<Col>
+											<p className="m-0 text-muted">{t('Model Number')}</p>
+											<p className="m-0">{component.model_number}</p>
+										</Col>
+										<Col>
+											<p className="m-0 text-muted">{t('Manufacturer Part Number')}</p>
+											<p className="m-0">{component.manufacturer_part_number}</p>
+										</Col>
+									</Row>
+									<Row className="mt-3">
+										<Col>
+											<p className="m-0 text-muted">{t('Component Type')}</p>
+											<p className="m-0">{component.type}</p>
+										</Col>
+										<Col>
+											<p className="m-0 text-muted">{t('HS Code')}</p>
+											<p className="m-0">{component.hscode}</p>
+										</Col>
+									</Row>
+									<Row className="mt-3">
+										<Col>
+											<p className="m-0 text-muted">{t('Dimensions')}</p>
+											<p className="m-0">{component.length ? component.length : "--"}x{component.width ? component.width : "--"}x{component.depth ? component.depth : "--"} {component.length_unit ? component.length_unit : "--"}</p>
+										</Col>
+										<Col>
+											<p className="m-0 text-muted">{t('Weight')}</p>
+											<p className="m-0">{component.weight ? component.weight.value + " " + component.weight.unit : "----"}</p>
+										</Col>
+									</Row>
+									<Row className="mt-3">
+										<Col>
+											<p className="m-0 text-muted">{t('Tags')}</p>
+											<p className="m-0 mt-2">
+												{component.tags && component.tags.length > 0 && map(component.tags.split(","), (tag, i) => (
+													<span key={i} className={"component-tags"}>{tag}</span>
+												))}
+											</p>
+										</Col>
+									</Row>
+									<h5 className="mt-3">Details</h5>
+									<div className="mt-3">
+										<p className="m-0 text-muted">{t('Bullet Points')}</p>
+										<p className="m-0 mt-2">{component.bullet_points ? component.bullet_points : "---"}</p>
+									</div>
+									<div className="mt-3">
+										<p className="m-0 text-muted">{t('Description')}</p>
+										<p className="m-0 mt-2">{component.description ? component.description : "---"}</p>
+									</div>
+									<Row className="mt-4">
+										<Col>
+											<span className="text-muted">{t('Created')}: </span> {component.create_date ? <DisplayDate dateStr={component.create_date} /> : null}
+										</Col>
+										<Col>
+											<span className="text-muted">{t('Updated')}: </span> {component.update_date ? <DisplayDate dateStr={component.update_date} /> : null}
+										</Col>
+									</Row>
+								</div>
 
 							</Card.Body>
-					</Card>
-			</Col>
-			</Row>
+						</Card>
+					</Col>
+				</Row>
 			</>
 		)
 	}
@@ -219,25 +218,25 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 										<Icon name="arrow_left_2" className="icon icon-xs mr-2" />
 									</Link>
 									<h1 className="m-0">{component && component.title}
-									<Link to={"#"} className="active-label btn btn-outline-primary ml-3">
-										{component.status && t(component.status.name)}
-									</Link>
+										<Link to={"#"} className="active-label btn btn-outline-primary ml-3">
+											{component.status && t(component.status.name)}
+										</Link>
 									</h1>
 								</div>
 								<div className="d-flex align-items-center">
 									<Dropdown>
 										<Dropdown.Toggle variant="none" id="more" className='p-0 border-0 mx-3 export'
-														 as={Link}>
+											as={Link}>
 											More actions
 										</Dropdown.Toggle>
 										<Dropdown.Menu>
 											<Dropdown.Item key="archive"
-																 onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
-													Archive
+												onClick={() => dispatch(archiveComponent(companyId, component.id, component))}>
+												Archive
 											</Dropdown.Item>
 											<Dropdown.Item key="discontinue"
-															   onClick={() => dispatch(discontinueComponent(companyId, component.id, component))}>
-													Discontinue
+												onClick={() => dispatch(discontinueComponent(companyId, component.id, component))}>
+												Discontinue
 											</Dropdown.Item>
 										</Dropdown.Menu>
 									</Dropdown>
@@ -245,17 +244,17 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 							</div>
 						</Col>
 					</Row>
-					</div>
+				</div>
 
 					<Row>
-							<Col lg={12}>
-									<Card>
-											<Card.Body className="">
-												<TabMenu onChange={onChangeTab} selectedView={selectedView} />
-												{renderContent()}
-											</Card.Body>
-									</Card>
-							</Col>
+						<Col lg={12}>
+							<Card>
+								<Card.Body className="">
+									<TabMenu onChange={onChangeTab} selectedView={selectedView} />
+									{renderContent()}
+								</Card.Body>
+							</Card>
+						</Col>
 
 					</Row>
 				</>

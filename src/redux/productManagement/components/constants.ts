@@ -14,6 +14,8 @@ export enum ComponentsTypes {
     DISCONTINUE_COMPONENT = '@@productManagement/components/DISCONTINUE_COMPONENT',
     GET_TAGS_TYPES = '@@productManagement/components/GET_TAGS_TYPES',
     GET_TYPES_ALL = '@@productManagement/components/GET_TYPES_ALL',
+
+    IMPORT_COMPONENT = '@@productManagement/components/IMPORT_COMPONENT',
     EXPORT_COMPONENT = '@@productManagement/components/EXPORT_COMPONENT',
     EDIT_VARIATION = '@@productManagement/components/EDIT_VARIATION',
     CREATE_COMPONENT_PACKING_BOX = '@@productManagement/components/CREATE_COMPONENT_PACKING_BOX',

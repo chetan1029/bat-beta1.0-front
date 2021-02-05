@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import CreatableSelect from 'react-select/creatable';
 import { Row, Col, Form, Modal, Button, InputGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,8 +11,8 @@ import * as Yup from 'yup';
 import classNames from "classnames";
 
 //action
-import { createComponentPackingBox, editComponentPackingBox, getPackingBox, resetComponents } from "../../../redux/actions";
-import Loader from "../../../components/Loader";
+import { createComponentPackingBox, editComponentPackingBox, getPackingBox } from "../../../redux/actions";
+// import Loader from "../../../components/Loader";
 import AlertMessage from "../../../components/AlertMessage";
 
 interface AddEditPackingBoxProps {
@@ -22,7 +22,7 @@ interface AddEditPackingBoxProps {
     companyId: any;
     componentId: any;
 }
-const AddEditPackingBox = ({ isOpen, onClose, defaultPackingBox, companyId, componentId}: AddEditPackingBoxProps) => {
+const AddEditPackingBox = ({ isOpen, onClose, defaultPackingBox, companyId, componentId }: AddEditPackingBoxProps) => {
     const { packingBoxList, isComponentPackingBoxCreated, isComponentPackingBoxEdited, editComponentPackingBoxError, createComponentPackingBoxError } = useSelector(
         (state: any) => ({
             packingBoxList: state.Company.PackingBox.packingBox,

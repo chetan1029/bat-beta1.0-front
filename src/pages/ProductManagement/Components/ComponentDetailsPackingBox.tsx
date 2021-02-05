@@ -34,13 +34,13 @@ const EmptyState = ({ showArchived }) => {
 	const { t } = useTranslation();
 	return (
 		<Col>
-		<Card>
-			<Card.Body>
-				<div className="p-2">
-					{showArchived ? <p className="font-weight-normal my-0">{t('There are no archived packing box available')}</p> : <p className="font-weight-normal my-0">{t('There are no packing box available')}</p>}
-				</div>
-			</Card.Body>
-		</Card>
+			<Card>
+				<Card.Body>
+					<div className="p-2">
+						{showArchived ? <p className="font-weight-normal my-0">{t('There are no archived packing box available')}</p> : <p className="font-weight-normal my-0">{t('There are no packing box available')}</p>}
+					</div>
+				</Card.Body>
+			</Card>
 		</Col>
 	)
 }
@@ -70,48 +70,48 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
 
 	return (<>
 		<Col lg={6}>
-				<Card className="mb-2">
-					<Link to="#" onClick={() => onEditPackingBox(packingbox)} className="card-link">
-						<Card.Header>
-							<p className="m-0 text-muted">{t('Name')}</p>
-							<h6 className="m-0">{get(packingbox, 'packingbox.name')}</h6>
-						</Card.Header>
-						<Card.Body>
-							<Row>
-								<Col xs={6} lg={3}>
-									<p className="m-0 text-muted">{t('Size')}</p>
-									<p className="m-0">{get(packingbox, 'packingbox.length')}x{get(packingbox, 'packingbox.width')}x{get(packingbox, 'packingbox.depth')} {get(packingbox, 'packingbox.length_unit')}</p>
-								</Col>
-								<Col xs={6} lg={3}>
-									<p className="m-0 text-muted">{t('Package Weight')}</p>
-									<p className="m-0">{get(packingbox, 'packingbox.weight.value')} {get(packingbox, 'packingbox.weight.unit')}</p>
-								</Col>
-								<Col xs={6} lg={3}>
-									<p className="m-0 text-muted">{t('Total Weight')}</p>
-									<p className="m-0">{get(packingbox, 'weight.value')} {get(packingbox, 'weight.unit')}</p>
-								</Col>
-								<Col xs={6} lg={3}>
-									<p className="m-0 text-muted">{t('Number of Unit')}</p>
-									<p className="m-0">{get(packingbox, 'units')}</p>
-								</Col>
-							</Row>
-						</Card.Body>
-					</Link>
-					<Card.Footer>
-						<div className="float-right">
-							<div className="d-flex align-items-center">
-								{
-									!packingbox.is_active ?
-										<Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-warning mr-2" /></Link> :
-										<Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-primary mr-2" /></Link>
-								}
-								<Link to="#" onClick={() => onDeletePackingBox(packingbox.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
+			<Card className="mb-2">
+				<Link to="#" onClick={() => onEditPackingBox(packingbox)} className="card-link">
+					<Card.Header>
+						<p className="m-0 text-muted">{t('Name')}</p>
+						<h6 className="m-0">{get(packingbox, 'packingbox.name')}</h6>
+					</Card.Header>
+					<Card.Body>
+						<Row>
+							<Col xs={6} lg={3}>
+								<p className="m-0 text-muted">{t('Size')}</p>
+								<p className="m-0">{get(packingbox, 'packingbox.length')}x{get(packingbox, 'packingbox.width')}x{get(packingbox, 'packingbox.depth')} {get(packingbox, 'packingbox.length_unit')}</p>
+							</Col>
+							<Col xs={6} lg={3}>
+								<p className="m-0 text-muted">{t('Package Weight')}</p>
+								<p className="m-0">{get(packingbox, 'packingbox.weight.value')} {get(packingbox, 'packingbox.weight.unit')}</p>
+							</Col>
+							<Col xs={6} lg={3}>
+								<p className="m-0 text-muted">{t('Total Weight')}</p>
+								<p className="m-0">{get(packingbox, 'weight.value')} {get(packingbox, 'weight.unit')}</p>
+							</Col>
+							<Col xs={6} lg={3}>
+								<p className="m-0 text-muted">{t('Number of Unit')}</p>
+								<p className="m-0">{get(packingbox, 'units')}</p>
+							</Col>
+						</Row>
+					</Card.Body>
+				</Link>
+				<Card.Footer>
+					<div className="float-right">
+						<div className="d-flex align-items-center">
+							{
+								!packingbox.is_active ?
+									<Link to="#" onClick={() => onClickArchiveUnArchive(true)}><Icon name="un-archive" className="svg-outline-warning mr-2" /></Link> :
+									<Link to="#" onClick={() => onClickArchiveUnArchive(false)}><Icon name="archive" className="svg-outline-primary mr-2" /></Link>
+							}
+							<Link to="#" onClick={() => onDeletePackingBox(packingbox.id)}><Icon name="delete" className="ml-2 svg-outline-danger" /></Link>
 
-							</div>
 						</div>
-					</Card.Footer>
-				</Card>
-			</Col>
+					</div>
+				</Card.Footer>
+			</Card>
+		</Col>
 		{
 			selectedTermForDelete ?
 				<ConfirmMessage message={`Are you sure you want to delete ${get(selectedTermForDelete, 'packingbox.name')}?`}
@@ -231,16 +231,16 @@ const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 				<div className="p-2">
 					<Row>
 						{
-								componentsPackingBox && componentsPackingBox['results'].length > 0 ?
-									componentsPackingBox['results'].map((packing, key) =>
-										<PaymentCardItem packingbox={packing}
-											key={key} companyId={companyId} componentId={componentId}
-											onArchiveDeleteAction={onArchiveDeleteAction}
-											onEditPackingBox={setPackingBox}
-											filters={{ is_active: !showArchived }}
-										/>
-									) : <EmptyState showArchived={showArchived} />
-							}
+							componentsPackingBox && componentsPackingBox['results'].length > 0 ?
+								componentsPackingBox['results'].map((packing, key) =>
+									<PaymentCardItem packingbox={packing}
+										key={key} companyId={companyId} componentId={componentId}
+										onArchiveDeleteAction={onArchiveDeleteAction}
+										onEditPackingBox={setPackingBox}
+										filters={{ is_active: !showArchived }}
+									/>
+								) : <EmptyState showArchived={showArchived} />
+						}
 					</Row>
 				</div>
 			</>

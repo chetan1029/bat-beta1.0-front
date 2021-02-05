@@ -14,7 +14,7 @@ import { getHscode, deleteHscode, archiveHscode, restoreHscode, resetHscode } fr
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
-import { COUNTRIES } from "../../constants";
+
 interface HscodeCardItemProps {
     hscode: any;
     onArchiveDeleteAction: any;
@@ -68,16 +68,16 @@ const HscodeCardItem = ({ hscode, onArchiveDeleteAction, onEditHscode, companyId
                             <h6 className="m-0">{hscode.hscode}</h6>
                         </Card.Header>
                         <Card.Body>
-                          <Row>
-                              <Col lg={6}>
-                                <p className="m-0 text-muted">{t('Material')}</p>
-                                <p className="m-0">{hscode.material}</p>
-                              </Col>
-                              <Col lg={6}>
-                                <p className="m-0 text-muted">{t('Use')}</p>
-                                <p className="m-0">{hscode.use}</p>
-                              </Col>
-                          </Row>
+                            <Row>
+                                <Col lg={6}>
+                                    <p className="m-0 text-muted">{t('Material')}</p>
+                                    <p className="m-0">{hscode.material}</p>
+                                </Col>
+                                <Col lg={6}>
+                                    <p className="m-0 text-muted">{t('Use')}</p>
+                                    <p className="m-0">{hscode.use}</p>
+                                </Col>
+                            </Row>
                         </Card.Body>
                     </Link>
                     <Card.Footer>
@@ -203,7 +203,7 @@ const Hscode = (props: HscodeProps) => {
                 dispatch(resetHscode());
             }, 10000);
         }
-    }, [isHscodeDeleted, isHscodeArchived, isHscodeRestored, dispatch, props.match.params.companyId]);
+    }, [isHscodeDeleted, isHscodeArchived, isHscodeRestored, dispatch, props.match.params.companyId, showArchived]);
 
     return (
         <>

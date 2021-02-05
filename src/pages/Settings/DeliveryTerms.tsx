@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Media, Table, Collapse, Accordion } from "react-bootstrap";
+import { Row, Col, Card, Media, Table, Accordion } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from "../../components/Icon";
 
 //actions
-import { getDeliveryTerms} from "../../redux/actions";
+import { getDeliveryTerms } from "../../redux/actions";
 
 import Loader from "../../components/Loader";
 
@@ -30,67 +30,63 @@ const EmptyState = () => {
     )
 }
 
-const BuyerPays = ({whopays}) => {
-    const { t } = useTranslation();
-    if (whopays == "Buyer"){
-      return (
-          <Icon name="check" className="icon icon-sm svg-outline-success" />
-      )
-    }else{
-      return (
-          <Icon name="x" className="icon icon-sm svg-outline-muted" />
-      )
+const BuyerPays = ({ whopays }) => {
+
+    if (whopays === "Buyer") {
+        return (
+            <Icon name="check" className="icon icon-sm svg-outline-success" />
+        )
+    } else {
+        return (
+            <Icon name="x" className="icon icon-sm svg-outline-muted" />
+        )
     }
 }
 
-const SellerPays = ({whopays}) => {
-    const { t } = useTranslation();
-    if (whopays == "Seller"){
-      return (
-          <Icon name="check" className="icon icon-sm svg-outline-success" />
-      )
-    }else{
-      return (
-          <Icon name="x" className="icon icon-sm svg-outline-muted" />
-      )
+const SellerPays = ({ whopays }) => {
+    if (whopays === "Seller") {
+        return (
+            <Icon name="check" className="icon icon-sm svg-outline-success" />
+        )
+    } else {
+        return (
+            <Icon name="x" className="icon icon-sm svg-outline-muted" />
+        )
     }
 }
 
 const DeliveryCardItem = ({ delivery, companyId }: DeliveryCardItemProps) => {
-    const { t } = useTranslation();
-    const dispatch = useDispatch();
-
 
     return (<>
-            <Card className="mb-2">
-              <Accordion.Toggle as={Card.Header} eventKey={delivery.id}>
+        <Card className="mb-2">
+            <Accordion.Toggle as={Card.Header} eventKey={delivery.id}>
                 <span>{delivery.code} ({delivery.name})</span>
-              </Accordion.Toggle>
-              <Accordion.Collapse eventKey={delivery.id}>
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={delivery.id}>
                 <Card.Body>
-                <Table bordered>
-                  <thead>
-                    <tr>
-                      <th>Services</th>
-                      <th>Buyer</th>
-                      <th>Seller</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                      delivery["deliveryterms"].map((term, key) =>
-                      <tr>
-                        <td>{term.service_name}</td>
-                        <td><BuyerPays whopays={term.who_pays}  /></td>
-                        <td><SellerPays whopays={term.who_pays}  /></td>
-                      </tr>
-                    )
-                    }
-                  </tbody>
-                </Table>
+                    <Table bordered>
+                        <thead>
+                            <tr>
+                                <th>Services</th>
+                                <th>Buyer</th>
+                                <th>Seller</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                delivery["deliveryterms"].map((term, key) =>
+                                    <tr>
+                                        <td>{term.service_name}</td>
+                                        <td><BuyerPays whopays={term.who_pays} /></td>
+                                        <td><SellerPays whopays={term.who_pays} /></td>
+                                    </tr>
+                                )
+                            }
+                        </tbody>
+                    </Table>
                 </Card.Body>
-              </Accordion.Collapse>
-            </Card>
+            </Accordion.Collapse>
+        </Card>
     </>
     )
 }
@@ -152,17 +148,17 @@ const DeliveryTerms = (props: DeliveryTermsProps) => {
                                 <div className="p-2">
                                     <Row>
                                         <Col lg={6} xs={12}>
-                                          <Accordion>
-                                            {
-                                                deliveryTerms['results'].length > 0 ?
-                                                    deliveryTerms['results'].map((delivery, key) =>
-                                                        <DeliveryCardItem delivery={delivery}
-                                                            key={key} companyId={companyId}
-                                                        />
-                                                    ) : <EmptyState />
-                                            }
+                                            <Accordion>
+                                                {
+                                                    deliveryTerms['results'].length > 0 ?
+                                                        deliveryTerms['results'].map((delivery, key) =>
+                                                            <DeliveryCardItem delivery={delivery}
+                                                                key={key} companyId={companyId}
+                                                            />
+                                                        ) : <EmptyState />
+                                                }
 
-                                          </Accordion>
+                                            </Accordion>
                                         </Col>
                                         <Col lg={6} xs={12}>
                                             <div>

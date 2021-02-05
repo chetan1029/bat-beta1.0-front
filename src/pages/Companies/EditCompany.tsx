@@ -53,7 +53,7 @@ const EditCompany = (props: EditCompanyProps) => {
                 dispatch(resetCompany());
             }, 10000);
         }
-    }, [companyEdited]);
+    }, [companyEdited, dispatch]);
 
 
     const validator = useFormik({
