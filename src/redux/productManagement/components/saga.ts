@@ -165,9 +165,9 @@ function* getTagsAndTypesById({ payload: { companyId } }: any) {
 /**
  * get Types and Images
  */
-function* getTypesAllById({ payload: { companyId } }: any) {
+function* getTypesAllById({ payload: { companyId, filters } }: any) {
 	try {
-		const response = yield call(getTypesAll, companyId);
+		const response = yield call(getTypesAll, companyId, filters);
 		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_TYPES_ALL, response.data));
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.GET_TYPES_ALL, error));
@@ -267,7 +267,7 @@ function* deleteComponentByIdPackingBox({ payload: { companyId, componentId, id,
 /**
  * archive component packing box
  */
-function* archiveComponentByIdPackingBox({ payload: { companyId, componentId, id, data , filters} }: any) {
+function* archiveComponentByIdPackingBox({ payload: { companyId, componentId, id, data, filters } }: any) {
 	try {
 		const response = yield call(archiveComponentPackingBox, companyId, componentId, id, data);
 		const res = yield call(getComponentpackingboxes, companyId, componentId, filters);

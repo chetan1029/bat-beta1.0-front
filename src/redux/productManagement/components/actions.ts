@@ -32,17 +32,17 @@ export const deleteComponent = (companyId: string | number, componentId: number 
     payload: { companyId, componentId }
 });
 
-export const archiveComponent = (companyId: string | number, componentId: number | string, data: any, filters:any = {}) => ({
+export const archiveComponent = (companyId: string | number, componentId: number | string, data: any, filters: any = {}) => ({
     type: ComponentsTypes.ARCHIVE_COMPONENT,
     payload: { companyId, componentId, data, filters }
 });
 
-export const restoreComponent = (companyId: string | number, componentId: number | string, filters:any = {}) => ({
+export const restoreComponent = (companyId: string | number, componentId: number | string, filters: any = {}) => ({
     type: ComponentsTypes.RESTORE_COMPONENT,
     payload: { companyId, componentId, filters }
 });
 
-export const discontinueComponent = (companyId: string | number, componentId: number | string, data: any, filters:any = {}) => ({
+export const discontinueComponent = (companyId: string | number, componentId: number | string, data: any, filters: any = {}) => ({
     type: ComponentsTypes.DISCONTINUE_COMPONENT,
     payload: { companyId, componentId, data, filters }
 });
@@ -57,9 +57,9 @@ export const getTagsAndTypes = (companyId: string | number) => ({
     payload: { companyId }
 });
 
-export const getTypesAll = (companyId: string | number) => ({
+export const getTypesAll = (companyId: string | number, filters?: any) => ({
     type: ComponentsTypes.GET_TYPES_ALL,
-    payload: { companyId }
+    payload: { companyId, filters }
 });
 
 export const exportComponent = (companyId: string | number, fileType: string, filters?: any) => ({
@@ -92,7 +92,7 @@ export const getComponentsPackingBox = (companyId: string | number, componentId:
     payload: { companyId, componentId, filters }
 });
 
-export const archiveComponentPackingBox = (companyId: string | number, componentId: number | string,  id: any, data: any, filters) => ({
+export const archiveComponentPackingBox = (companyId: string | number, componentId: number | string, id: any, data: any, filters) => ({
     type: ComponentsTypes.ARCHIVE_COMPONENT_PACKING_BOX,
     payload: { companyId, componentId, id, data, filters }
 });

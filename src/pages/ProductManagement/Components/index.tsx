@@ -13,8 +13,8 @@ import FilterDropDown from "../../../components/FilterDropDown";
 import Loader from "../../../components/Loader";
 import ListView from "./ListView";
 import GridView from "./GridView";
+import TypeView from "./TypeView";
 
-import dummyImage from "../../../assets/images/dummy_image.svg";
 
 const FILETYPES: Array<any> = [
 	{ label: "As csv", value: "csv" },
@@ -73,7 +73,6 @@ const Components = (props: ComponentsProps) => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 		dispatch(getTagsAndTypes(companyId));
-		dispatch(getTypesAll(companyId));
 	}, [dispatch, companyId]);
 
 	const {
@@ -113,7 +112,11 @@ const Components = (props: ComponentsProps) => {
 	// }, [filters, prevFilters]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	useEffect(() => {
-		dispatch(getComponents(companyId, filters));
+		if (selectedTab !== 'all') {
+			dispatch(getComponents(companyId, filters));
+		} else {
+			dispatch(getTypesAll(companyId, { is_component: true }));
+		}
 	}, [filters]);
 
 	/*
@@ -178,8 +181,17 @@ const Components = (props: ComponentsProps) => {
 	};
 
 	const handleOnTabChange = (tab) => {
+		const f = { ...filters };
+
+		if (tab === 'all') {
+			delete f['type'];
+			dispatch(resetComponents());
+		} else {
+			delete f['type'];
+			setFilters({ ...f, status: tab, limit, offset: 0 });
+		}
+		setFilters({ ...f, status: tab, limit, offset: 0 });
 		setSelectedTab(tab);
-		setFilters({ ...filters, status: tab, limit, offset: 0 });
 	};
 
 	const onChangeView = (checked: boolean) => {
@@ -274,59 +286,39 @@ const Components = (props: ComponentsProps) => {
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
 						icon={"x"} showAsNotification={false} />}
 					{selectedTab !== "all" ?
-					[(get(typesAll, "type_data") && get(components, "count") > 0 ?
-						<>
-							{selectedView === "list" ?
-								<ListView
-									companyId={companyId}
-									components={components}
-									selectedComponents={selectedComponents}
-									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
-									onSelectComponent={handleOnSelectComponents}
-									onSelectAllComponents={handleOnSelectAllComponents}
-									onChangePage={onChangePage}
-								/> :
-								<GridView
-									companyId={companyId}
-									components={components}
-									selectedComponents={selectedComponents}
-									archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
-									onSelectComponent={handleOnSelectComponents}
-									onChangePage={onChangePage}
-								/>
-							}
-						</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
-					)]
-					:
-					[(get(typesAll, "type_data") ?
-						<>
-						<Row>
-						{map(typesAll.type_data, (value, key) => (
-							<Col lg={4} md={4} sm={6}>
-								<Card className="mb-2">
-									<Card.Body>
-										<Row>
-											<Col>
-												<Icon name="components" className="icon icon-md svg-outline-primary" />
-											</Col>
-											<Col>
-												<div className="position-relative align-self-center image-group">
-														<img width={30} height={30} src={"" || dummyImage} alt="" />
-														<img width={30} height={30} src={"" || dummyImage} alt="" />
-														<img width={30} height={30} src={"" || dummyImage} alt="" />
-												</div>
-											</Col>
-										</Row>
-										<p className="mt-2">{key}</p>
-										<p className="text-muted mt-2">{value.total} Components</p>
-									</Card.Body>
-								</Card>
-							</Col>
-						))}
-						</Row>
-						</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
-					)]
-				}
+						[(get(components, "count") > 0 ?
+							<>
+								{selectedView === "list" ?
+									<ListView
+										companyId={companyId}
+										components={components}
+										selectedComponents={selectedComponents}
+										archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
+										onSelectComponent={handleOnSelectComponents}
+										onSelectAllComponents={handleOnSelectAllComponents}
+										onChangePage={onChangePage}
+									/> :
+									<GridView
+										companyId={companyId}
+										components={components}
+										selectedComponents={selectedComponents}
+										archiveComponent={(component) => dispatch(archiveComponent(companyId, component.id, component, filters))}
+										onSelectComponent={handleOnSelectComponents}
+										onChangePage={onChangePage}
+									/>
+								}
+							</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+						)]
+						:
+						[(typesAll ?
+							<>
+								<TypeView types={typesAll} onClick={(type) => {
+									setSelectedTab('active');
+									setFilters(prevState => ({ ...prevState, type: type, status: 'active' }));
+								}} />
+							</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+						)]
+					}
 				</Card.Body>
 			</Card>
 			{isComponentCreated ? <MessageAlert message={t('A new component is created')} icon={"check"}

@@ -457,8 +457,8 @@ function getTagsAndTypes(companyId: number) {
     return api.get(`${componentUrl(companyId)}tags-types/`);
 }
 
-function getTypesAll(companyId: number) {
-    return api.get(`${componentUrl(companyId)}types-with-images/`);
+function getTypesAll(companyId: number, filters?: any) {
+    return api.get(`${componentUrl(companyId)}types-with-images/`, filters);
 }
 
 function exportCSVFile(companyId: number, filters?: any) {
