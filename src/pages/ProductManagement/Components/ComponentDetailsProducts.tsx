@@ -67,7 +67,10 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 		isComponentDiscontinued,
 
 		isComponentProductsCreated,
-		isComponentProductsEdited
+		isComponentProductsEdited,
+		isComponentProductsDeleted,
+		isComponentProductsArchived,
+		isComponentProductsRestored,
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		components: Components.componentsProducts,
@@ -79,6 +82,9 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 
 		isComponentProductsCreated: Components.isComponentProductsCreated,
 		isComponentProductsEdited: Components.isComponentProductsEdited,
+		isComponentProductsDeleted: Components.isComponentProductsDeleted,
+		isComponentProductsArchived: Components.isComponentProductsArchived,
+		isComponentProductsRestored: Components.isComponentProductsRestored,
 	}));
 
 	const prevFiltersRef = useRef();
@@ -298,6 +304,9 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 
 			{!!isComponentProductsCreated ? <MessageAlert message={t('Add Component to Products successfully!')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 			{!!isComponentProductsEdited ? <MessageAlert message={t('Edit Component to Products successfully!')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+			{!!isComponentProductsDeleted ? <MessageAlert message={t('Delete successfully!')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+			{!!isComponentProductsArchived ? <MessageAlert message={t('Archived successfully!')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+			{!!isComponentProductsRestored ? <MessageAlert message={t('Restored successfully!')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
 		</div>
 	);

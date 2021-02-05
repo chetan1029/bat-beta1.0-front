@@ -183,10 +183,12 @@ const AddEditProduct = ({ isOpen, onClose, defaultData, companyId, componentId, 
 	};
 
 	const handleQuantityChange = (type, setFieldValue, values, component) => {
-		let quantity = get(values, `components[${component.id}].quantity`, 0);
+		let quantity = get(values, `components[${component.id}].quantity`, 1);
 		quantity = Number(quantity);
-		if (quantity >= 0 && quantity < 2147483647)
-			type === QUANTITY_DOWN ? (quantity > 0 && (quantity -= 1)) : (quantity += 1);
+		if (quantity >= 1 && quantity < 2147483647)
+			type === QUANTITY_DOWN ? (quantity > 1 && (quantity -= 1)) : (quantity += 1);
+		else
+			quantity = 1;
 		setFieldValue(`components[${component.id}].quantity`, quantity);
 		setFieldValue(`components[${component.id}].product`, component.id);
 		setFieldValue(`components[${component.id}].component`, componentId);
@@ -259,10 +261,10 @@ const AddEditProduct = ({ isOpen, onClose, defaultData, companyId, componentId, 
 											</Button>
 											<Form.Control type="number" className="form-control text-center"
 												name={`components[${component.id}].quantity`}
-												min={0}
+												min={1}
 												max={2147483647}
 												autoComplete="off"
-												value={get(values, `components[${component.id}].quantity`, 0)}
+												value={get(values, `components[${component.id}].quantity`, 1)}
 												onChange={(e) => {
 													setFieldValue(`components[${component.id}].quantity`, e.target.value);
 													setFieldValue(`components[${component.id}].product`, component.id);
