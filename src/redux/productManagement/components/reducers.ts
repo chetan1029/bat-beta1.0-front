@@ -358,6 +358,11 @@ const Components = (state = INIT_STATE, action: any) => {
                 isComponentRestored: false,
                 restoreComponentError: null,
                 isComponentPackingBoxEdited: false,
+            }
+        }
+        case ComponentsTypes.RESET_COMPONENTS: {
+            return {
+                ...state,
                 components: {}
             }
         }

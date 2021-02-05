@@ -71,6 +71,10 @@ export const resetComponents = () => ({
     type: ComponentsTypes.RESET,
 });
 
+export const resetComponentsData = () => ({
+    type: ComponentsTypes.RESET_COMPONENTS,
+});
+
 export const getVariationDetails = (companyId: string | number, variationId: number | string) => ({
     type: ComponentsTypes.GET_VARIATION,
     payload: { companyId, variationId }

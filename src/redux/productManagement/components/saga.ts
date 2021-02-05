@@ -179,9 +179,11 @@ function* getTypesAllById({ payload: { companyId, filters } }: any) {
  */
 function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 	try {
+		const isCsv = fileType === "csv" || fileType === "csv-filtered";
+
 		if (fileType) {
-			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId, filters);
-			if (fileType === 'csv') {
+			const response = yield call(isCsv ? exportCSVFile : exportXLSFile, companyId, filters);
+			if (isCsv) {
 				downloadFile(response.data, `components.${fileType}`);
 			} else {
 				downloadFile(response.data, `components.${fileType}`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

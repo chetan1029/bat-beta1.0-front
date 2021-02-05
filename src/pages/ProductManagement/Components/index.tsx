@@ -6,7 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { filter, findIndex, get, isEqual, map } from "lodash";
 
 import Icon from "../../../components/Icon";
-import { archiveComponent, exportComponent, getComponents, getTagsAndTypes, getTypesAll, resetComponents } from "../../../redux/actions";
+import {
+	archiveComponent, exportComponent, getComponents,
+	getTagsAndTypes, getTypesAll, resetComponents,
+	resetComponentsData
+} from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import searchIcon from "../../../assets/images/search_icon.svg";
 import FilterDropDown from "../../../components/FilterDropDown";
@@ -19,6 +23,8 @@ import TypeView from "./TypeView";
 const FILETYPES: Array<any> = [
 	{ label: "As csv", value: "csv" },
 	{ label: "As xls", value: "xls" },
+	{ label: "As csv (Filtered Data)", value: "csv-filtered" },
+	{ label: "As xls (Filtered Data)", value: "xls-filtered" },
 ];
 
 const TabMenu = ({ onChange, selectedTab }) => {
@@ -160,7 +166,10 @@ const Components = (props: ComponentsProps) => {
 		if (options["Component type"]) {
 			type = options["Component type"].toString();
 		}
-		setFilters({ ...filters, tags, type });
+		dispatch(resetComponentsData());
+		setTimeout(() => {
+			setFilters({ ...filters, tags, type });
+		});
 	};
 
 	const handleOnSelectComponents = (e: any, component: any) => {
@@ -185,7 +194,7 @@ const Components = (props: ComponentsProps) => {
 
 		if (tab === 'all') {
 			delete f['type'];
-			dispatch(resetComponents());
+			dispatch(resetComponentsData());
 		} else {
 			delete f['type'];
 			setFilters({ ...f, status: tab, limit, offset: 0 });
@@ -229,7 +238,12 @@ const Components = (props: ComponentsProps) => {
 								<Dropdown.Menu>
 									{map(FILETYPES, (file, index) => (
 										<Dropdown.Item key={index}
-											onClick={() => dispatch(exportComponent(companyId, file.value))}>
+											onClick={() => {
+												if (file.value === 'csv-filtered' || file.value === 'xls-filtered')
+													dispatch(exportComponent(companyId, file.value, filters))
+												else
+													dispatch(exportComponent(companyId, file.value))
+											}}>
 											{file.label}
 										</Dropdown.Item>
 									))}

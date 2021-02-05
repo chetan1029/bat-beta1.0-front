@@ -24,4 +24,5 @@ export enum ComponentsTypes {
     DELETE_COMPONENT_PACKING_BOX = '@@productManagement/components/DELETE_COMPONENT_PACKING_BOX',
 
     RESET = '@@productManagement/components/RESET',
+    RESET_COMPONENTS = '@@productManagement/components/RESET_COMPONENTS',
 }
