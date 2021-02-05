@@ -21,6 +21,29 @@
         .link {
             border-bottom: 1px solid $black;
         }
+        &.custom {
+            & svg {
+                height: 30px !important;
+            }
+            p.file-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1; /* number of lines to show */
+                -webkit-box-orient: vertical;
+                text-align: center;
+            }
+        }
+    }
+
+    &.is-invalid {
+        .invalid-feedback {
+            display: block !important;
+            position: absolute;
+        }
+        .dropzone {
+            border-color: $danger;
+        }
     }
 
     .files {

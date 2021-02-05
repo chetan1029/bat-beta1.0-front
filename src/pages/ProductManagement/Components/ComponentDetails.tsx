@@ -10,6 +10,8 @@ import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
 import dummyImage from "../../../assets/images/dummy_image.svg";
 import ComponentDetailsPackingBox from "./ComponentDetailsPackingBox";
+import ComponentDetailsME from "./ComponentDetailsME";
+import ComponentDetailsProducts from "./ComponentDetailsProducts";
 
 //actions
 import { archiveComponent, discontinueComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
@@ -146,7 +148,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 															</Col>
 															<Col>
 																	<p className="m-0 text-muted">{t('Weight')}</p>
-																	<p className="m-0">{component.weight ? component.weight.value+" "+component.weight.unit : "----"}</p>
+																	<p className="m-0">{get(component, 'weight.value')} {get(component, 'weight.unit')}</p>
 															</Col>
 													</Row>
 													<Row className="mt-3">
@@ -193,9 +195,9 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 			case packing_boxes_tab:
 				return <ComponentDetailsPackingBox />
 			case products_tag:
-				return products_tag
+				return <ComponentDetailsProducts />
 			case me_tag:
-				return me_tag
+				return <ComponentDetailsME />
 			default:
 				return null;
 		}

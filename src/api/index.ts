@@ -469,6 +469,7 @@ function exportXLSFile(companyId: number, filters?: any) {
     return api.getFile(`${componentUrl(companyId)}xlsxeport/`, filters);
 }
 
+// Component Packing Box
 function createComponentPackingBox(companyId: number, componentId, data: any) {
     return api.create(`${componentUrl(companyId)}${componentId}/packingboxes/`, data);
 }
@@ -491,6 +492,64 @@ function restoreComponentPackingBox(companyId: number, componentId: number | str
 
 function editComponentPackingBox(companyId: number, componentId: number | string, id: any, data: any) {
     return api.updatePatch(`${componentUrl(companyId)}${componentId}/packingboxes/${id}/`, data);
+}
+
+// Component ME
+function createComponentME(companyId: number, componentId: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/component-me/`, data);
+}
+
+function getComponentME(companyId: number, componentId: any, filters?: any) {
+    return api.get(`${componentUrl(companyId)}${componentId}/component-me/`, filters);
+}
+
+function deleteComponentME(companyId: number, componentId: number | string, id: any) {
+    return api.delete(`${componentUrl(companyId)}${componentId}/component-me/${id}/`);
+}
+
+function archiveComponentME(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/component-me/${id}/archive/`, data);
+}
+
+function restoreComponentME(companyId: number, componentId: number | string, id: any, data) {
+    return api.create(`${componentUrl(companyId)}${componentId}/component-me/${id}/restore/`, data);
+}
+
+function editComponentME(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.updatePatch(`${componentUrl(companyId)}${componentId}/component-me/${id}/`, data);
+}
+
+function uploadComponentMEFile(companyId: number, meId: number | string, data: any) {
+    return api.createWithFile(`/companies/${companyId}/component-me/${meId}/files/`, data);
+}
+
+function deleteComponentMEFile(companyId: number, meId: number | string, fileId: any) {
+    return api.delete(`companies/${companyId}/component-me/${meId}/files/${fileId}/`);
+}
+
+// Component Products
+function createComponentProducts(companyId: number, componentId: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/products/`, data);
+}
+
+function getComponentProducts(companyId: number, componentId: any, filters?: any) {
+    return api.get(`${componentUrl(companyId)}${componentId}/products/`, filters);
+}
+
+function deleteComponentProducts(companyId: number, componentId: number | string, id: any) {
+    return api.delete(`${componentUrl(companyId)}${componentId}/products/${id}/`);
+}
+
+function archiveComponentProducts(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/products/${id}/archive/`, data);
+}
+
+function restoreComponentProducts(companyId: number, componentId: number | string, id: any, data) {
+    return api.create(`${componentUrl(companyId)}${componentId}/products/${id}/restore/`, data);
+}
+
+function editComponentProducts(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.updatePatch(`${componentUrl(companyId)}${componentId}/products/${id}/`, data);
 }
 
 /*variations*/
@@ -523,7 +582,7 @@ function getLocations(companyId: number, params?: any) {
 }
 
 function getAssetType(companyId: number, params?: any) {
-    const baseUrl = `/companies/${companyId}/asset/types`;
+    const baseUrl = `/companies/${companyId}/asset/types/`;
     return api.get(`${baseUrl}`, params);
 }
 
@@ -585,4 +644,6 @@ export {
     getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType, transferAsset, getAssetTransferrs,
     getMembershipPlan,
     createComponentPackingBox, getComponentpackingboxes, deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox, editComponentPackingBox,
+    createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile, 
+    createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 }
