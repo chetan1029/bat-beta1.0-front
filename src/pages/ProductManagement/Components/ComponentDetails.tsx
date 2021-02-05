@@ -11,6 +11,7 @@ import Loader from "../../../components/Loader";
 import dummyImage from "../../../assets/images/dummy_image.svg";
 import ComponentDetailsPackingBox from "./ComponentDetailsPackingBox";
 import ComponentDetailsME from "./ComponentDetailsME";
+import ComponentDetailsProducts from "./ComponentDetailsProducts";
 
 //actions
 import { archiveComponent, discontinueComponent, getComponentDetails, resetComponents } from "../../../redux/actions";
@@ -194,7 +195,7 @@ const ComponentDetails = (props: ComponentDetailsProps) => {
 			case packing_boxes_tab:
 				return <ComponentDetailsPackingBox />
 			case products_tag:
-				return products_tag
+				return <ComponentDetailsProducts />
 			case me_tag:
 				return <ComponentDetailsME />
 			default:

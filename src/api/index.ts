@@ -523,6 +523,31 @@ function deleteComponentMEFile(companyId: number, meId: number | string, fileId:
     return api.delete(`companies/${companyId}/component-me/${meId}/files/${fileId}/`);
 }
 
+// Component Products
+function createComponentProducts(companyId: number, componentId: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/products/`, data);
+}
+
+function getComponentProducts(companyId: number, componentId: any, filters?: any) {
+    return api.get(`${componentUrl(companyId)}${componentId}/products/`, filters);
+}
+
+function deleteComponentProducts(companyId: number, componentId: number | string, id: any) {
+    return api.delete(`${componentUrl(companyId)}${componentId}/products/${id}/`);
+}
+
+function archiveComponentProducts(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.create(`${componentUrl(companyId)}${componentId}/products/${id}/archive/`, data);
+}
+
+function restoreComponentProducts(companyId: number, componentId: number | string, id: any, data) {
+    return api.create(`${componentUrl(companyId)}${componentId}/products/${id}/restore/`, data);
+}
+
+function editComponentProducts(companyId: number, componentId: number | string, id: any, data: any) {
+    return api.updatePatch(`${componentUrl(companyId)}${componentId}/products/${id}/`, data);
+}
+
 /*variations*/
 const variationUrl = (companyId) => `/companies/${companyId}/product-variations/`;
 
@@ -605,5 +630,6 @@ export {
     getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType,
     getMembershipPlan,
     createComponentPackingBox, getComponentpackingboxes, deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox, editComponentPackingBox,
-    createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile
+    createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile, 
+    createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 }
