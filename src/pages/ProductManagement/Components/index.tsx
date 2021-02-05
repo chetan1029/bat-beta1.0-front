@@ -202,7 +202,6 @@ const Components = (props: ComponentsProps) => {
 		}
 	};
 
-
 	return (
 		<div className={"components"}>
 			<div className="pt-4 pb-3 px-3">
@@ -285,6 +284,20 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
 						icon={"x"} showAsNotification={false} />}
+
+
+					<Row className="my-2">
+						<Col>
+							<DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
+								disabled={!(selectedTab !== 'all' && selectedComponents && selectedComponents.length)}>
+								<Dropdown.Item onClick={() => { }}>{t('Active Component')}</Dropdown.Item>
+								<Dropdown.Item onClick={() => { }}>{t('Archive Component')}</Dropdown.Item>
+								<Dropdown.Item onClick={() => { }}>{t('Draft Component')}</Dropdown.Item>
+								<Dropdown.Item onClick={() => { }}>{t('Delete Component')}</Dropdown.Item>
+							</DropdownButton>
+						</Col>
+					</Row>
+
 					{selectedTab !== "all" ?
 						[(get(components, "count") > 0 ?
 							<>
