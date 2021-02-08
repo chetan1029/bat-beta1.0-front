@@ -25,13 +25,7 @@ const EmptyState = ({ showArchived }) => {
 	const { t } = useTranslation();
 	return (
 		<Col>
-			<Card>
-				<Card.Body>
-					<div className="p-2">
-						{showArchived ? <p className="font-weight-normal my-0">{t('There are no archived packing box available')}</p> : <p className="font-weight-normal my-0">{t('There are no packing box available')}</p>}
-					</div>
-				</Card.Body>
-			</Card>
+			<p className="d-flex justify-content-center lead mt-5 mb-5"><Icon name="search" className="icon icon-xs mr-2" /> {showArchived ? t('There are no archived packing box available'): t('There are no packing box available')}</p>
 		</Col>
 	)
 }

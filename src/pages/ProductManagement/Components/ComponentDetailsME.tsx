@@ -27,13 +27,7 @@ const EmptyState = ({ showArchived }) => {
 	const { t } = useTranslation();
 	return (
 		<Col lg={12}>
-			<Card>
-				<Card.Body>
-					<div className="p-2">
-						{showArchived ? <p className="font-weight-normal my-0">{t('There are no archived manufacturing expectations available')}</p> : <p className="font-weight-normal my-0">{t('There are no manufacturing expectations available')}</p>}
-					</div>
-				</Card.Body>
-			</Card>
+			<p className="d-flex justify-content-center lead mt-5 mb-5"><Icon name="search" className="icon icon-xs mr-2" /> {showArchived ? t('There are no archived manufacturing expectations available'): t('There are no manufacturing expectations available')}</p>
 		</Col>
 	)
 }

@@ -187,7 +187,7 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 					<Row>
 						<Col>
 							<div className="d-flex align-items-center">
-								<h1 className="m-0">{t('Manufacturing Expectations')}</h1>
+								<h1 className="m-0">{t('Products')}</h1>
 								<div className="d-flex align-items-center pl-3">
 									<span className="m-0 font-16 mr-2">
 										{t('Show archived')}
@@ -207,41 +207,6 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 						</Col>
 					</Row>
 				</div>
-				<div className="d-flex align-items-center justify-content-between mb-3">
-
-					<div className="d-flex align-items-center w-50">
-						<div className="search">
-							<input type="text" placeholder="Search"
-								onChange={(e: any) => setSearch(e.target.value)}
-								onKeyDown={handleSearchKeyDown} />
-							<button type="submit">
-								<img src={searchIcon} alt=""
-									onClick={() => setFilters({ ...filters, search, offset: 0 })} />
-							</button>
-						</div>
-					</div>
-
-					<div className="d-flex align-items-center">
-
-						<FilterDropDown
-							filters={{
-								"Component type": tagsAndTypes && filter(tagsAndTypes.type_data, type => type !== ""),
-								"Tagged with": tagsAndTypes && filter(tagsAndTypes.tag_data, tag => tag !== ""),
-							}}
-							onChangeFilters={handleOnSelectFilters}
-						/>
-						<DropdownButton variant="outline-secondary" id="dropdown-basic-button" title="Order By">
-							<Dropdown.Item
-								onClick={() => handleOnClickOrderBy("create_date")}>{t('Created Date- ASC')}</Dropdown.Item>
-							<Dropdown.Item
-								onClick={() => handleOnClickOrderBy("-create_date")}>{t('Created Date- DESC')}</Dropdown.Item>
-							<Dropdown.Item
-								onClick={() => handleOnClickOrderBy("title")}>{t('Title- ASC')}</Dropdown.Item>
-							<Dropdown.Item
-								onClick={() => handleOnClickOrderBy("-title")}>{t('Title- DESC')}</Dropdown.Item>
-						</DropdownButton>
-					</div>
-				</div>
 				{
 					get(components, "results") && get(components, "results").length > 0 ?
 						<>
@@ -257,7 +222,7 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 							<Pagination onPageChange={onChangePage} pageCount={components.count / 5} />
 						</> :
 						get(components, "results") && get(components, "results").length === 0 &&
-						<p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+						<p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No Products connected to this Component')}</p>
 				}
 
 				{

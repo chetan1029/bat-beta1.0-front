@@ -256,8 +256,8 @@ const AddEditProduct = ({ isOpen, onClose, defaultData, companyId, componentId, 
 									<td>{component.ean}</td>
 									<td width="20%">
 										<div className="d-flex">
-											<Button className="btn btn-light py-2 px-2 text-center mr-2" onClick={() => handleQuantityChange(QUANTITY_DOWN, setFieldValue, values, component)}>
-												<Icon name="minus" className="icon icon-sm svg-outline-primary" />
+											<Button className="btn btn-light py-2 px-2 text-center mr-2" onClick={() => handleQuantityChange(QUANTITY_DOWN, setFieldValue, values, component)} disabled={!find(selectedComponents, _component => _component.id === component.id)}>
+												<Icon name="minus" className="icon icon-sm svg-outline-primary"/>
 											</Button>
 											<Form.Control type="number" className="form-control text-center"
 												name={`components[${component.id}].quantity`}
@@ -270,8 +270,9 @@ const AddEditProduct = ({ isOpen, onClose, defaultData, companyId, componentId, 
 													setFieldValue(`components[${component.id}].product`, component.id);
 													setFieldValue(`components[${component.id}].component`, componentId);
 												}}
+												disabled={!find(selectedComponents, _component => _component.id === component.id)}
 											/>
-											<Button className="btn btn-light py-2 px-2 text-center ml-2" onClick={() => handleQuantityChange(QUANTITY_UP, setFieldValue, values, component)}>
+											<Button className="btn btn-light py-2 px-2 text-center ml-2" onClick={() => handleQuantityChange(QUANTITY_UP, setFieldValue, values, component)} disabled={!find(selectedComponents, _component => _component.id === component.id)}>
 												<Icon name="plus" className="icon icon-sm svg-outline-primary" />
 											</Button>
 										</div>
