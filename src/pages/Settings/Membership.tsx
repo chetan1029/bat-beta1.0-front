@@ -23,7 +23,7 @@ const EmptyState = () => {
         <Card className="payment-terms-card mb-2">
             <Card.Body>
                 <div className="p-2">
-                    <h5 className="font-weight-normal my-0">{t('There are no delivery terms available')}</h5>
+                    <h5 className="font-weight-normal my-0">{t('There are no Membership Plan available')}</h5>
                 </div>
             </Card.Body>
         </Card>

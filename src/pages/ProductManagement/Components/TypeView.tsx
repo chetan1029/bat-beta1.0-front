@@ -53,7 +53,7 @@ const TypeView = (props: TypeViewProps) => {
     return <>
         <Row className="mt-4">
             {(types || []).map((type, idx) => {
-                return <Col lg={3} key={idx}>
+                return <Col lg={4} key={idx}>
                     <Type type={type} onClick={onClick}></Type>
                 </Col>
             })}
