@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import CreatableSelect from 'react-select/creatable';
-import { Row, Col, Form, Modal, Button, InputGroup, Dropdown, DropdownButton } from "react-bootstrap";
+import { Row, Col, Form, Button} from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 //plug-ins
-import { map, get, omit } from 'lodash';
+import { get } from 'lodash';
 import { Formik, Form as ForMikForm, Field, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import classNames from "classnames";
 
 import Icon from "../../../components/Icon";
 
@@ -16,7 +14,6 @@ import Icon from "../../../components/Icon";
 import {
 	createComponentME,
 	editComponentME,
-	getPackingBox,
 	resetComponents,
 	deleteComponentFileME
 } from "../../../redux/actions";

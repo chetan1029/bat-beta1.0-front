@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Card, Col, Dropdown, DropdownButton, Button, Row } from "react-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { Form, Col, Dropdown, DropdownButton, Button, Row } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
-import { filter, findIndex, get, isEqual, map } from "lodash";
+import { filter, findIndex, get, isEqual } from "lodash";
 
-import Icon from "../../../components/Icon";
 import { archiveComponentProducts, restoreComponentProducts, getComponentsProducts, getTagsAndTypes, resetComponents, deleteComponentProducts } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
@@ -28,7 +27,6 @@ const ComponentDetailsProducts = (props: componentDetailsProductsProps) => {
 	const componentId = props.match.params.componentId;
 	const tabName = props.match.params.tabName;
 
-	const [selectedTab, setSelectedTab] = useState<any>("active");
 	const [selectedView, setSelectedView] = useState<any>("list");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
 	const limit = selectedView === "list" ? 5 : 8;

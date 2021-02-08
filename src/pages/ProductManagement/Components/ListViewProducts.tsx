@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Form, Row, Table, Media } from "react-bootstrap";
+import { Form, Table, Media } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { find, get, map, size } from "lodash";
 import { Link } from "react-router-dom";
@@ -63,7 +63,7 @@ const ListViewProducts = (props: ListViewProductsProps) => {
 				<td>{component.quantity}</td>
 				<td>
 					{
-						component.is_active ? 
+						component.is_active ?
 						<Link to={"#"} onClick={() => archiveComponent(component, true)}>
 							<Icon name="archive" className="mx-1 svg-outline-primary cursor-pointer" />
 						</Link> :

@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Form, Media, Table, Dropdown, DropdownButton, Button, Row } from "react-bootstrap";
+import { Form, Media, Table, Dropdown, DropdownButton, Button } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from "react-redux";
 import { filter, findIndex, get, isEqual, map, find, size } from "lodash";
-import { Formik, Form as ForMikForm, Field, FieldArray } from 'formik';
+import { Formik, Form as ForMikForm, FieldArray } from 'formik';
 import * as Yup from 'yup';
 
 import Icon from "../../../components/Icon";
-import { createComponentProducts, archiveComponent, exportComponent, getComponents, getTagsAndTypes, resetComponents } from "../../../redux/actions";
+import { createComponentProducts, getComponents, getTagsAndTypes, resetComponents } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import Pagination from "../../../components/Pagination";
 import searchIcon from "../../../assets/images/search_icon.svg";

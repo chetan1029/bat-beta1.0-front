@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, Col, Nav, Row, Form, Button } from "react-bootstrap";
-import { Link, Redirect, withRouter } from "react-router-dom";
+import { Card, Col, Row, Form, Button } from "react-bootstrap";
+import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { get, map, find, size } from 'lodash';
+import { get } from 'lodash';
 
 //components
 import Icon from "../../../components/Icon";
 import Loader from "../../../components/Loader";
-import dummyImage from "../../../assets/images/dummy_image.svg";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 import MessageAlert from "../../../components/MessageAlert";
 
@@ -128,23 +127,16 @@ interface ComponentDetailsProps {
 const ComponentDetailsME = (props: ComponentDetailsProps) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
-	const [selectedView, setSelectedView] = useState<any>("description");
-	const [showMore, setShowMore] = useState<any>(false);
 
 	const {
 		loading,
 		component,
-		isComponentArchived,
-		isComponentDiscontinued,
 		componentsME,
 		isComponentMECreated,
 		isComponentMEEdited
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		component: Components.component,
-		isComponentArchived: Components.isComponentArchived,
-		isComponentDiscontinued: Components.isComponentDiscontinued,
-
 		componentsME: Components.componentsME,
 		isComponentMECreated: Components.isComponentMECreated,
 		isComponentMEEdited: Components.isComponentMEEdited,
