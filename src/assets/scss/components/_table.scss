@@ -29,6 +29,10 @@
   tr td:last-child, tr th:last-child{
     padding-right: $table-tr-padding;
   }
+  tr th button.btn{
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 }
 
 .table-hover{

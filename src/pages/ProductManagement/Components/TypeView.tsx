@@ -18,7 +18,7 @@ const Type = (props: TypeProps) => {
         <Card.Body>
             <Row>
                 <Col lg={3}>
-                    <Icon name='box-3' className='text-primary icon icon-md' />
+                    <Icon name='components' className='icon icon-md svg-outline-primary' />
                 </Col>
                 <Col lg={9} className="text-right">
                     <div className="type-product-image-list">

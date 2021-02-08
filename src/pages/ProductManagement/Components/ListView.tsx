@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Form, Table, Media, Button } from "react-bootstrap";
+import { Form, Table, Dropdown, DropdownButton, Media, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { find, get, map, size, uniqBy } from "lodash";
 import { Link, withRouter } from "react-router-dom";
@@ -53,14 +53,26 @@ const ListView = (props: ListViewProps) => {
 								type="switch"
 								id={"checkbox"}
 								label=""
-								checked={selectedComponents.length === uniq.length}
+								checked={selectedComponents && selectedComponents.length}
 								onChange={(e: any) => onSelectAllComponents(e, uniq)}
 							/>
 						</th>
-						<th>{t("Component")}</th>
+						{!(selectedComponents && selectedComponents.length) ?
+						<><th>{t("Component")}</th>
 						<th>{t("Type")}</th>
 						<th>{t("Status")}</th>
-						<th>{t("Model Number")}</th>
+						<th>{t("Model Number")}</th></>
+						:
+						<>
+						<th colSpan={4} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
+							disabled={!(selectedComponents && selectedComponents.length)}>
+							<Dropdown.Item onClick={() => { }}>{t('Active Component')}</Dropdown.Item>
+							<Dropdown.Item onClick={() => { }}>{t('Archive Component')}</Dropdown.Item>
+							<Dropdown.Item onClick={() => { }}>{t('Draft Component')}</Dropdown.Item>
+							<Dropdown.Item onClick={() => { }}>{t('Delete Component')}</Dropdown.Item>
+						</DropdownButton></th>
+						</>
+						}
 					</tr>
 				</thead>
 				<tbody>

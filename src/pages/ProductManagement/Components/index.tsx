@@ -60,7 +60,7 @@ const Components = (props: ComponentsProps) => {
 	const [selectedTab, setSelectedTab] = useState<any>("active");
 	const [selectedView] = useState<any>("list");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
-	const limit = selectedView === "list" ? 3 : 8;
+	const limit = selectedView === "list" ? 6 : 8;
 
 	const [filters, setFilters] = useState<any>({
 		is_component: true,
@@ -304,19 +304,6 @@ const Components = (props: ComponentsProps) => {
 					</div>
 					{archiveComponentError && <MessageAlert message={archiveComponentError}
 						icon={"x"} showAsNotification={false} />}
-
-
-					<Row className="my-2">
-						<Col>
-							<DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
-								disabled={!(selectedTab !== 'all' && selectedComponents && selectedComponents.length)}>
-								<Dropdown.Item onClick={() => { }}>{t('Active Component')}</Dropdown.Item>
-								<Dropdown.Item onClick={() => { }}>{t('Archive Component')}</Dropdown.Item>
-								<Dropdown.Item onClick={() => { }}>{t('Draft Component')}</Dropdown.Item>
-								<Dropdown.Item onClick={() => { }}>{t('Delete Component')}</Dropdown.Item>
-							</DropdownButton>
-						</Col>
-					</Row>
 
 					{selectedTab !== "all" ?
 						[(get(components, "count") > 0 ?
