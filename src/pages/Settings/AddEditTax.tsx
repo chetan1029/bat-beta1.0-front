@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Form, Modal, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -58,11 +58,11 @@ const AddEditTax = ({ isOpen, onClose, tax, companyId }: AddEditTaxProps) => {
         }),
         onSubmit: values => {
 
-                if (tax) {
-                    dispatch(editTax(companyId, tax.id, {...values, from_country: values['from_country']['value'], to_country: values['to_country']['value']}));
-                } else {
-                    dispatch(createTax(companyId, {...values, from_country: values['from_country']['value'], to_country: values['to_country']['value']}));
-                }
+            if (tax) {
+                dispatch(editTax(companyId, tax.id, { ...values, from_country: values['from_country']['value'], to_country: values['to_country']['value'] }));
+            } else {
+                dispatch(createTax(companyId, { ...values, from_country: values['from_country']['value'], to_country: values['to_country']['value'] }));
+            }
         },
     });
 
@@ -75,93 +75,93 @@ const AddEditTax = ({ isOpen, onClose, tax, companyId }: AddEditTaxProps) => {
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
             <Modal.Header closeButton className="add-tax-modal-header">
-              <Modal.Title>{tax ? t("Edit Tax") : t("Add Tax")}</Modal.Title>
+                <Modal.Title>{tax ? t("Edit Tax") : t("Add Tax")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="position-relative">
-                    {loading ? <Loader />: null}
+                    {loading ? <Loader /> : null}
 
                     <div>
                         {createTaxError && createTaxError['existing_items'] ? <ExistingDataWarning
-                        name={t('Tax(s)')}
-                        message={createTaxError}
-                        onConfirm={() => {
-                            dispatch(createTax(companyId, {...validator.values, from_country: validator.values['from_country']['value'], to_country: validator.values['to_country']['value'], force_create: true}));
-                        }} onClose={() => {}} displayField={'from_country'} /> : null}
+                            name={t('Tax(s)')}
+                            message={createTaxError}
+                            onConfirm={() => {
+                                dispatch(createTax(companyId, { ...validator.values, from_country: validator.values['from_country']['value'], to_country: validator.values['to_country']['value'], force_create: true }));
+                            }} onClose={() => { }} displayField={'from_country'} /> : null}
                         {(!isTaxCreated && createTaxError) && !createTaxError['existing_items'] ? <AlertMessage error={createTaxError} /> : null}
                         {(!isTaxUpdated && editTaxError) && <AlertMessage error={editTaxError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
-                          <Row>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('From Country')}</Form.Label>
-                                  <CountriesDropdown name='from_country' placeholder={t('From Country')} className={validator.touched.from_country && validator.errors.from_country ? "is-invalid" : ""}
-                                      onChange={(value) => validator.setFieldValue('from_country', value)}
-                                      value={validator.values.from_country} />
+                            <Row>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('From Country')}</Form.Label>
+                                        <CountriesDropdown name='from_country' placeholder={t('From Country')} className={validator.touched.from_country && validator.errors.from_country ? "is-invalid" : ""}
+                                            onChange={(value) => validator.setFieldValue('from_country', value)}
+                                            value={validator.values.from_country} />
 
-                                  {validator.touched.from_country && validator.errors.from_country ? (
-                                      <Form.Control.Feedback type="invalid" className="d-block">
-                                          {validator.errors.from_country}
-                                      </Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('To Country')}</Form.Label>
-                                  <CountriesDropdown name='to_country' placeholder={t('To Country')} className={validator.touched.to_country && validator.errors.to_country ? "is-invalid" : ""}
-                                      onChange={(value) => validator.setFieldValue('to_country', value)}
-                                      value={validator.values.to_country} />
+                                        {validator.touched.from_country && validator.errors.from_country ? (
+                                            <Form.Control.Feedback type="invalid" className="d-block">
+                                                {validator.errors.from_country}
+                                            </Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('To Country')}</Form.Label>
+                                        <CountriesDropdown name='to_country' placeholder={t('To Country')} className={validator.touched.to_country && validator.errors.to_country ? "is-invalid" : ""}
+                                            onChange={(value) => validator.setFieldValue('to_country', value)}
+                                            value={validator.values.to_country} />
 
-                                  {validator.touched.to_country && validator.errors.to_country ? (
-                                      <Form.Control.Feedback type="invalid" className="d-block">
-                                          {validator.errors.to_country}
-                                      </Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                          </Row>
-                          <Row>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Custom Duty')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="custom_duty" name="custom_duty" placeholder="Custom Duty"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.custom_duty}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.custom_duty && validator.errors && validator.errors.custom_duty ? true : false}
-                                      maxLength={200} />
-
-
-                                  {validator.touched.custom_duty && validator.errors.custom_duty ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.custom_duty}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('VAT')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="vat" name="vat" placeholder="VAT"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.vat}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.vat && validator.errors && validator.errors.vat ? true : false}
-                                      maxLength={200} />
+                                        {validator.touched.to_country && validator.errors.to_country ? (
+                                            <Form.Control.Feedback type="invalid" className="d-block">
+                                                {validator.errors.to_country}
+                                            </Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Custom Duty')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="custom_duty" name="custom_duty" placeholder="Custom Duty"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.custom_duty}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.custom_duty && validator.errors && validator.errors.custom_duty ? true : false}
+                                            maxLength={200} />
 
 
-                                  {validator.touched.vat && validator.errors.vat ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.vat}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                          </Row>
+                                        {validator.touched.custom_duty && validator.errors.custom_duty ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.custom_duty}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('VAT')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="vat" name="vat" placeholder="VAT"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.vat}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.vat && validator.errors && validator.errors.vat ? true : false}
+                                            maxLength={200} />
 
 
-                          <div>
-                              <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
-                              <Button type="submit" variant="primary">{tax ? t("Edit Tax") : t("Add Tax")}</Button>
-                          </div>
+                                        {validator.touched.vat && validator.errors.vat ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.vat}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+
+                            <div>
+                                <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
+                                <Button type="submit" variant="primary">{tax ? t("Edit Tax") : t("Add Tax")}</Button>
+                            </div>
                         </Form>
                     </div>
                 </div>

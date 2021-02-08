@@ -46,9 +46,10 @@ const Import = (props: ImportProps) => {
 
     useEffect(() => {
         if (isImported) {
-            onModalClose();
+            setShow(false);
+            onClose();
         }
-    }, [isImported]);
+    }, [isImported, onClose]);
 
     return <>
         <Modal show={show} onHide={onModalClose}>

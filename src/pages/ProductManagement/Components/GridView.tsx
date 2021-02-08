@@ -18,7 +18,7 @@ interface GridViewProps {
 
 const GridView = (props: GridViewProps) => {
 	const { t } = useTranslation();
-	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent, onChangePage } = props;
+	const { components, companyId, selectedComponents, archiveComponent, onSelectComponent } = props;
 
 	const [records, setRecords] = useState<Array<any>>([]);
 

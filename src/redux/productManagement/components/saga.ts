@@ -180,13 +180,26 @@ function* getTypesAllById({ payload: { companyId, filters } }: any) {
 function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 	try {
 		const isCsv = fileType === "csv" || fileType === "csv-filtered";
+		let fileName: string = "components.csv";
+
+		switch (fileType) {
+			case 'csv-filtered':
+				fileName = 'components-filtered.csv';
+				break;
+			case 'xls-filtered':
+				fileName = 'components-filtered.xls';
+				break;
+			case 'xls':
+				fileName = 'components.xls';
+				break;
+		}
 
 		if (fileType) {
 			const response = yield call(isCsv ? exportCSVFile : exportXLSFile, companyId, filters);
 			if (isCsv) {
-				downloadFile(response.data, `components.${fileType}`);
+				downloadFile(response.data, fileName);
 			} else {
-				downloadFile(response.data, `components.${fileType}`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+				downloadFile(response.data, fileName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 			}
 			yield put(componentsApiResponseSuccess(ComponentsTypes.EXPORT_COMPONENT, true));
 		}

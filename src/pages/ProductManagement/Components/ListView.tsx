@@ -12,7 +12,7 @@ interface ListViewProps {
 	selectedComponents: any;
 	archiveComponent: (any) => void;
 	onSelectComponent: any;
-	onSelectAllComponents: (any) => void;
+	onSelectAllComponents: any;
 	onChangePage?: any;
 	history?: any;
 }
@@ -41,7 +41,7 @@ const ListView = (props: ListViewProps) => {
 			const urlParams = new URLSearchParams(new URL(nextUrl).search);
 			onChangePage(urlParams.get('offset'));
 		}
-	}, [nextUrl]);
+	}, [nextUrl, onChangePage]);
 
 	return (
 		<div className={"list-view"}>
@@ -53,7 +53,8 @@ const ListView = (props: ListViewProps) => {
 								type="switch"
 								id={"checkbox"}
 								label=""
-								onChange={(e: any) => onSelectAllComponents(e)}
+								checked={selectedComponents.length === uniq.length}
+								onChange={(e: any) => onSelectAllComponents(e, uniq)}
 							/>
 						</th>
 						<th>{t("Component")}</th>
