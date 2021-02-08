@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Form, Modal, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -63,11 +63,11 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
         }),
         onSubmit: values => {
 
-                if (location) {
-                    dispatch(editLocation(companyId, location.id, {...values, country: values['country']['value']}));
-                } else {
-                    dispatch(createLocation(companyId, {...values, country: values['country']['value']}));
-                }
+            if (location) {
+                dispatch(editLocation(companyId, location.id, { ...values, country: values['country']['value'] }));
+            } else {
+                dispatch(createLocation(companyId, { ...values, country: values['country']['value'] }));
+            }
         },
     });
 
@@ -80,136 +80,136 @@ const AddEditLocation = ({ isOpen, onClose, location, companyId }: AddEditLocati
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
             <Modal.Header closeButton className="add-location-modal-header">
-              <Modal.Title>{location ? t("Edit Location") : t("Add Location")}</Modal.Title>
+                <Modal.Title>{location ? t("Edit Location") : t("Add Location")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="position-relative">
-                    {loading ? <Loader />: null}
+                    {loading ? <Loader /> : null}
 
                     <div>
                         {createLocationError && createLocationError['existing_items'] ? <ExistingDataWarning
-                        name={t('Location(s)')}
-                        message={createLocationError}
-                        onConfirm={() => {
-                            dispatch(createLocation(companyId, {...validator.values, country: validator.values['country']['value'], force_create: true}));
-                        }} onClose={() => {}} displayField={'name'} /> : null}
-                        {(!isLocationCreated && createLocationError) && !createLocationError['existing_items'] ? <AlertMessage error={createLocationError} />: null}
+                            name={t('Location(s)')}
+                            message={createLocationError}
+                            onConfirm={() => {
+                                dispatch(createLocation(companyId, { ...validator.values, country: validator.values['country']['value'], force_create: true }));
+                            }} onClose={() => { }} displayField={'name'} /> : null}
+                        {(!isLocationCreated && createLocationError) && !createLocationError['existing_items'] ? <AlertMessage error={createLocationError} /> : null}
                         {(!isLocationUpdated && editLocationError) && <AlertMessage error={editLocationError} />}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
-                          <Form.Group className="mb-4">
-                              <Form.Label htmlFor="usr">{t('Location Name')}</Form.Label>
-                              <Form.Control type="text" className="form-control" id="name" name="name" placeholder="Location Name"
-                                  onBlur={validator.handleBlur}
-                                  value={validator.values.name}
-                                  onChange={validator.handleChange}
-                                  isInvalid={validator.touched.name && validator.errors && validator.errors.name ? true : false}
-                                  maxLength={200} />
+                            <Form.Group className="mb-4">
+                                <Form.Label htmlFor="usr">{t('Location Name')}</Form.Label>
+                                <Form.Control type="text" className="form-control" id="name" name="name" placeholder="Location Name"
+                                    onBlur={validator.handleBlur}
+                                    value={validator.values.name}
+                                    onChange={validator.handleChange}
+                                    isInvalid={validator.touched.name && validator.errors && validator.errors.name ? true : false}
+                                    maxLength={200} />
 
 
-                              {validator.touched.name && validator.errors.name ? (
-                                  <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
-                              ) : null}
-                          </Form.Group>
-                          <Form.Group className="mb-4">
-                              <Form.Label htmlFor="usr">{t('Address')}</Form.Label>
-                              <Form.Control type="text" className="form-control" id="address1" name="address1" placeholder="Address"
-                                  onBlur={validator.handleBlur}
-                                  value={validator.values.address1}
-                                  onChange={validator.handleChange}
-                                  isInvalid={validator.touched.address1 && validator.errors && validator.errors.address1 ? true : false}
-                                  maxLength={200} />
+                                {validator.touched.name && validator.errors.name ? (
+                                    <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
+                                ) : null}
+                            </Form.Group>
+                            <Form.Group className="mb-4">
+                                <Form.Label htmlFor="usr">{t('Address')}</Form.Label>
+                                <Form.Control type="text" className="form-control" id="address1" name="address1" placeholder="Address"
+                                    onBlur={validator.handleBlur}
+                                    value={validator.values.address1}
+                                    onChange={validator.handleChange}
+                                    isInvalid={validator.touched.address1 && validator.errors && validator.errors.address1 ? true : false}
+                                    maxLength={200} />
 
 
-                              {validator.touched.address1 && validator.errors.address1 ? (
-                                  <Form.Control.Feedback type="invalid">{validator.errors.address1}</Form.Control.Feedback>
-                              ) : null}
-                          </Form.Group>
-                          <Form.Group className="mb-4">
-                              <Form.Label htmlFor="usr">{t('Apartment, suite, etc.')}</Form.Label>
-                              <Form.Control type="text" className="form-control" id="address2" name="address2" placeholder="Apartment, suite, etc."
-                                  onBlur={validator.handleBlur}
-                                  value={validator.values.address2}
-                                  onChange={validator.handleChange}
-                                  isInvalid={validator.touched.address2 && validator.errors && validator.errors.address2 ? true : false}
-                                  maxLength={200} />
+                                {validator.touched.address1 && validator.errors.address1 ? (
+                                    <Form.Control.Feedback type="invalid">{validator.errors.address1}</Form.Control.Feedback>
+                                ) : null}
+                            </Form.Group>
+                            <Form.Group className="mb-4">
+                                <Form.Label htmlFor="usr">{t('Apartment, suite, etc.')}</Form.Label>
+                                <Form.Control type="text" className="form-control" id="address2" name="address2" placeholder="Apartment, suite, etc."
+                                    onBlur={validator.handleBlur}
+                                    value={validator.values.address2}
+                                    onChange={validator.handleChange}
+                                    isInvalid={validator.touched.address2 && validator.errors && validator.errors.address2 ? true : false}
+                                    maxLength={200} />
 
 
-                              {validator.touched.address2 && validator.errors.address2 ? (
-                                  <Form.Control.Feedback type="invalid">{validator.errors.address2}</Form.Control.Feedback>
-                              ) : null}
-                          </Form.Group>
-                          <Row>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Postal Code')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="zip" name="zip" placeholder="Postal Code"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.zip}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.zip && validator.errors && validator.errors.zip ? true : false}
-                                      maxLength={20} />
+                                {validator.touched.address2 && validator.errors.address2 ? (
+                                    <Form.Control.Feedback type="invalid">{validator.errors.address2}</Form.Control.Feedback>
+                                ) : null}
+                            </Form.Group>
+                            <Row>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Postal Code')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="zip" name="zip" placeholder="Postal Code"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.zip}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.zip && validator.errors && validator.errors.zip ? true : false}
+                                            maxLength={20} />
 
 
-                                  {validator.touched.zip && validator.errors.zip ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.zip}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('City')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="city" name="city" placeholder="City"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.city}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.city && validator.errors && validator.errors.city ? true : false}
-                                      maxLength={100} />
+                                        {validator.touched.zip && validator.errors.zip ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.zip}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('City')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="city" name="city" placeholder="City"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.city}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.city && validator.errors && validator.errors.city ? true : false}
+                                            maxLength={100} />
 
 
-                                  {validator.touched.city && validator.errors.city ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.city}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Region')}</Form.Label>
-                                  <Form.Control type="text" className="form-control" id="region" name="region" placeholder="Region"
-                                      onBlur={validator.handleBlur}
-                                      value={validator.values.region}
-                                      onChange={validator.handleChange}
-                                      isInvalid={validator.touched.region && validator.errors && validator.errors.region ? true : false}
-                                      maxLength={100} />
+                                        {validator.touched.city && validator.errors.city ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.city}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Region')}</Form.Label>
+                                        <Form.Control type="text" className="form-control" id="region" name="region" placeholder="Region"
+                                            onBlur={validator.handleBlur}
+                                            value={validator.values.region}
+                                            onChange={validator.handleChange}
+                                            isInvalid={validator.touched.region && validator.errors && validator.errors.region ? true : false}
+                                            maxLength={100} />
 
 
-                                  {validator.touched.region && validator.errors.region ? (
-                                      <Form.Control.Feedback type="invalid">{validator.errors.region}</Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                          </Row>
+                                        {validator.touched.region && validator.errors.region ? (
+                                            <Form.Control.Feedback type="invalid">{validator.errors.region}</Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-                          <Row>
-                            <Col>
-                              <Form.Group className="mb-4">
-                                  <Form.Label htmlFor="usr">{t('Country')}</Form.Label>
-                                  <CountriesDropdown name='country' placeholder={t('Country')} className={validator.touched.country && validator.errors.country ? "is-invalid" : ""}
-                                      onChange={(value) => validator.setFieldValue('country', value)}
-                                      value={validator.values.country} />
+                            <Row>
+                                <Col>
+                                    <Form.Group className="mb-4">
+                                        <Form.Label htmlFor="usr">{t('Country')}</Form.Label>
+                                        <CountriesDropdown name='country' placeholder={t('Country')} className={validator.touched.country && validator.errors.country ? "is-invalid" : ""}
+                                            onChange={(value) => validator.setFieldValue('country', value)}
+                                            value={validator.values.country} />
 
-                                  {validator.touched.country && validator.errors.country ? (
-                                      <Form.Control.Feedback type="invalid" className="d-block">
-                                          {validator.errors.country}
-                                      </Form.Control.Feedback>
-                                  ) : null}
-                              </Form.Group>
-                            </Col>
-                          </Row>
-                          <div>
-                              <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
-                              <Button type="submit" variant="primary">{location ? t("Edit Location") : t("Add Location")}</Button>
-                          </div>
+                                        {validator.touched.country && validator.errors.country ? (
+                                            <Form.Control.Feedback type="invalid" className="d-block">
+                                                {validator.errors.country}
+                                            </Form.Control.Feedback>
+                                        ) : null}
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <div>
+                                <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
+                                <Button type="submit" variant="primary">{location ? t("Edit Location") : t("Add Location")}</Button>
+                            </div>
                         </Form>
                     </div>
                 </div>

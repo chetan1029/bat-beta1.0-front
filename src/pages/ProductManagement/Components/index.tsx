@@ -58,9 +58,9 @@ const Components = (props: ComponentsProps) => {
 	const dispatch = useDispatch();
 	const companyId = props.match.params.companyId;
 	const [selectedTab, setSelectedTab] = useState<any>("active");
-	const [selectedView, setSelectedView] = useState<any>("list");
+	const [selectedView] = useState<any>("list");
 	const [selectedComponents, setSelectedComponents] = useState<any>([]);
-	const limit = selectedView === "list" ? 6 : 8;
+	const limit = selectedView === "list" ? 3 : 8;
 
 	const [filters, setFilters] = useState<any>({
 		is_component: true,
@@ -126,7 +126,7 @@ const Components = (props: ComponentsProps) => {
 		} else {
 			dispatch(getTypesAll(companyId, { is_component: true }));
 		}
-	}, [filters]);
+	}, [filters, companyId, dispatch, selectedTab]);
 
 	/*
 	reset for all the notification
@@ -177,6 +177,7 @@ const Components = (props: ComponentsProps) => {
 
 	const handleOnSelectComponents = (e: any, component: any) => {
 		const index = findIndex(selectedComponents, _component => _component.id === component.id);
+
 		if (index === -1) {
 			setSelectedComponents([...selectedComponents, component]);
 		} else {
@@ -184,9 +185,9 @@ const Components = (props: ComponentsProps) => {
 		}
 	};
 
-	const handleOnSelectAllComponents = (e: any) => {
+	const handleOnSelectAllComponents = (e: any, selectedRecords?: Array<any>) => {
 		if (e.target.checked) {
-			setSelectedComponents([...selectedComponents, ...components.results]);
+			setSelectedComponents([...(selectedRecords || [])]);
 		} else {
 			setSelectedComponents([]);
 		}
@@ -206,13 +207,13 @@ const Components = (props: ComponentsProps) => {
 		setSelectedTab(tab);
 	};
 
-	const onChangeView = (checked: boolean) => {
-		if (checked) {
-			setSelectedView("grid");
-		} else {
-			setSelectedView("list");
-		}
-	};
+	// const onChangeView = (checked: boolean) => {
+	// 	if (checked) {
+	// 		setSelectedView("grid");
+	// 	} else {
+	// 		setSelectedView("list");
+	// 	}
+	// };
 
 	const [openImport, setOpenImport] = useState(false);
 
@@ -339,7 +340,7 @@ const Components = (props: ComponentsProps) => {
 										onChangePage={onChangePage}
 									/>
 								}
-							</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+							</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" alt="" /> {t('No components found')}</p>
 						)]
 						:
 						[(typesAll ?
@@ -348,7 +349,7 @@ const Components = (props: ComponentsProps) => {
 									setSelectedTab('active');
 									setFilters(prevState => ({ ...prevState, type: type, status: 'active' }));
 								}} />
-							</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" /> {t('No components found')}</p>
+							</> : <p className="d-flex justify-content-center lead mt-5 mb-5"><img src={searchIcon} className="mr-2" alt="" /> {t('No components found')}</p>
 						)]
 					}
 				</Card.Body>

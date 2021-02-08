@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Form, Modal, Button, InputGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +38,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
         loading: state.Company.PackingBox.loading,
     }));
 
-    const [showTotalError, setshowTotalError] = useState(false);
+    // const [showTotalError, setshowTotalError] = useState(false);
 
     /*
     validation
@@ -82,7 +82,7 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
             <Modal.Header closeButton className="add-payment-modal-header">
-              <Modal.Title>{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</Modal.Title>
+                <Modal.Title>{packingBox ? t("Edit Packing Box") : t("Add Packing Box")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <div className="position-relative">
@@ -90,11 +90,11 @@ const AddEditPackingBox = ({ isOpen, onClose, packingBox, companyId }: AddEditPa
 
                     <div>
                         {createPackingBoxError && createPackingBoxError['existing_items'] ? <ExistingDataWarning
-                        name={t('Packing Box(s)')}
-                        message={createPackingBoxError}
-                        onConfirm={() => {
-                            dispatch(createPackingBox(companyId, { ...validator.values, length_unit: validator.values['length_unit']['value'], force_create: true }));
-                        }} onClose={() => {}} displayField={'name'} /> : null}
+                            name={t('Packing Box(s)')}
+                            message={createPackingBoxError}
+                            onConfirm={() => {
+                                dispatch(createPackingBox(companyId, { ...validator.values, length_unit: validator.values['length_unit']['value'], force_create: true }));
+                            }} onClose={() => { }} displayField={'name'} /> : null}
                         {(!isPackingBoxCreated && createPackingBoxError) && !createPackingBoxError['existing_items'] ? <AlertMessage error={createPackingBoxError} /> : null}
                         {(!isPackingBoxUpdated && editPackingBoxError) && <AlertMessage error={editPackingBoxError} />}
 

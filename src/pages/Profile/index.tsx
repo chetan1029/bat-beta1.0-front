@@ -71,7 +71,7 @@ const Profile = (props: ProfileProp) => {
                 dispatch(resetAuth());
             }, 10000);
         }
-    }, [profileUpdated, updatedUser]);
+    }, [profileUpdated, updatedUser, dispatch]);
 
     const [showEditName, setshowEditName] = useState(false);
 
@@ -95,10 +95,10 @@ const Profile = (props: ProfileProp) => {
         validationSchema: Yup.object({}),
         onSubmit: values => {
 
-            if (porFile){
-              values['por_file'] = porFile;
+            if (porFile) {
+                values['por_file'] = porFile;
             } else {
-              delete values['por_file'];
+                delete values['por_file'];
             }
 
             dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'] }));
@@ -193,94 +193,94 @@ const Profile = (props: ProfileProp) => {
                             <Col lg={6}>
                                 <div className="py-4 mt-3 pr-sm-5">
                                     <Form noValidate onSubmit={validator.handleSubmit} className="">
-                                      <Row>
-                                        <Col lg={6} xs={12}>
-                                          <Form.Group>
-                                              <Form.Label>{t('User name')}</Form.Label>
+                                        <Row>
+                                            <Col lg={6} xs={12}>
+                                                <Form.Group>
+                                                    <Form.Label>{t('User name')}</Form.Label>
 
-                                              <Form.Control type="text" placeholder={t("User name")}
-                                                  name="username" id="username"
-                                                  value={profile.username}
-                                                  readOnly />
-                                          </Form.Group>
-                                        </Col>
-                                        <Col lg={6} xs={12}>
-                                          <Form.Group>
-                                              <Form.Label>{t('Email address')}</Form.Label>
+                                                    <Form.Control type="text" placeholder={t("User name")}
+                                                        name="username" id="username"
+                                                        value={profile.username}
+                                                        readOnly />
+                                                </Form.Group>
+                                            </Col>
+                                            <Col lg={6} xs={12}>
+                                                <Form.Group>
+                                                    <Form.Label>{t('Email address')}</Form.Label>
 
-                                              <Form.Control type="email" placeholder={t("Email address")}
-                                                  name="email" id="email"
-                                                  value={profile.email}
-                                                  readOnly />
-                                          </Form.Group>
-                                        </Col>
-                                      </Row>
+                                                    <Form.Control type="email" placeholder={t("Email address")}
+                                                        name="email" id="email"
+                                                        value={profile.email}
+                                                        readOnly />
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
 
-                                      <Form.Group>
-                                          <Form.Label>{t('Phone number')}</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>{t('Phone number')}</Form.Label>
 
-                                          <Form.Control type="text" placeholder={t("Phone number")}
-                                              name="phone_number" id="phone_number"
-                                              onChange={validator.handleChange}
-                                              onBlur={validator.handleBlur}
-                                              value={validator.values.phone_number}
-                                              isInvalid={validator.touched.phone_number && validator.errors && validator.errors.phone_number ? true : false} />
+                                            <Form.Control type="text" placeholder={t("Phone number")}
+                                                name="phone_number" id="phone_number"
+                                                onChange={validator.handleChange}
+                                                onBlur={validator.handleBlur}
+                                                value={validator.values.phone_number}
+                                                isInvalid={validator.touched.phone_number && validator.errors && validator.errors.phone_number ? true : false} />
 
-                                          {validator.touched.phone_number && validator.errors.phone_number ? (
-                                              <Form.Control.Feedback type="invalid">{validator.errors.phone_number}</Form.Control.Feedback>
-                                          ) : null}
-                                      </Form.Group>
+                                            {validator.touched.phone_number && validator.errors.phone_number ? (
+                                                <Form.Control.Feedback type="invalid">{validator.errors.phone_number}</Form.Control.Feedback>
+                                            ) : null}
+                                        </Form.Group>
 
-                                      <Row>
-                                        <Col lg={6} xs={12}>
-                                          <Form.Group>
-                                              <Form.Label>{t('Language')}</Form.Label>
-                                              <LanguageDropdown name='language' placeholder={t('Language')}
-                                                  className={validator.touched.language && validator.errors.language ? "is-invalid" : ""}
-                                                  onChange={(value) => validator.setFieldValue('language', value)}
-                                                  value={validator.values.language} />
+                                        <Row>
+                                            <Col lg={6} xs={12}>
+                                                <Form.Group>
+                                                    <Form.Label>{t('Language')}</Form.Label>
+                                                    <LanguageDropdown name='language' placeholder={t('Language')}
+                                                        className={validator.touched.language && validator.errors.language ? "is-invalid" : ""}
+                                                        onChange={(value) => validator.setFieldValue('language', value)}
+                                                        value={validator.values.language} />
 
-                                              {validator.touched.language && validator.errors.language ? (
-                                                  <Form.Control.Feedback type="invalid" className="d-block">
-                                                      {validator.errors.language}
-                                                  </Form.Control.Feedback>
-                                              ) : null}
-                                          </Form.Group>
-                                        </Col>
-                                        <Col lg={6} xs={12}>
-                                          <Form.Group>
-                                              <Form.Label>{t('Time zone')}</Form.Label>
-                                              <TimezoneDropdown name='timezone' placeholder={t('Timezone')}
-                                                  className={validator.touched.timezone && validator.errors.timezone ? "is-invalid" : ""}
-                                                  onChange={(value) => validator.setFieldValue('timezone', value)}
-                                                  value={validator.values.timezone} />
+                                                    {validator.touched.language && validator.errors.language ? (
+                                                        <Form.Control.Feedback type="invalid" className="d-block">
+                                                            {validator.errors.language}
+                                                        </Form.Control.Feedback>
+                                                    ) : null}
+                                                </Form.Group>
+                                            </Col>
+                                            <Col lg={6} xs={12}>
+                                                <Form.Group>
+                                                    <Form.Label>{t('Time zone')}</Form.Label>
+                                                    <TimezoneDropdown name='timezone' placeholder={t('Timezone')}
+                                                        className={validator.touched.timezone && validator.errors.timezone ? "is-invalid" : ""}
+                                                        onChange={(value) => validator.setFieldValue('timezone', value)}
+                                                        value={validator.values.timezone} />
 
-                                              {validator.touched.timezone && validator.errors.timezone ? (
-                                                  <Form.Control.Feedback type="invalid" className="d-block">
-                                                      {validator.errors.timezone}
-                                                  </Form.Control.Feedback>
-                                              ) : null}
-                                          </Form.Group>
-                                        </Col>
-                                      </Row>
+                                                    {validator.touched.timezone && validator.errors.timezone ? (
+                                                        <Form.Control.Feedback type="invalid" className="d-block">
+                                                            {validator.errors.timezone}
+                                                        </Form.Control.Feedback>
+                                                    ) : null}
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
 
-                                      <Row className='align-items-center'>
-                                          <Col md={6}>
-                                              <Form.Group>
-                                                  <Form.Label>{t('Power of Representation')}</Form.Label>
-                                                  <Form.Control type="file" name="license_file" id="license_file"
-                                                      onChange={onPorFile} custom />
+                                        <Row className='align-items-center'>
+                                            <Col md={6}>
+                                                <Form.Group>
+                                                    <Form.Label>{t('Power of Representation')}</Form.Label>
+                                                    <Form.Control type="file" name="license_file" id="license_file"
+                                                        onChange={onPorFile} custom />
 
-                                                  {profile && profile['por_file'] ? <p className="mb-0">
-                                                      {t('Power of Representation')}: <a href={profile['por_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View Power of Representation')}</a>
-                                                  </p> : null}
-                                              </Form.Group>
-                                          </Col>
-                                      </Row>
+                                                    {profile && profile['por_file'] ? <p className="mb-0">
+                                                        {t('Power of Representation')}: <a href={profile['por_file']} target='_blank' className='text-primary' rel="noreferrer">{t('View Power of Representation')}</a>
+                                                    </p> : null}
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
 
-                                      <Form.Group className="mb-0">
-                                          <Button variant="primary" type="submit">{t('Submit')}</Button>
-                                      </Form.Group>
+                                        <Form.Group className="mb-0">
+                                            <Button variant="primary" type="submit">{t('Submit')}</Button>
+                                        </Form.Group>
                                     </Form>
                                 </div>
                             </Col>

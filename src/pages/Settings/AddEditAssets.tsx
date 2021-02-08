@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import { format } from 'date-fns'
 //action
 import { createAsset, editAsset, resetAsset, getAssetType, getLocations } from "../../redux/actions";
-import { CURRENCIES } from "../../constants";
+
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
@@ -38,7 +38,7 @@ const AddEditAssets = ({
     dispatch(resetAsset());
     dispatch(getLocations(companyId, { is_active: true }));
     dispatch(getAssetType(companyId, { is_active: true }));
-  }, [dispatch]);
+  }, [dispatch, companyId]);
 
   const {
     createAssetError,
@@ -57,8 +57,6 @@ const AddEditAssets = ({
     isAssetUpdated: state.Company.AssetsState.isAssetUpdated,
     loading: state.Company.AssetsState.loading,
   }));
-
-  const [showTotalError, setshowTotalError] = useState(false);
 
   const defaultTypes = assettypes && map(assettypes.type_data, (type: any) => ({
     label: type,

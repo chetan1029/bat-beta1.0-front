@@ -23,7 +23,7 @@ const Type = (props: TypeProps) => {
                 <Col lg={9} className="text-right">
                     <div className="type-product-image-list">
                         {(type['products'] || []).map((product, idx) => {
-                            return <img src={product ? product : dummyImage} key={idx} className="type-product-image" />
+                            return <img src={product ? product : dummyImage} key={idx} className="type-product-image" alt="" />
                         })}
                         {type['total'] > 3 ? <div className="type-product-image-more">{t('+')}{type['total'] - 3}</div> : null}
                     </div>

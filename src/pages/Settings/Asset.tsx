@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, Card, Form, Button, Media, Table } from "react-bootstrap";
+import { Row, Col, Card, Form, Button, Table } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -171,7 +171,7 @@ const Assets = (props: AssetsProps) => {
       dispatch(getLocations(companyId, { is_active: true }));
       dispatch(getAssetType(companyId, { is_active: true }));
     }
-  }, [props.match.params.companyId]);
+  }, [props.match.params.companyId, dispatch]);
 
   /*
     archive switch
@@ -218,11 +218,11 @@ const Assets = (props: AssetsProps) => {
     setAssetSelectedForTransfer(asset);
   };
 
-  const closeTransferModal = () => {
+  const closeTransferModal = useCallback(() => {
     setistransferopen(false);
     setAssetSelectedForTransfer(null);
     dispatch(resetAsset());
-  };
+  }, [dispatch]);
 
   /*
         asset
@@ -245,7 +245,7 @@ const Assets = (props: AssetsProps) => {
         dispatch(resetAsset());
       }, 10000);
     }
-  }, [isAssetCreated, isAssetUpdated, props.match.params.companyId]);
+  }, [isAssetCreated, isAssetUpdated, props.match.params.companyId, dispatch]);
 
   /*
     re-fetch items when item deleted, archived, restored
@@ -268,14 +268,14 @@ const Assets = (props: AssetsProps) => {
     isAssetRestored,
     isAssetTransferred,
     dispatch,
-    props.match.params.companyId,
+    props.match.params.companyId, showArchived
   ]);
 
   useEffect(() => {
     if (isAssetTransferred) {
       closeTransferModal();
     }
-  }, [isAssetTransferred]);
+  }, [isAssetTransferred, closeTransferModal]);
 
   return (
     <>

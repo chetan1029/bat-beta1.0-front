@@ -4,7 +4,7 @@ interface DashboardProps {
 
 }
 
-const Dashboard = () => {
+const Dashboard = (props: DashboardProps) => {
     return <>
     </>;
 }

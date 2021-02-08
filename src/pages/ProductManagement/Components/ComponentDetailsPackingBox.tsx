@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, Col, Nav, Row, Form, Button } from "react-bootstrap";
-import { Link, Redirect, withRouter } from "react-router-dom";
+import { Card, Col, Row, Form, Button } from "react-bootstrap";
+import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { get, map, find, size } from 'lodash';
+import { get } from 'lodash';
 
 //components
 import Icon from "../../../components/Icon";
-import Loader from "../../../components/Loader";
-import dummyImage from "../../../assets/images/dummy_image.svg";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 import MessageAlert from "../../../components/MessageAlert";
 
 //actions
 import {
-	archivePackingBox,
-	restorePackingBox,
 	getComponentsPackingBox,
-	archiveComponent,
-	discontinueComponent,
-	getComponentDetails,
-	resetComponents,
-	deletePackingBox,
 	archiveComponentPackingBox,
 	restoreComponentPackingBox,
 	deleteComponentPackingBox,
@@ -133,14 +124,8 @@ interface ComponentDetailsProps {
 const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
-	const [selectedView, setSelectedView] = useState<any>("description");
-	const [showMore, setShowMore] = useState<any>(false);
 
 	const {
-		loading,
-		component,
-		isComponentArchived,
-		isComponentDiscontinued,
 		componentsPackingBox,
 		isComponentPackingBoxCreated,
 		isComponentPackingBoxEdited
@@ -158,6 +143,11 @@ const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 	const companyId = props.match.params.companyId;
 	const componentId = props.match.params.componentId;
 	const tabName = props.match.params.tabName;
+
+	const getPackingbox = useCallback((filters = { is_active: true }) => {
+		dispatch(getComponentsPackingBox(companyId, componentId, filters));
+	}, [dispatch, companyId, componentId]);
+
 	/*
 		close modal for after creating payment term
 		*/
@@ -168,13 +158,13 @@ const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 				getPackingbox();
 			}, 1000);
 		}
-	}, [isComponentPackingBoxCreated, isComponentPackingBoxEdited, dispatch, companyId, componentId, tabName]);
+	}, [isComponentPackingBoxCreated, isComponentPackingBoxEdited, dispatch, companyId, componentId, tabName, getPackingbox]);
 
 	useEffect(() => {
 		if (tabName === packing_boxes_tab) {
 			getPackingbox(); // initial loading
 		}
-	}, [dispatch, companyId, componentId, tabName]);
+	}, [dispatch, companyId, componentId, tabName, getPackingbox]);
 
 	const [isOpenAddPackingBox, setisOpenAddPackingBox] = useState(false);
 	const [showArchived, setshowArchived] = useState(false);
@@ -193,10 +183,6 @@ const ComponentDetailsPackingBox = (props: ComponentDetailsProps) => {
 	const setPackingBox = (data: any) => {
 		setselectedPackingBox(data);
 		setisOpenAddPackingBox(true);
-	}
-
-	const getPackingbox = (filters = { is_active: true }) => {
-		dispatch(getComponentsPackingBox(companyId, componentId, filters));
 	}
 
 	const renderPackingBoxes = () => {
