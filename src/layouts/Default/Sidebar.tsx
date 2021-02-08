@@ -127,7 +127,7 @@ const Sidebar = (props: SideProps) => {
   }, [companyId, vendorCategories, mainSidebar, vendorCategoriesStr, salesCategories, salesCategoriesStr]);
 
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   //init resize event on body click
   useEffect(() => {

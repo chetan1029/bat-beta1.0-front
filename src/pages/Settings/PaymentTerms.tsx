@@ -211,7 +211,7 @@ const PaymentTerms = (props: PaymentTermsProps) => {
                 dispatch(resetPaymentTerm());
             }, 10000);
         }
-    }, [isPaymentTermDeleted, isPaymentTermArchived, isPaymentTermRestored, dispatch, props.match.params.companyId]);
+    }, [isPaymentTermDeleted, isPaymentTermArchived, isPaymentTermRestored, dispatch, props.match.params.companyId, showArchived]);
 
     return (
         <>

@@ -12,6 +12,7 @@ import {
 	getComponent,
 	getComponents,
 	getTagsAndTypes,
+	getTypesAll,
 	uploadComponentImages,
 	uploadVariationImages,
 	getVariation,
@@ -163,13 +164,27 @@ function* getTagsAndTypesById({ payload: { companyId } }: any) {
 }
 
 /**
+ * get Types and Images
+ */
+function* getTypesAllById({ payload: { companyId, filters } }: any) {
+	try {
+		const response = yield call(getTypesAll, companyId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_TYPES_ALL, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_TYPES_ALL, error));
+	}
+}
+
+/**
  * export component
  */
 function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 	try {
+		const isCsv = fileType === "csv" || fileType === "csv-filtered";
+
 		if (fileType) {
-			const response = yield call(fileType === "csv" ? exportCSVFile : exportXLSFile, companyId, filters);
-			if (fileType === 'csv') {
+			const response = yield call(isCsv ? exportCSVFile : exportXLSFile, companyId, filters);
+			if (isCsv) {
 				downloadFile(response.data, `components.${fileType}`);
 			} else {
 				downloadFile(response.data, `components.${fileType}`, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -178,6 +193,20 @@ function* exportComponent({ payload: { companyId, fileType, filters } }: any) {
 		}
 	} catch (error) {
 		yield put(componentsApiResponseError(ComponentsTypes.EXPORT_COMPONENT, error));
+	}
+}
+
+
+/**
+ * Import component
+ * @param param0 
+ */
+function* importComponent({ payload: { companyId, file } }: any) {
+	try {
+		// const response = yield call(importComponents, companyId, file);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.IMPORT_COMPONENT, true));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.IMPORT_COMPONENT, error));
 	}
 }
 
@@ -437,8 +466,16 @@ export function* watchGetTagsAndTypes() {
 	yield takeEvery(ComponentsTypes.GET_TAGS_TYPES, getTagsAndTypesById);
 }
 
+export function* watchGetTypesAll() {
+	yield takeEvery(ComponentsTypes.GET_TYPES_ALL, getTypesAllById);
+}
+
 export function* watchExportComponent() {
 	yield takeEvery(ComponentsTypes.EXPORT_COMPONENT, exportComponent);
+}
+
+export function* watchImportComponent() {
+	yield takeEvery(ComponentsTypes.IMPORT_COMPONENT, importComponent);
 }
 
 export function* watchGetVariation() {
@@ -515,7 +552,9 @@ function* componentsSaga() {
 		fork(watchDeleteComponent),
 		fork(watchArchiveComponent),
 		fork(watchGetTagsAndTypes),
+		fork(watchGetTypesAll),
 		fork(watchExportComponent),
+		fork(watchImportComponent),
 		fork(watchGetVariation),
 		fork(watchEditVariation),
 		fork(watchDiscontinueComponent),

@@ -73,11 +73,24 @@ const Components = (state = INIT_STATE, action: any) => {
                         tagsAndTypes: action.payload.data,
                     }
                 }
+                case ComponentsTypes.GET_TYPES_ALL: {
+                    return {
+                        ...state,
+                        typesAll: action.payload.data,
+                    }
+                }
                 case ComponentsTypes.EXPORT_COMPONENT: {
                     return {
                         ...state,
                         isExported: true,
                         loading: false,
+                    }
+                }
+                case ComponentsTypes.IMPORT_COMPONENT: {
+                    return {
+                        ...state,
+                        isImported: true,
+                        importLoading: false,
                     }
                 }
                 case ComponentsTypes.GET_VARIATION: {
@@ -259,6 +272,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case ComponentsTypes.IMPORT_COMPONENT: {
+                    return {
+                        ...state,
+                        importComponentError: action.payload.error,
+                        isImported: false,
+                        importLoading: false,
+                    }
+                }
                 case ComponentsTypes.GET_VARIATION: {
                     return {
                         ...state,
@@ -397,6 +418,9 @@ const Components = (state = INIT_STATE, action: any) => {
         case ComponentsTypes.DISCONTINUE_COMPONENT:
             return { ...state, isComponentDiscontinued: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
+        case ComponentsTypes.IMPORT_COMPONENT:
+            return { ...state, isImported: false, importLoading: true };
+
         case ComponentsTypes.EXPORT_COMPONENT:
             return { ...state, isExported: false, loading: true };
 
@@ -405,13 +429,13 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.EDIT_VARIATION:
             return { ...state, isVariationEdited: false, loading: true };
-        
+
         case ComponentsTypes.CREATE_COMPONENT_PACKING_BOX:
-                return { ...state, isComponentPackingBoxCreated: false, loading: true };
-        
+            return { ...state, isComponentPackingBoxCreated: false, loading: true };
+
         case ComponentsTypes.GET_COMPONENT_PACKING_BOX:
-                return { ...state, isComponentPackingBoxCreated: false, loading: true };
-        
+            return { ...state, isComponentPackingBoxCreated: false, loading: true };
+
         case ComponentsTypes.DELETE_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxDeleted: false, isComponentCreated: false, isComponentEdited: false, loading: true };
 
@@ -420,7 +444,7 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.RESTORE_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxRestored: false, isComponentArchived: false, isComponentCreated: false, isComponentEdited: false, loading: true };
-        
+
         case ComponentsTypes.EDIT_COMPONENT_PACKING_BOX:
             return { ...state, isComponentPackingBoxEdited: false, loading: true };
 
@@ -438,7 +462,7 @@ const Components = (state = INIT_STATE, action: any) => {
 
         case ComponentsTypes.RESTORE_COMPONENT_ME:
             return { ...state, isComponentMERestored: false, isComponentMEArchived: false, isComponentMECreated: false, isComponentMEEdited: false, loading: true };
-        
+
         case ComponentsTypes.EDIT_COMPONENT_ME:
             return { ...state, isComponentMEEdited: false, loading: true };
 
@@ -465,6 +489,13 @@ const Components = (state = INIT_STATE, action: any) => {
                 isComponentPackingBoxEdited: false,
                 isComponentMECreated: false,
                 isComponentMEEdited: false,
+                isImported: false
+            }
+        }
+        case ComponentsTypes.RESET_COMPONENTS: {
+            return {
+                ...state,
+                components: {}
             }
         }
         default: return { ...state };

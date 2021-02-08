@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { Row, Col, Card, Form, Media, Button } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
@@ -38,7 +38,7 @@ const ChangePassword = (props: ChangePasswordProps) => {
                 dispatch(resetAuth());
             }, 10000);
         }
-    }, [passwordChange]);
+    }, [passwordChange, dispatch]);
 
 
     const menuItems: Array<any> = [

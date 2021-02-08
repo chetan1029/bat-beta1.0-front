@@ -164,13 +164,23 @@ const VariationDetails = (props: VariationDetailsProps) => {
 				setVariationOptions([]);
 			}
 
+			const randomString = (length: number) => {
+				var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+				var result = '';
+				for (var i = 0; i < length; i++) {
+					result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+				}
+				return result;
+			};
+
 			if (size(variations) > 1) {
 				forEach(allOptions, (option, index) => {
 					forEach(allOptions, (opt) => {
 						if (!isEmpty(allOptions[index + 1]) && (option.name !== opt.name)) {
 							newOptions.push({
 								name: `${option.value} ${opt.value}`,
-								value: [option, opt]
+								value: [option, opt],
+								random: randomString(10)
 							});
 						}
 					});
@@ -179,7 +189,8 @@ const VariationDetails = (props: VariationDetailsProps) => {
 				forEach(allOptions, (option) => {
 					newOptions.push({
 						name: option.value,
-						value: [option]
+						value: [option],
+						random: randomString(10)
 					});
 				});
 			}
@@ -192,8 +203,8 @@ const VariationDetails = (props: VariationDetailsProps) => {
 					name: varOption.name,
 					value: varOption.value,
 					image: "",
-					model_number: "",
-					manufacturer_part_number: "",
+					model_number: varOption.random,
+					manufacturer_part_number: varOption.random,
 					weight: { value: "", unit: "lb" },
 					show: true,
 				});
@@ -217,6 +228,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
 		const newVariations = [...variations];
 		newVariations.splice(index, 1);
 		setVariations(newVariations);
+		if (newVariations.length === 0) {
+			setVariationOptions([]);
+		}
 	};
 
 	const removeVariationOptions = (index: number, show, undo: boolean = false) => {
@@ -251,92 +265,92 @@ const VariationDetails = (props: VariationDetailsProps) => {
 			</div>
 
 			{hasMultiVariations &&
-            <Card className="mb-4">
-              <h6
-                className="link  text-blue text-right m-3"
-                onClick={() => setVariations([...variations, { name: "", option: "" }])}
-              >
-                + {t('Add one more')}
-              </h6>
-              <Card.Body>
-				  {map(variations, (variation, index) => (
-					  <Row key={index}>
-						  <Col lg={4}>
-							  <Form.Group className="mb-4">
-								  <Form.Label htmlFor="usr">{`${t("Name ")}${index + 1}`}</Form.Label>
-								  <Form.Control
-									  type="text"
-									  className={classNames("form-control", get(errors, `variations[${index}].name`) && "border-danger")}
-									  id={`name${index}`}
-									  name={"name"}
-									  value={variation.name}
-									  placeholder={`${t("Name ")}${index + 1}`}
-									  autoComplete="off"
-									  onChange={(e: any) => {
-										  validator.setFieldValue(`variations[${index}].name`, e.target.value);
-										  handleInputChange(e, index);
-									  }}
-								  />
-								  {get(errors, `variations[${index}].name`) &&
-                                  <span className="text-danger font-10">
-                                        {get(errors, `variations[${index}].name`)}
-                                    </span>
-								  }
-							  </Form.Group>
-						  </Col>
-						  <Col lg={4}>
-							  <Form.Group className="mb-4">
-								  <TagsInput
-									  label={t('Option Value')}
-									  placeholder={t('Option Value')}
-									  id="option"
-									  name="option"
-									  tags={variations[index].option}
-									  selectedTags={(tags: [string]) => handleInputChange({
-										  target: {
-											  name: "option",
-											  value: tags
-										  }
-									  }, index)}
-								  />
-							  </Form.Group>
-						  </Col>
-						  <div onClick={() => removeVariation(index)}
-							   style={{ position: "sticky", marginTop: "2.5em" }}>
-							  <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
-						  </div>
-					  </Row>
-				  ))}
-              </Card.Body>
-            </Card>
+				<Card className="mb-4">
+					<h6
+						className="link  text-blue text-right m-3"
+						onClick={() => setVariations([...variations, { name: "", option: "" }])}
+					>
+						+ {t('Add one more')}
+					</h6>
+					<Card.Body>
+						{map(variations, (variation, index) => (
+							<Row key={index}>
+								<Col lg={4}>
+									<Form.Group className="mb-4">
+										<Form.Label htmlFor="usr">{`${t("Name ")}${index + 1}`}</Form.Label>
+										<Form.Control
+											type="text"
+											className={classNames("form-control", get(errors, `variations[${index}].name`) && "border-danger")}
+											id={`name${index}`}
+											name={"name"}
+											value={variation.name}
+											placeholder={`${t("Name ")}${index + 1}`}
+											autoComplete="off"
+											onChange={(e: any) => {
+												validator.setFieldValue(`variations[${index}].name`, e.target.value);
+												handleInputChange(e, index);
+											}}
+										/>
+										{get(errors, `variations[${index}].name`) &&
+											<span className="text-danger font-10">
+												{get(errors, `variations[${index}].name`)}
+											</span>
+										}
+									</Form.Group>
+								</Col>
+								<Col lg={4}>
+									<Form.Group className="mb-4">
+										<TagsInput
+											label={t('Option Value')}
+											placeholder={t('Option Value')}
+											id="option"
+											name="option"
+											tags={variations[index].option}
+											selectedTags={(tags: [string]) => handleInputChange({
+												target: {
+													name: "option",
+													value: tags
+												}
+											}, index)}
+										/>
+									</Form.Group>
+								</Col>
+								<div onClick={() => removeVariation(index)}
+									style={{ position: "sticky", marginTop: "2.5em" }}>
+									<Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer" />
+								</div>
+							</Row>
+						))}
+					</Card.Body>
+				</Card>
 			}
 			{variationOptError && <Alert variant="danger" className="my-2 text-white">{variationOptError}</Alert>}
 			{get(errors, "options") && variationOptions.length === 0 &&
-            <Alert variant="danger" className="my-2 text-white">{get(errors, "options")}</Alert>}
+				<Alert variant="danger" className="my-2 text-white">{get(errors, "options")}</Alert>}
 			{map(variationOptions, (option, index) => (
 				<Row key={index} className="mt-2 mx-0">
 					{!!option.show ?
 						<>
 							{hasMultiVariations &&
-                            <div className="react-dropzone"
-                                 style={{ maxHeight: "3.5em", marginTop: "1.8em" }}>
-								{option.image ?
-									<div className={"variation-image"}>
-										<img src={option.image.preview} alt={option.image.name}/>
-									</div> :
-									<Dropzone accept={"image/*"}
-											  onDropAccepted={(files) => handleUploadImage(files[0], index)} multiple
-											  maxFiles={1}>
-										{({ getRootProps, getInputProps }) => (
-											<div className="small-dropzone" {...getRootProps()}>
-												<input {...getInputProps()} />
-												<Icon name={"upload"} className="icon-sm"/>
-												<span className="font-10">Upload</span>
-											</div>
-										)}
-									</Dropzone>
-								}
-                            </div>
+								<div className="react-dropzone"
+									style={{ maxHeight: "3.5em", marginTop: "1.8em" }}>
+									{option.image ?
+										<div className={"variation-image"}>
+											<img src={option.image.preview} alt={option.image.name} />
+										</div> :
+										<Dropzone accept={"image/*"}
+											onDropAccepted={(files) => handleUploadImage(files[0], index)} multiple
+											maxFiles={1}>
+											{({ getRootProps, getInputProps }) => (
+												<div className="small-dropzone" {...getRootProps()}>
+													<input {...getInputProps()} />
+													<Icon name={"upload"} className="icon-sm" />
+													<span className="font-10">Upload</span>
+												</div>
+											)}
+										</Dropzone>
+									}
+								</div>
 							}
 							<Col lg={4}>
 								<Form.Group className="mb-4">
@@ -347,7 +361,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										className={classNames("form-control", get(errors, `variationOptions[${index}].model_number`) && "border-danger")}
 										id={`model_number${index}`}
 										name={"model_number"}
-										value={option.modelNo}
+										value={option.model_number}
 										placeholder={`${t("Model Number ")}${option.name}`}
 										autoComplete="off"
 										onChange={(e: any) => {
@@ -357,9 +371,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										}
 									/>
 									{get(errors, `variationOptions[${index}].model_number`) &&
-                                    <span className="text-danger font-10">
-                                        {get(errors, `variationOptions[${index}].model_number`)}
-                                    </span>
+										<span className="text-danger font-10">
+											{get(errors, `variationOptions[${index}].model_number`)}
+										</span>
 									}
 								</Form.Group>
 							</Col>
@@ -372,7 +386,7 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										className={classNames("form-control", get(errors, `variationOptions[${index}].manufacturer_part_number`) && "border-danger")}
 										id={`manufacturer_part_number${index}`}
 										name={"manufacturer_part_number"}
-										value={option.modelNo}
+										value={option.manufacturer_part_number}
 										placeholder={`${t("Manufacturer Number ")}${option.name}`}
 										autoComplete="off"
 										onChange={(e: any) => {
@@ -381,9 +395,9 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										}}
 									/>
 									{get(errors, `variationOptions[${index}].manufacturer_part_number`) &&
-                                    <span className="text-danger font-10">
-                                        {get(errors, `variationOptions[${index}].manufacturer_part_number`)}
-                                    </span>
+										<span className="text-danger font-10">
+											{get(errors, `variationOptions[${index}].manufacturer_part_number`)}
+										</span>
 									}
 								</Form.Group>
 							</Col>
@@ -419,31 +433,31 @@ const VariationDetails = (props: VariationDetailsProps) => {
 										</DropdownButton>
 									</InputGroup>
 									{(numberInvalidError || get(errors, `variationOptions[${index}].weight`)) &&
-                                    <span className="text-danger font-10">
-                                        {numberInvalidError ? numberInvalidError : get(errors, `variationOptions[${index}].weight`)}
-                                    </span>
+										<span className="text-danger font-10">
+											{numberInvalidError ? numberInvalidError : get(errors, `variationOptions[${index}].weight`)}
+										</span>
 									}
 								</Form.Group>
 							</Col>
 							{size(variationOptions) > 1 && !!hasMultiVariations &&
-                            <div onClick={() => removeVariationOptions(index, option.show)}
-                                 style={{ position: "sticky", marginTop: "3em" }}>
-                              <Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer"/>
-                            </div>
+								<div onClick={() => removeVariationOptions(index, option.show)}
+									style={{ position: "sticky", marginTop: "3em" }}>
+									<Icon name="delete" className="mx-1 svg-outline-danger cursor-pointer" />
+								</div>
 							}
 						</> :
 						<>
 							<div className="d-flex align-items-center justify-content-center cursor-pointer"
-								 onClick={() => removeVariationOptions(index, option.show)}>
+								onClick={() => removeVariationOptions(index, option.show)}>
 								<div className={"delete-box"}>
-									<Icon name="delete-white"/>
+									<Icon name="delete-white" />
 								</div>
 							</div>
 							<Col lg={3} className="d-flex align-items-center">
 								{t("This variant will not be created. You can undo this action")}
 							</Col>
 							<button className="btn btn-outline-primary cursor-pointer"
-									onClick={() => removeVariationOptions(index, option.show, true)}>
+								onClick={() => removeVariationOptions(index, option.show, true)}>
 								{t("Undo")}
 							</button>
 						</>

@@ -68,16 +68,16 @@ const TaxCardItem = ({ tax, onArchiveDeleteAction, onEditTax, companyId }: TaxCa
                             <h6 className="m-0">{COUNTRIES[tax.from_country]} to {COUNTRIES[tax.to_country]}</h6>
                         </Card.Header>
                         <Card.Body>
-                          <Row>
-                              <Col lg={6}>
-                                <p className="m-0 text-muted">{t('Custom Duty')}</p>
-                                <p className="m-0">{tax.custom_duty}%</p>
-                              </Col>
-                              <Col lg={6}>
-                                <p className="m-0 text-muted">{t('VAT')}</p>
-                                <p className="m-0">{tax.vat}%</p>
-                              </Col>
-                          </Row>
+                            <Row>
+                                <Col lg={6}>
+                                    <p className="m-0 text-muted">{t('Custom Duty')}</p>
+                                    <p className="m-0">{tax.custom_duty}%</p>
+                                </Col>
+                                <Col lg={6}>
+                                    <p className="m-0 text-muted">{t('VAT')}</p>
+                                    <p className="m-0">{tax.vat}%</p>
+                                </Col>
+                            </Row>
                         </Card.Body>
                     </Link>
                     <Card.Footer>
@@ -203,7 +203,7 @@ const Tax = (props: TaxProps) => {
                 dispatch(resetTax());
             }, 10000);
         }
-    }, [isTaxDeleted, isTaxArchived, isTaxRestored, dispatch, props.match.params.companyId]);
+    }, [isTaxDeleted, isTaxArchived, isTaxRestored, dispatch, props.match.params.companyId, showArchived]);
 
     return (
         <>

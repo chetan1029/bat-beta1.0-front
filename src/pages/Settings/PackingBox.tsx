@@ -75,7 +75,7 @@ const PaymentCardItem = ({ packingbox, onArchiveDeleteAction, onEditPackingBox, 
                                 </Col>
                                 <Col xs={6} lg={6}>
                                     <p className="m-0 text-muted">{t('Weight')}</p>
-                                    <p className="m-0">{packingbox.weight ? packingbox.weight['value'] + ' ' + packingbox.weight['unit']: ''}</p>
+                                    <p className="m-0">{packingbox.weight ? packingbox.weight['value'] + ' ' + packingbox.weight['unit'] : ''}</p>
                                 </Col>
                             </Row>
                         </Card.Body>
@@ -203,7 +203,7 @@ const PackingBox = (props: PackingBoxProps) => {
                 dispatch(resetPackingBox());
             }, 10000);
         }
-    }, [isPackingBoxDeleted, isPackingBoxArchived, isPackingBoxRestored, dispatch, props.match.params.companyId]);
+    }, [isPackingBoxDeleted, isPackingBoxArchived, isPackingBoxRestored, dispatch, props.match.params.companyId, showArchived]);
 
     return (
         <>

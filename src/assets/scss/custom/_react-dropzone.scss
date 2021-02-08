@@ -62,7 +62,7 @@
             margin: 1em;
         }
 
-        :checked + label img {
+        :checked+label img {
             border-color: $black;
         }
     }
@@ -75,6 +75,17 @@
         border-radius: 0.7em;
         flex-direction: column;
         padding: 0.4em 0.5em;
+    }
+
+    .medium-dropzone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba($primary, 0.3);
+        border-radius: 0.7em;
+        flex-direction: column;
+        padding: 3em;
+        cursor: pointer;
     }
 
     .variation-image {

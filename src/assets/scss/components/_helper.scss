@@ -150,3 +150,8 @@ main {
     }
   }
 }
+
+.image-group img{
+  border-radius: 50% !important;
+  border: $card-border-width solid $img-border-color;
+}
