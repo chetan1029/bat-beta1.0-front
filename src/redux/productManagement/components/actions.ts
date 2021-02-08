@@ -156,3 +156,34 @@ export const deleteComponentFileME = (companyId: number, meId: number | string, 
     type: ComponentsTypes.DELETE_COMPONENT_FILE_ME,
     payload: { companyId, meId, fileId }
 });
+
+// component Products
+export const createComponentProducts = (companyId: string | number, componentId: any, data: any) => ({
+    type: ComponentsTypes.CREATE_COMPONENT_PRODUCTS,
+    payload: { companyId, componentId, data }
+});
+
+export const getComponentsProducts = (companyId: string | number, componentId: any, filters?: any) => ({
+    type: ComponentsTypes.GET_COMPONENT_PRODUCTS,
+    payload: { companyId, componentId, filters }
+});
+
+export const archiveComponentProducts = (companyId: string | number, componentId: number | string,  id: any, data: any, filters) => ({
+    type: ComponentsTypes.ARCHIVE_COMPONENT_PRODUCTS,
+    payload: { companyId, componentId, id, data, filters }
+});
+
+export const restoreComponentProducts = (companyId: string | number, componentId: number | string, id: any, data: any, filters) => ({
+    type: ComponentsTypes.RESTORE_COMPONENT_PRODUCTS,
+    payload: { companyId, componentId, id, data, filters }
+});
+
+export const deleteComponentProducts = (companyId: string | number, componentId: number | string, id: any, filters) => ({
+    type: ComponentsTypes.DELETE_COMPONENT_PRODUCTS,
+    payload: { companyId, componentId, id, filters }
+});
+
+export const editComponentProducts = (companyId: string | number, componentId: number | string, id: any, data: any) => ({
+    type: ComponentsTypes.EDIT_COMPONENT_PRODUCTS,
+    payload: { companyId, componentId, id, data }
+});

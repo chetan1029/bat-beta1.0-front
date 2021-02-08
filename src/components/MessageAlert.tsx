@@ -33,6 +33,8 @@ interface MessageAlertProps {
     showAsNotification?: boolean,
 }
 
+const timeout = 3000;
+
 const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, iconClass, showAsNotification }: MessageAlertProps) => {
     const { t } = useTranslation();
 
@@ -41,6 +43,9 @@ const MessageAlert = ({ onHide, message, icon, undo, onUndo, iconWrapperClass, i
     useEffect(() => {
         if (message) {
             setshow(true);
+            setTimeout(() => {
+                setshow(false);
+            }, timeout);
         }
     }, [message])
 

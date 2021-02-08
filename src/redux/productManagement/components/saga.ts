@@ -25,7 +25,9 @@ import {
 	archiveComponentPackingBox,
 	restoreComponentPackingBox,
 	editComponentPackingBox,
-	createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile
+	createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
+	createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
+
 } from "../../../api";
 
 import { downloadFile } from "../../../api/utils";
@@ -434,6 +436,86 @@ function* updateComponentME({ payload: { companyId, componentId, id, data } }: a
 	}
 }
 
+
+/**
+ * create new component Products
+ */
+function* createNewComponentProducts({ payload: { companyId, componentId, data } }: any) {
+	try {
+		const responses = yield* data.map(item => call(createComponentProducts, companyId, componentId, item))
+		// const response = yield call(createComponentProducts, companyId, componentId, data);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.CREATE_COMPONENT_PRODUCTS, responses));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.CREATE_COMPONENT_PRODUCTS, error));
+	}
+}
+
+/**
+ * get all components Products
+ */
+function* getAllComponentsProducts({ payload: { companyId, componentId, filters } }: any) {
+	try {
+		const response = yield call(getComponentProducts, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PRODUCTS, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.GET_COMPONENT_PRODUCTS, error));
+	}
+}
+
+/**
+ * delete component Products
+ */
+function* deleteComponentByIdProducts({ payload: { companyId, componentId, id, filters } }: any) {
+	try {
+		const response = yield call(deleteComponentProducts, companyId, componentId, id);
+		const res = yield call(getComponentProducts, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PRODUCTS, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.DELETE_COMPONENT_PRODUCTS, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.DELETE_COMPONENT_PRODUCTS, error));
+	}
+}
+
+/**
+ * archive component Products
+ */
+function* archiveComponentByIdProducts({ payload: { companyId, componentId, id, data, filters } }: any) {
+	try {
+		const response = yield call(archiveComponentProducts, companyId, componentId, id, data);
+		const res = yield call(getComponentProducts, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PRODUCTS, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.ARCHIVE_COMPONENT_PRODUCTS, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.ARCHIVE_COMPONENT_PRODUCTS, error));
+	}
+}
+
+/**
+ * restore component Products
+ */
+function* restoreComponentByIdProducts({ payload: { companyId, componentId, id, data, filters } }: any) {
+	try {
+		const response = yield call(restoreComponentProducts, companyId, componentId, id, data);
+		const res = yield call(getComponentProducts, companyId, componentId, filters);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.GET_COMPONENT_PRODUCTS, res.data));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.RESTORE_COMPONENT_PRODUCTS, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.RESTORE_COMPONENT_PRODUCTS, error));
+	}
+}
+
+/**
+ * update component Products
+ */
+function* updateComponentProducts({ payload: { companyId, componentId, id, data } }: any) {
+	try {
+		const response = yield call(editComponentProducts, companyId, componentId, id, omit(data, ['files']));
+		yield put(componentsApiResponseSuccess(ComponentsTypes.EDIT_COMPONENT_PRODUCTS, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.EDIT_COMPONENT_PRODUCTS, error));
+	}
+}
+
 export function* watchGetComponents() {
 	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
@@ -543,6 +625,31 @@ export function* watchDeleteComponentFileME() {
 	yield takeEvery(ComponentsTypes.DELETE_COMPONENT_FILE_ME, deleteComponentFileME);
 }
 
+
+export function* watchCreateNewComponentProducts() {
+	yield takeEvery(ComponentsTypes.CREATE_COMPONENT_PRODUCTS, createNewComponentProducts);
+}
+
+export function* watchGetAllComponentsProducts() {
+	yield takeEvery(ComponentsTypes.GET_COMPONENT_PRODUCTS, getAllComponentsProducts);
+}
+
+export function* watchDeleteComponentByIdProducts() {
+	yield takeEvery(ComponentsTypes.DELETE_COMPONENT_PRODUCTS, deleteComponentByIdProducts);
+}
+
+export function* watchArchiveComponentByIdProducts() {
+	yield takeEvery(ComponentsTypes.ARCHIVE_COMPONENT_PRODUCTS, archiveComponentByIdProducts);
+}
+
+export function* watchRestoreComponentByIdProducts() {
+	yield takeEvery(ComponentsTypes.RESTORE_COMPONENT_PRODUCTS, restoreComponentByIdProducts);
+}
+
+export function* watchUpdateComponentProducts() {
+	yield takeEvery(ComponentsTypes.EDIT_COMPONENT_PRODUCTS, updateComponentProducts);
+}
+
 function* componentsSaga() {
 	yield all([
 		fork(watchGetComponents),
@@ -574,6 +681,13 @@ function* componentsSaga() {
 		fork(watchRestoreComponentByIdME),
 		fork(watchUpdateComponentME),
 		fork(watchDeleteComponentFileME),
+
+		fork(watchCreateNewComponentProducts),
+		fork(watchGetAllComponentsProducts),
+		fork(watchDeleteComponentByIdProducts),
+		fork(watchArchiveComponentByIdProducts),
+		fork(watchRestoreComponentByIdProducts),
+		fork(watchUpdateComponentProducts),
 	]);
 }
 
