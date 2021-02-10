@@ -170,6 +170,7 @@ const Components = (props: ComponentsProps) => {
 			type = options["Component type"].toString();
 		}
 		dispatch(resetComponentsData());
+		setSelectedComponents([]);
 		setTimeout(() => {
 			setFilters({ ...filters, tags, type });
 		});
@@ -203,6 +204,7 @@ const Components = (props: ComponentsProps) => {
 			delete f['type'];
 			setFilters({ ...f, status: tab, limit, offset: 0 });
 		}
+		setSelectedComponents([]);
 		setFilters({ ...f, status: tab, limit, offset: 0 });
 		setSelectedTab(tab);
 	};
