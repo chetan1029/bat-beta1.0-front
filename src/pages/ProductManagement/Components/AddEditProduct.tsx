@@ -170,10 +170,22 @@ const AddEditProduct = ({ isOpen, onClose, defaultData, companyId, componentId, 
 			}))
 		}),
 		onSubmit: values => {
-			let sendData = values.components.filter(v => !!v);
-			console.log(values)
-			console.log(sendData)
-			console.log('defaultData', defaultData)
+			let _values = values.components.filter(v => !!v);
+			let sendData:any = [];
+			selectedComponents.map(v => {
+				let _find_product = find(_values, ['product', v.id]);
+				if(!!_find_product){
+					sendData = [...sendData, _find_product];
+				} else {
+					let _default_product = {
+						component: componentId,
+						quantity: 1,
+						product: v.id
+					}
+					sendData = [ ...sendData, _default_product]
+				}
+			})
+
 			if (!!defaultData) {
 				// dispatch(editComponentME(companyId, componentId, defaultData.id, values));
 			} else {
