@@ -552,6 +552,10 @@ function editComponentProducts(companyId: number, componentId: number | string, 
     return api.updatePatch(`${componentUrl(companyId)}${componentId}/products/${id}/`, data);
 }
 
+function performBulkActionProducts(companyId, action: string, ids: Array<any>) {
+    return api.create(`${componentUrl(companyId)}bulk_action/`, { action, ids });
+}
+
 /*variations*/
 const variationUrl = (companyId) => `/companies/${companyId}/product-variations/`;
 
@@ -636,7 +640,7 @@ export {
     getHscode, createHscode, updateHscode, deleteHscode, archiveHscode, restoreHscode,
     getTax, createTax, updateTax, deleteTax, archiveTax, restoreTax,
     getDeliveryTerms,
-    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent, restoreComponent,
+    getComponents, createComponent, editComponent, deleteComponent, getComponent, archiveComponent, restoreComponent, performBulkActionProducts,
     uploadComponentImages, uploadVariationImages, getTagsAndTypes, getTypesAll, exportCSVFile, exportXLSFile,
     getVariation, editVariation, deleteVariationImages, discontinueComponent,
     getClients, getClient, archiveClient,
@@ -644,6 +648,6 @@ export {
     getAssets, createAsset, updateAsset, deleteAsset, archiveAsset, restoreAsset, getLocations, getAssetType, transferAsset, getAssetTransferrs,
     getMembershipPlan,
     createComponentPackingBox, getComponentpackingboxes, deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox, editComponentPackingBox,
-    createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile, 
+    createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 }

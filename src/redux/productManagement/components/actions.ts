@@ -132,7 +132,7 @@ export const getComponentsME = (companyId: string | number, componentId: any, fi
     payload: { companyId, componentId, filters }
 });
 
-export const archiveComponentME = (companyId: string | number, componentId: number | string,  id: any, data: any, filters) => ({
+export const archiveComponentME = (companyId: string | number, componentId: number | string, id: any, data: any, filters) => ({
     type: ComponentsTypes.ARCHIVE_COMPONENT_ME,
     payload: { companyId, componentId, id, data, filters }
 });
@@ -168,7 +168,7 @@ export const getComponentsProducts = (companyId: string | number, componentId: a
     payload: { companyId, componentId, filters }
 });
 
-export const archiveComponentProducts = (companyId: string | number, componentId: number | string,  id: any, data: any, filters) => ({
+export const archiveComponentProducts = (companyId: string | number, componentId: number | string, id: any, data: any, filters) => ({
     type: ComponentsTypes.ARCHIVE_COMPONENT_PRODUCTS,
     payload: { companyId, componentId, id, data, filters }
 });
@@ -186,4 +186,10 @@ export const deleteComponentProducts = (companyId: string | number, componentId:
 export const editComponentProducts = (companyId: string | number, componentId: number | string, id: any, data: any) => ({
     type: ComponentsTypes.EDIT_COMPONENT_PRODUCTS,
     payload: { companyId, componentId, id, data }
+});
+
+
+export const performBulkActionProduct = (companyId: string | number, action: string, ids: Array<number | string>) => ({
+    type: ComponentsTypes.PERFORM_BULK,
+    payload: { companyId, action, ids }
 });

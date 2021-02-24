@@ -2,28 +2,12 @@ import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
 import { get, isEmpty, map, size, forEach, omit } from 'lodash';
 
 import {
-	archiveComponent,
-	restoreComponent,
-	createComponent,
-	deleteComponent,
-	editComponent,
-	exportCSVFile,
-	exportXLSFile,
-	getComponent,
-	getComponents,
-	getTagsAndTypes,
-	getTypesAll,
-	uploadComponentImages,
-	uploadVariationImages,
-	getVariation,
-	editVariation,
-	deleteVariationImages,
-	discontinueComponent,
-	createComponentPackingBox,
-	getComponentpackingboxes,
-	deleteComponentPackingBox,
-	archiveComponentPackingBox,
-	restoreComponentPackingBox,
+	archiveComponent, restoreComponent, createComponent, deleteComponent, editComponent, performBulkActionProducts,
+	exportCSVFile, exportXLSFile, getComponent, getComponents, getTagsAndTypes,
+	getTypesAll, uploadComponentImages, uploadVariationImages,
+	getVariation, editVariation, deleteVariationImages,
+	discontinueComponent, createComponentPackingBox, getComponentpackingboxes,
+	deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox,
 	editComponentPackingBox,
 	createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
 	createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
@@ -529,6 +513,15 @@ function* updateComponentProducts({ payload: { companyId, componentId, id, data 
 	}
 }
 
+function* performBulkAction({ payload: { companyId, action, ids } }: any) {
+	try {
+		const response = yield call(performBulkActionProducts, companyId, action, ids);
+		yield put(componentsApiResponseSuccess(ComponentsTypes.PERFORM_BULK, response.data));
+	} catch (error) {
+		yield put(componentsApiResponseError(ComponentsTypes.PERFORM_BULK, error));
+	}
+}
+
 export function* watchGetComponents() {
 	yield takeEvery(ComponentsTypes.GET_COMPONENTS, getAllComponents);
 }
@@ -663,6 +656,10 @@ export function* watchUpdateComponentProducts() {
 	yield takeEvery(ComponentsTypes.EDIT_COMPONENT_PRODUCTS, updateComponentProducts);
 }
 
+export function* watchPerformBulkAction() {
+	yield takeEvery(ComponentsTypes.PERFORM_BULK, performBulkAction);
+}
+
 function* componentsSaga() {
 	yield all([
 		fork(watchGetComponents),
@@ -701,6 +698,8 @@ function* componentsSaga() {
 		fork(watchArchiveComponentByIdProducts),
 		fork(watchRestoreComponentByIdProducts),
 		fork(watchUpdateComponentProducts),
+
+		fork(watchPerformBulkAction)
 	]);
 }
 

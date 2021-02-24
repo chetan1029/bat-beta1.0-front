@@ -44,4 +44,6 @@ export enum ComponentsTypes {
 
     RESET = '@@productManagement/components/RESET',
     RESET_COMPONENTS = '@@productManagement/components/RESET_COMPONENTS',
+
+    PERFORM_BULK = '@@productManagement/components/PERFORM_BULK',
 }

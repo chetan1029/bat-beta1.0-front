@@ -240,6 +240,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.PERFORM_BULK: {
+                    return {
+                        ...state,
+                        bulkActionResponse: action.payload.data,
+                        isBulkActionPerformed: true,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -481,6 +489,14 @@ const Components = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case ComponentsTypes.PERFORM_BULK: {
+                    return {
+                        ...state,
+                        bulkActionError: action.payload.error,
+                        isBulkActionPerformed: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -600,13 +616,21 @@ const Components = (state = INIT_STATE, action: any) => {
                 isComponentMEEdited: false,
                 isComponentProductsCreated: false,
                 isComponentProductsEdited: false,
-                isImported: false
+                isImported: false,
+                isBulkActionPerformed: false
             }
         }
         case ComponentsTypes.RESET_COMPONENTS: {
             return {
                 ...state,
                 components: {}
+            }
+        }
+        case ComponentsTypes.PERFORM_BULK: {
+            return {
+                ...state,
+                isBulkActionPerformed: false,
+                loading: true
             }
         }
         default: return { ...state };

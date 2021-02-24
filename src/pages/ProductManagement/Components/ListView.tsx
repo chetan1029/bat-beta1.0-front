@@ -15,11 +15,12 @@ interface ListViewProps {
 	onSelectAllComponents: any;
 	onChangePage?: any;
 	history?: any;
+	onPerformBulk?; any;
 }
 
 const ListView = (props: ListViewProps) => {
 	const { components, companyId, selectedComponents,
-		onSelectComponent, onSelectAllComponents, onChangePage, history } = props;
+		onSelectComponent, onSelectAllComponents, onChangePage, history, onPerformBulk } = props;
 	const { t } = useTranslation();
 
 	const [records, setRecords] = useState<Array<any>>([]);
@@ -58,20 +59,20 @@ const ListView = (props: ListViewProps) => {
 							/>
 						</th>
 						{!(selectedComponents && selectedComponents.length) ?
-						<><th>{t("Component")}</th>
-						<th>{t("Type")}</th>
-						<th>{t("Status")}</th>
-						<th>{t("Model Number")}</th></>
-						:
-						<>
-						<th colSpan={4} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
-							disabled={!(selectedComponents && selectedComponents.length)}>
-							<Dropdown.Item onClick={() => { }}>{t('Active Component')}</Dropdown.Item>
-							<Dropdown.Item onClick={() => { }}>{t('Archive Component')}</Dropdown.Item>
-							<Dropdown.Item onClick={() => { }}>{t('Draft Component')}</Dropdown.Item>
-							<Dropdown.Item onClick={() => { }}>{t('Delete Component')}</Dropdown.Item>
-						</DropdownButton></th>
-						</>
+							<><th>{t("Component")}</th>
+								<th>{t("Type")}</th>
+								<th>{t("Status")}</th>
+								<th>{t("Model Number")}</th></>
+							:
+							<>
+								<th colSpan={4} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
+									disabled={!(selectedComponents && selectedComponents.length)}>
+									<Dropdown.Item onClick={() => onPerformBulk('active')}>{t('Active Component')}</Dropdown.Item>
+									<Dropdown.Item onClick={() => onPerformBulk('archive')}>{t('Archive Component')}</Dropdown.Item>
+									<Dropdown.Item onClick={() => onPerformBulk('draft')}>{t('Draft Component')}</Dropdown.Item>
+									<Dropdown.Item onClick={() => onPerformBulk('delete')}>{t('Delete Component')}</Dropdown.Item>
+								</DropdownButton></th>
+							</>
 						}
 					</tr>
 				</thead>

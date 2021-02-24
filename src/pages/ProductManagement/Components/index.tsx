@@ -9,7 +9,7 @@ import Icon from "../../../components/Icon";
 import {
 	archiveComponent, exportComponent, getComponents,
 	getTagsAndTypes, getTypesAll, resetComponents,
-	resetComponentsData
+	resetComponentsData, performBulkActionProduct
 } from "../../../redux/actions";
 import MessageAlert from "../../../components/MessageAlert";
 import searchIcon from "../../../assets/images/search_icon.svg";
@@ -93,6 +93,7 @@ const Components = (props: ComponentsProps) => {
 		isExported,
 		isImported,
 		isComponentDiscontinued,
+		isBulkActionPerformed, bulkActionError, bulkActionResponse
 	} = useSelector(({ ProductManagement: { Components } }: any) => ({
 		loading: Components.loading,
 		components: Components.components,
@@ -104,6 +105,9 @@ const Components = (props: ComponentsProps) => {
 		isExported: Components.isExported,
 		isImported: Components.isImported,
 		isComponentDiscontinued: Components.isComponentDiscontinued,
+		isBulkActionPerformed: Components.isBulkActionPerformed,
+		bulkActionError: Components.bulkActionError,
+		bulkActionResponse: Components.bulkActionResponse,
 	}));
 
 	// const prevFiltersRef = useRef();
@@ -132,12 +136,21 @@ const Components = (props: ComponentsProps) => {
 	reset for all the notification
 	*/
 	useEffect(() => {
-		if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported || isImported) {
+		if (isComponentCreated || isComponentArchived || isComponentDiscontinued || isExported || isImported || isBulkActionPerformed) {
 			setTimeout(() => {
 				dispatch(resetComponents());
 			}, 10000);
 		}
-	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, isImported, dispatch]);
+	}, [isComponentCreated, isComponentArchived, isComponentDiscontinued, isExported, isImported, isBulkActionPerformed, dispatch]);
+
+
+	useEffect(() => {
+		if (isBulkActionPerformed) {
+			dispatch(resetComponentsData());
+			dispatch(getComponents(companyId, filters));
+			setSelectedComponents([]);
+		}
+	}, [isBulkActionPerformed, companyId, dispatch, filters]);
 
 
 	const onChangePage = useCallback((offset) => {
@@ -202,12 +215,17 @@ const Components = (props: ComponentsProps) => {
 			dispatch(resetComponentsData());
 		} else {
 			delete f['type'];
+			dispatch(resetComponentsData());
 			setFilters({ ...f, status: tab, limit, offset: 0 });
 		}
 		setSelectedComponents([]);
 		setFilters({ ...f, status: tab, limit, offset: 0 });
 		setSelectedTab(tab);
 	};
+
+	const performBulkAction = (action: string) => {
+		dispatch(performBulkActionProduct(companyId, action, selectedComponents.map(c => c['id'])));
+	}
 
 	// const onChangeView = (checked: boolean) => {
 	// 	if (checked) {
@@ -319,6 +337,7 @@ const Components = (props: ComponentsProps) => {
 										onSelectComponent={handleOnSelectComponents}
 										onSelectAllComponents={handleOnSelectAllComponents}
 										onChangePage={onChangePage}
+										onPerformBulk={performBulkAction}
 									/> :
 									<GridView
 										companyId={companyId}
@@ -361,6 +380,13 @@ const Components = (props: ComponentsProps) => {
 			{isImported ? <MessageAlert message={t('File imported successfully')} icon={"check"}
 				iconWrapperClass="bg-success text-white p-2 rounded-circle"
 				iconClass="icon-sm" /> : null}
+
+			{isBulkActionPerformed && bulkActionResponse ? <MessageAlert message={bulkActionResponse['message'] || bulkActionResponse['detail']} icon={"check"}
+				iconWrapperClass="bg-success text-white p-2 rounded-circle"
+				iconClass="icon-sm" /> : null}
+
+			{bulkActionError && <MessageAlert message={bulkActionError}
+				icon={"x"} showAsNotification={false} />}
 
 		</div>
 	);
