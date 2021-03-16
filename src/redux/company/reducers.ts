@@ -12,7 +12,8 @@ import Location from "./location/reducers";
 import PackingBox from "./packingBox/reducers";
 import DeliveryTerms from "./deliveryTerms/reducers";
 import AssetsState from "./assets/reducers"
-import MembershipPlan from "./membershipPlan/reducers"
+import MembershipPlan from "./membershipPlan/reducers";
+import AutoEmails from "./autoEmails/reducers";
 
 export default combineReducers({
     PaymentTerms,
@@ -28,5 +29,6 @@ export default combineReducers({
     Tax,
     DeliveryTerms,
     AssetsState,
-    MembershipPlan
+    MembershipPlan,
+    AutoEmails
 });

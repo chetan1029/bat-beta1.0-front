@@ -625,6 +625,34 @@ function transferAsset(companyId: number, params: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+
+/* auto emails */
+function getCampaigns(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getCampaign(companyId: number, campaignId: number,) {
+    const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function updateCampaign(companyId: number, campaignId: number, data: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
+/* marketplaces */
+function getMarketPlaces(params?: any) {
+    const baseUrl = `/amazon-marketplaces/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getMarketPlace(marketId: string | number) {
+    const baseUrl = `/amazon-marketplaces/${marketId}/`;
+    return api.get(`${baseUrl}`, {});
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -650,4 +678,7 @@ export {
     createComponentPackingBox, getComponentpackingboxes, deleteComponentPackingBox, archiveComponentPackingBox, restoreComponentPackingBox, editComponentPackingBox,
     createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
+
+    getCampaigns, getCampaign, updateCampaign,
+    getMarketPlaces, getMarketPlace
 }

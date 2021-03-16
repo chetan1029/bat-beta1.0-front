@@ -9747,6 +9747,11 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
+react-flagkit@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-flagkit/-/react-flagkit-2.0.4.tgz#1b19ca6a20642ee2d9856e7af5c96fb3ba5c3c01"
+  integrity sha512-e0Rak6VG1+KemBFqLqTPzFDLYS40lEW1YOpG9s68WDoEoQiC0YPEXDkIGLorNgP6omJztcg/OtcjSqAKM2O1cw==
+
 react-flatpickr@^3.10.6:
   version "3.10.6"
   resolved "https://registry.yarnpkg.com/react-flatpickr/-/react-flatpickr-3.10.6.tgz#d6fe73ee12d13f2a804e5362c82e2688b6fbd409"

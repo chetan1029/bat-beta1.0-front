@@ -91,6 +91,7 @@
         rect {
             stroke: $white !important;
         }
+
         circle {
             stroke: $white !important;
         }
@@ -110,6 +111,7 @@
         rect {
             stroke: $success !important;
         }
+
         circle {
             stroke: $success !important;
         }
@@ -129,6 +131,7 @@
         rect {
             stroke: $muted !important;
         }
+
         circle {
             stroke: $muted !important;
         }
@@ -217,7 +220,13 @@ add new payment form
         z-index: $zIndexContent;
     }
 }
+
 /* Accordion */
-.accordion > .card > .card-header{
-  cursor: pointer;
+.accordion>.card>.card-header {
+    cursor: pointer;
+}
+
+
+.clickable-row {
+    cursor: pointer;
 }

@@ -12,8 +12,10 @@ const DisplayDate = ({ dateStr, timeClass, hideTime }: DisplayDateProps) => {
     const tClass = timeClass || 'text-muted ml-2';
 
     return <>
-        <span>{dayjs(dateStr).format('DD MMMM YYYY')}</span>
-        {!hideTime ? <span className={classNames(tClass)}>{dayjs(dateStr).format('hh:mm A')}</span> : null}
+        {dateStr ? <>
+            <span>{dayjs(dateStr).format('DD MMMM YYYY')}</span>
+            {!hideTime ? <span className={classNames(tClass)}>{dayjs(dateStr).format('hh:mm A')}</span> : null}
+        </> : null}
     </>;
 }
 
