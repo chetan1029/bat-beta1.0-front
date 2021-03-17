@@ -12,12 +12,12 @@ export const marketPlacesApiResponseError = (actionType: string, error: string) 
     payload: { actionType, error }
 });
 
-export const getMarketPlaces = (filters?: any) => ({
+export const getMarketPlaces = (companyId: string | number, filters?: any) => ({
     type: MarketPlacesTypes.GET_MARKETPLACES,
-    payload: { filters }
+    payload: { companyId, filters }
 });
 
-export const getMarketPlace = (marketId: string | number) => ({
+export const getMarketPlace = (companyId: string | number, marketId: string | number) => ({
     type: MarketPlacesTypes.GET_MARKETPLACE,
-    payload: { marketId }
+    payload: { companyId, marketId }
 });

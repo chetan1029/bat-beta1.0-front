@@ -38,8 +38,8 @@ const Campaigns = (props: CampaignsProps) => {
     // get the data
     useEffect(() => {
         dispatch(getCampaigns(companyId, defaultParams));
-        dispatch(getMarketPlaces(defaultParams));
-    }, [dispatch, companyId]);
+        dispatch(getMarketPlaces(companyId, defaultParams));
+    }, [dispatch, companyId, defaultParams]);
 
     const getCampaignsOfMarket = (market: any) => {
         return ((campaigns || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];
@@ -145,9 +145,14 @@ const Campaigns = (props: CampaignsProps) => {
                                                         {getCampaignsOfMarket(market).map((campaign, cidx) => {
                                                             return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
                                                                 <td>
-                                                                    <div>
-                                                                        <h6 className="text-muted font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
-                                                                        <h6 className='my-0'>{campaign['emailtemplate']['slug']}</h6>
+                                                                    <div className="d-flex">
+                                                                        <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible">
+                                                                            <Flag country={market['country']} />
+                                                                        </div>
+                                                                        <div>
+                                                                            <h6 className="text-muted font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
+                                                                            <h6 className='my-0'>{campaign['emailtemplate']['slug']}</h6>
+                                                                        </div>
                                                                     </div>
                                                                 </td>
                                                                 <td>

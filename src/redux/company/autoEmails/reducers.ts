@@ -56,7 +56,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         loading: false,
-                        error: action.payload.error,
+                        updateError: action.payload.error,
                         isCampaignUpdated: false,
                     }
                 }
@@ -71,14 +71,15 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
             return { ...state, loading: true };
 
         case AutoEmailsTypes.UPDATE_CAMPAIGN:
-            return { ...state, loading: true, isCampaignUpdated: false };
+            return { ...state, loading: true, isCampaignUpdated: false, updateError: null };
 
         case AutoEmailsTypes.RESET: {
             return {
                 ...state,
                 isCampaignsFetched: false,
                 isCampaignUpdated: false,
-                error: null
+                error: null,
+                updateError: null
             }
         }
         default: return { ...state };

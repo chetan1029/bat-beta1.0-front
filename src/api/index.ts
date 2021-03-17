@@ -643,13 +643,13 @@ function updateCampaign(companyId: number, campaignId: number, data: any) {
 }
 
 /* marketplaces */
-function getMarketPlaces(params?: any) {
-    const baseUrl = `/amazon-marketplaces/`;
+function getMarketPlaces(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/amazon-marketplaces/`;
     return api.get(`${baseUrl}`, params);
 }
 
-function getMarketPlace(marketId: string | number) {
-    const baseUrl = `/amazon-marketplaces/${marketId}/`;
+function getMarketPlace(companyId: number, marketId: string | number) {
+    const baseUrl = `/companies/${companyId}/amazon-marketplaces/${marketId}/`;
     return api.get(`${baseUrl}`, {});
 }
 

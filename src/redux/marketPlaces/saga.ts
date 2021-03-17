@@ -9,9 +9,9 @@ import { MarketPlacesTypes } from './constants';
 /**
  * get all
  */
-function* getMarkets({ payload: { filters } }: any) {
+function* getMarkets({ payload: { companyId, filters } }: any) {
     try {
-        const response = yield call(getMarketPlacesApi, filters);
+        const response = yield call(getMarketPlacesApi, companyId, filters);
         yield put(marketPlacesApiResponseSuccess(MarketPlacesTypes.GET_MARKETPLACES, response.data));
     } catch (error) {
         yield put(marketPlacesApiResponseError(MarketPlacesTypes.GET_MARKETPLACES, error));
@@ -19,9 +19,9 @@ function* getMarkets({ payload: { filters } }: any) {
 }
 
 
-function* getMarket({ payload: { marketId } }: any) {
+function* getMarket({ payload: { companyId, marketId } }: any) {
     try {
-        const response = yield call(getMarketPlaceApi, marketId);
+        const response = yield call(getMarketPlaceApi, companyId, marketId);
         yield put(marketPlacesApiResponseSuccess(MarketPlacesTypes.GET_MARKETPLACE, response.data));
     } catch (error) {
         yield put(marketPlacesApiResponseError(MarketPlacesTypes.GET_MARKETPLACE, error));

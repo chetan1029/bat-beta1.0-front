@@ -32,13 +32,13 @@ const Details = (props: DetailsProps) => {
     const companyId = props.match.params.companyId;
     const marketId = props.match.params.marketId;
 
-    const defaultParams = useMemo(() => ({ 'limit': 100000000, 'marketplace': marketId }), []);
+    const defaultParams = useMemo(() => ({ 'limit': 100000000, 'marketplace': marketId }), [marketId]);
 
     // get the data
     useEffect(() => {
         dispatch(getCampaigns(companyId, defaultParams));
-        dispatch(getMarketPlace(marketId));
-    }, [dispatch, companyId, marketId]);
+        dispatch(getMarketPlace(companyId, marketId));
+    }, [dispatch, companyId, marketId, defaultParams]);
 
     const getCampaignsOfMarket = (market: any) => {
         return ((campaigns || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];
@@ -61,7 +61,11 @@ const Details = (props: DetailsProps) => {
 
     const onSelect = (campaign) => {
         setSelectedCampaignId(campaign['id']);
-        setSelectedCampaign(campaign);
+        setSelectedCampaign(null);
+
+        setTimeout(() => {
+            setSelectedCampaign(campaign);
+        });
     }
 
     return (
@@ -130,7 +134,7 @@ const Details = (props: DetailsProps) => {
 
                                 <Row className="mt-4">
                                     <Col lg={12}>
-                                        <div className="px-2 pb-2 mb-4">
+                                        <div className="px-2 pb-2 mb-3">
                                             <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedCampaignId} as='ul'>
                                                 {(campaigns || []).map((campaign: any, idx: number) => {
                                                     return <Nav.Item as="li" key={idx}>
@@ -151,8 +155,6 @@ const Details = (props: DetailsProps) => {
                 </Row>
 
             </> : null}
-
-            {/* {isClientArchived ? <MessageAlert message={t('The client is archived successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null} */}
 
         </>
     );
