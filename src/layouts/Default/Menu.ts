@@ -15,7 +15,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
     let menuItems: Array<MenuItemProp> = [
         { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
         {
-            name: 'ProductManagement', url: `/product-management/${companyId}`, icon: 'box', label: 'Product Management', id: 'prodManagement',
+            name: 'ProductManagement', url: `/product-management/${companyId}`, icon: 'scan', label: 'Product Management', id: 'prodManagement',
             children: [
                 { name: 'Dashboard', url: `/product-management/${companyId}/dashboard`, icon: 'apps', label: 'Dashboard', id: 'prodDs', parentId: 'prodManagement' },
                 { name: 'Components', url: `/product-management/${companyId}/components`, icon: 'components', label: 'Components', id: 'prodComps', parentId: 'prodManagement' },
@@ -85,7 +85,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
     menuItems = [...menuItems, ...[{
         name: 'Sales', url: '/sales', icon: 'sales', label: 'Sales', id: 'sales',
         children: [
-            { name: 'Dashboard', url: '/sales/dashboard', icon: 'box-2', label: 'Dashboard', id: 'salesDs', parentId: 'sales' },
+            { name: 'Dashboard', url: '/sales/dashboard', icon: 'apps', label: 'Dashboard', id: 'salesDs', parentId: 'sales' },
             { name: 'CostControl', url: '/sales/cost-control', icon: 'cost_control', label: 'Cost Control', id: 'salesCC', parentId: 'sales' },
             // {
             //     name: 'SalesChannel', url: `/sales/${companyId}/channels`, icon: 'shop', label: 'Sales Channels', id: 'salesChanels', parentId: 'sales',
@@ -104,7 +104,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
     {
         name: 'Finance', url: '/finance', icon: 'finance', label: 'Finance', id: 'finance',
         children: [
-            { name: 'Dashboard', url: '/finance/dashboard', icon: 'box-2', label: 'Dashboard', id: 'FinanceDashboard', parentId: 'finance' },
+            { name: 'Dashboard', url: '/finance/dashboard', icon: 'apps', label: 'Dashboard', id: 'FinanceDashboard', parentId: 'finance' },
             {
                 name: 'Payments', url: '/finance/payments', icon: 'cash_flow', label: 'Payments', id: 'FinancePayments', parentId: 'finance',
                 children: [

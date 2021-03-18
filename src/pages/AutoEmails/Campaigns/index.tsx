@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Table } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
-
+import Icon from "../../../components/Icon";
 import Flag from 'react-flagkit';
 import { useTranslation } from 'react-i18next';
 
@@ -71,6 +71,7 @@ const Campaigns = (props: CampaignsProps) => {
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
+                            <Icon name="mail2" className="icon icon-xs  mr-2" />
                             <h1 className="m-0">{t('Campaigns')}</h1>
                         </div>
                     </Col>
