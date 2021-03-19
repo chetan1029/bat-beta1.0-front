@@ -103,7 +103,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                         <tr className="clickable-row" onClick={() => openDetails(market)}>
                                                             <td>
                                                                 <div className="d-flex">
-                                                                    <div className="border rounded-sm p-1 mr-2 d-flex align-items-end">
+                                                                    <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
                                                                         <Flag country={market['country']} />
                                                                     </div>
                                                                     <div>

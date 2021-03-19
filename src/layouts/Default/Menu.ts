@@ -106,7 +106,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
         children: [
             { name: 'Dashboard', url: '/finance/dashboard', icon: 'apps', label: 'Dashboard', id: 'FinanceDashboard', parentId: 'finance' },
             {
-                name: 'Payments', url: '/finance/payments', icon: 'cash_flow', label: 'Payments', id: 'FinancePayments', parentId: 'finance',
+                name: 'Payments', url: '/finance/payments', icon: 'finance', label: 'Payments', id: 'FinancePayments', parentId: 'finance',
                 children: [
                     { name: 'UpcomingPayments', url: `/supply-chain/${companyId}/finance/payments/upcoming`, icon: 'circle', label: 'Upcoming', id: 'UpcomingPayments', parentId: 'supplyChainInventory' },
                     { name: 'PaidPayments', url: `/supply-chain/${companyId}/finance/payments/paid`, icon: 'circle', label: 'Paid', id: 'PaidPayments', parentId: 'supplyChainInventory' },
