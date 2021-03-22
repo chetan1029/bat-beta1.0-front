@@ -69,7 +69,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
         {
             name: 'AutoEmails', url: `/auto-emails/${companyId}`, icon: 'mail', label: 'Auto Emails', id: 'autoEmails',
             children: [
-                { name: 'Dashboard', url: `/auto-emails/${companyId}/dashboard`, icon: 'apps', label: 'Dashboard', id: 'autoEmailDs', parentId: 'autoEmails' },
+                { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'apps', label: 'Dashboard', id: 'autoEmailDs', parentId: 'autoEmails' },
                 { name: 'Campaigns', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Campaigns', id: 'campaigns', parentId: 'autoEmails' },
             ]
         }
