@@ -115,13 +115,13 @@ const Index = ({ match }: IndexProps) => {
           desc:
             "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
         },
-        {
-          title: "User Permissions",
-          key: "members",
-          icon: "members",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
+        // {
+        //   title: "User Permissions",
+        //   key: "members",
+        //   icon: "members",
+        //   desc:
+        //     "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+        // },
         {
           title: "Membership Plan",
           key: "membership",
@@ -129,81 +129,81 @@ const Index = ({ match }: IndexProps) => {
           desc:
             "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
         },
-        {
-          title: "Amazon Accounts",
-          key: "amazon_accounts",
-          icon: "amazon",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
+        // {
+        //   title: "Amazon Accounts",
+        //   key: "amazon_accounts",
+        //   icon: "amazon",
+        //   desc:
+        //     "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+        // },
       ],
     },
-    {
-      label: "Logistic",
-      items: [
-        {
-          title: "Location",
-          key: "location",
-          icon: "location",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-        {
-          title: "Hs Code",
-          key: "hscode",
-          icon: "ticket",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-        {
-          title: "Packing Box",
-          key: "packing_box",
-          icon: "packing",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-        {
-          title: "Delivery Terms",
-          key: "delivery_terms",
-          icon: "shipment",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-      ],
-    },
-    {
-      label: t("Finance"),
-      items: [
-        {
-          title: "Payment Terms",
-          key: "payment_terms",
-          icon: "wallet",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-        {
-          title: "Banks",
-          key: "bank",
-          icon: "bank",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-        {
-          title: "Taxes",
-          key: "tax",
-          icon: "tax",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-        {
-          title: "Assets",
-          key: "asset",
-          icon: "shop",
-          desc:
-            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        },
-      ],
-    },
+    // {
+    //   label: "Logistic",
+    //   items: [
+    //     {
+    //       title: "Location",
+    //       key: "location",
+    //       icon: "location",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //     {
+    //       title: "Hs Code",
+    //       key: "hscode",
+    //       icon: "ticket",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //     {
+    //       title: "Packing Box",
+    //       key: "packing_box",
+    //       icon: "packing",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //     {
+    //       title: "Delivery Terms",
+    //       key: "delivery_terms",
+    //       icon: "shipment",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //   ],
+    // },
+    // {
+    //   label: t("Finance"),
+    //   items: [
+    //     {
+    //       title: "Payment Terms",
+    //       key: "payment_terms",
+    //       icon: "wallet",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //     {
+    //       title: "Banks",
+    //       key: "bank",
+    //       icon: "bank",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //     {
+    //       title: "Taxes",
+    //       key: "tax",
+    //       icon: "tax",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //     {
+    //       title: "Assets",
+    //       key: "asset",
+    //       icon: "shop",
+    //       desc:
+    //         "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+    //     },
+    //   ],
+    // },
   ];
 
   return (

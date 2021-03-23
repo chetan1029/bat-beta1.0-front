@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Table } from "react-bootstrap";
+import { Row, Col, Card, Table, Button, Accordion } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
 import Icon from "../../../components/Icon";
 import Flag from 'react-flagkit';
@@ -128,7 +128,7 @@ const Campaigns = (props: CampaignsProps) => {
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>
-                                        <Table>
+                                      <Table>
                                             <thead>
                                                 <tr>
                                                     <th>{t("Campaign Name")}</th>
@@ -141,7 +141,7 @@ const Campaigns = (props: CampaignsProps) => {
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
-                                                        <tr className="clickable-row" onClick={() => openDetails(market)}>
+                                                    <tr className="clickable-row">
                                                             <td>
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
@@ -164,9 +164,13 @@ const Campaigns = (props: CampaignsProps) => {
                                                             </td>
                                                             <td>
                                                                 {capitalizeFirstLetter(market['status'])}
+                                                                {capitalizeFirstLetter(market['status']) == 'Inactive' ?
+                                                                <Button onClick={() => openDetails(market)}
+                                                                  className="btn btn-sm btn-danger ml-5">{t('Connect')}</Button>
+                                                                :null
+                                                                }
                                                             </td>
                                                         </tr>
-
                                                         {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
                                                             <td className="text-muted font-weight-normal">
                                                                 <div className="d-flex">

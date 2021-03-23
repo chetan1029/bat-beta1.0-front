@@ -20,7 +20,7 @@ const Dashboard = (props: DashboardProps) => {
             <Row className='align-items-center'>
                 <Col>
                     <div className="d-flex align-items-center">
-                        <Icon name="mail2" className="icon icon-xs  mr-2" />
+                        <Icon name="home" className="icon icon-xs  mr-2" />
                         <h1 className="m-0">Dashboard</h1>
                     </div>
                 </Col>

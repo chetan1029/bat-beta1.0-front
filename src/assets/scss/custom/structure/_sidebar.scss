@@ -59,9 +59,10 @@
         ul {
             padding-bottom: 6px;
         }
-        :last-child{
-          margin-top: auto;
-        }
+        // To keep setting menu in the bottom
+        //:last-child{
+        //  margin-top: auto;
+        //}
         li {
             position: relative;
             border-radius: $border-radius;
