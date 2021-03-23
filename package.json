@@ -42,6 +42,7 @@
     "simplebar-react": "^2.3.0",
     "typescript": "^4.0.3",
     "ua-parser-js": "^0.7.22",
+    "universal-cookie": "^4.0.4",
     "web-vitals": "^0.2.4",
     "yup": "^0.31.1"
   },

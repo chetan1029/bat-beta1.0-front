@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Table } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
@@ -9,26 +9,52 @@ import { useTranslation } from 'react-i18next';
 //components
 import Loader from "../../../components/Loader";
 import DisplayDate from "../../../components/DisplayDate";
+import MessageAlert from "../../../components/MessageAlert";
 
 
 //actions
-import { getCampaigns, getMarketPlaces } from "../../../redux/actions";
+import { getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace } from "../../../redux/actions";
 
-
+const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 interface CampaignsProps {
     match: any;
+    location?: any;
 }
 const Campaigns = (props: CampaignsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const { loading, campaigns, markets } = useSelector((state: any) => ({
+    const queryParam: any = props.location.search;
+    const [successMsg, setSuccessMsg] = useState<any>(null);
+    const [errorMsg, setErrorMsg] = useState<any>(null);
+
+    useEffect(() => {
+        const params = new URLSearchParams(queryParam);
+        const success = params.get('success');
+        const error = params.get('error');
+
+        if (success) {
+            setSuccessMsg(success);
+            setErrorMsg(null);
+        }
+        if (error) {
+            setSuccessMsg(null);
+            setErrorMsg(error);
+        }
+    }, [queryParam]);
+
+
+    const { loading, campaigns, markets, redirectUri, isMarketConnected } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
-        markets: state.MarketPlaces.markets
+        markets: state.MarketPlaces.markets,
+        isMarketConnected: state.MarketPlaces.isMarketConnected,
+        redirectUri: state.MarketPlaces.redirectUri
     }));
 
     const companyId = props.match.params.companyId;
@@ -37,6 +63,7 @@ const Campaigns = (props: CampaignsProps) => {
 
     // get the data
     useEffect(() => {
+        dispatch(resetConnectMarketplace());
         dispatch(getCampaigns(companyId, defaultParams));
         dispatch(getMarketPlaces(companyId, defaultParams));
     }, [dispatch, companyId, defaultParams]);
@@ -62,8 +89,22 @@ const Campaigns = (props: CampaignsProps) => {
     }
 
     const openDetails = (market: any) => {
-        history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/`);
+        if (market.status === 'active')
+            history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/`);
+        else {
+            dispatch(connectMarketplace(companyId, market['id']));
+        }
     }
+
+    useEffect(() => {
+        if (redirectUri && isMarketConnected) {
+            window.location.href = redirectUri;
+        }
+    }, [redirectUri, isMarketConnected]);
+
+
+    const sortedMarkets = [...markets.filter(m => m['status'] === 'active'), ...markets.filter(m => m['status'] !== 'active')];
+
 
     return (
         <>
@@ -98,7 +139,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {markets.map((market, idx) => {
+                                                {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
                                                         <tr className="clickable-row" onClick={() => openDetails(market)}>
                                                             <td>
@@ -122,16 +163,14 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 <DisplayDate dateStr={getLastSentOfMarket(market)} />
                                                             </td>
                                                             <td>
-                                                                {market['status']}
+                                                                {capitalizeFirstLetter(market['status'])}
                                                             </td>
                                                         </tr>
 
                                                         {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
                                                             <td className="text-muted font-weight-normal">
                                                                 <div className="d-flex">
-                                                                    <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible">
-                                                                        <Flag country={market['country']} />
-                                                                    </div>
+                                                                    <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
                                                                     <div>
                                                                         {t("Template Name")}
                                                                     </div>
@@ -147,9 +186,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                             return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
                                                                 <td>
                                                                     <div className="d-flex">
-                                                                        <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible">
-                                                                            <Flag country={market['country']} />
-                                                                        </div>
+                                                                        <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
                                                                         <div>
                                                                             <h6 className="text-muted font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
                                                                             <h6 className='my-0'>{campaign['emailtemplate']['slug']}</h6>
@@ -166,7 +203,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     <DisplayDate dateStr={campaign['last_email_send_in_queue']} />
                                                                 </td>
                                                                 <td>
-                                                                    {campaign['status']['name']}
+                                                                    {capitalizeFirstLetter(campaign['status']['name'])}
                                                                 </td>
                                                             </tr>
                                                         })}
@@ -181,6 +218,9 @@ const Campaigns = (props: CampaignsProps) => {
                     </div>}
                 </Card.Body>
             </Card>
+
+            {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
         </>
     );
 }

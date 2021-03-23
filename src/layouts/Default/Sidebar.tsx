@@ -147,7 +147,7 @@ const Sidebar = (props: SideProps) => {
       let items = div.getElementsByTagName("a");
 
       for (let i = 0; i < items.length; ++i) {
-        if (props.location.pathname === items[i].pathname) {
+        if (props.location.pathname === items[i].pathname || (props.location.pathname.includes('/settings/') && items[i].pathname.includes('/settings/'))) {
           matchingMenuItem = items[i];
           break;
         }

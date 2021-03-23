@@ -653,6 +653,11 @@ function getMarketPlace(companyId: number, marketId: string | number) {
     return api.get(`${baseUrl}`, {});
 }
 
+function connectMarketPlace(companyId: number, marketId: string | number) {
+    const baseUrl = `/companies/${companyId}/amazon-marketplaces/${marketId}/authorize/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -680,5 +685,5 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign,
-    getMarketPlaces, getMarketPlace
+    getMarketPlaces, getMarketPlace, connectMarketPlace
 }

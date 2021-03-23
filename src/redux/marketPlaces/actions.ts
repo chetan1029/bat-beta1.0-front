@@ -21,3 +21,13 @@ export const getMarketPlace = (companyId: string | number, marketId: string | nu
     type: MarketPlacesTypes.GET_MARKETPLACE,
     payload: { companyId, marketId }
 });
+
+
+export const connectMarketplace = (companyId: string | number, marketId: string | number) => ({
+    type: MarketPlacesTypes.CONNECT_MARKETPLACE,
+    payload: { companyId, marketId }
+});
+
+export const resetConnectMarketplace = () => ({
+    type: MarketPlacesTypes.RESET_CONNECT_MARKETPLACE
+});
