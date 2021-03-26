@@ -1,12 +1,13 @@
 export interface MenuItemProp {
-    id: string,
-    parentId?: string,
-    name: string,
-    url: string,
-    icon?: string,
-    label: string,
-    active?: boolean,
-    children?: Array<MenuItemProp>
+    id: string;
+    parentId?: string;
+    name: string;
+    url: string;
+    icon?: string;
+    label: string;
+    active?: boolean;
+    isExternal?: boolean;
+    children?: Array<MenuItemProp>;
 }
 
 
@@ -15,7 +16,8 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
     let menuItems: Array<MenuItemProp> = [
         { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
         { name: 'Campaigns', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Campaigns', id: 'campaigns' },
-        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/category/extensions", icon: 'graph', label: 'Keywords Rank Tracker', id: 'keyword_rank_tracker' },
+        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/category/extensions", icon: 'graph', 
+            label: 'Keywords Rank Tracker', id: 'keyword_rank_tracker', isExternal: true },
         { name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings' },
         // {
         //     name: 'ProductManagement', url: `/product-management/${companyId}`, icon: 'scan', label: 'Product Management', id: 'prodManagement',

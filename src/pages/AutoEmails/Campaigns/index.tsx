@@ -91,7 +91,7 @@ const Campaigns = (props: CampaignsProps) => {
     const openDetails = (market: any) => {
         if (market.status === 'active')
             history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/`);
-        else {
+        else if (markets.findIndex(m => m['status'] === 'active') === -1) {
             dispatch(connectMarketplace(companyId, market['id']));
         }
     }
@@ -104,7 +104,7 @@ const Campaigns = (props: CampaignsProps) => {
 
 
     const sortedMarkets = [...markets.filter(m => m['status'] === 'active'), ...markets.filter(m => m['status'] !== 'active')];
-
+    const isActiveMarket = markets.findIndex(m => m['status'] === 'active') !== -1;
 
     return (
         <>
@@ -164,11 +164,11 @@ const Campaigns = (props: CampaignsProps) => {
                                                             </td>
                                                             <td>
                                                                 {capitalizeFirstLetter(market['status'])}
-                                                                {capitalizeFirstLetter(market['status']) == 'Inactive' ?
-                                                                <Button onClick={() => openDetails(market)}
+                                                                {capitalizeFirstLetter(market['status']) === 'Inactive' ?
+                                                                <Button onClick={() => openDetails(market)} disabled={isActiveMarket}
                                                                   className="btn btn-sm btn-danger ml-5">{t('Connect')}</Button>
-                                                                :null
-                                                                }
+                                                                :<Button onClick={() => openDetails(market)}
+                                                                className="btn btn-sm btn-danger ml-5">{t('View')}</Button>}
                                                             </td>
                                                         </tr>
                                                         {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
