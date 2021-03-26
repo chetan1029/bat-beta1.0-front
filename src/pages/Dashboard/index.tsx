@@ -42,30 +42,34 @@ const Dashboard = (props: DashboardProps) => {
                         </Row>
                         <Row className="mt-3">
                             <Col lg={3}>
-                              <Card className="pt-2 mb-2">
+                              <Card className="card-stats mb-2">
                                   <Card.Body className="">
-                                    <h3>$112,455 Sales</h3>
+                                    <p className="header">Sales</p>
+                                    <p className="sub-header mt-1">$112,455  <small className="text-success"><i className="up"></i>10%</small></p>
                                   </Card.Body>
                               </Card>
                             </Col>
                             <Col lg={3}>
-                              <Card className="pt-2 mb-2">
+                              <Card className="card-stats mb-2">
                                   <Card.Body className="">
-                                    <h3>2345 Orders</h3>
+                                    <p className="header">Orders</p>
+                                    <p className="sub-header mt-1">12,455  <small className="text-danger"><i className="down"></i>10%</small></p>
                                   </Card.Body>
                               </Card>
                             </Col>
                             <Col lg={3}>
-                              <Card className="pt-2 mb-2">
+                              <Card className="card-stats mb-2">
                                   <Card.Body className="">
-                                    <h3>2340 Email Sent</h3>
+                                    <p className="header">Email Sent</p>
+                                    <p className="sub-header mt-1">3,455  <small className="text-success"><i className="up"></i>10%</small></p>
                                   </Card.Body>
                               </Card>
                             </Col>
                             <Col lg={3}>
-                              <Card className="pt-2 mb-2">
+                              <Card className="card-stats mb-2">
                                   <Card.Body className="">
-                                    <h3>4567 Email in Queue</h3>
+                                    <p className="header">Email in Queue</p>
+                                    <p className="sub-header mt-1">2,455 <small className="text-danger"><i className="down"></i>10%</small></p>
                                   </Card.Body>
                               </Card>
                             </Col>
