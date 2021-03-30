@@ -48,6 +48,10 @@ import InviteChannel from "../pages/SalesChannels/InviteChannel";
 // clients
 import Clients from "../pages/Clients/";
 
+// auto emails
+import Campaigns from "../pages/AutoEmails/Campaigns/";
+import CampaignDetails from "../pages/AutoEmails/Campaigns/Details";
+
 // account
 import Login from "../pages/account/Login";
 import SignUp from "../pages/account/SignUp";
@@ -74,6 +78,9 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/edit", component: EditCompany },
 
   { path: "/clients/:companyId", component: Clients, layoutProps: { 'mainSidebar': true } },
+
+  { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
+  { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
 
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },

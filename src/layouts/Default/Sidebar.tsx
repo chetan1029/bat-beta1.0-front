@@ -20,7 +20,7 @@ import { Collapse } from "react-bootstrap";
 const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
   const Tag: any = tag || 'li';
 
-  const { id, url, icon, label, children } = menuItem;
+  const { id, url, icon, label, children, isExternal } = menuItem;
   const { t } = useTranslation();
 
   const hasChildren = children && children.length;
@@ -43,29 +43,37 @@ const MenuItem = ({ menuItem, tag, onToggle, activeMenuItemIds }) => {
   }
 
   return <Tag className={classNames({ 'selected_item': show })}>
-    <Link to={url} className={classNames("menu_item d-flex", { "selected_link": show })} data-menu-id={id} onClick={(e: any) => {
-      toggleMenu();
-      if (hasChildren) {
-        e.preventDefault();
-        return false;
-      }
-    }}>
-      {hasChildren ? <div className="menu_icon">
-        <Icon name="arrow-left" />
-      </div> : null}
-
+    {isExternal ? <a href={url} className={classNames("menu_item d-flex", { "selected_link": show })} target="_blank" rel="noreferrer">
       {icon ? <div className="menu_item_icon">
         <Icon name={icon} />
       </div> : null}
 
       <p className="menu_item_label">{t(label)}</p>
-    </Link>
+    </a> : <>
+        <Link to={url} className={classNames("menu_item d-flex", { "selected_link": show })} data-menu-id={id} onClick={(e: any) => {
+          toggleMenu();
+          if (hasChildren) {
+            e.preventDefault();
+            return false;
+          }
+        }}>
+          {hasChildren ? <div className="menu_icon">
+            <Icon name="arrow-left" />
+          </div> : null}
 
-    {hasChildren ? <>
-      <Collapse in={show}>
-        <Menu menuItems={children} uId={id} className="" onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
-      </Collapse>
-    </> : null}
+          {icon ? <div className="menu_item_icon">
+            <Icon name={icon} />
+          </div> : null}
+
+          <p className="menu_item_label">{t(label)}</p>
+        </Link>
+
+        {hasChildren ? <>
+          <Collapse in={show}>
+            <Menu menuItems={children} uId={id} className="" onToggle={onToggle} activeMenuItemIds={activeMenuItemIds} />
+          </Collapse>
+        </> : null}
+      </>}
   </Tag>
 }
 
@@ -147,7 +155,7 @@ const Sidebar = (props: SideProps) => {
       let items = div.getElementsByTagName("a");
 
       for (let i = 0; i < items.length; ++i) {
-        if (props.location.pathname === items[i].pathname) {
+        if (props.location.pathname === items[i].pathname || (props.location.pathname.includes('/settings/') && items[i].pathname.includes('/settings/'))) {
           matchingMenuItem = items[i];
           break;
         }

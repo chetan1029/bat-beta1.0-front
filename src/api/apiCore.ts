@@ -1,5 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 import config from "../config";
 
@@ -14,7 +15,7 @@ axios.interceptors.response.use(response => {
 }, error => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     let message: any;
-    
+
     if (error && error.response && error.response.status === 404) {
         window.location.href = '/not-found';
     } else if (error && error.response && error.response.status === 403) {
@@ -46,6 +47,13 @@ const setAuthorization = (token) => {
         axios.defaults.headers.common['Authorization'] = 'JWT ' + token;
     else
         delete axios.defaults.headers.common['Authorization'];
+}
+
+const cookies = new Cookies();
+
+const getUserFromCookie = () => {
+    const user = cookies.get("_bat_session_");
+    return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null;
 }
 class APICore {
     /**
@@ -168,21 +176,20 @@ class APICore {
 
     setLoggedInUser = (session: any) => {
         if (session)
-            sessionStorage.setItem("_bat_session_", JSON.stringify(session));
+            cookies.set('_bat_session_', JSON.stringify(session), { maxAge: 3600, domain: window.location.hostname });
         else
-            sessionStorage.removeItem("_bat_session_");
+            cookies.remove('_bat_session_');
     }
 
     /**
      * Returns the logged in user
      */
     getLoggedInUser = () => {
-        const user = sessionStorage.getItem("_bat_session_");
-        return user ? (typeof user == 'object' ? user : JSON.parse(user)) : null;
+        return getUserFromCookie();
     }
 
     setUserInSession = (modifiedUser: any) => {
-        let userInfo = sessionStorage.getItem("_bat_session_");
+        let userInfo = cookies.get("_bat_session_");
         if (userInfo) {
             const { token, user } = JSON.parse(userInfo);
             this.setLoggedInUser({ token, ...user, ...modifiedUser });
@@ -193,9 +200,9 @@ class APICore {
 /*
 Check if token available in session
 */
-let user = sessionStorage.getItem("_bat_session_");
+let user = getUserFromCookie();
 if (user) {
-    const { token } = JSON.parse(user);
+    const { token } = user;
     if (token) {
         setAuthorization(token);
     }

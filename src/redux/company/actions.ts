@@ -12,3 +12,4 @@ export * from "./clients/actions";
 export * from "./salesChannels/actions";
 export * from "./assets/actions";
 export * from "./membershipPlan/actions";
+export * from "./autoEmails/actions";
