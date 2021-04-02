@@ -5,6 +5,7 @@ import commonSaga from "./common/saga";
 import invitationsSaga from "./invitations/saga";
 import productManagementSaga from "./productManagement/sagas";
 import marketPlacesSaga from "./marketPlaces/saga";
+import dashboardSaga from "./dashboard/saga";
 
 
 export default function* rootSaga() {
@@ -14,6 +15,7 @@ export default function* rootSaga() {
         commonSaga(),
         invitationsSaga(),
         productManagementSaga(),
-        marketPlacesSaga()
+        marketPlacesSaga(),
+        dashboardSaga()
     ]);
 }

@@ -53,3 +53,9 @@ $value in $theme-colors {
         border-color: $gray-400;
     }
 }
+
+.btn-chart {
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.76562rem;
+    line-height: 1.5;
+}

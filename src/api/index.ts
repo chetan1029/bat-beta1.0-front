@@ -658,6 +658,12 @@ function connectMarketPlace(companyId: number, marketId: string | number) {
     return api.create(`${baseUrl}`, {});
 }
 
+
+function getCampaignDashboard(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign-dashboard/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -685,5 +691,6 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign,
-    getMarketPlaces, getMarketPlace, connectMarketPlace
+    getMarketPlaces, getMarketPlace, connectMarketPlace,
+    getCampaignDashboard
 }
