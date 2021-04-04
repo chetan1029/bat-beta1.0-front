@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 //components
 import Icon from "../../components/Icon";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 
 import { getVendorCategories, getSalesCategories } from "../../redux/actions";
 
@@ -199,7 +199,7 @@ const Sidebar = (props: SideProps) => {
 
           <div>
             <Link to="/" className="side_bar_logo">
-              <img src={logo} alt="" />
+              <img src={logo} alt="Komrs.io" height="25" />
             </Link>
 
             {/* <SimpleBar> */}

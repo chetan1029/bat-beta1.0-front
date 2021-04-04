@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 
 //components
 import Icon from "../../components/Icon";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import searchIcon from "../../assets/images/search_icon.svg";
 import bellIcon from "../../assets/images/icons/bell.svg";
 
@@ -37,7 +37,7 @@ const Topbar = (props: TopbarProps) => {
         <div className="navbar">
           <div className="header_top d-flex align-items-center justify-content-between">
             <Link to='#'>
-              <img src={logo} alt="" />
+              <img src={logo} alt="Komrs.io" height="25" />
             </Link>
 
             <Link to='#' className="header_menu_btn" onClick={toggleSidebar}>
