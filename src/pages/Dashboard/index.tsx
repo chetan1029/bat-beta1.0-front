@@ -64,12 +64,12 @@ const Dashboard = (props: DashboardProps) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getCampaignDashboard(companyId, {...getDates(selectedPeriod), currency: selectedCurrency['value']}));
+    dispatch(getCampaignDashboard(companyId, {...getDates(selectedPeriod)}));
   }, [dispatch, companyId, getDates, selectedPeriod, selectedCurrency]);
 
   const onPeriodChange = (period: string) => {
     setSelectedPeriod(period);
-    const filters = {...getDates(period), currency: selectedCurrency['value']};
+    const filters = {...getDates(period)};
     if (selectedMarket) {
       filters['marketplace'] = selectedMarket['value'];
     }
