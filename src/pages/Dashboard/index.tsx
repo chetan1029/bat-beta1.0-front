@@ -76,18 +76,10 @@ const Dashboard = (props: DashboardProps) => {
     dispatch(getCampaignDashboard(companyId, filters));
   }
 
-  const onCurrencyChange = (currency: any) => {
-    setSelectedCurrency(currency);
-    const filters = {...getDates(selectedPeriod), currency: currency['value']};
-    if (selectedMarket) {
-      filters['marketplace'] = selectedMarket['value'];
-    }
-    dispatch(getCampaignDashboard(companyId, filters));
-  }
 
   const onMarketChange = (market: any) => {
     setSelectedMarket(market);
-    const filters = {...getDates(selectedPeriod), currency: selectedCurrency['value']};
+    const filters = {...getDates(selectedPeriod)};
     if (market) {
       filters['marketplace'] = market['value'];
     }
@@ -131,7 +123,7 @@ const Dashboard = (props: DashboardProps) => {
 
         <div>
           <div className="px-2">
-            <Row className="mt-0 mb-5">
+            <Row className="mt-0 mb-3">
             <Col lg={3}>
                 <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
                   onChange={onMarketChange}
@@ -140,17 +132,10 @@ const Dashboard = (props: DashboardProps) => {
                   isSingle={true}
                   companyId={companyId} />
               </Col>
-              <Col lg={3}>
-                <CurrenciesDropdown name='currency' placeholder={t('Currency')}
-                  onChange={onCurrencyChange}
-                  className=""
-                  value={selectedCurrency}
-                  isSingle={true} />
-              </Col>
             </Row>
-            <Row className="mt-4 mb-5">
+            <Row className="mt-1 mb-3">
               <Col lg={12}>
-                {!loading ? <OrderChart data={campaignDashboard ? campaignDashboard['data'] : {}} changePeriod={onPeriodChange} 
+                {!loading ? <OrderChart data={campaignDashboard ? campaignDashboard['data'] : {}} changePeriod={onPeriodChange}
                   selectedCurrency={selectedCurrency['value']} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
               </Col>
             </Row>
