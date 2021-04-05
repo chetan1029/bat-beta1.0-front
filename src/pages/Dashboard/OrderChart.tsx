@@ -13,7 +13,7 @@ interface OrderChartProps {
 }
 
 const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: OrderChartProps) => {
-    
+
     const getFormmater = () => {
         const cFormatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
@@ -106,7 +106,7 @@ const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: Or
             <Col lg={12}>
                 <Card>
                     <Card.Body className="p-0">
-                        <div className="mb-2">
+                        <div className="mb-2 mt-3 ml-3">
                             <Button variant={selectedPeriod === '1m' ? "primary" : "white"} id="one_month" onClick={() => onChangePeriod('1m')} className={classNames('mr-1', 'btn-chart')}>1M</Button>
                             <Button variant={selectedPeriod === '6m' ? "primary" : "white"} id="six_month" onClick={() => onChangePeriod('6m')} className={classNames('mr-1', 'btn-chart')}>6M</Button>
                             <Button variant={selectedPeriod === '1y' ? "primary" : "white"} id="one_year" onClick={() => onChangePeriod('1y')} className={classNames('mr-1', 'btn-chart')}>1Y</Button>
