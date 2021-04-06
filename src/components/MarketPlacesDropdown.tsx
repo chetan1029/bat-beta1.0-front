@@ -31,6 +31,11 @@ const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, i
 
     let marketOpts: Array<any> = [];
 
+    marketOpts.push({
+        label: "All",
+        value: "all"
+    });
+
     for (const market of markets.filter(m => m['status'] === 'active')) {
         marketOpts.push({
             label: t('Amazon') + " " + market['country'],
