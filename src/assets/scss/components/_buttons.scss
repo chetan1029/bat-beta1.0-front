@@ -1,9 +1,16 @@
-// 
+//
 // buttons.scss
 //
 
 .btn {
     transition: 0.3s all ease;
+    padding: 13px 20px;
+}
+
+.btn-sm, .btn-group-sm > .btn {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.76562rem;
+    line-height: 1.5;
 }
 
 
@@ -31,6 +38,10 @@ $value in $theme-colors {
             border: 1px solid darken($value, 8%);
         }
     }
+
+    .bg-soft-#{$color} {
+        background-color: rgba($value, 0.25) !important;
+    }
 }
 
 
@@ -41,4 +52,10 @@ $value in $theme-colors {
         background-color: $gray-300;
         border-color: $gray-400;
     }
+}
+
+.btn-chart {
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.76562rem;
+    line-height: 1.5;
 }

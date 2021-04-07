@@ -1,6 +1,7 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getPaymentTerms as getPaymentTermsByCompanyId,
+import {
+    getPaymentTerms as getPaymentTermsByCompanyId,
     createPaymentTerm as addPaymentTerm,
     updatePaymentTerm,
     deletePaymentTerm as deletePaymentTermApi,
@@ -31,7 +32,7 @@ function* createPaymentTerm({ payload: { companyId, params } }: any) {
     try {
         const response = yield call(addPaymentTerm, companyId, params);
         yield put(paymentTermsApiResponseSuccess(PaymentTermsTypes.CREATE_PAYMENT_TERM, response.data));
-        
+
     } catch (error) {
         yield put(paymentTermsApiResponseError(PaymentTermsTypes.CREATE_PAYMENT_TERM, error));
     }
@@ -56,7 +57,7 @@ function* deletePaymentTerm({ payload: { companyId, paymentTermId } }: any) {
     try {
         const response = yield call(deletePaymentTermApi, companyId, paymentTermId);
         yield put(paymentTermsApiResponseSuccess(PaymentTermsTypes.DELETE_PAYMENT_TERM, response.data));
-        
+
     } catch (error) {
         yield put(paymentTermsApiResponseError(PaymentTermsTypes.DELETE_PAYMENT_TERM, error));
     }
@@ -69,7 +70,7 @@ function* archivePaymentTerm({ payload: { companyId, paymentTermId, params } }: 
     try {
         const response = yield call(archivePaymentTermApi, companyId, paymentTermId, params);
         yield put(paymentTermsApiResponseSuccess(PaymentTermsTypes.ARCHIVE_PAYMENT_TERM, response.data));
-        
+
     } catch (error) {
         yield put(paymentTermsApiResponseError(PaymentTermsTypes.ARCHIVE_PAYMENT_TERM, error));
     }
@@ -82,7 +83,7 @@ function* restorePaymentTerm({ payload: { companyId, paymentTermId, params } }: 
     try {
         const response = yield call(restorePaymentTermApi, companyId, paymentTermId, params);
         yield put(paymentTermsApiResponseSuccess(PaymentTermsTypes.RESTORE_PAYMENT_TERM, response.data));
-        
+
     } catch (error) {
         yield put(paymentTermsApiResponseError(PaymentTermsTypes.RESTORE_PAYMENT_TERM, error));
     }
@@ -112,7 +113,7 @@ export function* watchRestorePaymentTerm() {
     yield takeEvery(PaymentTermsTypes.RESTORE_PAYMENT_TERM, restorePaymentTerm)
 }
 
-function* authSaga() {
+function* paymentTermsSaga() {
     yield all([
         fork(watchGetPaymentTerms),
         fork(watchCreatePaymentTerm),
@@ -123,4 +124,4 @@ function* authSaga() {
     ]);
 }
 
-export default authSaga;
+export default paymentTermsSaga;

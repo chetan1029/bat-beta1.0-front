@@ -1,83 +1,154 @@
 export interface MenuItemProp {
-    id: number,
-    parentId?: number,
-    name: string,
-    url: string,
-    icon?: string,
-    label: string,
-    active?: boolean,
-    children?: Array<MenuItemProp>
+    id: string;
+    parentId?: string;
+    name: string;
+    url: string;
+    icon?: string;
+    label: string;
+    active?: boolean;
+    isExternal?: boolean;
+    children?: Array<MenuItemProp>;
 }
 
-const menuItems: Array<MenuItemProp> = [
-    { name: 'Dashboard', url: '/', icon: 'home', label: 'Dashboard', id: 1 },
-    {
-        name: 'ProductManagement', url: '/product-management', icon: 'box', label: 'Product Management', id: 2,
-        children: [
-            { name: 'Dashboard', url: '/product-management', icon: 'apps', label: 'Dashboard', id: 3, parentId: 2, },
-            { name: 'Components', url: '/product-management/components', icon: 'components', label: 'Components', id: 4, parentId: 2, },
-            { name: 'Products', url: '/product-management/products', icon: 'products', label: 'Products', id: 5, parentId: 2, }
-        ]
-    },
-    {
-        name: 'SupplyChain', url: '/supply-chain', icon: 'refresh', label: 'Supply Chain', id: 6,
-        children: [
-            {
-                name: 'Vendors', url: '/supply-chain/vendors', icon: 'shop', label: 'Vendors', id: 7, parentId: 6,
-                children: [
-                    { name: 'Fulfillments', url: '/supply-chain/fulfillments', icon: 'circle', label: 'Fulfillment\'s', id: 8, parentId: 7 },
-                    { name: 'Logistics', url: '/supply-chain/logistics', icon: 'circle', label: 'Logistics', id: 9, parentId: 7 },
-                    { name: 'Manufacturers', url: '/supply-chain/manufacturers', icon: 'circle', label: 'Manufacturers', id: 10, parentId: 7 },
-                    { name: 'Supplier', url: '/supply-chain/supplier', icon: 'circle', label: 'Supplier', id: 11 }
-                ]
-            },
-            { name: 'Orders', url: '/supply-chain/orders', icon: 'shopping-cart', label: 'Orders', id: 12, parentId: 6 },
-            { name: 'Shipment', url: '/supply-chain/shipment', icon: 'shipment', label: 'Shipment', id: 13, parentId: 6 },
-            {
-                name: 'Vendors', url: '/supply-chain/vendors', icon: 'inventory', label: 'Vendors', id: 14, parentId: 6,
-                children: [
-                    { name: 'InventoryValuation', url: '/supply-chain/fulfillments', icon: 'circle', label: 'Inventory Valuation', id: 8, parentId: 14 },
-                    { name: 'WarehouseLocation', url: '/supply-chain/logistics', icon: 'circle', label: 'Warehouse Location', id: 9, parentId: 14 },
-                    { name: 'InventoryOverview', url: '/supply-chain/manufacturers', icon: 'circle', label: 'Inventory Overview', id: 10, parentId: 14 },
-                ]
-            },
-        ]
-    },
-    {
-        name: 'Sales', url: '/sales', icon: 'sales', label: 'Sales', id: 7,
-        children: [
-            { name: 'Dashboard', url: '/sales/dashboard', icon: 'box-2', label: 'Dashboard', id: 9, parentId: 7 },
-            { name: 'CostControl', url: '/sales/cost-control', icon: 'cost_control', label: 'Cost Control', id: 10, parentId: 7 },
-            {
-                name: 'SalesChannel', url: '/sales/sales_channel', icon: 'shop', label: 'SalesChannel', id: 8, parentId: 7,
-                children: [
-                    { name: 'Amazon', url: '/sales/amazon', icon: 'circle', label: 'Amazon', id: 20, parentId: 8 },
-                    { name: 'Distributor', url: '/sales/circle', icon: 'circle', label: 'Distributor', id: 9, parentId: 8 },
-                    { name: 'Retail', url: '/sales/retail', icon: 'circle', label: 'Retail', id: 10, parentId: 8 },
-                    { name: 'Website', url: '/sales/website', icon: 'circle', label: 'Website', id: 11 }
-                ]
-            },
-            {
-                name: 'Optimization', url: '/sales/optimization', icon: 'optimization', label: 'Optimization', id: 11, parentId: 7,
-                children: [
-                    { name: 'Dashboard', url: '/sales/optimization/dashboard', icon: 'circle', label: 'Dashboard', id: 8, parentId: 11 },
-                    { name: 'KeywordResearch', url: '/sales/optimization/keyword-research', icon: 'circle', label: 'Keyword Research', id: 9, parentId: 11 },
 
-                ]
-            },
-        ]
-    },
-    {
-        name: 'Finance', url: '/finance', icon: 'finance', label: 'Finance', id: 8,
-        children: [
-            { name: 'CashFlow', url: '/finance/cashflow', icon: 'cash_flow', label: 'Cash Flow', id: 9, parentId: 8 },
-        ]
-    }
-];
+const getMenuItems = (companyId: string, vendorCategories: any, salesCategories: any) => {
+
+    let menuItems: Array<MenuItemProp> = [
+        { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
+        { name: 'Campaigns', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Campaigns', id: 'campaigns' },
+        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/category/extensions", icon: 'graph', 
+            label: 'Keywords Rank Tracker', id: 'keyword_rank_tracker', isExternal: true },
+        { name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings' },
+        // {
+        //     name: 'ProductManagement', url: `/product-management/${companyId}`, icon: 'scan', label: 'Product Management', id: 'prodManagement',
+        //     children: [
+        //         { name: 'Dashboard', url: `/product-management/${companyId}/dashboard`, icon: 'apps', label: 'Dashboard', id: 'prodDs', parentId: 'prodManagement' },
+        //         { name: 'Components', url: `/product-management/${companyId}/components`, icon: 'components', label: 'Components', id: 'prodComps', parentId: 'prodManagement' },
+        //         { name: 'Products', url: `/product-management/${companyId}/products`, icon: 'products', label: 'Products', id: 'prodProds', parentId: 'prodManagement' }
+        //     ]
+        // }
+      ];
+
+    // const supplierChainVendors: Array<any> = [];
+    //
+    // for (const category of vendorCategories) {
+    //     supplierChainVendors.push(
+    //         { name: category['name'], url: `/supply-chain/${companyId}/vendors/${category['id']}`, icon: 'circle', label: category['name'], id: `supplyVendors-${category['name']}`, parentId: 'supplyVendors' },
+    //     );
+    // }
+    //
+    // menuItems.push(
+    //     {
+    //         name: 'SupplyChain', url: `/supply-chain/${companyId}`, icon: 'refresh', label: 'Supply Chain', id: 'supplyChain',
+    //         children: [
+    //             {
+    //                 name: 'Vendors', url: `/supply-chain/${companyId}/vendors`, icon: 'shop', label: 'Vendors', id: 'supplyVendors', parentId: 'supplyChain',
+    //                 children: supplierChainVendors
+    //             },
+    //             {
+    //                 name: 'Orders', url: `/supply-chain/${companyId}/orders`, icon: 'shopping-cart', label: 'Orders', id: 'supplyChainOrders', parentId: 'supplyChain',
+    //                 children: [
+    //                     { name: 'PlanOrders', url: `/supply-chain/${companyId}/orders/plan`, icon: 'circle', label: 'Plan Orders', id: 'PlanOrders', parentId: 'supplyChainOrders' },
+    //                     { name: 'ManageOrders', url: `/supply-chain/${companyId}/orders/manage`, icon: 'circle', label: 'Manage Orders', id: 'ManageOrders', parentId: 'supplyChainOrders' },
+    //                     { name: 'ProductPlan', url: `/supply-chain/${companyId}/product-plan`, icon: 'circle', label: 'Product Plan', id: 'ProductPlan', parentId: 'supplyChainOrders' },
+    //                 ]
+    //             },
+    //             {
+    //                 name: 'Logistics', url: `/supply-chain/${companyId}/logistics`, icon: 'shipment', label: 'Logistics', id: 'supplyChainLogistics', parentId: 'supplyChain',
+    //                 children: [
+    //                     { name: 'Shipments', url: `/supply-chain/${companyId}/logistics/shipments`, icon: 'circle', label: 'Shipments', id: 'Shipments', parentId: 'supplyChainLogistics' },
+    //                     { name: 'Transfers', url: `/supply-chain/${companyId}/logistics/transfers`, icon: 'circle', label: 'Transfers', id: 'Transfers', parentId: 'supplyChainLogistics' },
+    //                 ]
+    //             },
+    //             {
+    //                 name: 'Inventory', url: `/supply-chain/${companyId}/inventory`, icon: 'inventory', label: 'Inventory', id: 'supplyChainInventory', parentId: 'supplyChain',
+    //                 children: [
+    //                     { name: 'InventoryValuation', url: `/supply-chain/${companyId}/inventory/valuation`, icon: 'circle', label: 'Inventory Valuation', id: 'InventoryValuation', parentId: 'supplyChainInventory' },
+    //                     { name: 'InventoryOverview', url: `/supply-chain/${companyId}/inventory/overview`, icon: 'circle', label: 'Inventory Overview', id: 'InventoryOverview', parentId: 'supplyChainInventory' },
+    //                     { name: 'InventoryHighlights', url: `/supply-chain/${companyId}/inventory/highlights`, icon: 'circle', label: 'Inventory Highlights', id: 'InventoryHighlights', parentId: 'supplyChainInventory' },
+    //                 ]
+    //             },
+    //         ]
+    //     });
+
+    // menuItems.push(
+    //     {
+    //         name: 'AutoEmails', url: `/auto-emails/${companyId}`, icon: 'mail', label: 'Auto Emails', id: 'autoEmails',
+    //         children: [
+    //             { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'apps', label: 'Dashboard', id: 'autoEmailDs', parentId: 'autoEmails' },
+    //             { name: 'Campaigns', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Campaigns', id: 'campaigns', parentId: 'autoEmails' },
+    //         ]
+    //     }
+    // );
+
+    // const salesCats: Array<any> = [];
+    //
+    // for (const category of salesCategories) {
+    //     salesCats.push(
+    //         { name: category['name'], url: `/sales/${companyId}/channels/${category['id']}`, icon: 'circle', label: category['name'], id: `salesChanels-${category['name']}`, parentId: 'salesChanels' },
+    //     );
+    // }
+    // menuItems = [...menuItems, ...[{
+    //     name: 'Sales', url: '/sales', icon: 'sales', label: 'Sales', id: 'sales',
+    //     children: [
+    //         { name: 'Dashboard', url: '/sales/dashboard', icon: 'apps', label: 'Dashboard', id: 'salesDs', parentId: 'sales' },
+    //         { name: 'CostControl', url: '/sales/cost-control', icon: 'cost_control', label: 'Cost Control', id: 'salesCC', parentId: 'sales' },
+    //         {
+    //             name: 'SalesChannel', url: `/sales/${companyId}/channels`, icon: 'shop', label: 'Sales Channels', id: 'salesChanels', parentId: 'sales',
+    //             children: salesCats
+    //         },
+    //         {
+    //             name: 'Optimization', url: '/sales/optimization', icon: 'optimization', label: 'Optimization', id: 'salesOpt', parentId: 'sales',
+    //             children: [
+    //                 { name: 'Dashboard', url: '/sales/optimization/dashboard', icon: 'circle', label: 'Dashboard', id: 'salesOptDS', parentId: 'salesOpt' },
+    //                 { name: 'KeywordResearch', url: '/sales/optimization/keyword-research', icon: 'circle', label: 'Keyword Research', id: 'salesOptKS', parentId: 'salesOpt' },
+    //
+    //             ]
+    //         },
+    //     ]
+    // },
+    // {
+    //     name: 'Finance', url: '/finance', icon: 'finance', label: 'Finance', id: 'finance',
+    //     children: [
+    //         { name: 'Dashboard', url: '/finance/dashboard', icon: 'apps', label: 'Dashboard', id: 'FinanceDashboard', parentId: 'finance' },
+    //         {
+    //             name: 'Payments', url: '/finance/payments', icon: 'finance', label: 'Payments', id: 'FinancePayments', parentId: 'finance',
+    //             children: [
+    //                 { name: 'UpcomingPayments', url: `/supply-chain/${companyId}/finance/payments/upcoming`, icon: 'circle', label: 'Upcoming', id: 'UpcomingPayments', parentId: 'supplyChainInventory' },
+    //                 { name: 'PaidPayments', url: `/supply-chain/${companyId}/finance/payments/paid`, icon: 'circle', label: 'Paid', id: 'PaidPayments', parentId: 'supplyChainInventory' },
+    //                 { name: 'OverduePayments', url: `/supply-chain/${companyId}/finance/payments/overdue`, icon: 'circle', label: 'Overdue', id: 'OverduePayments', parentId: 'supplyChainInventory' },
+    //             ]
+    //         },
+    //     ],
+    // },
+    // {
+    //     name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings',
+    // }
+    // ]];
+
+    return menuItems;
+}
+
+
+
+const getMainMenuItems = (companyId: number | string) => {
+    const mainMenuItems: Array<MenuItemProp> = [
+        { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
+        { name: 'My Profile', url: `/profile/${companyId}/general`, icon: 'user', label: 'My Profile', id: 'myProfile' },
+        // { name: 'My Clients', url: `/clients/${companyId}`, icon: 'bag', label: 'My Clients', id: 'myClients' },
+        {
+            name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings',
+        }
+    ];
+
+    return mainMenuItems;
+}
+
+
 
 const findAllParent = (menuItems: Array<any>, menuItem: any) => {
     let parents: Array<any> = [];
-    const parent = menuItems.find(i => i['id'] === menuItem['parentId']);
+    const parent = findMenuItem(menuItems, menuItem['parentId']);
 
     if (parent) {
         parents.push(parent['id']);
@@ -87,4 +158,17 @@ const findAllParent = (menuItems: Array<any>, menuItem: any) => {
     return parents;
 }
 
-export { menuItems, findAllParent };
+const findMenuItem = (menuItems: Array<any>, menuItemId: any) => {
+    if (menuItems) {
+        for (var i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].id === menuItemId) {
+                return menuItems[i];
+            }
+            var found = findMenuItem(menuItems[i].children, menuItemId);
+            if (found) return found;
+        }
+    }
+    return null;
+}
+
+export { getMenuItems, getMainMenuItems, findAllParent, findMenuItem };

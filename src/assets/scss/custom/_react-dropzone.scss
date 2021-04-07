@@ -1,0 +1,99 @@
+.react-dropzone {
+    .dropzone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 8em;
+        background-color: rgba($gray-100, 1);
+        border: 1px dashed rgba($primary, 0.3);
+        border-radius: 0.7em;
+        cursor: pointer;
+        margin: 1em;
+        min-width: 8em;
+        flex-grow: 1;
+        flex-direction: column;
+
+        &:focus {
+            border: 1px dashed rgba($primary, 0.3);
+            outline: none;
+        }
+
+        .link {
+            border-bottom: 1px solid $black;
+        }
+        &.custom {
+            & svg {
+                height: 30px !important;
+            }
+            p.file-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1; /* number of lines to show */
+                -webkit-box-orient: vertical;
+                text-align: center;
+            }
+        }
+    }
+
+    &.is-invalid {
+        .invalid-feedback {
+            display: block !important;
+            position: absolute;
+        }
+        .dropzone {
+            border-color: $danger;
+        }
+    }
+
+    .files {
+        input[type="checkbox"] {
+            display: block;
+            position: absolute;
+            top: 1.2em;
+            left: 3em;
+        }
+
+        label img {
+            height: 8em;
+            width: 8em;
+            border: 1px solid rgba($primary, 0.3);
+            border-radius: 0.7em;
+            margin: 1em;
+        }
+
+        :checked+label img {
+            border-color: $black;
+        }
+    }
+
+    .small-dropzone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba($primary, 0.3);
+        border-radius: 0.7em;
+        flex-direction: column;
+        padding: 0.4em 0.5em;
+    }
+
+    .medium-dropzone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba($primary, 0.3);
+        border-radius: 0.7em;
+        flex-direction: column;
+        padding: 3em;
+        cursor: pointer;
+    }
+
+    .variation-image {
+        img {
+            height: 3.5em;
+            width: 3.5em;
+            border: 1px solid rgba($primary, 0.3);
+            border-radius: 0.7em;
+        }
+    }
+}

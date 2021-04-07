@@ -1,4 +1,4 @@
-// 
+//
 // card.scss
 //
 
@@ -84,7 +84,69 @@
     border-radius: $border-radius;
 }
 
+.card-header {
+  padding: $card-cap-padding-y $card-cap-padding-x;
+  margin-bottom: 0; // Removes the default margin-bottom of <hN>
+  color: $card-cap-color;
+  background-color: $white;
+  border-bottom: $card-border-width solid $card-border-color;
 
+  &:first-child {
+    @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+  }
+}
+
+.card .media img{
+    height: 6em;
+    width: 6em;
+    object-fit: cover;
+    border: $card-border-width solid $border-color;
+    border-radius: 0.3em;
+}
+.card .media img.img-sm{
+  height: 3em;
+  width: 3em;
+}
+
+
+.card-body{
+  min-height: $card-min-height;
+}
+
+.card-stats{
+  .header{
+    color: #8a90a2 !important;
+    font-size: $h5-font-size;
+  }
+  .sub-header{
+    font-size: $h1-font-size;
+
+    small{
+      font-size: $font-size-sm;
+    }
+    i{
+      display: inline-block;
+      vertical-align: middle;
+      content: "";
+      font-size: $h5-font-size;
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+    .down{
+      border-top: 0.3em solid;
+      border-right: 0.3em solid transparent;
+      border-bottom: 0;
+      border-left: 0.3em solid transparent;
+    }
+    .up{
+      border-top: 0.3em solid;
+      border-right: 0.3em solid transparent;
+      border-bottom: 0;
+      border-left: 0.3em solid transparent;
+      transform: rotate(180deg);
+    }
+  }
+}
 
 // Responsive
 @media(min-width:1500px) {

@@ -7,6 +7,7 @@
 
 // Color system
 
+$tranparent: transparent;
 $white:    #fff;
 $gray-100: #f8f9fa;
 $gray-200: #f2f2f2;
@@ -78,6 +79,7 @@ $info:          $cyan;
 $warning:       $yellow;
 $danger:        $danger;
 $light:         $gray-100;
+$muted:         $gray-600;
 $dark:          $gray-800;
 
 $theme-colors: ();
@@ -237,7 +239,7 @@ $line-height-lg:              1.5;
 $line-height-sm:              1.5;
 
 $border-width:                1px;
-$border-color:                $gray-200;
+$border-color:                rgba(#9D9EAD, 0.3);
 
 $border-radius:                10px;
 $border-radius-lg:             14px;
@@ -286,6 +288,9 @@ $font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberati
 $font-family-base:            $font-family-sans-serif;
 // Secondary font
 $font-family-secondary:       'Source Sans Pro', sans-serif;
+
+// img
+$img-border-color: $primary;
 
 // stylelint-enable value-keyword-case
 
@@ -360,14 +365,14 @@ $hr-margin-y:                 $spacer;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
-$table-cell-padding:          .75rem;
+$table-cell-padding:          1.1rem;
 $table-cell-padding-sm:       .3rem;
 
 $table-color:                 $body-color;
 $table-bg:                    null;
 $table-accent-bg:             $gray-200;
 $table-hover-color:           $table-color;
-$table-hover-bg:              $gray-200;
+$table-hover-bg:              $body-bg;
 $table-active-bg:             $table-hover-bg;
 
 $table-border-width:          $border-width;
@@ -390,6 +395,9 @@ $table-caption-color:         $text-muted;
 
 $table-bg-level:              -9;
 $table-border-level:          -6;
+
+$table-tr-padding:            2rem;
+
 
 
 // Buttons + Forms
@@ -441,7 +449,7 @@ $btn-line-height-lg:          $input-btn-line-height-lg;
 
 $btn-border-width:            $input-btn-border-width;
 
-$btn-font-weight:             $font-weight-medium;
+$btn-font-weight:             $font-weight-semibold;
 $btn-box-shadow:              inset 0 1px 0 rgba($white, .15), 0 1px 1px rgba($black, .075);
 $btn-focus-width:             $input-btn-focus-width;
 $btn-focus-box-shadow:        none;
@@ -852,7 +860,10 @@ $card-deck-margin:                  $card-group-margin;
 $card-columns-count:                3;
 $card-columns-gap:                  1.25rem;
 $card-columns-margin:               $card-spacer-y;
+$card-cap-padding-y:                1.25rem;
+$card-cap-padding-x:                1.25rem;
 
+$card-min-height:                   100px;
 
 // Tooltips
 
@@ -1144,3 +1155,6 @@ $print-body-min-width:              map-get($grid-breakpoints, "lg");
 $btn-soft-bg-opacity: 0.1;
 
 $dropdown-lg-width: 300;
+
+// Sizing
+$w-1: 0.5em;

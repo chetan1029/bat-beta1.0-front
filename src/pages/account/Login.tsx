@@ -9,18 +9,27 @@ import { useSelector, useDispatch } from 'react-redux';
 
 //import loader
 import Loader from '../../components/Loader';
+import { useQuery } from "../../components/Hooks";
 
-import { loginUser } from "../../redux/actions";
+import { loginUser, resetAuth } from "../../redux/actions";
 
 const Login = () => {
     const dispatch = useDispatch();
 
+    const query: any = useQuery();
+    const next: string = query.get('next');
+
     useEffect(() => {
         document['body'].classList.add('auth-bg');
+
         return () => {
             document['body'].classList.remove('auth-bg');
         }
-    })
+    }, []);
+
+    useEffect(() => {
+        dispatch(resetAuth());
+    }, [dispatch]);
 
     const { t } = useTranslation();
 
@@ -32,7 +41,7 @@ const Login = () => {
         },
         validationSchema: Yup.object({
             username: Yup.string()
-                .required(t('Username is required')),
+                .required(t('Username or Email is required')),
             password: Yup.string()
                 .required(t('Password is required'))
         }),
@@ -50,7 +59,7 @@ const Login = () => {
 
 
     return <>
-        {userLoggedIn || user ? <Redirect to='/'></Redirect> : null}
+        {userLoggedIn || user ? <Redirect to={next ? next : '/'}></Redirect> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
@@ -83,14 +92,14 @@ const Login = () => {
 
                                         <Form noValidate onSubmit={validator.handleSubmit} className="">
                                             <Form.Group>
-                                                {/* <Form.Label>Username</Form.Label> */}
-                                                <Form.Control type="text" placeholder={t("Your username")}
+                                                <Form.Label>{t('Username or Email')}</Form.Label>
+
+                                                <Form.Control type="text" placeholder={t("Your username or Email")}
                                                     name="username" id="username"
                                                     onChange={validator.handleChange}
                                                     onBlur={validator.handleBlur}
                                                     value={validator.values.username}
                                                     isInvalid={validator.touched.username && validator.errors && validator.errors.username ? true : false} />
-
 
                                                 {validator.touched.username && validator.errors.username ? (
                                                     <Form.Control.Feedback type="invalid">{validator.errors.username}</Form.Control.Feedback>
@@ -98,7 +107,7 @@ const Login = () => {
                                             </Form.Group>
 
                                             <Form.Group>
-                                                {/* <Form.Label>Password</Form.Label> */}
+                                                <Form.Label>{t('Password')}</Form.Label>
                                                 <Form.Control type="password" placeholder={t("Your password")}
                                                     name="password" id="password"
                                                     onChange={validator.handleChange}
@@ -114,7 +123,7 @@ const Login = () => {
 
                                             <Row>
                                                 <Col className="text-right">
-                                                    <Link to="/forget-password" className='font-weight-bold'>{t('Forget Password?')}</Link>
+                                                    <Link to="/forgot-password" className='font-weight-bold'>{t('Forgot Password?')}</Link>
                                                 </Col>
                                             </Row>
 

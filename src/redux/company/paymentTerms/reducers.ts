@@ -49,6 +49,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         isPaymentTermArchived: false,
+                        isPaymentTermRestored: true,
                         loading: false
                     }
                 }
@@ -111,12 +112,13 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
         case PaymentTermsTypes.GET_PAYMENT_TERMS:
             return { ...state, isPaymentTermsFetched: false };
         case PaymentTermsTypes.CREATE_PAYMENT_TERM:
-            return { ...state, isPaymentTermCreated: false, loading: true };
+            return { ...state, isPaymentTermCreated: false, loading: true, createPaymentTermError: null };
         case PaymentTermsTypes.EDIT_PAYMENT_TERM:
             return {
                 ...state, 
                 isPaymentTermUpdated: false, isPaymentTermCreated: false,
                 isPaymentTermDeleted: false, isPaymentTermRestored: false, isPaymentTermArchived: false,
+                createPaymentTermError: null, editPaymentTermError: null,
                 loading: true
             };
         case PaymentTermsTypes.DELETE_PAYMENT_TERM:
@@ -124,6 +126,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                 ...state, isPaymentTermDeleted: false, loading: true,
                 isPaymentTermUpdated: false, isPaymentTermCreated: false,
                 isPaymentTermRestored: false, isPaymentTermArchived: false,
+                createPaymentTermError: null
             };
         case PaymentTermsTypes.ARCHIVE_PAYMENT_TERM: {
             return {
@@ -131,6 +134,7 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                 isPaymentTermArchived: false, isPaymentTermRestored: false,
                 isPaymentTermUpdated: false, isPaymentTermCreated: false,
                 isPaymentTermDeleted: false,
+                createPaymentTermError: null,
                 loading: true
             }
         }
@@ -139,13 +143,13 @@ const PaymentTerms = (state = INIT_STATE, action: any) => {
                 ...state,
                 isPaymentTermRestored: false, isPaymentTermArchived: false,
                 isPaymentTermUpdated: false, isPaymentTermCreated: false,
-                isPaymentTermDeleted: false,
-                loading: true
+                isPaymentTermDeleted: false, loading: true, createPaymentTermError: null
             }
         }
         case PaymentTermsTypes.RESET: {
             return {
                 ...state,
+                createPaymentTermError: null,
                 editPaymentTermError: null,
                 isPaymentTermCreated: false,
                 isPaymentTermDeleted: false,

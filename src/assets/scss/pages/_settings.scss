@@ -11,6 +11,10 @@
         rect {
             stroke: $primary !important;
         }
+
+        circle {
+            stroke: $primary !important;
+        }
     }
 }
 
@@ -25,6 +29,10 @@
         }
 
         rect {
+            stroke: $secondary !important;
+        }
+
+        circle {
             stroke: $secondary !important;
         }
     }
@@ -43,6 +51,10 @@
         rect {
             stroke: $warning !important;
         }
+
+        circle {
+            stroke: $warning !important;
+        }
     }
 }
 
@@ -59,6 +71,70 @@
         rect {
             stroke: $danger !important;
         }
+
+        circle {
+            stroke: $danger !important;
+        }
+    }
+}
+
+.svg-outline-white {
+    svg {
+        path {
+            stroke: $white !important;
+        }
+
+        ellipse {
+            stroke: $white !important;
+        }
+
+        rect {
+            stroke: $white !important;
+        }
+
+        circle {
+            stroke: $white !important;
+        }
+    }
+}
+
+.svg-outline-success {
+    svg {
+        path {
+            stroke: $success !important;
+        }
+
+        ellipse {
+            stroke: $success !important;
+        }
+
+        rect {
+            stroke: $success !important;
+        }
+
+        circle {
+            stroke: $success !important;
+        }
+    }
+}
+
+.svg-outline-muted {
+    svg {
+        path {
+            stroke: $muted !important;
+        }
+
+        ellipse {
+            stroke: $muted !important;
+        }
+
+        rect {
+            stroke: $muted !important;
+        }
+
+        circle {
+            stroke: $muted !important;
+        }
     }
 }
 
@@ -66,7 +142,7 @@
     min-height: 120px;
 }
 
-.payment-terms-link {
+.card-link {
     color: inherit !important;
     width: 100%;
 
@@ -75,15 +151,15 @@
     }
 }
 
-.payment-terms-card {
+.card {
 
-    .payment-card-title {
-        border-bottom: 1px solid rgba(#9D9EAD, 0.3);
+    .card-header {
+        border-bottom: $card-border-width solid $border-color;
         background-color: transparent;
     }
 
-    .payment-card-footer {
-        border-top: 1px solid rgba(#9D9EAD, 0.3);
+    .card-footer {
+        border-top: $card-border-width solid $border-color;
         background-color: transparent;
     }
 }
@@ -130,3 +206,27 @@
 /*
 add new payment form
 */
+
+
+@for $i from 1 through 6 {
+    $zIndexBackdrop: #{1000 + (5 * $i)};
+    $zIndexContent: #{1000 + (5 * $i) + 2};
+
+    .modal-backdrop.show:nth-of-type(#{$i}) {
+        z-index: $zIndexBackdrop;
+    }
+
+    div[role="dialog"][aria-modal="true"]:nth-of-type(#{$i}) {
+        z-index: $zIndexContent;
+    }
+}
+
+/* Accordion */
+.accordion>.card>.card-header {
+    cursor: pointer;
+}
+
+
+.clickable-row {
+    cursor: pointer;
+}

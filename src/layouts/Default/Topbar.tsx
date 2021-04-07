@@ -4,23 +4,31 @@ import { Button, Dropdown } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { isMobile } from "react-device-detect";
 import classNames from "classnames";
+import { useSelector } from 'react-redux';
 
 //components
 import Icon from "../../components/Icon";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/logo.png";
 import searchIcon from "../../assets/images/search_icon.svg";
 import bellIcon from "../../assets/images/icons/bell.svg";
 
-import personImg from "../../assets/images/person.png";
+import personImg from "../../assets/images/avatar-placeholder.jpg";
 
 interface TopbarProps {
-  toggleSidebar: any
+  toggleSidebar: any,
+  match: any
 }
 
 const Topbar = (props: TopbarProps) => {
   const { t } = useTranslation();
 
   const { toggleSidebar } = props;
+
+  const { user } = useSelector((state: any) => ({
+    user: state.Auth.user,
+  }));
+
+  const companyId = props.match.params.companyId;
 
 
   return (
@@ -29,7 +37,7 @@ const Topbar = (props: TopbarProps) => {
         <div className="navbar">
           <div className="header_top d-flex align-items-center justify-content-between">
             <Link to='#'>
-              <img src={logo} alt="" />
+              <img src={logo} alt="Komrs.io" height="25" />
             </Link>
 
             <Link to='#' className="header_menu_btn" onClick={toggleSidebar}>
@@ -80,19 +88,24 @@ const Topbar = (props: TopbarProps) => {
               <Dropdown className="header_ropdown">
                 <Dropdown.Toggle id="dropdown-profile" className="p-0" variant="none">
                   <div className="header_dropdown_trigger_img">
-                    <img src={personImg} alt="" />
+                    <img src={user.profile_picture ? user.profile_picture : personImg} alt="" />
                   </div>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="">
-                  <Dropdown.Item>
-                    <Icon name="bag" className='icon icon-xs' />
-                    <span>{t('Companies')}</span>
+                  <Dropdown.Item to={`/profile/${companyId}/general`} as={Link}>
+                    <Icon name="user" className='icon icon-xs' />
+                    <span>{t('My Profile')}</span>
                   </Dropdown.Item>
 
-                  <Dropdown.Item>
-                    <Icon name="user" className='icon icon-xs' />
-                    <span>{t('Profile')}</span>
+                  {/* }<Dropdown.Item to={`/clients/${companyId}`} as={Link}>
+                    <Icon name="bag" className='icon icon-xs' />
+                    <span>{t('My Clients')}</span>
+                  </Dropdown.Item> */}
+
+                  <Dropdown.Item to={`/settings/${companyId}`} as={Link} className='icon-settings'>
+                    <Icon name="settings" className='icon icon-xs' />
+                    <span>{t('Settings')}</span>
                   </Dropdown.Item>
 
                   <Dropdown.Divider></Dropdown.Divider>
