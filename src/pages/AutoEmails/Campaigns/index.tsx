@@ -98,7 +98,7 @@ const Campaigns = (props: CampaignsProps) => {
 
     useEffect(() => {
         if (redirectUri && isMarketConnected) {
-            window.location.href = redirectUri;
+            window.open(redirectUri, '_blank');
         }
     }, [redirectUri, isMarketConnected]);
 
