@@ -86,7 +86,9 @@ const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: Or
             curve: 'smooth',
             width: 2,
         },
+        colors: ["#0a0c32"],
         fill: {
+            colors: ["#0a0c32"],
             type: 'gradient',
             gradient: {
                 shadeIntensity: 1,

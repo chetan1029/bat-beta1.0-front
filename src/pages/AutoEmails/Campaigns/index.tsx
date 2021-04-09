@@ -98,7 +98,7 @@ const Campaigns = (props: CampaignsProps) => {
 
     useEffect(() => {
         if (redirectUri && isMarketConnected) {
-            window.location.href = redirectUri;
+            window.open(redirectUri, '_blank');
         }
     }, [redirectUri, isMarketConnected]);
 
@@ -141,8 +141,9 @@ const Campaigns = (props: CampaignsProps) => {
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
-                                                    <tr className="clickable-row">
+                                                    <tr className={""+(capitalizeFirstLetter(market['status']) === 'Inactive' && isActiveMarket ? 'opacity-3': 'clickable-row')}>
                                                             <td>
+
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
                                                                         <Flag country={market['country']} />
@@ -188,10 +189,10 @@ const Campaigns = (props: CampaignsProps) => {
 
                                                         {getCampaignsOfMarket(market).map((campaign, cidx) => {
                                                             return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
-                                                                <td>
+                                                                <td className="clickable-row">
                                                                     <div className="d-flex">
                                                                         <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
-                                                                        <div>
+                                                                        <div onClick={() => openDetails(market)}>
                                                                             <h6 className="text-muted font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
                                                                             <h6 className='my-0'>{campaign['emailtemplate']['slug']}</h6>
                                                                         </div>

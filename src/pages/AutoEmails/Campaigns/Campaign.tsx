@@ -103,7 +103,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         </p>
                     </Col>
                 </Row>
-
+                { campaign["name"].toLowerCase().includes("order confirmation") ?
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Include Invoice (additional email)</Form.Label>
@@ -116,6 +116,8 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         />
                     </Col>
                 </Row>
+                : null
+                }
 
                 <Row className="mt-4">
                     <Col lg={12}>
@@ -135,6 +137,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                     </Col>
                 </Row>
 
+                { campaign["name"].toLowerCase().includes("review request") ?
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">
@@ -155,6 +158,8 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         </div>
                     </Col>
                 </Row>
+                : null
+                }
 
                 <Row className="mt-4">
                     <Col lg={12}>

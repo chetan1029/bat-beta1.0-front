@@ -72,7 +72,7 @@ $colors: map-merge(
   $colors
 );
 
-$primary:       $blue;
+$primary:       $gray-800; /* changed from $blue */
 $secondary:     $blue;
 $success:       $green;
 $info:          $cyan;

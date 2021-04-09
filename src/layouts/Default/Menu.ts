@@ -14,9 +14,14 @@ export interface MenuItemProp {
 const getMenuItems = (companyId: string, vendorCategories: any, salesCategories: any) => {
 
     let menuItems: Array<MenuItemProp> = [
-        { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
-        { name: 'Campaigns', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Campaigns', id: 'campaigns' },
-        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/category/extensions", icon: 'graph', 
+        {
+          name: 'CustomerCampaigns', url: ``, icon: 'mail2', label: 'Customer Campaigns', id: 'customercampaigns',
+          children: [
+            { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard', parentId: 'customercampaigns' },
+            { name: 'CreateACampaign', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Create a Campaign', id: 'create_a_campaign', parentId: 'customercampaigns' }
+          ]
+        },
+        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/category/extensions", icon: 'graph',
             label: 'Keywords Rank Tracker', id: 'keyword_rank_tracker', isExternal: true },
         { name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings' },
         // {
