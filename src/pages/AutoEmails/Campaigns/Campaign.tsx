@@ -61,7 +61,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
 
     const saveCampaign = () => {
         const camp = {
-            status: status ? 'Active' : 'InActive', channel: channels, exclude_orders: excludeOrders,
+            status: status ? 'Active' : 'Inactive', channel: channels, exclude_orders: excludeOrders,
             include_invoice: includeInvoice
         };
 
