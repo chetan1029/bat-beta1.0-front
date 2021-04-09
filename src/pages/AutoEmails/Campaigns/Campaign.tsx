@@ -12,6 +12,7 @@ import MessageAlert from "../../../components/MessageAlert";
 //actions
 import { updateCampaign } from "../../../redux/actions";
 
+import EmailTemplate from "./EmailTemplate";
 
 interface CampaignProps {
     campaign: any;
@@ -67,6 +68,8 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
         dispatch(updateCampaign(companyId, campaign['id'], camp));
     }
 
+    const [showEmailTemplate, setShowEmailTemplate] = useState(false);
+
     return (
         <>
             {campaign ? <div className="px-2">
@@ -88,7 +91,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         <p className="mb-0 text-muted font-weight-semibold">
                             {campaign['emailtemplate']['name']} - {campaign['emailtemplate']['slug']}
 
-                            <Link to='#' className='ml-4 text-primary' onClick={() => { }}>View Email Template</Link>
+                            <Link to='#' className='ml-4 text-primary' onClick={() => setShowEmailTemplate(true)}>View Email Template</Link>
                         </p>
                     </Col>
                 </Row>
@@ -181,6 +184,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
             {isCampaignUpdated ? <MessageAlert message={t('The campaign is updated successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {updateError ? <MessageAlert message={updateError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
+            {showEmailTemplate ? <EmailTemplate campaign={campaign} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
         </>
     );
 }

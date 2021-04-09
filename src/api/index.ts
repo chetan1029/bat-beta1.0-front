@@ -637,6 +637,11 @@ function getCampaign(companyId: number, campaignId: number,) {
     return api.get(`${baseUrl}`);
 }
 
+function testCampaign(companyId: number, campaignId: number, data: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/test_email/`;
+    return api.create(`${baseUrl}`, data);
+}
+
 function updateCampaign(companyId: number, campaignId: number, data: any) {
     const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/`;
     return api.updatePatch(`${baseUrl}`, data);
@@ -690,7 +695,7 @@ export {
     createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
-    getCampaigns, getCampaign, updateCampaign,
+    getCampaigns, getCampaign, updateCampaign, testCampaign,
     getMarketPlaces, getMarketPlace, connectMarketPlace,
     getCampaignDashboard
 }

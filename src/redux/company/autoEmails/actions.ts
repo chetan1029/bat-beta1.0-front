@@ -30,3 +30,8 @@ export const updateCampaign = (companyId: string | number, campaignId: number | 
 export const resetAutoEmails = () => ({
     type: AutoEmailsTypes.RESET
 })
+
+export const testCampaign = (companyId: string | number, campaignId: number | string, data: any) => ({
+    type: AutoEmailsTypes.TEST_CAMPAIGN,
+    payload: { companyId, campaignId, data }
+});
