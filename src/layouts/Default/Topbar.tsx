@@ -57,7 +57,7 @@ const Topbar = (props: TopbarProps) => {
 
             <div className="d-flex align-items-center">
 
-              /* <Dropdown className="header_notify_wrap">
+              {/* <Dropdown className="header_notify_wrap">
                 <Dropdown.Toggle id="dropdown-notifications" className="header_notify position-relative p-0" variant='none'>
                   <img src={bellIcon} alt="" />
                   <span className="badge badge-orange">0</span>
@@ -84,7 +84,7 @@ const Topbar = (props: TopbarProps) => {
                   </Button>
                 </Dropdown.Menu>
               </Dropdown>
-*/
+*/}
               <Dropdown className="header_ropdown">
                 <Dropdown.Toggle id="dropdown-profile" className="p-0" variant="none">
                   <div className="header_dropdown_trigger_img">
