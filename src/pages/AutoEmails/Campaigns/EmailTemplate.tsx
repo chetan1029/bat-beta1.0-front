@@ -45,14 +45,14 @@ const EmailTemplate = ({ companyId, campaign, onClose }: EmailTemplateProps) => 
 
                 <h4>{t('Email Template')}</h4>
 
-                <h6 className="mt-3">{t('Email Subject')}</h6>
-                <p className="mb-0 text-muted">{template['subject']}</p>
+                <h6 className="mt-3 no-action">{t('Email Subject')}</h6>
+                <p className="mb-0 text-muted no-action">{template['subject']}</p>
 
-                <h6 className="mt-3">{t('Email Body')}</h6>
+                <h6 className="mt-3 no-action">{t('Email Body')}</h6>
                 {(template['template'] || "").split("\n").map((i, key) => {
-                    return <p className="mb-1 text-muted" key={key}>{i}</p>;
+                    return <p className="mb-1 text-muted no-action" key={key}>{i}</p>;
                 })}
-                
+
 
                 <Row className="mt-4">
                     <Col lg="8">
