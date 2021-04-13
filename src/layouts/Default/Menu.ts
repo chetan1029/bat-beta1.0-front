@@ -21,7 +21,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
             { name: 'CreateACampaign', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Create a Campaign', id: 'create_a_campaign', parentId: 'customercampaigns' }
           ]
         },
-        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/category/extensions", icon: 'graph',
+        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/detail/komrsio-amazon-keyword-tr/hdlekegeaachepgfkadcjefobnmkjgdg", icon: 'graph',
             label: 'Keywords Rank Tracker', id: 'keyword_rank_tracker', isExternal: true },
         { name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings' },
         // {
