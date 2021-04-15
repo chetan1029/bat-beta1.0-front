@@ -56,6 +56,7 @@ const Topbar = (props: TopbarProps) => {
             </form>
 
             <div className="d-flex align-items-center">
+              <Button href={`/get-started/${companyId}`} variant="outline-danger" size="sm" className="mr-5">Get Started</Button>
 
               {/* <Dropdown className="header_notify_wrap">
                 <Dropdown.Toggle id="dropdown-notifications" className="header_notify position-relative p-0" variant='none'>

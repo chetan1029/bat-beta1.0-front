@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import Loader from "../../../components/Loader";
 import DisplayDate from "../../../components/DisplayDate";
 import MessageAlert from "../../../components/MessageAlert";
-
+import AlertDismissible from "../../../components/AlertDismissible";
+import ConfirmMessage from "../../../components/ConfirmMessage";
 
 //actions
 import { getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace } from "../../../redux/actions";
@@ -119,7 +120,7 @@ const Campaigns = (props: CampaignsProps) => {
                     <Col className="text-right"></Col>
                 </Row>
             </div>
-
+            <AlertDismissible heading="Getting started guide!" message="Do you wanna go through getting started guide." cancelBtnVariant="danger" cancelBtnLabel="I will figure it out!" confirmBtnVariant="primary" confirmBtnLabel="Go to Getting Started" />
             <Card>
                 <Card.Body className="">
 
@@ -167,9 +168,9 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 {capitalizeFirstLetter(market['status'])}
                                                                 {capitalizeFirstLetter(market['status']) === 'Inactive' ?
                                                                 <Button onClick={() => openDetails(market)} disabled={isActiveMarket}
-                                                                  className="btn btn-sm btn-danger ml-5">{t('Connect')}</Button>
+                                                                  className="btn btn-sm btn-primary ml-5">{t('Connect')}</Button>
                                                                 :<Button onClick={() => openDetails(market)}
-                                                                className="btn btn-sm btn-danger ml-5">{t('View')}</Button>}
+                                                                className="btn btn-sm btn-primary ml-5">{t('View')}</Button>}
                                                             </td>
                                                         </tr>
                                                         {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">

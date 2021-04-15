@@ -119,6 +119,7 @@ const GeneralInfo = ({ onSubmit, values, disableEmail }: GeneralInfoProp) => {
                     {validator.touched.email && validator.errors.email ? (
                         <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
                     ) : null}
+                    <Form.Text id="emailHelp" muted>{t('Your email is only and only use by us.')}</Form.Text>
                 </Form.Group>
             </Col>
         </Row>
@@ -292,7 +293,7 @@ const AccountSetup = ({ onSubmit, generalInfo, values }: AccountSetupProp) => {
                 </Form.Group>
             </Col>
         </Row>
-        
+
         <Row>
             <Col>
                 <Form.Group>
