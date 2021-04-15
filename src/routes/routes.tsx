@@ -109,9 +109,13 @@ const authProtectedRoutes = [
   // { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
   // { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
 
-  { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': true } },
-  { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
-  { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': true } },
+  // If you wanna show second sidebar menu with my cleint, setting, my profile. it must do mainSidebar: true;
+  // { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': true } },
+  // { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
+  // { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': false } },
+  { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': false } },
+  { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': false } },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 
