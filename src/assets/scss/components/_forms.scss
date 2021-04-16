@@ -17,18 +17,18 @@
     }
 
     .custom-control-label::before {
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
         border-radius: 3px;
         background-color: transparent;
         border: 1px solid rgba($gray-500, 0.3);
     }
 
     .custom-control-label::after {
-        top: 4px;
+        top: 1px;
         left: -24px;
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
     }
 
     .custom-control-input:checked~.custom-control-label::after {

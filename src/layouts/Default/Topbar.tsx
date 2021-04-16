@@ -9,8 +9,6 @@ import { useSelector } from 'react-redux';
 //components
 import Icon from "../../components/Icon";
 import logo from "../../assets/images/logo.png";
-import searchIcon from "../../assets/images/search_icon.svg";
-import bellIcon from "../../assets/images/icons/bell.svg";
 
 import personImg from "../../assets/images/avatar-placeholder.jpg";
 
@@ -51,7 +49,7 @@ const Topbar = (props: TopbarProps) => {
             <form className="search">
               <input type="text" placeholder="Search" />
               <button type="submit">
-                <img src={searchIcon} alt="" />
+                <Icon name='search' className="icon" />
               </button>
             </form>
 
@@ -60,7 +58,7 @@ const Topbar = (props: TopbarProps) => {
 
               {/* <Dropdown className="header_notify_wrap">
                 <Dropdown.Toggle id="dropdown-notifications" className="header_notify position-relative p-0" variant='none'>
-                  <img src={bellIcon} alt="" />
+                  <Icon name='bell' className="icon" />
                   <span className="badge badge-orange">0</span>
                 </Dropdown.Toggle>
 
