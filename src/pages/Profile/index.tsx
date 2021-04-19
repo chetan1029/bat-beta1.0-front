@@ -140,7 +140,7 @@ const Profile = (props: ProfileProp) => {
                                         <img width={60} height={60} className={classNames("rounded-circle", { "border": !profile['profile_picture'] })}
                                             src={profile['profile_picture'] || avatarPlaceholder} alt="" />
                                         <div className='profile-pic-edit'>
-                                            <Icon name='pencil' className="icon icon-xxxs" />
+                                            <Icon name='pencil' className="icon icon-xxs" />
                                             <input type="file" onChange={onProfilePic} accept="image/x-png,image/gif,image/jpeg" />
                                         </div>
                                     </div>
@@ -159,7 +159,7 @@ const Profile = (props: ProfileProp) => {
                                                     </Col>
                                                     <Col>
                                                         <Button variant='primary' size='sm' onClick={saveName} className="ml-3">
-                                                            <Icon name='check' className='icon icon-xxxs'></Icon>
+                                                            <Icon name='check' className='icon icon-xxs'></Icon>
                                                         </Button>
                                                     </Col>
                                                 </Row>
@@ -168,7 +168,7 @@ const Profile = (props: ProfileProp) => {
                                                 <h5 className="mt-1">
                                                     {fullName}
                                                     <Button variant="link" className="ml-2 p-0 mt-n1" onClick={() => setshowEditName(!showEditName)}>
-                                                        <Icon name='pencil' className="icon icon-xxxs text-primary" />
+                                                        <Icon name='pencil' className="icon icon-xxs text-primary" />
                                                     </Button>
                                                 </h5>
                                             </>}

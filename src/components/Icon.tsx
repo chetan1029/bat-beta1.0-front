@@ -452,9 +452,15 @@ const Icon = ({ name, className }: Props) => {
         </svg>
 
       case 'pencil':
-        return <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 9.50034V12H2.49966L9.87199 4.62767L7.37233 2.12801L0 9.50034ZM11.8051 2.6946C11.8669 2.63293 11.9159 2.55968 11.9493 2.47904C11.9828 2.3984 12 2.31196 12 2.22466C12 2.13736 11.9828 2.05092 11.9493 1.97028C11.9159 1.88964 11.8669 1.81639 11.8051 1.75472L10.2453 0.194936C10.1836 0.133142 10.1104 0.0841172 10.0297 0.0506674C9.94908 0.0172176 9.86264 0 9.77534 0C9.68804 0 9.6016 0.0172176 9.52096 0.0506674C9.44032 0.0841172 9.36707 0.133142 9.3054 0.194936L8.08557 1.41477L10.5852 3.91443L11.8051 2.6946Z" fill="#396AFF" />
-        </svg>
+        return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Iconly/Light/Edit">
+<g id="Edit">
+<path id="Stroke 1" d="M13.7473 20.4429H20.9999" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 3" fill-rule="evenodd" clip-rule="evenodd" d="M12.78 3.79479C13.5557 2.86779 14.95 2.73186 15.8962 3.49173C15.9485 3.53296 17.6295 4.83879 17.6295 4.83879C18.669 5.46719 18.992 6.80311 18.3494 7.82259C18.3153 7.87718 8.81195 19.7645 8.81195 19.7645C8.49578 20.1589 8.01583 20.3918 7.50291 20.3973L3.86353 20.443L3.04353 16.9723C2.92866 16.4843 3.04353 15.9718 3.3597 15.5773L12.78 3.79479Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Stroke 5" d="M11.0208 6.00092L16.473 10.188" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>
 
       case 'upload':
         return <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -534,10 +540,25 @@ const Icon = ({ name, className }: Props) => {
         </svg>
 
       case 'search':
-        return <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7.54541 1C6.25085 1 4.98536 1.38388 3.90898 2.1031C2.83259 2.82233 1.99365 3.84458 1.49824 5.0406C1.00284 6.23662 0.873215 7.55269 1.12577 8.82238C1.37833 10.0921 2.00172 11.2584 2.91711 12.1737C3.8325 13.0891 4.99878 13.7125 6.26847 13.9651C7.53815 14.2177 8.85422 14.088 10.0502 13.5926C11.2462 13.0972 12.2685 12.2583 12.9877 11.1819C13.7069 10.1055 14.0908 8.83999 14.0908 7.54543C14.0907 5.80951 13.4011 4.14472 12.1736 2.91723C10.9461 1.68975 9.28133 1.00011 7.54541 1V1Z" stroke="#3C76E6" strokeWidth="1.5" />
-          <path d="M12.4287 12.4287L17 17" stroke="#3C76E6" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+        return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="Iconly/Light/Search">
+          <g id="Search">
+          <circle id="Ellipse_739" cx="11.7666" cy="11.7666" r="8.98856" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path id="Line_181" d="M18.0183 18.4851L21.5423 22" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          </g>
+          </svg>
+
+      case 'bell':
+        return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g id="Iconly/Light/Notification">
+            <g id="Notification">
+            <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M12 17.8476C17.6392 17.8476 20.2481 17.1242 20.5 14.2205C20.5 11.3188 18.6812 11.5054 18.6812 7.94511C18.6812 5.16414 16.0452 2 12 2C7.95477 2 5.31885 5.16414 5.31885 7.94511C5.31885 11.5054 3.5 11.3188 3.5 14.2205C3.75295 17.1352 6.36177 17.8476 12 17.8476Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path id="Stroke 3" d="M14.3889 20.8572C13.0247 22.372 10.8967 22.3899 9.51953 20.8572" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            </g>
+            </svg>
+
 
       case 'mail':
         return <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Accordion } from "react-bootstrap";
+import { Row, Col, Card, Table, Accordion } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
@@ -41,8 +41,21 @@ const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemPro
             <Col lg={12}>
                 <Card className="payment-terms-card mb-2">
                     <Card.Header className="payment-card-title">
-                        <p className="m-0 text-muted">{t('Plan Name')}</p>
-                        <h6 className="m-0">{membershipplan.plan.name} (Free)</h6>
+                      <Row>
+                        <Col sm={6}>
+                          <p className="m-0 text-muted">{t('Plan Name')}</p>
+                          <h6 className="m-0">{membershipplan.plan.name}</h6>
+                        </Col>
+                        <Col sm={6}>
+                          <p className="m-0 text-muted text-right">{t('Price')}</p>
+                          {
+                            membershipplan.plan.cost.amount ?
+                          <h6 className="m-0 text-right">
+                          {membershipplan.plan.cost.currency} {membershipplan.plan.cost.amount}/{ membershipplan.plan.recurrence_period != 1 ? membershipplan.plan.recurrence_period : "" } {membershipplan.plan.recurrence_unit}
+                          </h6>
+                          :<h6 className="m-0 text-right">Free</h6> }
+                        </Col>
+                      </Row>
                     </Card.Header>
                     <Card.Body>
                         <p className="m-0 text-muted">{t('Detail')}</p>
@@ -53,6 +66,29 @@ const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemPro
                                 <p className="m-0">{membershipplan.billing_start_date}</p>
                             </Col>
                         </Row>
+                        <Table bordered className="mt-4">
+                            <thead>
+                                <tr>
+                                    <th>Quota Name</th>
+                                    <th>Alloted</th>
+                                    <th>Used</th>
+                                    <th>Available</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    membershipplan.plan["plan_quotas"].map((quota, key) =>
+                                        <tr>
+                                            <td>{quota.quota.name}</td>
+                                            <td>{quota.value} {quota.quota.unit}</td>
+                                            <td>{quota.used_quota} {quota.quota.unit}</td>
+                                            <td>{quota.available_quota} {quota.quota.unit}</td>
+                                        </tr>
+                                    )
+                                }
+                            </tbody>
+                        </Table>
+
                     </Card.Body>
                 </Card>
             </Col>
@@ -115,7 +151,7 @@ const MembershipPlan = (props: MembershipPlanProps) => {
                     <div>
                         <div className="p-2">
                             <Row>
-                                <Col md={{ span: 4, offset: 4 }}>
+                                <Col md={{ span: 6, offset: 3 }}>
                                     <Accordion>
                                         {
                                             membershipPlan['results'].length > 0 ?

@@ -3,6 +3,10 @@ import NonAuthLayout from "../layouts/NonAuth";
 
 import Dashboard from "../pages/Dashboard/";
 
+// Get started
+import GetStarted from "../pages/GetStarted/index"
+
+// Settings
 import Settings from "../pages/Settings/index";
 import AddEditMember from "../pages/Settings/Members/AddEditMember";
 import MemberDetails from "../pages/Settings/Members/MemberDetails";
@@ -85,6 +89,7 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
+  { path: "/get-started/:companyId", component: GetStarted },
 
   { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: InviteVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },
