@@ -24,6 +24,13 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case AutoEmailsTypes.TEST_CAMPAIGN: {
+                    return {
+                        ...state,
+                        campaignTestSent: true,
+                        campaignTestLoading: false,
+                    }
+                }
                 case AutoEmailsTypes.UPDATE_CAMPAIGN: {
                     return {
                         ...state,
@@ -52,6 +59,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         error: action.payload.error,
                     }
                 }
+                case AutoEmailsTypes.TEST_CAMPAIGN: {
+                    return {
+                        ...state,
+                        campaignTestLoading: false,
+                        campaignTestSentError: action.payload.error,
+                        campaignTestSent: false
+                    }
+                }
                 case AutoEmailsTypes.UPDATE_CAMPAIGN: {
                     return {
                         ...state,
@@ -70,6 +85,9 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.GET_CAMPAIGN:
             return { ...state, loading: true };
 
+        case AutoEmailsTypes.TEST_CAMPAIGN:
+            return { ...state, campaignTestLoading: true, campaignTestSent: false };
+
         case AutoEmailsTypes.UPDATE_CAMPAIGN:
             return { ...state, loading: true, isCampaignUpdated: false, updateError: null };
 
@@ -79,6 +97,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 isCampaignsFetched: false,
                 isCampaignUpdated: false,
                 error: null,
+                campaignTestSentError: null,
                 updateError: null
             }
         }

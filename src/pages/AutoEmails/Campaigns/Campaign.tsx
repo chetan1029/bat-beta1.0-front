@@ -8,10 +8,13 @@ import { useTranslation } from 'react-i18next';
 //components
 import MessageAlert from "../../../components/MessageAlert";
 
+//plug-ins
+import { format } from 'date-fns'
 
 //actions
 import { updateCampaign } from "../../../redux/actions";
 
+import EmailTemplate from "./EmailTemplate";
 
 interface CampaignProps {
     campaign: any;
@@ -27,8 +30,19 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
         updateError: state.Company.AutoEmails.updateError
     }));
 
+    const getDate = (date) => {
+      if (date) {
+        var fulldate = date.split('T');
+        return fulldate[0];
+      } else {
+        return "";
+      }
+    }
+
     const [status, setStatus] = useState(campaign['status'] && campaign['status']['name'] && campaign['status']['name'].toLowerCase() === 'active');
 
+    const [scheduledays, setScheduledays] = useState(campaign['schedule_days']);
+    const [activationdate, setActivationdate] = useState(getDate(campaign['activation_date']));
     const [includeInvoice, setIncludeInvoice] = useState<any>(campaign['include_invoice']);
     const [channels, setChannels] = useState(campaign['channel']);
 
@@ -60,12 +74,16 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
 
     const saveCampaign = () => {
         const camp = {
-            status: status ? 'Active' : 'InActive', channel: channels, exclude_orders: excludeOrders,
+            status: status ? 'Active' : 'Inactive', channel: channels, exclude_orders: excludeOrders,
+            schedule_days: scheduledays,
+            activation_date: format(new Date(activationdate), 'yyyy-MM-dd hh:mm'),
             include_invoice: includeInvoice
         };
 
         dispatch(updateCampaign(companyId, campaign['id'], camp));
     }
+
+    const [showEmailTemplate, setShowEmailTemplate] = useState(false);
 
     return (
         <>
@@ -83,12 +101,26 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                     </Col>
                 </Row>
                 <Row className="mt-4">
+                  <Col sm={2}>
+                    <Form.Label className="font-weight-semibold">{t("Activation Date")}</Form.Label>
+                      <Form.Control
+                        type="date"
+                        className="form-control"
+                        id="activation_date"
+                        name="activation_date"
+                        placeholder="Select Activation date"
+                        value={activationdate}
+                        onChange={(e: any) => setActivationdate(e.target.value)}
+                      />
+                  </Col>
+                </Row>
+                <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Email Template</Form.Label>
                         <p className="mb-0 text-muted font-weight-semibold">
                             {campaign['emailtemplate']['name']} - {campaign['emailtemplate']['slug']}
 
-                            <Link to='#' className='ml-4 text-primary' onClick={() => { }}>View Email Template</Link>
+                            <Link to='#' className='ml-4 text-primary' onClick={() => setShowEmailTemplate(true)}>View Email Template</Link>
                         </p>
                     </Col>
                 </Row>
@@ -100,7 +132,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         </p>
                     </Col>
                 </Row>
-
+                { campaign["name"].toLowerCase().includes("order confirmation") ?
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Include Invoice (additional email)</Form.Label>
@@ -113,13 +145,17 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         />
                     </Col>
                 </Row>
+                : null
+                }
 
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Channel</Form.Label>
-                        <div>
+                        <div key={`custom-checkbox`}>
                             {CHANNELS.map((ch, idx) => {
-                                return <Form.Check key={idx}
+                                return <Form.Check
+                                    custom
+                                    key={idx}
                                     type='checkbox'
                                     inline
                                     id={`channel-check-${idx + 1}`}
@@ -132,15 +168,18 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                     </Col>
                 </Row>
 
+                { campaign["name"].toLowerCase().includes("review request") ?
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">
                             Exclude Orders
                             <span className="text-muted ml-2 font-13 font-weight-normal">(All negative(1-2 star) and neutral (3 star) feedback are excluded by default)</span>
                         </Form.Label>
-                        <div>
+                        <div key={`custom-checkbox`}>
                             {EXCLUDE_ORDERS.map((ex, idx) => {
-                                return <Form.Check key={idx}
+                                return <Form.Check
+                                    custom
+                                    key={idx}
                                     type='checkbox'
                                     inline
                                     id={`exclude-order-check-${idx + 1}`}
@@ -152,13 +191,28 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         </div>
                     </Col>
                 </Row>
+                : null
+                }
 
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Schedule</Form.Label>
                         <p className="mb-0 text-muted font-weight-semibold">
-                            {campaign['schedule']}
+                            { campaign['schedule'] == "Daily" ? "Number of Days after order is "+campaign['order_status']['name'] : campaign['schedule']  }
                         </p>
+                        { campaign['schedule'] == "Daily" ?
+                        <Form.Control as="select" size="sm" className="mt-1 col-1" placeholder={t("Number of Days")}
+                            name="schedule_days" id="schedule_days"
+                            value={scheduledays}
+                            onChange={(e: any) => setScheduledays(e.target.value)}
+                        >
+                        {[...Array(61)].map((e, i) => {
+                        return i >= 5 ?
+                        <option value={i}>{i}</option>
+                        : ""
+                        })}
+                        </Form.Control>
+                          : ""}
                     </Col>
                 </Row>
 
@@ -181,6 +235,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
             {isCampaignUpdated ? <MessageAlert message={t('The campaign is updated successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {updateError ? <MessageAlert message={updateError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
+            {showEmailTemplate ? <EmailTemplate campaign={campaign} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
         </>
     );
 }

@@ -28,7 +28,7 @@ const Dashboard = (props: DashboardProps) => {
 
   const [selectedCurrency, setSelectedCurrency] = useState({label: CURRENCIES['USD'], value: 'USD'});
   const [selectedPeriod, setSelectedPeriod] = useState('all');
-  const [selectedMarket, setSelectedMarket] = useState<any>();
+  const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
 
   const { loading, campaignDashboard } = useSelector((state: any) => ({
     loading: state.Dashboard.loading,

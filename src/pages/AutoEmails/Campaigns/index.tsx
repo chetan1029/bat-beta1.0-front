@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import Loader from "../../../components/Loader";
 import DisplayDate from "../../../components/DisplayDate";
 import MessageAlert from "../../../components/MessageAlert";
-
+import AlertDismissible from "../../../components/AlertDismissible";
+import ConfirmMessage from "../../../components/ConfirmMessage";
 
 //actions
 import { getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace } from "../../../redux/actions";
@@ -98,7 +99,7 @@ const Campaigns = (props: CampaignsProps) => {
 
     useEffect(() => {
         if (redirectUri && isMarketConnected) {
-            window.location.href = redirectUri;
+            window.open(redirectUri, '_blank');
         }
     }, [redirectUri, isMarketConnected]);
 
@@ -119,7 +120,7 @@ const Campaigns = (props: CampaignsProps) => {
                     <Col className="text-right"></Col>
                 </Row>
             </div>
-
+            <AlertDismissible heading="Getting started guide!" message="Do you wanna go through getting started guide." cancelBtnVariant="danger" cancelBtnLabel="I will figure it out!" confirmBtnVariant="primary" confirmBtnLabel="Go to Getting Started" />
             <Card>
                 <Card.Body className="">
 
@@ -141,8 +142,9 @@ const Campaigns = (props: CampaignsProps) => {
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
-                                                    <tr className="clickable-row">
+                                                    <tr className={""+(capitalizeFirstLetter(market['status']) === 'Inactive' && isActiveMarket ? 'opacity-3': 'clickable-row')}>
                                                             <td>
+
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
                                                                         <Flag country={market['country']} />
@@ -166,9 +168,9 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 {capitalizeFirstLetter(market['status'])}
                                                                 {capitalizeFirstLetter(market['status']) === 'Inactive' ?
                                                                 <Button onClick={() => openDetails(market)} disabled={isActiveMarket}
-                                                                  className="btn btn-sm btn-danger ml-5">{t('Connect')}</Button>
+                                                                  className="btn btn-sm btn-primary ml-5">{t('Connect')}</Button>
                                                                 :<Button onClick={() => openDetails(market)}
-                                                                className="btn btn-sm btn-danger ml-5">{t('View')}</Button>}
+                                                                className="btn btn-sm btn-primary ml-5">{t('View')}</Button>}
                                                             </td>
                                                         </tr>
                                                         {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
@@ -188,10 +190,10 @@ const Campaigns = (props: CampaignsProps) => {
 
                                                         {getCampaignsOfMarket(market).map((campaign, cidx) => {
                                                             return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
-                                                                <td>
+                                                                <td className="clickable-row">
                                                                     <div className="d-flex">
                                                                         <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
-                                                                        <div>
+                                                                        <div onClick={() => openDetails(market)}>
                                                                             <h6 className="text-muted font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
                                                                             <h6 className='my-0'>{campaign['emailtemplate']['slug']}</h6>
                                                                         </div>

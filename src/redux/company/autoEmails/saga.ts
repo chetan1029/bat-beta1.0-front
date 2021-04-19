@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi } from "../../../api/index";
+import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi } from "../../../api/index";
 
 import { autoEmailsApiResponseError, autoEmailsApiResponseSuccess } from "./actions";
 import { AutoEmailsTypes } from './constants';
@@ -36,6 +36,15 @@ function* updateCampaign({ payload: { companyId, campaignId, data } }: any) {
     }
 }
 
+function* testCampaign({ payload: { companyId, campaignId, data } }: any) {
+    try {
+        const response = yield call(testCampaignApi, companyId, campaignId, data);
+        yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.TEST_CAMPAIGN, response.data));
+    } catch (error) {
+        yield put(autoEmailsApiResponseError(AutoEmailsTypes.TEST_CAMPAIGN, error));
+    }
+}
+
 export function* watchGetCampaigns() {
     yield takeEvery(AutoEmailsTypes.GET_CAMPAIGNS, getAllCampaigns)
 }
@@ -48,11 +57,16 @@ export function* watchUpdateCampain() {
     yield takeEvery(AutoEmailsTypes.UPDATE_CAMPAIGN, updateCampaign)
 }
 
+export function* watchTestCampain() {
+    yield takeEvery(AutoEmailsTypes.TEST_CAMPAIGN, testCampaign)
+}
+
 function* autoEmailsSaga() {
     yield all([
         fork(watchGetCampaigns),
         fork(watchGetCampaign),
         fork(watchUpdateCampain),
+        fork(watchTestCampain)
     ]);
 }
 

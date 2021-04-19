@@ -202,7 +202,7 @@ const EditCompany = (props: EditCompanyProps) => {
                                                 <img width={72} height={72} className={classNames("rounded-circle", { "border": !(company && company['logo']) })}
                                                     src={imagePath} alt="" />
                                                 <div className='profile-pic-edit'>
-                                                    <Icon name='pencil' className="icon icon-xxxs" />
+                                                    <Icon name='pencil' className="icon icon-xxs" />
                                                     <input type="file" onChange={onLogoFile} accept="image/x-png,image/gif,image/jpeg" />
                                                 </div>
                                             </div>

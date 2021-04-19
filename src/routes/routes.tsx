@@ -3,6 +3,10 @@ import NonAuthLayout from "../layouts/NonAuth";
 
 import Dashboard from "../pages/Dashboard/";
 
+// Get started
+import GetStarted from "../pages/GetStarted/index"
+
+// Settings
 import Settings from "../pages/Settings/index";
 import AddEditMember from "../pages/Settings/Members/AddEditMember";
 import MemberDetails from "../pages/Settings/Members/MemberDetails";
@@ -85,6 +89,7 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
+  { path: "/get-started/:companyId", component: GetStarted },
 
   { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: InviteVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },
@@ -109,9 +114,13 @@ const authProtectedRoutes = [
   // { path: "/companies/add", component: AddNewCompany, layoutProps: { 'mainSidebar': true } },
   // { path: "/companies", component: Companies, layoutProps: { 'mainSidebar': true } },
 
-  { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': true } },
-  { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
-  { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': true } },
+  // If you wanna show second sidebar menu with my cleint, setting, my profile. it must do mainSidebar: true;
+  // { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': true } },
+  // { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': true } },
+  // { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': true } },
+  { path: "/profile/:companyId/general", component: Profile, layoutProps: { 'mainSidebar': false } },
+  { path: "/profile/:companyId/change-password", component: ChangePassword, layoutProps: { 'mainSidebar': false } },
+  { path: "/profile/:companyId", component: Profile, layoutProps: { 'mainSidebar': false } },
   { path: "/", component: Root, layout: NonAuthLayout },
 ];
 

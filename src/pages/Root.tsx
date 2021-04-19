@@ -31,7 +31,8 @@ const Root = (props: RootComponentProps) => {
     const noOfCompanies = isCompaniesFetched ? companies.count : 0;
 
     const company = isCompaniesFetched && noOfCompanies >= 1 ? companies.results[0]: null;
-    const isCompanyDetailsMissing = company && (!company['time_zone'] || !company['currency']); 
+    //const isCompanyDetailsMissing = company && (!company['time_zone'] || !company['currency']);
+    const isCompanyDetailsMissing = false
     const redirectUrl = company ? (isCompanyDetailsMissing ? `/companies/${company['id']}/edit`: `/dashboard/${company['id']}`): '';
 
     return <>
