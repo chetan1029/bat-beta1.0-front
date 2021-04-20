@@ -7,6 +7,7 @@ import { Link, Redirect } from "react-router-dom";
 //actions
 import { getCompanies } from "../redux/actions";
 
+import { APICore } from '../api/apiCore';
 import Loader from "../components/Loader";
 
 interface RootComponentProps {
@@ -16,6 +17,10 @@ interface RootComponentProps {
 const Root = (props: RootComponentProps) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
+
+    const api = new APICore();
+
+    const loggedInUser = api.getLoggedInUser();
 
     const { companies, loading, isCompaniesFetched } = useSelector((state: any) => ({
         loading: state.Company.Common.loading,
@@ -30,10 +35,11 @@ const Root = (props: RootComponentProps) => {
 
     const noOfCompanies = isCompaniesFetched ? companies.count : 0;
 
-    const company = isCompaniesFetched && noOfCompanies >= 1 ? companies.results[0]: null;
+    const company = isCompaniesFetched && noOfCompanies >= 1 ? companies.results[0] : null;
     //const isCompanyDetailsMissing = company && (!company['time_zone'] || !company['currency']);
-    const isCompanyDetailsMissing = false
-    const redirectUrl = company ? (isCompanyDetailsMissing ? `/companies/${company['id']}/edit`: `/dashboard/${company['id']}`): '';
+    const isCompanyDetailsMissing = false;
+
+    const redirectUrl = company ? (isCompanyDetailsMissing ? `/companies/${company['id']}/edit` : (loggedInUser && loggedInUser['first_login'] ? `/auto-emails/${company['id']}/campaigns` : `/dashboard/${company['id']}`)) : '';
 
     return <>
         {isCompaniesFetched && noOfCompanies >= 1 ? <Redirect to={redirectUrl} /> : null}

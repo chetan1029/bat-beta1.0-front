@@ -663,10 +663,27 @@ function connectMarketPlace(companyId: number, marketId: string | number) {
     return api.create(`${baseUrl}`, {});
 }
 
+function disConnectMarketPlace(companyId: number, marketId: string | number) {
+    const baseUrl = `/companies/${companyId}/amazon-marketplaces/${marketId}/disconnect/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 
 function getCampaignDashboard(companyId: number, filters?: any) {
     const baseUrl = `/companies/${companyId}/email-campaign-dashboard/`;
     return api.get(`${baseUrl}`, filters);
+}
+
+/* amazon account */
+
+function getAmazonAccount(companyId: number, id: number,) {
+    const baseUrl = `/companies/${companyId}/amazon-company/${id}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function updateAmazonAccount(companyId: number, id: number, data: any) {
+    const baseUrl = `/companies/${companyId}/amazon-company/${id}/`;
+    return api.updatePatch(`${baseUrl}`, data);
 }
 
 export {
@@ -696,6 +713,7 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
-    getMarketPlaces, getMarketPlace, connectMarketPlace,
-    getCampaignDashboard
+    getMarketPlaces, getMarketPlace, connectMarketPlace, disConnectMarketPlace,
+    getCampaignDashboard,
+    getAmazonAccount, updateAmazonAccount
 }

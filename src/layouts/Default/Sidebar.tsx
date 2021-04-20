@@ -155,7 +155,10 @@ const Sidebar = (props: SideProps) => {
       let items = div.getElementsByTagName("a");
 
       for (let i = 0; i < items.length; ++i) {
-        if (props.location.pathname === items[i].pathname || (props.location.pathname.includes('/settings/') && items[i].pathname.includes('/settings/'))) {
+        if (props.location.pathname === items[i].pathname ||
+          (props.location.pathname.includes('/settings/') && items[i].pathname.includes('/settings/')) ||
+          (props.location.pathname.includes('/campaigns/') && items[i].pathname.includes('/campaigns/'))
+        ) {
           matchingMenuItem = items[i];
           break;
         }

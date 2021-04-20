@@ -191,8 +191,13 @@ class APICore {
     setUserInSession = (modifiedUser: any) => {
         let userInfo = cookies.get("_bat_session_");
         if (userInfo) {
-            const { token, user } = JSON.parse(userInfo);
-            this.setLoggedInUser({ token, ...user, ...modifiedUser });
+            if (typeof userInfo === 'string' || userInfo instanceof String) {
+                const { token, user } = JSON.parse(userInfo + "");
+                this.setLoggedInUser({ token, ...user, ...modifiedUser });
+            } else {
+                const { token, user } = userInfo;
+                this.setLoggedInUser({ token, ...user, ...modifiedUser });
+            }
         }
     }
 }

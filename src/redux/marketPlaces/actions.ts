@@ -28,6 +28,11 @@ export const connectMarketplace = (companyId: string | number, marketId: string 
     payload: { companyId, marketId }
 });
 
+export const disConnectMarketplace = (companyId: string | number, marketId: string | number) => ({
+    type: MarketPlacesTypes.DISCONNECT_MARKETPLACE,
+    payload: { companyId, marketId }
+});
+
 export const resetConnectMarketplace = () => ({
     type: MarketPlacesTypes.RESET_CONNECT_MARKETPLACE
 });

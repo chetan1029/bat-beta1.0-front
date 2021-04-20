@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getMarketPlaces as getMarketPlacesApi, getMarketPlace as getMarketPlaceApi, connectMarketPlace } from "../../api/index";
+import { getMarketPlaces as getMarketPlacesApi, getMarketPlace as getMarketPlaceApi, connectMarketPlace, disConnectMarketPlace } from "../../api/index";
 
 import { marketPlacesApiResponseSuccess, marketPlacesApiResponseError } from "./actions";
 import { MarketPlacesTypes } from './constants';
@@ -37,6 +37,15 @@ function* connectMarket({ payload: { companyId, marketId } }: any) {
     }
 }
 
+function* disConnectMarket({ payload: { companyId, marketId } }: any) {
+    try {
+        const response = yield call(disConnectMarketPlace, companyId, marketId);
+        yield put(marketPlacesApiResponseSuccess(MarketPlacesTypes.DISCONNECT_MARKETPLACE, response.data));
+    } catch (error) {
+        yield put(marketPlacesApiResponseError(MarketPlacesTypes.DISCONNECT_MARKETPLACE, error));
+    }
+}
+
 export function* watchGetMarkets() {
     yield takeEvery(MarketPlacesTypes.GET_MARKETPLACES, getMarkets)
 }
@@ -49,11 +58,16 @@ export function* watchConnectMarket() {
     yield takeEvery(MarketPlacesTypes.CONNECT_MARKETPLACE, connectMarket)
 }
 
+export function* watchDisConnectMarket() {
+    yield takeEvery(MarketPlacesTypes.DISCONNECT_MARKETPLACE, disConnectMarket)
+}
+
 function* marketsSaga() {
     yield all([
         fork(watchGetMarkets),
         fork(watchGetMarket),
-        fork(watchConnectMarket)
+        fork(watchConnectMarket),
+        fork(watchDisConnectMarket)
     ]);
 }
 
