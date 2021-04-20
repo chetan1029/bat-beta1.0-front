@@ -674,6 +674,18 @@ function getCampaignDashboard(companyId: number, filters?: any) {
     return api.get(`${baseUrl}`, filters);
 }
 
+/* amazon account */
+
+function getAmazonAccount(companyId: number, id: number,) {
+    const baseUrl = `/companies/${companyId}/amazon-company/${id}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function updateAmazonAccount(companyId: number, id: number, data: any) {
+    const baseUrl = `/companies/${companyId}/amazon-company/${id}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -702,5 +714,6 @@ export {
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
     getMarketPlaces, getMarketPlace, connectMarketPlace, disConnectMarketPlace,
-    getCampaignDashboard
+    getCampaignDashboard,
+    getAmazonAccount, updateAmazonAccount
 }

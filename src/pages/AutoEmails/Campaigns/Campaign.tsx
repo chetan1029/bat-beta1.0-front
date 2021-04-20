@@ -12,22 +12,25 @@ import MessageAlert from "../../../components/MessageAlert";
 import { format } from 'date-fns'
 
 //actions
-import { updateCampaign } from "../../../redux/actions";
+import { updateCampaign, } from "../../../redux/actions";
 
 import EmailTemplate from "./EmailTemplate";
+import EditCompanyInfo from "./EditCompanyInfo";
 
 interface CampaignProps {
     campaign: any;
+    market: any;
     companyId: string | number;
 }
-const Campaign = ({ companyId, campaign }: CampaignProps) => {
+const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
 
-    const { isCampaignUpdated, updateError } = useSelector((state: any) => ({
+    const { isCampaignUpdated, updateError, isCompanyUpdated } = useSelector((state: any) => ({
         isCampaignUpdated: state.Company.AutoEmails.isCampaignUpdated,
-        updateError: state.Company.AutoEmails.updateError
+        updateError: state.Company.AutoEmails.updateError,
+        isCompanyUpdated: state.Company.AmazonCompany.isCompanyUpdated,
     }));
 
     const getDate = (date) => {
@@ -85,6 +88,8 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
 
     const [showEmailTemplate, setShowEmailTemplate] = useState(false);
 
+    const [showCompanyAccount, setShowCompanyAccount] = useState<any>(false);
+
     return (
         <>
             {campaign ? <div className="px-2">
@@ -120,7 +125,7 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         <p className="mb-0 text-muted font-weight-semibold">
                             {campaign['emailtemplate']['name']} - {campaign['emailtemplate']['slug']}
 
-                            <Link to='#' className='ml-4 text-primary' onClick={() => setShowEmailTemplate(true)}>View Email Template</Link>
+                            <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>View Email Template</Link>
                         </p>
                     </Col>
                 </Row>
@@ -134,15 +139,22 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                 </Row>
                 {campaign["name"].toLowerCase().includes("order confirmation") ?
                     <Row className="mt-4">
-                        <Col lg={12}>
+                        <Col lg={'auto'}>
                             <Form.Label className="font-weight-semibold">Include Invoice (additional email)</Form.Label>
-                            <Form.Check
-                                type='switch'
-                                id="include_invoice-check"
-                                label="Yes"
-                                checked={includeInvoice}
-                                onChange={(e: any) => setIncludeInvoice(e.target.checked)}
-                            />
+                            <Row>
+                                <Col lg="auto">
+                                    <Form.Check
+                                        type='switch'
+                                        id="include_invoice-check"
+                                        label="Yes"
+                                        checked={includeInvoice}
+                                        onChange={(e: any) => setIncludeInvoice(e.target.checked)}
+                                    />
+                                </Col>
+                                <Col>
+                                    <Link to='#' className='ml-1 text-link d-inline' onClick={() => setShowCompanyAccount(true)}>{t('Edit Company Info')}</Link>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                     : null
@@ -232,10 +244,13 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                 </Row>
             </div> : null}
 
+            {isCompanyUpdated ? <MessageAlert message={t('The company account updated')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {isCampaignUpdated ? <MessageAlert message={t('The campaign is updated successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {updateError ? <MessageAlert message={updateError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
             {showEmailTemplate ? <EmailTemplate campaign={campaign} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+
+            {showCompanyAccount ? <EditCompanyInfo companyId={companyId} market={market} onClose={() => setShowCompanyAccount(false)} /> : null}
         </>
     );
 }

@@ -14,6 +14,7 @@ import deliveryTerms from "./deliveryTerms/saga";
 import assetsSaga from "./assets/saga";
 import membershipPlan from "./membershipPlan/saga";
 import autoEmails from "./autoEmails/saga";
+import amazonAccount from "./amazonCompany/saga";
 
 
 export default function* companySaga() {
@@ -32,6 +33,7 @@ export default function* companySaga() {
         deliveryTerms(),
         assetsSaga(),
         membershipPlan(),
-        autoEmails()
+        autoEmails(),
+        amazonAccount()
     ]);
 }

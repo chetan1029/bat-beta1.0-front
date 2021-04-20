@@ -152,7 +152,7 @@ const Details = (props: DetailsProps) => {
                                         </div>
 
                                         <div>
-                                            {selectedCampaign ? <Campaign campaign={selectedCampaign} companyId={companyId} /> : null}
+                                            {selectedCampaign ? <Campaign campaign={selectedCampaign} companyId={companyId} market={market} /> : null}
                                         </div>
                                     </Col>
                                 </Row>

@@ -14,6 +14,7 @@ import DeliveryTerms from "./deliveryTerms/reducers";
 import AssetsState from "./assets/reducers"
 import MembershipPlan from "./membershipPlan/reducers";
 import AutoEmails from "./autoEmails/reducers";
+import AmazonCompany from "./amazonCompany/reducers";
 
 export default combineReducers({
     PaymentTerms,
@@ -30,5 +31,6 @@ export default combineReducers({
     DeliveryTerms,
     AssetsState,
     MembershipPlan,
-    AutoEmails
+    AutoEmails,
+    AmazonCompany
 });
