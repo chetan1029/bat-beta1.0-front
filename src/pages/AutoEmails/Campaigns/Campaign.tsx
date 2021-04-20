@@ -125,7 +125,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                         <p className="mb-0 text-muted font-weight-semibold">
                             {campaign['emailtemplate']['name']} - {campaign['emailtemplate']['slug']}
 
-                            <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>View Email Template</Link>
+                            <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>{t('View Email Template')}</Link>
                         </p>
                     </Col>
                 </Row>
@@ -152,7 +152,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                                     />
                                 </Col>
                                 <Col>
-                                    <Link to='#' className='ml-1 text-link d-inline' onClick={() => setShowCompanyAccount(true)}>{t('Edit Company Info')}</Link>
+                                    <Link to='#' className='ml-1 text-link d-inline font-weight-semibold' onClick={() => setShowCompanyAccount(true)}>{t('Edit Company Info')}</Link>
                                 </Col>
                             </Row>
                         </Col>

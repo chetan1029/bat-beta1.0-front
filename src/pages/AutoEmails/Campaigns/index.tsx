@@ -14,6 +14,7 @@ import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 
 //actions
+import { APICore } from '../../../api/apiCore';
 import {
     getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace,
     getMembershipPlan, disConnectMarketplace
@@ -35,6 +36,10 @@ const Campaigns = (props: CampaignsProps) => {
     const queryParam: any = props.location.search;
     const [successMsg, setSuccessMsg] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState<any>(null);
+
+    const api = new APICore();
+
+    const loggedInUser = api.getLoggedInUser();
 
     useEffect(() => {
         const params = new URLSearchParams(queryParam);
@@ -142,7 +147,9 @@ const Campaigns = (props: CampaignsProps) => {
                     <Col className="text-right"></Col>
                 </Row>
             </div>
+            { loggedInUser['first_login'] ?
             <AlertDismissible heading="Getting started guide!" message="Do you wanna go through getting started guide." cancelBtnVariant="danger" cancelBtnLabel="I will figure it out!" confirmBtnVariant="primary" confirmBtnLabel="Go to Getting Started" />
+            : null}
             <Card>
                 <Card.Body className="">
 
@@ -159,12 +166,13 @@ const Campaigns = (props: CampaignsProps) => {
                                                     <th>{t("Email in Queue")}</th>
                                                     <th>{t("Last email sent")}</th>
                                                     <th>{t("Status")}</th>
+                                                    <th>{t("Action")}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
-                                                        <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && isActiveMarket ? 'opacity-3' : 'clickable-row')}>
+                                                        <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && !isActiveMarket ? 'opacity-3' : 'clickable-row')}>
                                                             <td>
 
                                                                 <div className="d-flex">
@@ -188,17 +196,19 @@ const Campaigns = (props: CampaignsProps) => {
                                                             </td>
                                                             <td>
                                                                 {capitalizeFirstLetter(market['status'])}
+                                                            </td>
+                                                            <td>
                                                                 {capitalizeFirstLetter(market['status']) === 'Inactive' ?
                                                                     <Button onClick={() => openDetails(market)} disabled={!isActiveMarket}
-                                                                        className="btn btn-sm btn-primary ml-5">{t('Connect')}</Button>
+                                                                        className="btn btn-sm btn-primary">{t('Connect')}</Button>
                                                                     : <>
                                                                         <Button onClick={() => openDetails(market)}
-                                                                            className="btn btn-sm btn-primary ml-5">{t('View')}</Button>
+                                                                            className="btn btn-sm btn-primary">{t('View')}</Button>
                                                                         <Button onClick={() => setMarketForDisconnect(market)}
                                                                             className="btn btn-sm btn-danger ml-2">{t('Disconnect')}</Button></>}
                                                             </td>
                                                         </tr>
-                                                        {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
+                                                        {capitalizeFirstLetter(market['status']) === 'Active' && getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
                                                             <td className="text-muted font-weight-normal">
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
@@ -211,9 +221,11 @@ const Campaigns = (props: CampaignsProps) => {
                                                             <td className="text-muted font-weight-normal">{t("Email in Queue")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Last email sent")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Status")}</td>
+                                                            <td></td>
                                                         </tr> : null}
 
-                                                        {getCampaignsOfMarket(market).map((campaign, cidx) => {
+                                                        { capitalizeFirstLetter(market['status']) === 'Active' ?
+                                                          getCampaignsOfMarket(market).map((campaign, cidx) => {
                                                             return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
                                                                 <td className="clickable-row">
                                                                     <div className="d-flex">
@@ -236,8 +248,9 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 <td>
                                                                     {capitalizeFirstLetter(campaign['status']['name'])}
                                                                 </td>
+                                                                <td></td>
                                                             </tr>
-                                                        })}
+                                                        }) : null}
                                                     </React.Fragment>
                                                 })}
                                             </tbody>
