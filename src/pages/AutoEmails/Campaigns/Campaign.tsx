@@ -31,12 +31,12 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
     }));
 
     const getDate = (date) => {
-      if (date) {
-        var fulldate = date.split('T');
-        return fulldate[0];
-      } else {
-        return "";
-      }
+        if (date) {
+            var fulldate = date.split('T');
+            return fulldate[0];
+        } else {
+            return "";
+        }
     }
 
     const [status, setStatus] = useState(campaign['status'] && campaign['status']['name'] && campaign['status']['name'].toLowerCase() === 'active');
@@ -101,18 +101,18 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                     </Col>
                 </Row>
                 <Row className="mt-4">
-                  <Col sm={2}>
-                    <Form.Label className="font-weight-semibold">{t("Activation Date")}</Form.Label>
-                      <Form.Control
-                        type="date"
-                        className="form-control"
-                        id="activation_date"
-                        name="activation_date"
-                        placeholder="Select Activation date"
-                        value={activationdate}
-                        onChange={(e: any) => setActivationdate(e.target.value)}
-                      />
-                  </Col>
+                    <Col sm={2}>
+                        <Form.Label className="font-weight-semibold">{t("Activation Date")}</Form.Label>
+                        <Form.Control
+                            type="date"
+                            className="form-control"
+                            id="activation_date"
+                            name="activation_date"
+                            placeholder="Select Activation date"
+                            value={activationdate}
+                            onChange={(e: any) => setActivationdate(e.target.value)}
+                        />
+                    </Col>
                 </Row>
                 <Row className="mt-4">
                     <Col lg={12}>
@@ -132,20 +132,20 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                         </p>
                     </Col>
                 </Row>
-                { campaign["name"].toLowerCase().includes("order confirmation") ?
-                <Row className="mt-4">
-                    <Col lg={12}>
-                        <Form.Label className="font-weight-semibold">Include Invoice (additional email)</Form.Label>
-                        <Form.Check
-                            type='switch'
-                            id="include_invoice-check"
-                            label="Yes"
-                            checked={includeInvoice}
-                            onChange={(e: any) => setIncludeInvoice(e.target.checked)}
-                        />
-                    </Col>
-                </Row>
-                : null
+                {campaign["name"].toLowerCase().includes("order confirmation") ?
+                    <Row className="mt-4">
+                        <Col lg={12}>
+                            <Form.Label className="font-weight-semibold">Include Invoice (additional email)</Form.Label>
+                            <Form.Check
+                                type='switch'
+                                id="include_invoice-check"
+                                label="Yes"
+                                checked={includeInvoice}
+                                onChange={(e: any) => setIncludeInvoice(e.target.checked)}
+                            />
+                        </Col>
+                    </Row>
+                    : null
                 }
 
                 <Row className="mt-4">
@@ -168,51 +168,51 @@ const Campaign = ({ companyId, campaign }: CampaignProps) => {
                     </Col>
                 </Row>
 
-                { campaign["name"].toLowerCase().includes("review request") ?
-                <Row className="mt-4">
-                    <Col lg={12}>
-                        <Form.Label className="font-weight-semibold">
-                            Exclude Orders
+                {campaign["name"].toLowerCase().includes("review request") ?
+                    <Row className="mt-4">
+                        <Col lg={12}>
+                            <Form.Label className="font-weight-semibold">
+                                Exclude Orders
                             <span className="text-muted ml-2 font-13 font-weight-normal">(All negative(1-2 star) and neutral (3 star) feedback are excluded by default)</span>
-                        </Form.Label>
-                        <div key={`custom-checkbox`}>
-                            {EXCLUDE_ORDERS.map((ex, idx) => {
-                                return <Form.Check
-                                    custom
-                                    key={idx}
-                                    type='checkbox'
-                                    inline
-                                    id={`exclude-order-check-${idx + 1}`}
-                                    label={ex}
-                                    checked={excludeOrders.includes(ex)}
-                                    onChange={(e: any) => selectExcludeOrder(ex, e.target.checked)}
-                                />
-                            })}
-                        </div>
-                    </Col>
-                </Row>
-                : null
+                            </Form.Label>
+                            <div key={`custom-checkbox`}>
+                                {EXCLUDE_ORDERS.map((ex, idx) => {
+                                    return <Form.Check
+                                        custom
+                                        key={idx}
+                                        type='checkbox'
+                                        inline
+                                        id={`exclude-order-check-${idx + 1}`}
+                                        label={ex}
+                                        checked={excludeOrders.includes(ex)}
+                                        onChange={(e: any) => selectExcludeOrder(ex, e.target.checked)}
+                                    />
+                                })}
+                            </div>
+                        </Col>
+                    </Row>
+                    : null
                 }
 
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Schedule</Form.Label>
                         <p className="mb-0 text-muted font-weight-semibold">
-                            { campaign['schedule'] == "Daily" ? "Number of Days after order is "+campaign['order_status']['name'] : campaign['schedule']  }
+                            {campaign['schedule'] === "Daily" ? "Number of Days after order is " + campaign['order_status']['name'] : campaign['schedule']}
                         </p>
-                        { campaign['schedule'] == "Daily" ?
-                        <Form.Control as="select" size="sm" className="mt-1 col-1" placeholder={t("Number of Days")}
-                            name="schedule_days" id="schedule_days"
-                            value={scheduledays}
-                            onChange={(e: any) => setScheduledays(e.target.value)}
-                        >
-                        {[...Array(61)].map((e, i) => {
-                        return i >= 5 ?
-                        <option value={i}>{i}</option>
-                        : ""
-                        })}
-                        </Form.Control>
-                          : ""}
+                        {campaign['schedule'] === "Daily" ?
+                            <Form.Control as="select" size="sm" className="mt-1 col-1" placeholder={t("Number of Days")}
+                                name="schedule_days" id="schedule_days"
+                                value={scheduledays}
+                                onChange={(e: any) => setScheduledays(e.target.value)}
+                            >
+                                {[...Array(61)].map((e, i) => {
+                                    return i >= 5 ?
+                                        <option value={i}>{i}</option>
+                                        : ""
+                                })}
+                            </Form.Control>
+                            : ""}
                     </Col>
                 </Row>
 

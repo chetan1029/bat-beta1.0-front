@@ -22,11 +22,12 @@ const Details = (props: DetailsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { loading, campaigns, market } = useSelector((state: any) => ({
+    const { loading, campaigns, market, isCampaignUpdated } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
-        market: state.MarketPlaces.market
+        market: state.MarketPlaces.market,
+        isCampaignUpdated: state.Company.AutoEmails.isCampaignUpdated,
     }));
 
     const companyId = props.match.params.companyId;
@@ -39,6 +40,12 @@ const Details = (props: DetailsProps) => {
         dispatch(getCampaigns(companyId, defaultParams));
         dispatch(getMarketPlace(companyId, marketId));
     }, [dispatch, companyId, marketId, defaultParams]);
+
+    useEffect(() => {
+        if (isCampaignUpdated) {
+            dispatch(getCampaigns(companyId, defaultParams));
+        }
+    }, [dispatch, isCampaignUpdated, companyId, defaultParams]);
 
     const getCampaignsOfMarket = (market: any) => {
         return ((campaigns || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];

@@ -453,14 +453,14 @@ const Icon = ({ name, className }: Props) => {
 
       case 'pencil':
         return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Iconly/Light/Edit">
-<g id="Edit">
-<path id="Stroke 1" d="M13.7473 20.4429H20.9999" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Stroke 3" fill-rule="evenodd" clip-rule="evenodd" d="M12.78 3.79479C13.5557 2.86779 14.95 2.73186 15.8962 3.49173C15.9485 3.53296 17.6295 4.83879 17.6295 4.83879C18.669 5.46719 18.992 6.80311 18.3494 7.82259C18.3153 7.87718 8.81195 19.7645 8.81195 19.7645C8.49578 20.1589 8.01583 20.3918 7.50291 20.3973L3.86353 20.443L3.04353 16.9723C2.92866 16.4843 3.04353 15.9718 3.3597 15.5773L12.78 3.79479Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Stroke 5" d="M11.0208 6.00092L16.473 10.188" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-</g>
-</svg>
+          <g id="Iconly/Light/Edit">
+            <g id="Edit">
+              <path id="Stroke 1" d="M13.7473 20.4429H20.9999" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path id="Stroke 3" fillRule="evenodd" clipRule="evenodd" d="M12.78 3.79479C13.5557 2.86779 14.95 2.73186 15.8962 3.49173C15.9485 3.53296 17.6295 4.83879 17.6295 4.83879C18.669 5.46719 18.992 6.80311 18.3494 7.82259C18.3153 7.87718 8.81195 19.7645 8.81195 19.7645C8.49578 20.1589 8.01583 20.3918 7.50291 20.3973L3.86353 20.443L3.04353 16.9723C2.92866 16.4843 3.04353 15.9718 3.3597 15.5773L12.78 3.79479Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path id="Stroke 5" d="M11.0208 6.00092L16.473 10.188" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          </g>
+        </svg>
 
       case 'upload':
         return <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -542,22 +542,22 @@ const Icon = ({ name, className }: Props) => {
       case 'search':
         return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g id="Iconly/Light/Search">
-          <g id="Search">
-          <circle id="Ellipse_739" cx="11.7666" cy="11.7666" r="8.98856" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="Line_181" d="M18.0183 18.4851L21.5423 22" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <g id="Search">
+              <circle id="Ellipse_739" cx="11.7666" cy="11.7666" r="8.98856" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path id="Line_181" d="M18.0183 18.4851L21.5423 22" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
           </g>
-          </g>
-          </svg>
+        </svg>
 
       case 'bell':
         return <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g id="Iconly/Light/Notification">
+          <g id="Iconly/Light/Notification">
             <g id="Notification">
-            <path id="Stroke 1" fill-rule="evenodd" clip-rule="evenodd" d="M12 17.8476C17.6392 17.8476 20.2481 17.1242 20.5 14.2205C20.5 11.3188 18.6812 11.5054 18.6812 7.94511C18.6812 5.16414 16.0452 2 12 2C7.95477 2 5.31885 5.16414 5.31885 7.94511C5.31885 11.5054 3.5 11.3188 3.5 14.2205C3.75295 17.1352 6.36177 17.8476 12 17.8476Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path id="Stroke 3" d="M14.3889 20.8572C13.0247 22.372 10.8967 22.3899 9.51953 20.8572" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path id="Stroke 1" fillRule="evenodd" clipRule="evenodd" d="M12 17.8476C17.6392 17.8476 20.2481 17.1242 20.5 14.2205C20.5 11.3188 18.6812 11.5054 18.6812 7.94511C18.6812 5.16414 16.0452 2 12 2C7.95477 2 5.31885 5.16414 5.31885 7.94511C5.31885 11.5054 3.5 11.3188 3.5 14.2205C3.75295 17.1352 6.36177 17.8476 12 17.8476Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path id="Stroke 3" d="M14.3889 20.8572C13.0247 22.372 10.8967 22.3899 9.51953 20.8572" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </g>
-            </g>
-            </svg>
+          </g>
+        </svg>
 
 
       case 'mail':
@@ -584,8 +584,8 @@ const Icon = ({ name, className }: Props) => {
 
       case 'graph':
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path id="Stroke 1" fillRule="evenodd" clipRule="evenodd" d="M11.5185 9.25949C11.9683 9.25949 12.3458 9.63072 12.2771 10.0749C11.8736 12.6883 9.63636 14.6286 6.93812 14.6286C3.95285 14.6286 1.5332 12.209 1.5332 9.2244C1.5332 6.76546 3.40127 4.47493 5.50443 3.95703C5.95636 3.84546 6.41952 4.16335 6.41952 4.62861C6.41952 7.78089 6.52548 8.59633 7.12408 9.03984C7.72268 9.48335 8.42654 9.25949 11.5185 9.25949Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          <path id="Stroke 3" fillRule="evenodd" clipRule="evenodd" d="M14.4614 6.63442C14.4972 4.60916 12.0095 1.3446 8.97792 1.40074C8.74213 1.40495 8.55336 1.60144 8.54283 1.83653C8.46634 3.50179 8.5695 5.65969 8.62704 6.63793C8.64459 6.94249 8.88388 7.18179 9.18774 7.19934C10.1934 7.25688 12.4298 7.33548 14.0713 7.08705C14.2944 7.05337 14.4579 6.85969 14.4614 6.63442Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <path id="Stroke 1" fillRule="evenodd" clipRule="evenodd" d="M11.5185 9.25949C11.9683 9.25949 12.3458 9.63072 12.2771 10.0749C11.8736 12.6883 9.63636 14.6286 6.93812 14.6286C3.95285 14.6286 1.5332 12.209 1.5332 9.2244C1.5332 6.76546 3.40127 4.47493 5.50443 3.95703C5.95636 3.84546 6.41952 4.16335 6.41952 4.62861C6.41952 7.78089 6.52548 8.59633 7.12408 9.03984C7.72268 9.48335 8.42654 9.25949 11.5185 9.25949Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          <path id="Stroke 3" fillRule="evenodd" clipRule="evenodd" d="M14.4614 6.63442C14.4972 4.60916 12.0095 1.3446 8.97792 1.40074C8.74213 1.40495 8.55336 1.60144 8.54283 1.83653C8.46634 3.50179 8.5695 5.65969 8.62704 6.63793C8.64459 6.94249 8.88388 7.18179 9.18774 7.19934C10.1934 7.25688 12.4298 7.33548 14.0713 7.08705C14.2944 7.05337 14.4579 6.85969 14.4614 6.63442Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
 
 

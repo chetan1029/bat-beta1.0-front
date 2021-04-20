@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Table, Button, Accordion } from "react-bootstrap";
+import { Row, Col, Card, Table, Button } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
 import Icon from "../../../components/Icon";
 import Flag from 'react-flagkit';
@@ -14,7 +14,10 @@ import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 
 //actions
-import { getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace } from "../../../redux/actions";
+import {
+    getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace,
+    getMembershipPlan, disConnectMarketplace
+} from "../../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -49,13 +52,16 @@ const Campaigns = (props: CampaignsProps) => {
     }, [queryParam]);
 
 
-    const { loading, campaigns, markets, redirectUri, isMarketConnected } = useSelector((state: any) => ({
-        loading: state.Company.AutoEmails.loading,
+    const { loading, campaigns, markets, redirectUri, isMarketConnected, membershipPlan, isMarketDisconnected } = useSelector((state: any) => ({
+        loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
         markets: state.MarketPlaces.markets,
         isMarketConnected: state.MarketPlaces.isMarketConnected,
-        redirectUri: state.MarketPlaces.redirectUri
+        redirectUri: state.MarketPlaces.redirectUri,
+        isMarketDisconnected: state.MarketPlaces.isMarketDisconnected,
+
+        membershipPlan: state.Company.MembershipPlan.membershipPlan,
     }));
 
     const companyId = props.match.params.companyId;
@@ -67,6 +73,7 @@ const Campaigns = (props: CampaignsProps) => {
         dispatch(resetConnectMarketplace());
         dispatch(getCampaigns(companyId, defaultParams));
         dispatch(getMarketPlaces(companyId, defaultParams));
+        dispatch(getMembershipPlan(companyId, { is_active: true }));
     }, [dispatch, companyId, defaultParams]);
 
     const getCampaignsOfMarket = (market: any) => {
@@ -89,13 +96,17 @@ const Campaigns = (props: CampaignsProps) => {
         return "";
     }
 
+    const [selectedMarket, setSelectedMarket] = useState<any>(null);
+
     const openDetails = (market: any) => {
         if (market.status === 'active')
             history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/`);
-        else if (markets.findIndex(m => m['status'] === 'active') === -1) {
-            dispatch(connectMarketplace(companyId, market['id']));
+        else {
+            setSelectedMarket(market);
         }
     }
+
+    const [marketForDisconnect, setMarketForDisconnect] = useState<any>(null);
 
     useEffect(() => {
         if (redirectUri && isMarketConnected) {
@@ -103,9 +114,20 @@ const Campaigns = (props: CampaignsProps) => {
         }
     }, [redirectUri, isMarketConnected]);
 
+    useEffect(() => {
+        if (isMarketDisconnected) {
+            setMarketForDisconnect(null);
+            dispatch(getCampaigns(companyId, defaultParams));
+            dispatch(getMarketPlaces(companyId, defaultParams));
+        }
+    }, [dispatch, isMarketDisconnected, companyId, defaultParams]);
+
 
     const sortedMarkets = [...markets.filter(m => m['status'] === 'active'), ...markets.filter(m => m['status'] !== 'active')];
-    const isActiveMarket = markets.findIndex(m => m['status'] === 'active') !== -1;
+    const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
+    const quotas = plan ? (plan['plan_quotas'] || []).find(pq => (pq['quota'] && pq['quota']['codename'] === "MARKETPLACES")) : {};
+
+    const isActiveMarket = quotas && quotas['available_quota'] > 0 ? true : false;
 
     return (
         <>
@@ -129,7 +151,7 @@ const Campaigns = (props: CampaignsProps) => {
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>
-                                      <Table>
+                                        <Table>
                                             <thead>
                                                 <tr>
                                                     <th>{t("Campaign Name")}</th>
@@ -142,7 +164,7 @@ const Campaigns = (props: CampaignsProps) => {
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
-                                                    <tr className={""+(capitalizeFirstLetter(market['status']) === 'Inactive' && isActiveMarket ? 'opacity-3': 'clickable-row')}>
+                                                        <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && isActiveMarket ? 'opacity-3' : 'clickable-row')}>
                                                             <td>
 
                                                                 <div className="d-flex">
@@ -167,10 +189,13 @@ const Campaigns = (props: CampaignsProps) => {
                                                             <td>
                                                                 {capitalizeFirstLetter(market['status'])}
                                                                 {capitalizeFirstLetter(market['status']) === 'Inactive' ?
-                                                                <Button onClick={() => openDetails(market)} disabled={isActiveMarket}
-                                                                  className="btn btn-sm btn-primary ml-5">{t('Connect')}</Button>
-                                                                :<Button onClick={() => openDetails(market)}
-                                                                className="btn btn-sm btn-primary ml-5">{t('View')}</Button>}
+                                                                    <Button onClick={() => openDetails(market)} disabled={!isActiveMarket}
+                                                                        className="btn btn-sm btn-primary ml-5">{t('Connect')}</Button>
+                                                                    : <>
+                                                                        <Button onClick={() => openDetails(market)}
+                                                                            className="btn btn-sm btn-primary ml-5">{t('View')}</Button>
+                                                                        <Button onClick={() => setMarketForDisconnect(market)}
+                                                                            className="btn btn-sm btn-danger ml-2">{t('Disconnect')}</Button></>}
                                                             </td>
                                                         </tr>
                                                         {getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
@@ -227,6 +252,28 @@ const Campaigns = (props: CampaignsProps) => {
 
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+
+            {
+                selectedMarket ?
+                    <ConfirmMessage message={`Are you sure you want to connect ${t('Amazon')} ${selectedMarket['country']} ? You can only connect ${quotas ? quotas['value'] : 0} markets based on your subscribed plan.`}
+                        onConfirm={() => {
+                            dispatch(connectMarketplace(companyId, selectedMarket['id']));
+                            setSelectedMarket(null);
+                        }}
+                        onClose={() => setSelectedMarket(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Confirm')} />
+                    : null
+            }
+
+            {
+                marketForDisconnect ?
+                    <ConfirmMessage message={`Are you sure you want to disconnect ${t('Amazon')} ${marketForDisconnect['country']} ?`}
+                        onConfirm={() => {
+                            dispatch(disConnectMarketplace(companyId, marketForDisconnect['id']));
+                            setMarketForDisconnect(null);
+                        }}
+                        onClose={() => setMarketForDisconnect(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Confirm')} />
+                    : null
+            }
         </>
     );
 }

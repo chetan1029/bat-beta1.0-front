@@ -663,6 +663,11 @@ function connectMarketPlace(companyId: number, marketId: string | number) {
     return api.create(`${baseUrl}`, {});
 }
 
+function disConnectMarketPlace(companyId: number, marketId: string | number) {
+    const baseUrl = `/companies/${companyId}/amazon-marketplaces/${marketId}/disconnect/`;
+    return api.create(`${baseUrl}`, {});
+}
+
 
 function getCampaignDashboard(companyId: number, filters?: any) {
     const baseUrl = `/companies/${companyId}/email-campaign-dashboard/`;
@@ -696,6 +701,6 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
-    getMarketPlaces, getMarketPlace, connectMarketPlace,
+    getMarketPlaces, getMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard
 }

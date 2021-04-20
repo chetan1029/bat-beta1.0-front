@@ -30,6 +30,13 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
                         isMarketConnected: true
                     }
                 }
+                case MarketPlacesTypes.DISCONNECT_MARKETPLACE: {
+                    return {
+                        ...state,
+                        isMarketDisconnected: true,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -57,6 +64,14 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
                         isMarketConnected: false
                     }
                 }
+                case MarketPlacesTypes.DISCONNECT_MARKETPLACE: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isMarketDisconnected: false,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -66,7 +81,9 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
         case MarketPlacesTypes.CONNECT_MARKETPLACE:
             return { ...state, isMarketConnected: false, loading: true };
         case MarketPlacesTypes.RESET_CONNECT_MARKETPLACE:
-            return { ...state, isMarketConnected: false, redirectUri: null };
+            return { ...state, isMarketConnected: false, redirectUri: null, isMarketDisconnected: false };
+        case MarketPlacesTypes.DISCONNECT_MARKETPLACE:
+            return { ...state, isMarketDisconnected: false, loading: true };
 
         default: return { ...state };
     }
