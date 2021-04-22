@@ -10,7 +10,7 @@ import MessageAlert from "../../../components/MessageAlert";
 
 //plug-ins
 import { format } from 'date-fns'
-
+import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 //actions
 import { updateCampaign, } from "../../../redux/actions";
 
@@ -90,22 +90,25 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
 
     const [showCompanyAccount, setShowCompanyAccount] = useState<any>(false);
 
-    useEffect(() => {
-        saveCampaign();
-    },[status]);
+    // useEffect(() => {
+    //     saveCampaign();
+    // },[status]);
 
     return (
         <>
             {campaign ? <div className="px-2">
                 <Row>
                     <Col lg={12}>
-                        <Form.Label className="font-weight-semibold">Status</Form.Label>
-                        <Form.Check
-                            type="switch"
-                            id="status-check"
-                            label=""
+                        <BootstrapSwitchButton
+                            onlabel='Active'
+                            offlabel='Inactive'
                             checked={status}
-                            onChange={(e: any) => setStatus(e.target.checked)}
+                            width={150}
+                            height={40}
+                            style="status-switch"
+                            onstyle='success'
+                            offstyle='danger'
+                            onChange={(checked: boolean) => setStatus(checked)}
                         />
                     </Col>
                 </Row>

@@ -105,15 +105,15 @@ const Details = (props: DetailsProps) => {
                             <Card.Body className="">
 
                                 <Row>
-                                    <Col lg={3}>
+                                    <Col lg={2}>
                                         <Card>
                                             <Card.Body className="">
-                                                <h6 className="mt-0 text-muted">{t('Email Sent')}</h6>
+                                                <h6 className="mt-0 text-muted">{t('Sent Emails')}</h6>
                                                 <h1 className="mb-0">{getTotalOfMarket(market, 'email_sent')}</h1>
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col lg={3}>
+                                    <Col lg={2}>
                                         <Card>
                                             <Card.Body className="">
                                                 <h6 className="mt-0 text-muted">{t('Email in Queue')}</h6>
@@ -121,19 +121,35 @@ const Details = (props: DetailsProps) => {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col lg={3}>
+                                    <Col lg={2}>
                                         <Card>
                                             <Card.Body className="">
-                                                <h6 className="mt-0 text-muted">{t('Email Sent - Today')}</h6>
+                                                <h6 className="mt-0 text-muted">{t('Opt-out Emails')}</h6>
+                                                <h1 className="mb-0">{getTotalOfMarket(market, 'email_opt_out')}</h1>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col lg={2}>
+                                        <Card>
+                                            <Card.Body className="">
+                                                <h6 className="mt-0 text-muted">{t('Sent Emails - Today')}</h6>
                                                 <h1 className="mb-0">{getTotalOfMarket(market, 'email_sent')}</h1>
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col lg={3}>
+                                    <Col lg={2}>
                                         <Card>
                                             <Card.Body className="">
                                                 <h6 className="mt-0 text-muted">{t('Email in Queue - Today')}</h6>
                                                 <h1 className="mb-0">{getTotalOfMarket(market, 'email_in_queue')}</h1>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col lg={2}>
+                                        <Card>
+                                            <Card.Body className="">
+                                                <h6 className="mt-0 text-muted">{t('Opt-out Emails - Today')}</h6>
+                                                <h1 className="mb-0">{getTotalOfMarket(market, 'email_opt_out_today')}</h1>
                                             </Card.Body>
                                         </Card>
                                     </Col>

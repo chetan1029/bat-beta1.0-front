@@ -192,7 +192,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 {getTotalOfMarket(market, 'email_in_queue')}
                                                             </td>
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
-                                                                <DisplayDate dateStr={getLastSentOfMarket(market)} />
+                                                                {getTotalOfMarket(market, 'opt_out_rate')}
                                                             </td>
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {capitalizeFirstLetter(market['status'])}
@@ -242,7 +242,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     {campaign['email_in_queue']}
                                                                 </td>
                                                                 <td>
-                                                                    <DisplayDate dateStr={campaign['last_email_send_in_queue']} />
+                                                                    {campaign['opt_out_rate']}
                                                                 </td>
                                                                 <td>
                                                                     {capitalizeFirstLetter(campaign['status']['name'])}
