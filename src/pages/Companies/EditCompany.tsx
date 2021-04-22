@@ -60,7 +60,6 @@ const EditCompany = (props: EditCompanyProps) => {
         enableReinitialize: true,
         initialValues: {
             name: '',
-            abbreviation: '',
             address1: '',
             address2: '',
             zip: '',
@@ -71,17 +70,18 @@ const EditCompany = (props: EditCompanyProps) => {
             phone_number: '', ...company,
             country: company && company['country'] ? { label: COUNTRIES[company['country']], 'value': company['country'] } : null,
             timezone: company && company['time_zone'] ? { label: company['time_zone'], value: company['time_zone'] } : null,
-            currency: company && company['currency'] ? { label: CURRENCIES[company['currency']], value: company['currency'] } : null,
-            language: company && company['language'] ? { label: LANGS[company['language']], value: company['language'] } : null,
-            weight_unit: company && company['weight_unit'] ? { label: WEIGHTS[company['weight_unit']], value: company['weight_unit'] } : null,
-            unit_system: company && company['unit_system'] ? { label: UNIT_SYSTEMS[company['unit_system']], value: company['unit_system'] } : null,
+            // abbreviation: '',
+            // currency: company && company['currency'] ? { label: CURRENCIES[company['currency']], value: company['currency'] } : null,
+            // language: company && company['language'] ? { label: LANGS[company['language']], value: company['language'] } : null,
+            // weight_unit: company && company['weight_unit'] ? { label: WEIGHTS[company['weight_unit']], value: company['weight_unit'] } : null,
+            // unit_system: company && company['unit_system'] ? { label: UNIT_SYSTEMS[company['unit_system']], value: company['unit_system'] } : null,
         },
         validationSchema: Yup.object({
             name: Yup.string().required(t('Company name is required')),
             country: Yup.object().required(t('Country is required')),
             email: Yup.string().required(t('Email is required')),
             timezone: Yup.object().required(t('Timezone is required')).nullable(),
-            currency: Yup.object().required(t('Currency is required')).nullable(),
+            // currency: Yup.object().required(t('Currency is required')).nullable(),
         }),
         onSubmit: values => {
             const newData = { ...company, ...values };
@@ -94,21 +94,21 @@ const EditCompany = (props: EditCompanyProps) => {
                 newData['time_zone'] = values['timezone']['value'];
             }
 
-            if (values['currency']) {
-                newData['currency'] = values['currency']['value'];
-            }
-
-            if (values['language']) {
-                newData['language'] = values['language']['value'];
-            }
-
-            if (values['weight_unit']) {
-                newData['weight_unit'] = values['weight_unit']['value'];
-            }
-
-            if (values['unit_system']) {
-                newData['unit_system'] = values['unit_system']['value'];
-            }
+            // if (values['currency']) {
+            //     newData['currency'] = values['currency']['value'];
+            // }
+            //
+            // if (values['language']) {
+            //     newData['language'] = values['language']['value'];
+            // }
+            //
+            // if (values['weight_unit']) {
+            //     newData['weight_unit'] = values['weight_unit']['value'];
+            // }
+            //
+            // if (values['unit_system']) {
+            //     newData['unit_system'] = values['unit_system']['value'];
+            // }
 
             if (logoFile) {
                 newData['logo'] = logoFile;
@@ -116,11 +116,11 @@ const EditCompany = (props: EditCompanyProps) => {
                 delete newData['logo'];
             }
 
-            if (licenseFile) {
-                newData['license_file'] = licenseFile;
-            } else {
-                delete newData['license_file'];
-            }
+            // if (licenseFile) {
+            //     newData['license_file'] = licenseFile;
+            // } else {
+            //     delete newData['license_file'];
+            // }
             dispatch(editCompany(companyId, newData));
         },
     });
@@ -132,12 +132,12 @@ const EditCompany = (props: EditCompanyProps) => {
             setlogoFile(file);
     }
 
-    const [licenseFile, setlicenseFile] = useState<any>();
-    const onLicenseFile = (e: any) => {
-        const file = e.target.files[0];
-        if (file)
-            setlicenseFile(file);
-    }
+    // const [licenseFile, setlicenseFile] = useState<any>();
+    // const onLicenseFile = (e: any) => {
+    //     const file = e.target.files[0];
+    //     if (file)
+    //         setlicenseFile(file);
+    // }
 
     const imagePath: any = company && company['logo'] ? company['logo'] : (logoFile ? URL.createObjectURL(logoFile) : avatarPlaceholder);
 
@@ -180,7 +180,7 @@ const EditCompany = (props: EditCompanyProps) => {
                                                 <Form.Control.Feedback type="invalid">{validator.errors.name}</Form.Control.Feedback>
                                             ) : null}
                                         </Form.Group>
-                                        <Form.Group>
+                                        { /* <Form.Group>
                                             <Form.Label>{t('Abbreviation')}</Form.Label>
                                             <Form.Control type="text" placeholder={t("Abbreviation")}
                                                 name="abbreviation" id="abbreviation"
@@ -193,7 +193,7 @@ const EditCompany = (props: EditCompanyProps) => {
                                             {validator.touched.abbreviation && validator.errors.abbreviation ? (
                                                 <Form.Control.Feedback type="invalid">{validator.errors.abbreviation}</Form.Control.Feedback>
                                             ) : null}
-                                        </Form.Group>
+                                        </Form.Group> */ }
                                     </Col>
                                     <Col md={6}>
                                         <Form.Group>
@@ -363,7 +363,7 @@ const EditCompany = (props: EditCompanyProps) => {
                                             ) : null}
                                         </Form.Group>
                                     </Col>
-                                    <Col md={6}>
+                                    { /* <Col md={6}>
                                         <Form.Group>
                                             <Form.Label>{t('Currency')}</Form.Label>
                                             <CurrenciesDropdown name='currency' placeholder={t('Currency')}
@@ -378,9 +378,9 @@ const EditCompany = (props: EditCompanyProps) => {
                                                 </Form.Control.Feedback>
                                             ) : null}
                                         </Form.Group>
-                                    </Col>
+                                    </Col> */ }
                                 </Row>
-
+                                { /*
                                 <Row>
                                     <Col lg={6}>
                                         <Form.Group>
@@ -444,7 +444,7 @@ const EditCompany = (props: EditCompanyProps) => {
                                         </Form.Group>
                                     </Col>
                                 </Row>
-
+                                */ }
 
                                 <Form.Group className="mb-0">
                                     <Button variant="primary" type="submit">{t('Submit')}</Button>

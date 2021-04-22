@@ -89,28 +89,30 @@ const Profile = (props: ProfileProp) => {
         enableReinitialize: true,
         initialValues: {
             phone_number: profile ? profile['phone_number'] : "",
-            language: profile ? { label: LANGS[profile['language']], value: profile['language'] } : "",
-            timezone: profile ? { label: profile['timezone'], value: profile['timezone'] } : ""
+            // language: profile ? { label: LANGS[profile['language']], value: profile['language'] } : "",
+            // timezone: profile ? { label: profile['timezone'], value: profile['timezone'] } : ""
         },
         validationSchema: Yup.object({}),
         onSubmit: values => {
 
-            if (porFile) {
-                values['por_file'] = porFile;
-            } else {
-                delete values['por_file'];
-            }
+            // if (porFile) {
+            //     values['por_file'] = porFile;
+            // } else {
+            //     delete values['por_file'];
+            // }
 
-            dispatch(updateProfile(user['username'], { ...values, timezone: values['timezone']['value'], language: values['language']['value'] }));
+            dispatch(updateProfile(user['username'], { ...values,
+              //timezone: values['timezone']['value'], language: values['language']['value']
+            }));
         },
     });
 
-    const [porFile, setporFile] = useState<any>();
-    const onPorFile = (e: any) => {
-        const file = e.target.files[0];
-        if (file)
-            setporFile(file);
-    }
+    // const [porFile, setporFile] = useState<any>();
+    // const onPorFile = (e: any) => {
+    //     const file = e.target.files[0];
+    //     if (file)
+    //         setporFile(file);
+    // }
 
 
     return <>
@@ -231,7 +233,7 @@ const Profile = (props: ProfileProp) => {
                                             ) : null}
                                         </Form.Group>
 
-                                        <Row>
+                                        { /* <Row>
                                             <Col lg={6} xs={12}>
                                                 <Form.Group>
                                                     <Form.Label>{t('Language')}</Form.Label>
@@ -263,8 +265,9 @@ const Profile = (props: ProfileProp) => {
                                                 </Form.Group>
                                             </Col>
                                         </Row>
+                                        */ }
 
-                                        <Row className='align-items-center'>
+                                        { /* <Row className='align-items-center'>
                                             <Col md={6}>
                                                 <Form.Group>
                                                     <Form.Label>{t('Power of Representation')}</Form.Label>
@@ -276,7 +279,7 @@ const Profile = (props: ProfileProp) => {
                                                     </p> : null}
                                                 </Form.Group>
                                             </Col>
-                                        </Row>
+                                        </Row> */ }
 
                                         <Form.Group className="mb-0">
                                             <Button variant="primary" type="submit">{t('Submit')}</Button>

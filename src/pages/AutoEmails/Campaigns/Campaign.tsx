@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
@@ -89,6 +89,10 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
     const [showEmailTemplate, setShowEmailTemplate] = useState(false);
 
     const [showCompanyAccount, setShowCompanyAccount] = useState<any>(false);
+
+    useEffect(() => {
+        saveCampaign();
+    },[status]);
 
     return (
         <>

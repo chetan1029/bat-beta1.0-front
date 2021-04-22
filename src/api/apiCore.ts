@@ -40,7 +40,7 @@ axios.interceptors.response.use(response => {
 
 /**
  * Sets the default authorization
- * @param {*} token 
+ * @param {*} token
  */
 const setAuthorization = (token) => {
     if (token)
@@ -176,7 +176,7 @@ class APICore {
 
     setLoggedInUser = (session: any) => {
         if (session)
-            cookies.set('_bat_session_', JSON.stringify(session), { maxAge: 3600, domain: window.location.hostname });
+            cookies.set('_bat_session_', JSON.stringify(session), { maxAge: 86400, domain: window.location.hostname });
         else
             cookies.remove('_bat_session_');
     }
