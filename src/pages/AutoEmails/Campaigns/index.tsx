@@ -141,7 +141,7 @@ const Campaigns = (props: CampaignsProps) => {
                     <Col>
                         <div className="d-flex align-items-center">
                             <Icon name="mail2" className="icon icon-xs  mr-2" />
-                            <h1 className="m-0">{t('Campaigns')}</h1>
+                            <h1 className="m-0">{t('Manage Campaigns')}</h1>
                         </div>
                     </Col>
                     <Col className="text-right"></Col>
@@ -161,10 +161,10 @@ const Campaigns = (props: CampaignsProps) => {
                                         <Table>
                                             <thead>
                                                 <tr>
-                                                    <th>{t("Campaign Name")}</th>
-                                                    <th>{t("Email Sent")}</th>
+                                                    <th>{t("MarketPlace Name")}</th>
+                                                    <th>{t("Sent Emails")}</th>
                                                     <th>{t("Email in Queue")}</th>
-                                                    <th>{t("Last email sent")}</th>
+                                                    <th>{t("Opt-out Rate")}</th>
                                                     <th>{t("Status")}</th>
                                                     <th>{t("Action")}</th>
                                                 </tr>
@@ -172,8 +172,8 @@ const Campaigns = (props: CampaignsProps) => {
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
                                                     return <React.Fragment key={idx}>
-                                                        <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && !isActiveMarket ? 'opacity-3' : 'clickable-row')}>
-                                                            <td>
+                                                        <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && !isActiveMarket ? 'opacity-3' : '')}>
+                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
 
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
@@ -185,16 +185,16 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                            <td>
+                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {getTotalOfMarket(market, 'email_sent')}
                                                             </td>
-                                                            <td>
+                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {getTotalOfMarket(market, 'email_in_queue')}
                                                             </td>
-                                                            <td>
+                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 <DisplayDate dateStr={getLastSentOfMarket(market)} />
                                                             </td>
-                                                            <td>
+                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {capitalizeFirstLetter(market['status'])}
                                                             </td>
                                                             <td>
@@ -203,7 +203,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                                         className="btn btn-sm btn-primary">{t('Connect')}</Button>
                                                                     : <>
                                                                         <Button onClick={() => openDetails(market)}
-                                                                            className="btn btn-sm btn-primary">{t('View')}</Button>
+                                                                            className="btn btn-sm btn-primary">{t('Manage')}</Button>
                                                                         <Button onClick={() => setMarketForDisconnect(market)}
                                                                             className="btn btn-sm btn-danger ml-2">{t('Disconnect')}</Button></>}
                                                             </td>
@@ -213,26 +213,25 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
                                                                     <div>
-                                                                        {t("Template Name")}
+                                                                        {t("Campaign Name")}
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                            <td className="text-muted font-weight-normal">{t("Email Sent")}</td>
+                                                            <td className="text-muted font-weight-normal">{t("Sent Emails")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Email in Queue")}</td>
-                                                            <td className="text-muted font-weight-normal">{t("Last email sent")}</td>
+                                                            <td className="text-muted font-weight-normal">{t("Opt-out Rate")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Status")}</td>
                                                             <td></td>
                                                         </tr> : null}
 
                                                         { capitalizeFirstLetter(market['status']) === 'Active' ?
                                                           getCampaignsOfMarket(market).map((campaign, cidx) => {
-                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
-                                                                <td className="clickable-row">
+                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light clickable-row' onClick={() => openDetails(market)}>
+                                                                <td>
                                                                     <div className="d-flex">
                                                                         <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
-                                                                        <div onClick={() => openDetails(market)}>
-                                                                            <h6 className="text-muted font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
-                                                                            <h6 className='my-0'>{campaign['emailtemplate']['slug']}</h6>
+                                                                        <div>
+                                                                            <h6 className="font-weight-normal my-0">{campaign['emailtemplate']['name']}</h6>
                                                                         </div>
                                                                     </div>
                                                                 </td>
