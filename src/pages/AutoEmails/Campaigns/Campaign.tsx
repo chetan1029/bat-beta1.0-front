@@ -113,7 +113,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
 
     const [showCompanyAccount, setShowCompanyAccount] = useState<any>(false);
 
-    const minActivationDate = new Date(new Date().getTime() + (10 * 24 * 60 * 60 * 1000));
+    const minActivationDate = new Date(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
 
     return (
         <>
@@ -161,7 +161,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Email Template</Form.Label>
                         <p className="mb-0 text-muted font-weight-semibold">
-                            {campaign['emailtemplate']['name']} - {campaign['emailtemplate']['slug']}
+                            {campaign['emailtemplate']['name']}
 
                             <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>{t('View Email Template')}</Link>
                         </p>
