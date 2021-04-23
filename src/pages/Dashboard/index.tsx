@@ -141,7 +141,7 @@ const Dashboard = (props: DashboardProps) => {
             </Row>
 
             <Row className="mt-3">
-              <Col lg={3}>
+              <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
                     <p className="header">{t('Sales')}</p>
@@ -152,7 +152,7 @@ const Dashboard = (props: DashboardProps) => {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col lg={3}>
+              <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
                     <p className="header">Orders</p>
@@ -163,7 +163,7 @@ const Dashboard = (props: DashboardProps) => {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col lg={3}>
+              <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
                     <p className="header">Email Sent</p>
@@ -174,12 +174,34 @@ const Dashboard = (props: DashboardProps) => {
                   </Card.Body>
                 </Card>
               </Col>
-              <Col lg={3}>
+              <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
                     <p className="header">Email in Queue</p>
                     <p className="sub-header mt-1">
                       {getNumber('total_email_in_queue')}
+                      {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                    </p>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={2}>
+                <Card className="card-stats mb-2">
+                  <Card.Body className="">
+                    <p className="header">Opt-out Emails</p>
+                    <p className="sub-header mt-1">
+                      {getNumber('total_opt_out_email')}
+                      {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                    </p>
+                  </Card.Body>
+                </Card>
+              </Col>
+              <Col lg={2}>
+                <Card className="card-stats mb-2">
+                  <Card.Body className="">
+                    <p className="header">Opt-out Rate(%)</p>
+                    <p className="sub-header mt-1">
+                      {getNumber('opt_out_rate')}
                       {/* <small className="text-danger"><i className="down"></i>10%</small> */}
                     </p>
                   </Card.Body>

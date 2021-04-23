@@ -30,6 +30,12 @@ const EmptyState = () => {
     )
 }
 
+const IncludedInPlan = () => {
+    return (
+            <Icon name="check" className="icon icon-sm svg-outline-success" />
+        )
+}
+
 
 const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemProps) => {
     const { t } = useTranslation();
@@ -78,12 +84,12 @@ const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemPro
                             <tbody>
                                 {
                                     membershipplan.plan["plan_quotas"].map((quota, key) =>
-                                        <tr>
-                                            <td>{quota.quota.name}</td>
-                                            <td>{quota.value} {quota.quota.unit}</td>
-                                            <td>{quota.used_quota} {quota.quota.unit}</td>
-                                            <td>{quota.available_quota} {quota.quota.unit}</td>
-                                        </tr>
+                                      <tr>
+                                          <td>{quota.quota.name} </td>
+                                          <td>{ quota.quota.is_boolean ? <IncludedInPlan></IncludedInPlan> : quota.value+" "+quota.quota.unit}</td>
+                                          <td>{ quota.quota.is_boolean ? <IncludedInPlan></IncludedInPlan> : quota.used_quota+" "+quota.quota.unit}</td>
+                                          <td>{ quota.quota.is_boolean ? <IncludedInPlan></IncludedInPlan> : quota.available_quota+" "+quota.quota.unit}</td>
+                                      </tr>
                                     )
                                 }
                             </tbody>
