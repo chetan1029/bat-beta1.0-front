@@ -9,9 +9,10 @@ interface AlertDismissibleProps {
   confirmBtnLabel?: string,
   cancelBtnVariant?: string,
   cancelBtnLabel?: string,
+  confirmBtnLink?: string,
 }
 
-const AlertDismissible = ({ heading, message, confirmBtnVariant, confirmBtnLabel, cancelBtnVariant, cancelBtnLabel }: AlertDismissibleProps) => {
+const AlertDismissible = ({ heading, message, confirmBtnVariant, confirmBtnLabel, cancelBtnVariant, cancelBtnLabel, confirmBtnLink }: AlertDismissibleProps) => {
   const { t } = useTranslation();
   const [show, setShow] = useState(true);
 
@@ -23,7 +24,7 @@ const AlertDismissible = ({ heading, message, confirmBtnVariant, confirmBtnLabel
       </p>
       <hr />
       <div className="d-flex justify-content-end">
-        <Button href={'/get-started'} variant={confirmBtnVariant || "outline-success"}>
+        <Button href={confirmBtnLink || "#"} variant={confirmBtnVariant || "outline-success"}>
           {confirmBtnLabel || t('Confirm')}
         </Button>
         <Button onClick={() => setShow(false)} variant={cancelBtnVariant || "outline-danger"} className="ml-3">

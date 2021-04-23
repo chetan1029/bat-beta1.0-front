@@ -149,7 +149,7 @@ const Campaigns = (props: CampaignsProps) => {
                 </Row>
             </div>
             { loggedInUser['first_login'] ?
-            <AlertDismissible heading="Getting started guide!" message="Do you wanna go through getting started guide." cancelBtnVariant="danger" cancelBtnLabel="I will figure it out!" confirmBtnVariant="primary" confirmBtnLabel="Go to Getting Started" />
+            <AlertDismissible heading="Getting started guide!" message="Do you wanna go through getting started guide." cancelBtnVariant="danger" cancelBtnLabel="I will figure it out!" confirmBtnVariant="primary" confirmBtnLabel="Go to Getting Started" confirmBtnLink={`/get-started/${companyId}`} />
             : null}
             <Card>
                 <Card.Body className="">
@@ -186,18 +186,31 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
-                                                                {getTotalOfMarket(market, 'email_sent')}
+                                                            { capitalizeFirstLetter(market['status']) === 'Active' ?
+                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
+                                                              {getTotalOfMarket(market, 'email_sent')}
                                                             </td>
-                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
-                                                                {getTotalOfMarket(market, 'email_in_queue')}
+                                                            :
+                                                            <td>-</td>
+                                                            }
+                                                            { capitalizeFirstLetter(market['status']) === 'Active' ?
+                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
+                                                              {getTotalOfMarket(market, 'email_in_queue')}
                                                             </td>
-                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
-                                                                {getTotalOfMarket(market, 'opt_out_rate')}%
+                                                            :
+                                                            <td>-</td>
+                                                            }
+                                                            { capitalizeFirstLetter(market['status']) === 'Active' ?
+                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
+                                                              {getTotalOfMarket(market, 'opt_out_rate')}%
                                                             </td>
+                                                            :
+                                                            <td>-</td>
+                                                            }
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {capitalizeFirstLetter(market['status'])}
                                                             </td>
+
                                                             <td>
                                                                 {capitalizeFirstLetter(market['status']) === 'Inactive' ?
                                                                     <Button onClick={() => openDetails(market)} disabled={!isActiveMarket}
@@ -237,13 +250,16 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    {campaign['email_sent']}
+                                                                  { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
+                                                                    campaign['email_sent'] : "-"}
                                                                 </td>
                                                                 <td>
-                                                                    {campaign['email_in_queue']}
+                                                                  { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
+                                                                    campaign['email_in_queue'] : "-"}
                                                                 </td>
                                                                 <td>
-                                                                    {campaign['opt_out_rate']}%
+                                                                  { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
+                                                                    campaign['opt_out_rate']+"%" : "-"}
                                                                 </td>
                                                                 <td>
                                                                     {capitalizeFirstLetter(campaign['status']['name'])}
