@@ -124,6 +124,7 @@ const Campaigns = (props: CampaignsProps) => {
             setMarketForDisconnect(null);
             dispatch(getCampaigns(companyId, defaultParams));
             dispatch(getMarketPlaces(companyId, defaultParams));
+            dispatch(getMembershipPlan(companyId, { is_active: true }));
         }
     }, [dispatch, isMarketDisconnected, companyId, defaultParams]);
 
