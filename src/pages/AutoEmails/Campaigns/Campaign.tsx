@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Form, Button } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
+import DatePicker from 'react-datepicker';
 
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import MessageAlert from "../../../components/MessageAlert";
 
 //plug-ins
-import { format } from 'date-fns'
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 //actions
 import { updateCampaign, } from "../../../redux/actions";
@@ -33,13 +33,8 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
         isCompanyUpdated: state.Company.AmazonCompany.isCompanyUpdated,
     }));
 
-    const getDate = (date) => {
-        if (date) {
-            var fulldate = date.split('T');
-            return fulldate[0];
-        } else {
-            return "";
-        }
+    const getDate = (value) => {
+        return typeof value === 'string' ? new Date(Date.parse(value)) : value;
     }
 
     const [status, setStatus] = useState(campaign['status'] && campaign['status']['name'] && campaign['status']['name'].toLowerCase() === 'active');
@@ -59,6 +54,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
             chs = chs.filter(c => c !== channel);
         }
         setChannels(chs);
+        saveCampaign('channles', chs);
     }
 
     const EXCLUDE_ORDERS = ["Positive Feedback(4 star)", "Positive Feedback(5 star)", "With Returns", "With Refunds"];
@@ -73,15 +69,42 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
             orders = orders.filter(c => c !== orderStr);
         }
         setExcludeOrders(orders);
+        saveCampaign('exclude_orders', orders);
     }
 
-    const saveCampaign = () => {
-        const camp = {
-            status: status ? 'Active' : 'Inactive', channel: channels, exclude_orders: excludeOrders,
-            schedule_days: scheduledays,
-            activation_date: format(new Date(activationdate), 'yyyy-MM-dd hh:mm'),
-            include_invoice: includeInvoice
-        };
+    const saveCampaign = (field: string, value: any) => {
+        const camp: any = {};
+
+        switch (field) {
+            case 'status': {
+                camp['status'] = value ? 'Active' : 'Inactive';
+                setStatus(value);
+                break;
+            }
+            case 'activation_date': {
+                camp['activation_date'] = value;
+                setActivationdate(value);
+                break;
+            }
+            case 'includeInvoice': {
+                camp['include_invoice'] = value;
+                setIncludeInvoice(value);
+                break;
+            }
+            case 'channles': {
+                camp['channel'] = value;
+                break;
+            }
+            case 'exclude_orders':{
+                camp['exclude_orders'] = value;
+                break;
+            }
+            case 'schedule_days': {
+                camp['schedule_days'] = value;
+                setScheduledays(value);
+                break;
+            }
+        }
 
         dispatch(updateCampaign(companyId, campaign['id'], camp));
     }
@@ -90,9 +113,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
 
     const [showCompanyAccount, setShowCompanyAccount] = useState<any>(false);
 
-    // useEffect(() => {
-    //     saveCampaign();
-    // },[status]);
+    const minActivationDate = new Date(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
 
     return (
         <>
@@ -105,24 +126,34 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                             checked={status}
                             width={150}
                             height={40}
-                            style="status-switch"
+                            style={"status-switch"}
                             onstyle='success'
                             offstyle='danger'
-                            onChange={(checked: boolean) => setStatus(checked)}
+                            onChange={(checked: boolean) => saveCampaign('status', checked)}
                         />
                     </Col>
                 </Row>
                 <Row className="mt-4">
                     <Col sm={2}>
                         <Form.Label className="font-weight-semibold">{t("Activation Date")}</Form.Label>
-                        <Form.Control
-                            type="date"
-                            className="form-control"
-                            id="activation_date"
-                            name="activation_date"
-                            placeholder="Select Activation date"
-                            value={activationdate}
-                            onChange={(e: any) => setActivationdate(e.target.value)}
+                        <DatePicker
+                            popperModifiers={{
+                                flip: {
+                                    enabled: false
+                                },
+                                preventOverflow: {
+                                    escapeWithReference: true
+                                }
+                            }}
+                            placeholderText={'Activation Date'}
+                            className={"form-control"}
+                            selected={activationdate}
+                            onChange={date => saveCampaign('activation_date', date)}
+                            dateFormat={"yyyy-MM-dd"}
+                            timeFormat="hh:mm"
+                            minDate={minActivationDate}
+                            startDate={minActivationDate}
+                            id="activationDate"
                         />
                     </Col>
                 </Row>
@@ -130,7 +161,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Email Template</Form.Label>
                         <p className="mb-0 text-muted font-weight-semibold">
-                            {campaign['emailtemplate']['name']} - {campaign['emailtemplate']['slug']}
+                            {campaign['emailtemplate']['name']}
 
                             <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>{t('View Email Template')}</Link>
                         </p>
@@ -155,7 +186,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                                         id="include_invoice-check"
                                         label="Yes"
                                         checked={includeInvoice}
-                                        onChange={(e: any) => setIncludeInvoice(e.target.checked)}
+                                        onChange={(e: any) => saveCampaign('includeInvoice', e.target.checked)}
                                     />
                                 </Col>
                                 <Col>
@@ -223,11 +254,11 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                             <Form.Control as="select" size="sm" className="mt-1 col-1" placeholder={t("Number of Days")}
                                 name="schedule_days" id="schedule_days"
                                 value={scheduledays}
-                                onChange={(e: any) => setScheduledays(e.target.value)}
+                                onChange={(e: any) => saveCampaign('schedule_days', e.target.value)}
                             >
                                 {[...Array(61)].map((e, i) => {
                                     return i >= 5 ?
-                                        <option value={i}>{i}</option>
+                                        <option value={i} key={i}>{i}</option>
                                         : ""
                                 })}
                             </Form.Control>
@@ -241,12 +272,6 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                         <p className="mb-0 text-muted font-weight-semibold">
                             {t('All Products')}
                         </p>
-                    </Col>
-                </Row>
-
-                <Row className="mt-4">
-                    <Col lg={12} className='text-right'>
-                        <Button variant='primary' type='button' onClick={saveCampaign}>Save</Button>
                     </Col>
                 </Row>
             </div> : null}
