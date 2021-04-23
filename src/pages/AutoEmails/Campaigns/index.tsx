@@ -193,7 +193,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 {getTotalOfMarket(market, 'email_in_queue')}
                                                             </td>
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
-                                                                {getTotalOfMarket(market, 'opt_out_rate')}
+                                                                {getTotalOfMarket(market, 'opt_out_rate')}%
                                                             </td>
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {capitalizeFirstLetter(market['status'])}
@@ -243,7 +243,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     {campaign['email_in_queue']}
                                                                 </td>
                                                                 <td>
-                                                                    {campaign['opt_out_rate']}
+                                                                    {campaign['opt_out_rate']}%
                                                                 </td>
                                                                 <td>
                                                                     {capitalizeFirstLetter(campaign['status']['name'])}

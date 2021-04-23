@@ -201,7 +201,7 @@ const Dashboard = (props: DashboardProps) => {
                   <Card.Body className="">
                     <p className="header">Opt-out Rate(%)</p>
                     <p className="sub-header mt-1">
-                      {getNumber('opt_out_rate')}
+                      {getNumber('opt_out_rate')}%
                       {/* <small className="text-danger"><i className="down"></i>10%</small> */}
                     </p>
                   </Card.Body>
