@@ -14,8 +14,6 @@ import MessageAlert from "../../components/MessageAlert";
 import TabMenu from "../../components/TabMenu";
 import DisplayDate from "../../components/DisplayDate";
 import { useUser } from "../../components/Hooks";
-import { LANGS, LanguageDropdown } from "../../components/LanguageDropdown";
-import TimezoneDropdown from "../../components/TimezoneDropdown";
 
 
 import avatarPlaceholder from "../../assets/images/avatar-placeholder.jpg";

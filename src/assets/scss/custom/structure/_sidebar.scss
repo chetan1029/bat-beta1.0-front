@@ -83,12 +83,13 @@
             ul.collapse, ul.collapsing {
                 padding: 4px 10px;
                 li {
-                    .menu_item{
-                        padding: 12px 12px 12px 30px;
-
-                        .menu_icon {
-                            top: 12px;
+                    .menu_item_icon{
+                        i {
+                            margin-top:-1px;
                         }
+                    }
+                    .selected_link{
+                      background-color: $secondary!important;
                     }
                 }
             }

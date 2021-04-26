@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Form } from "react-bootstrap";
+import { Row, Col, Form, Card } from "react-bootstrap";
 import { Link, withRouter } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 
@@ -118,19 +118,70 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
     return (
         <>
             {campaign ? <div className="px-2">
-                <Row>
+              <Row>
+                  <Col lg={2}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Sent Emails')}</h6>
+                              <h1 className="mb-0">{campaign['email_sent']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+                  <Col lg={2}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Email in Queue')}</h6>
+                              <h1 className="mb-0">{campaign['email_in_queue']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+                  <Col lg={2}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Opt-out Emails')}</h6>
+                              <h1 className="mb-0">{campaign['email_opt_out']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+                  <Col lg={2}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Sent Emails - Today')}</h6>
+                              <h1 className="mb-0">{campaign['email_sent_today']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+                  <Col lg={2}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Email in Queue - Today')}</h6>
+                              <h1 className="mb-0">{campaign['email_queue_today']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+                  <Col lg={2}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Opt-out Emails - Today')}</h6>
+                              <h1 className="mb-0">{campaign['email_opt_out_today']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+              </Row>
+                <Row className="mt-4">
                     <Col lg={12}>
-                        <BootstrapSwitchButton
-                            onlabel='Active'
-                            offlabel='Inactive'
-                            checked={status}
-                            width={150}
-                            height={40}
-                            style={"status-switch"}
-                            onstyle='success'
-                            offstyle='danger'
-                            onChange={(checked: boolean) => saveCampaign('status', checked)}
-                        />
+                      <Form.Label className="font-weight-semibold">{t("Status")}</Form.Label><br />
+                      <BootstrapSwitchButton
+                          onlabel='Active'
+                          offlabel='Inactive'
+                          checked={status}
+                          width={150}
+                          height={40}
+                          style={"status-switch"}
+                          onstyle='success'
+                          offstyle='danger'
+                          onChange={(checked: boolean) => saveCampaign('status', checked)}
+                      />
                     </Col>
                 </Row>
                 <Row className="mt-4">
