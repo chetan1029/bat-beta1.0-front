@@ -8,6 +8,7 @@ import { default as dayjs } from 'dayjs';
 //components
 import Icon from "../../components/Icon";
 import Loader from "../../components/Loader";
+import ToolTips from "../../components/ToolTips"
 import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
 import { getCampaignDashboard } from "../../redux/actions";
@@ -144,7 +145,12 @@ const Dashboard = (props: DashboardProps) => {
               <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
-                    <p className="header">{t('Sales')}</p>
+                    <p className="header">
+                    {t('Sales')}
+                    <span className="float-right">
+                      <ToolTips placement="auto" label="" message="Message on hover over" />
+                    </span>
+                    </p>
                     <p className="sub-header mt-1">
                       {getAmount('total_sales')}
                       {/* <small className="text-success"><i className="up"></i>10%</small> */}
@@ -155,7 +161,12 @@ const Dashboard = (props: DashboardProps) => {
               <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
-                    <p className="header">Orders</p>
+                    <p className="header">
+                    {t('Orders')}
+                    <span className="float-right">
+                      <ToolTips placement="auto" label="" message="Message on hover over" />
+                    </span>
+                    </p>
                     <p className="sub-header mt-1">
                       {getNumber('total_orders')}
                       {/* <small className="text-danger"><i className="down"></i>10%</small> */}
@@ -166,7 +177,12 @@ const Dashboard = (props: DashboardProps) => {
               <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
-                    <p className="header">Email Sent</p>
+                    <p className="header">
+                    {t('Email Sent')}
+                    <span className="float-right">
+                      <ToolTips placement="auto" label="" message="Message on hover over" />
+                    </span>
+                    </p>
                     <p className="sub-header mt-1">
                       {getNumber('total_email_sent')}
                       {/* <small className="text-success"><i className="up"></i>10%</small> */}
@@ -177,7 +193,13 @@ const Dashboard = (props: DashboardProps) => {
               <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
-                    <p className="header">Email in Queue</p>
+                    <p className="header">
+
+                    {t('Email in Queue')}
+                    <span className="float-right">
+                      <ToolTips placement="auto" label="" message="Message on hover over" />
+                    </span>
+                    </p>
                     <p className="sub-header mt-1">
                       {getNumber('total_email_in_queue')}
                       {/* <small className="text-danger"><i className="down"></i>10%</small> */}
@@ -188,7 +210,13 @@ const Dashboard = (props: DashboardProps) => {
               <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
-                    <p className="header">Opt-out Emails</p>
+                    <p className="header">
+
+                    {t('Opt-out Emails')}
+                    <span className="float-right">
+                      <ToolTips placement="auto" label="" message="Message on hover over" />
+                    </span>
+                    </p>
                     <p className="sub-header mt-1">
                       {getNumber('total_opt_out_email')}
                       {/* <small className="text-danger"><i className="down"></i>10%</small> */}
@@ -199,7 +227,13 @@ const Dashboard = (props: DashboardProps) => {
               <Col lg={2}>
                 <Card className="card-stats mb-2">
                   <Card.Body className="">
-                    <p className="header">Opt-out Rate(%)</p>
+                    <p className="header">
+
+                    {t('Opt-out Rate(%)')}
+                    <span className="float-right">
+                      <ToolTips placement="auto" label="" message="Message on hover over" />
+                    </span>
+                    </p>
                     <p className="sub-header mt-1">
                       {getNumber('opt_out_rate')}%
                       {/* <small className="text-danger"><i className="down"></i>10%</small> */}

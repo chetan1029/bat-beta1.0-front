@@ -57,7 +57,7 @@ const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemPro
                           {
                             membershipplan.plan.cost.amount ?
                           <h6 className="m-0 text-right">
-                          {membershipplan.plan.cost.currency} {membershipplan.plan.cost.amount}/{ membershipplan.plan.recurrence_period != 1 ? membershipplan.plan.recurrence_period : "" } {membershipplan.plan.recurrence_unit}
+                          {membershipplan.plan.cost.currency} {membershipplan.plan.cost.amount}/{ membershipplan.plan.recurrence_period !== 1 ? membershipplan.plan.recurrence_period : "" } {membershipplan.plan.recurrence_unit}
                           </h6>
                           :<h6 className="m-0 text-right">Free</h6> }
                         </Col>
