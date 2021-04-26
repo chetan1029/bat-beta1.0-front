@@ -55,6 +55,7 @@ import Clients from "../pages/Clients/";
 // auto emails
 import Campaigns from "../pages/AutoEmails/Campaigns/";
 import CampaignDetails from "../pages/AutoEmails/Campaigns/Details";
+import EmailQueue from "../pages/AutoEmails/Emails/EmailQueue";
 
 // account
 import Login from "../pages/account/Login";
@@ -85,6 +86,7 @@ const authProtectedRoutes = [
 
   { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
   { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
+  { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
 
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },

@@ -27,6 +27,11 @@ export const updateCampaign = (companyId: string | number, campaignId: number | 
     payload: { companyId, campaignId, data }
 });
 
+export const getEmailQueues = (companyId: string | number, filters?: any) => ({
+    type: AutoEmailsTypes.GET_EMAILQUEUES,
+    payload: { companyId, filters }
+});
+
 export const resetAutoEmails = () => ({
     type: AutoEmailsTypes.RESET
 })

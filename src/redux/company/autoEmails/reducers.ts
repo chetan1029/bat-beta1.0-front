@@ -1,7 +1,8 @@
 import { AutoEmailsTypes } from './constants';
 
 const INIT_STATE: any = {
-    campaigns: []
+    campaigns: [],
+    emailqueues: []
 };
 
 
@@ -36,6 +37,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         ...state,
                         loading: false,
                         isCampaignUpdated: true,
+                    }
+                }
+                case AutoEmailsTypes.GET_EMAILQUEUES: {
+                    return {
+                        ...state,
+                        emailQueues: action.payload.data,
+                        isEmailQueuesFetched: true,
+                        loading: false,
                     }
                 }
                 default:
@@ -75,6 +84,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isCampaignUpdated: false,
                     }
                 }
+                case AutoEmailsTypes.GET_EMAILQUEUES: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                        isClientsFetched: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -91,11 +108,15 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.UPDATE_CAMPAIGN:
             return { ...state, loading: true, isCampaignUpdated: false, updateError: null };
 
+        case AutoEmailsTypes.GET_EMAILQUEUES:
+            return { ...state, isEmailQueuesFetched: false, loading: true };
+
         case AutoEmailsTypes.RESET: {
             return {
                 ...state,
                 isCampaignsFetched: false,
                 isCampaignUpdated: false,
+                isEmailQueuesFetched: false,
                 error: null,
                 campaignTestSentError: null,
                 updateError: null
