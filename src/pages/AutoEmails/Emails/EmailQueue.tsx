@@ -17,6 +17,10 @@ interface EmailQueueCardItemProps {
     companyId: any;
 }
 
+const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const EmptyState = () => {
     const { t } = useTranslation();
     return (
@@ -51,7 +55,7 @@ const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) =>
           <td>{email.amazonorder.order_id}</td>
           <td>{email.emailcampaign.name}</td>
           <td>{email.sent_to}</td>
-          <td>{email.status.name}</td>
+          <td>{capitalizeFirstLetter(email.status.name)}</td>
         </tr>
         )
         }
@@ -77,23 +81,23 @@ const EmailQueue = (props: EmailQueueProps) => {
     }));
 
     const companyId = props.match.params.companyId;
-
-
+    const campaignId = props.match.params.campaignId || "";
+    const status = props.match.params.status || "active";
     /*
         Email Queue
     */
     const limit = 10
     const [filters, setFilters] = useState<any>({
-      campaign_id: "",
+      emailcampaign_id: campaignId,
   		is_active: true,
-  		status: "active",
+  		status: status,
   		limit,
   		offset: 0
   	});
     const [search, setSearch] = useState<any>({
-      campaign_id: "",
+      emailcampaign_id: campaignId,
       is_active: true,
-      status: "active",
+      status: status,
       limit,
       offset: 0
     });

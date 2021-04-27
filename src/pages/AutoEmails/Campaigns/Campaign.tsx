@@ -123,7 +123,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                       <Card>
                           <Card.Body className="">
                               <h6 className="mt-0 text-muted">{t('Sent Emails')}</h6>
-                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue`}>{campaign['email_sent']}</Link></h1>
+                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/send`}>{campaign['email_sent']}</Link></h1>
                           </Card.Body>
                       </Card>
                   </Col>
@@ -131,7 +131,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                       <Card>
                           <Card.Body className="">
                               <h6 className="mt-0 text-muted">{t('Email in Queue')}</h6>
-                              <h1 className="mb-0">{campaign['email_in_queue']}</h1>
+                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/queued`}>{campaign['email_in_queue']}</Link></h1>
                           </Card.Body>
                       </Card>
                   </Col>
@@ -139,7 +139,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                       <Card>
                           <Card.Body className="">
                               <h6 className="mt-0 text-muted">{t('Opt-out Emails')}</h6>
-                              <h1 className="mb-0">{campaign['email_opt_out']}</h1>
+                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/opt-out`}>{campaign['email_opt_out']}</Link></h1>
                           </Card.Body>
                       </Card>
                   </Col>
