@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Form, Card } from "react-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ interface CampaignProps {
 const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-
+    const history = useHistory();
 
     const { isCampaignUpdated, updateError, isCompanyUpdated } = useSelector((state: any) => ({
         isCampaignUpdated: state.Company.AutoEmails.isCampaignUpdated,
@@ -115,31 +115,35 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
 
     const minActivationDate = new Date(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
 
+    const openDetails = (status: any) => {
+        history.push(`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/${status}`);
+    }
+
     return (
         <>
             {campaign ? <div className="px-2">
               <Row>
                   <Col lg={2}>
                       <Card>
-                          <Card.Body className="">
+                          <Card.Body className="clickable-row" onClick={() =>openDetails("send")}>
                               <h6 className="mt-0 text-muted">{t('Sent Emails')}</h6>
-                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/send`}>{campaign['email_sent']}</Link></h1>
+                              <h1 className="mb-0">{campaign['email_sent']}</h1>
                           </Card.Body>
                       </Card>
                   </Col>
                   <Col lg={2}>
                       <Card>
-                          <Card.Body className="">
+                          <Card.Body className="clickable-row" onClick={() =>openDetails("queued")}>
                               <h6 className="mt-0 text-muted">{t('Email in Queue')}</h6>
-                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/queued`}>{campaign['email_in_queue']}</Link></h1>
+                              <h1 className="mb-0">{campaign['email_in_queue']}</h1>
                           </Card.Body>
                       </Card>
                   </Col>
                   <Col lg={2}>
                       <Card>
-                          <Card.Body className="">
+                          <Card.Body className="clickable-row" onClick={() =>openDetails("opt-out")}>
                               <h6 className="mt-0 text-muted">{t('Opt-out Emails')}</h6>
-                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/opt-out`}>{campaign['email_opt_out']}</Link></h1>
+                              <h1 className="mb-0">{campaign['email_opt_out']}</h1>
                           </Card.Body>
                       </Card>
                   </Col>
