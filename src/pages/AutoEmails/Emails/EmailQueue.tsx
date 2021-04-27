@@ -13,7 +13,7 @@ import { getEmailQueues } from "../../../redux/actions";
 import Loader from "../../../components/Loader";
 
 interface EmailQueueCardItemProps {
-    delivery: any;
+    emailqueues: any;
     companyId: any;
 }
 
@@ -30,63 +30,32 @@ const EmptyState = () => {
     )
 }
 
-const BuyerPays = ({ whopays }) => {
 
-    if (whopays === "Buyer") {
-        return (
-            <Icon name="check" className="icon icon-sm svg-outline-success" />
-        )
-    } else {
-        return (
-            <Icon name="x" className="icon icon-sm svg-outline-muted" />
-        )
-    }
-}
-
-const SellerPays = ({ whopays }) => {
-    if (whopays === "Seller") {
-        return (
-            <Icon name="check" className="icon icon-sm svg-outline-success" />
-        )
-    } else {
-        return (
-            <Icon name="x" className="icon icon-sm svg-outline-muted" />
-        )
-    }
-}
-
-const EmailQueueCardItem = ({ delivery, companyId }: EmailQueueCardItemProps) => {
+const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) => {
 
     return (<>
-        <Card className="mb-2">
-            <Accordion.Toggle as={Card.Header} eventKey={delivery.id}>
-                <span>{delivery.code} ({delivery.name})</span>
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey={delivery.id}>
-                <Card.Body>
-                    <Table bordered>
-                        <thead>
-                            <tr>
-                                <th>Services</th>
-                                <th>Buyer</th>
-                                <th>Seller</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                delivery["deliveryterms"].map((term, key) =>
-                                    <tr>
-                                        <td>{term.service_name}</td>
-                                        <td><BuyerPays whopays={term.who_pays} /></td>
-                                        <td><SellerPays whopays={term.who_pays} /></td>
-                                    </tr>
-                                )
-                            }
-                        </tbody>
-                    </Table>
-                </Card.Body>
-            </Accordion.Collapse>
-        </Card>
+      <Table bordered className="mt-4">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Email Campaign</th>
+                <th>Email</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        {
+        emailqueues['results'].map((email, key) =>
+        <tr>
+          <td>{email.amazonorder.order_id}</td>
+          <td>{email.emailcampaign.name}</td>
+          <td>{email.sent_to}</td>
+          <td>{email.status.name}</td>
+        </tr>
+        )
+        }
+        </tbody>
+      </Table>
     </>
     )
 }
@@ -131,7 +100,7 @@ const EmailQueue = (props: EmailQueueProps) => {
                             <Link to={`/settings/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
-                            <h1 className="m-0">{t('Delivery Terms')}</h1>
+                            <h1 className="m-0">{t('Email Queue')}</h1>
                         </div>
                     </Col>
 
@@ -146,38 +115,14 @@ const EmailQueue = (props: EmailQueueProps) => {
                         <Card>
                             <Card.Body className="">
                                 <div className="p-2">
-                                    <Row>
-                                        <Col lg={6} xs={12}>
-                                            <Accordion>
-                                                {
-                                                    emailQueues['results'].length > 0 ?
-                                                        emailQueues['results'].map((delivery, key) =>
-                                                            <EmailQueueCardItem delivery={delivery}
-                                                                key={key} companyId={companyId}
-                                                            />
-                                                        ) : <EmptyState />
-                                                }
+                                    {
+                                        emailQueues['results'].length > 0 ?
+                                        <EmailQueueTable emailqueues={emailQueues}
+                                            companyId={companyId}
+                                        />
+                                        : <EmptyState />
 
-                                            </Accordion>
-                                        </Col>
-                                        <Col lg={6} xs={12}>
-                                            <div>
-                                                <Media>
-                                                    <div className="pt-1">
-                                                        <Icon name="info" className="icon icon-sm svg-outline-secondary" />
-                                                    </div>
-                                                    <Media.Body>
-                                                        <div className="px-3">
-                                                            <h2 className="m-0 mb-2"> Luctus sed ut elit nibh </h2>
-                                                            <p className="text-wrap pb-0 text-muted">Some quick example text to build on the card title and make up the bulk
-                                                            of the card's content.Some quick example text to build on the card title and make up the bulk
-        of the card's content.</p>
-                                                        </div>
-                                                    </Media.Body>
-                                                </Media>
-                                            </div>
-                                        </Col>
-                                    </Row>
+                                    }
                                 </div>
                             </Card.Body>
                         </Card>
