@@ -647,6 +647,12 @@ function updateCampaign(companyId: number, campaignId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+/* Email queue */
+function getEmailQueues(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-queue/`;
+    return api.get(`${baseUrl}`, params);
+}
+
 /* marketplaces */
 function getMarketPlaces(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/amazon-marketplaces/`;
@@ -713,6 +719,7 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
+    getEmailQueues,
     getMarketPlaces, getMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount

@@ -7,5 +7,6 @@ export enum AutoEmailsTypes {
     GET_CAMPAIGN = '@@company/autoEmails/GET_CAMPAIGN',
     UPDATE_CAMPAIGN = '@@company/autoEmails/UPDATE_CAMPAIGN',
     TEST_CAMPAIGN = '@@company/autoEmails/TEST_CAMPAIGN',
+    GET_EMAILQUEUES = '@@company/autoEmails/GET_EMAILQUEUES',
     RESET = '@@company/autoEmails/RESET',
 }
