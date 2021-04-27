@@ -86,7 +86,8 @@ const authProtectedRoutes = [
 
   { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
   { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
-  { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
+  { path: "/auto-emails/:companyId/campaigns/:campaignId/email-queue", component: EmailQueue },
+  { path: "/auto-emails/:companyId/campaigns/:campaignId/email-queue", component: EmailQueue },
 
   { path: "/settings/:companyId/:view?", component: Settings },
   { path: "/invitations", component: Invitations },

@@ -123,7 +123,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                       <Card>
                           <Card.Body className="">
                               <h6 className="mt-0 text-muted">{t('Sent Emails')}</h6>
-                              <h1 className="mb-0">{campaign['email_sent']}</h1>
+                              <h1 className="mb-0"><Link to={`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue`}>{campaign['email_sent']}</Link></h1>
                           </Card.Body>
                       </Card>
                   </Col>

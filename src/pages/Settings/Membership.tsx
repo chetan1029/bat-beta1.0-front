@@ -72,13 +72,13 @@ const MembershipPlanItem = ({ membershipplan, companyId }: MembershipPlanItemPro
                                 <p className="m-0">{membershipplan.billing_start_date}</p>
                             </Col>
                         </Row>
-                        <Table bordered className="mt-4">
+                        <Table hover className="mt-4">
                             <thead>
                                 <tr>
-                                    <th>Quota Name</th>
-                                    <th>Alloted</th>
-                                    <th>Used</th>
-                                    <th>Available</th>
+                                    <th>{t('Quota Name')}</th>
+                                    <th>{t('Alloted')}</th>
+                                    <th>{t('Used')}</th>
+                                    <th>{t('Available')}</th>
                                 </tr>
                             </thead>
                             <tbody>
