@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
-import { withRouter } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import { default as dayjs } from 'dayjs';
 
 //components
@@ -24,6 +24,7 @@ interface DashboardProps {
 const Dashboard = (props: DashboardProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const companyId = props.match.params.companyId;
 
@@ -105,6 +106,10 @@ const Dashboard = (props: DashboardProps) => {
     return cFormatter.format(amt);
   }
 
+  const openDetails = (status: any) => {
+      history.push(`/auto-emails/${companyId}/email-queue/${status}`);
+  }
+
   return (<>
     <div className="py-4">
       <Row className='align-items-center'>
@@ -176,7 +181,7 @@ const Dashboard = (props: DashboardProps) => {
               </Col>
               <Col lg={2}>
                 <Card className="card-stats mb-2">
-                  <Card.Body className="">
+                  <Card.Body className="clickable-row" onClick={() =>openDetails("send")}>
                     <p className="header">
                     {t('Email Sent')}
                     <span className="float-right">
@@ -192,7 +197,7 @@ const Dashboard = (props: DashboardProps) => {
               </Col>
               <Col lg={2}>
                 <Card className="card-stats mb-2">
-                  <Card.Body className="">
+                  <Card.Body className="clickable-row" onClick={() =>openDetails("queued")}>
                     <p className="header">
 
                     {t('Email in Queue')}
@@ -209,7 +214,7 @@ const Dashboard = (props: DashboardProps) => {
               </Col>
               <Col lg={2}>
                 <Card className="card-stats mb-2">
-                  <Card.Body className="">
+                  <Card.Body className="clickable-row" onClick={() =>openDetails("opt-out")}>
                     <p className="header">
 
                     {t('Opt-out Emails')}
