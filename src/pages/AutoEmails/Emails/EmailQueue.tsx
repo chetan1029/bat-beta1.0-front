@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Media, Table, Accordion } from "react-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, useHistory } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import searchIcon from "../../../assets/images/search_icon.svg";
 //components
@@ -37,6 +37,11 @@ const EmptyState = () => {
 
 const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) => {
   const { t } = useTranslation();
+  const history = useHistory();
+
+  const openDetails = (domain: string, orderid: string) => {
+      window.open(`https://sellercentral.${domain.toLowerCase()}/orders-v3/order/${orderid}`, '_blank');
+  }
 
     return (<>
       <Table hover>
@@ -51,7 +56,7 @@ const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) =>
         <tbody>
         {
         emailqueues['results'].map((email, key) =>
-        <tr key={key}>
+        <tr key={key} onClick={() =>openDetails(email.amazonorder.sales_channel, email.amazonorder.order_id)}>
           <td>{email.amazonorder.order_id}</td>
           <td>{email.emailcampaign.name}</td>
           <td>{email.sent_to}</td>
