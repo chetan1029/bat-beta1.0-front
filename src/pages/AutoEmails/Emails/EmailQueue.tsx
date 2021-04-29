@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Media, Table, Accordion } from "react-bootstrap";
-import { Link, withRouter } from "react-router-dom";
+import { Row, Col, Card, Media, Table, Accordion, Button } from "react-bootstrap";
+import { Link, withRouter, useHistory } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { map, uniqBy, get } from "lodash";
 import searchIcon from "../../../assets/images/search_icon.svg";
 //components
 import Icon from "../../../components/Icon";
@@ -15,6 +16,7 @@ import Loader from "../../../components/Loader";
 interface EmailQueueCardItemProps {
     emailqueues: any;
     companyId: any;
+    onChangePage?: any;
 }
 
 const capitalizeFirstLetter = (string) => {
@@ -35,8 +37,45 @@ const EmptyState = () => {
 }
 
 
-const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) => {
+const EmailQueueTable = ({ emailqueues, companyId, onChangePage }: EmailQueueCardItemProps) => {
   const { t } = useTranslation();
+  const history = useHistory();
+
+  const openDetails = (domain: string, orderid: string) => {
+      window.open(`https://sellercentral.${domain.toLowerCase()}/orders-v3/order/${orderid}`, '_blank');
+  }
+
+  const [records, setRecords] = useState<Array<any>>([]);
+  const [nextUrl, setNextUrl] = useState<string>(emailqueues ? emailqueues.next : '');
+  const [previousUrl, setPreviousUrl] = useState<string>(emailqueues ? emailqueues.previous : '');
+
+  useEffect(() => {
+		if (emailqueues) {
+			setRecords(prevArray => [...prevArray, ...emailqueues.results]);
+			setNextUrl(emailqueues.next);
+      setPreviousUrl(emailqueues.previous);
+		}
+	}, [emailqueues]);
+
+
+  const uniq = uniqBy(records, (e) => {
+		return e.id;
+	});
+
+
+  const loadPrevious = useCallback(() => {
+		if (previousUrl) {
+			const urlParams = new URLSearchParams(new URL(previousUrl).search);
+      onChangePage(urlParams.get('offset'));
+		}
+	}, [previousUrl, onChangePage]);
+
+  const loadNext = useCallback(() => {
+		if (nextUrl) {
+			const urlParams = new URLSearchParams(new URL(nextUrl).search);
+			onChangePage(urlParams.get('offset'));
+		}
+	}, [nextUrl, onChangePage]);
 
     return (<>
       <Table hover>
@@ -49,9 +88,8 @@ const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) =>
             </tr>
         </thead>
         <tbody>
-        {
-        emailqueues['results'].map((email, key) =>
-        <tr key={key}>
+        {map(uniq, (email, i) =>
+        <tr key={i} onClick={() =>openDetails(email.amazonorder.sales_channel, email.amazonorder.order_id)}>
           <td>{email.amazonorder.order_id}</td>
           <td>{email.emailcampaign.name}</td>
           <td>{email.sent_to}</td>
@@ -61,6 +99,14 @@ const EmailQueueTable = ({ emailqueues, companyId }: EmailQueueCardItemProps) =>
         }
         </tbody>
       </Table>
+      <div className="text-center">
+        { previousUrl ?
+        <Button variant="outline-primary" onClick={loadPrevious}>{t('Previous')}</Button> : null
+        }
+        { nextUrl ?
+				<Button variant="outline-primary ml-2" onClick={loadNext}>{t('Next')}</Button> : null
+        }
+			</div>
     </>
     )
 }
@@ -82,11 +128,11 @@ const EmailQueue = (props: EmailQueueProps) => {
 
     const companyId = props.match.params.companyId;
     const campaignId = props.match.params.campaignId || "";
-    const status = props.match.params.status || "active";
+    const status = props.match.params.status || "";
     /*
         Email Queue
     */
-    const limit = 10
+    const limit = 100
     const [filters, setFilters] = useState<any>({
       emailcampaign_id: campaignId,
   		is_active: true,
@@ -124,7 +170,7 @@ const EmailQueue = (props: EmailQueueProps) => {
     const onChangePage = useCallback((offset) => {
   		const off = offset ? parseInt(offset) : offset;
 
-  		if (filters && off > filters['offset']) {
+  		if (filters) {
   			setFilters(prevState => ({ ...prevState, offset: off }));
   		}
   	}, [filters]);
@@ -168,9 +214,9 @@ const EmailQueue = (props: EmailQueueProps) => {
                                 </div>
                                 <div>
                                     {
-                                        emailQueues['results'].length > 0 ?
+                                        get(emailQueues, "count") > 0 ?
                                         <EmailQueueTable emailqueues={emailQueues}
-                                            companyId={companyId}
+                                            companyId={companyId} onChangePage={onChangePage}
                                         />
                                         : <EmptyState />
 
