@@ -664,6 +664,11 @@ function getMarketPlace(companyId: number, marketId: string | number) {
     return api.get(`${baseUrl}`, {});
 }
 
+function updateMarketPlace(companyId: number, marketId: string | number, data: any) {
+    const baseUrl = `/companies/${companyId}/amazon-marketplaces/${marketId}/`;
+    return api.updatePatch(`${baseUrl}`, data);
+}
+
 function connectMarketPlace(companyId: number, marketId: string | number) {
     const baseUrl = `/companies/${companyId}/amazon-marketplaces/${marketId}/authorize/`;
     return api.create(`${baseUrl}`, {});
@@ -720,7 +725,7 @@ export {
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
     getEmailQueues,
-    getMarketPlaces, getMarketPlace, connectMarketPlace, disConnectMarketPlace,
+    getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount
 }

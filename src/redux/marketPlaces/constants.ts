@@ -5,6 +5,7 @@ export enum MarketPlacesTypes {
 
     GET_MARKETPLACES = '@@company/marketPlaces/GET_MARKETPLACES',
     GET_MARKETPLACE = '@@company/marketPlaces/GET_MARKETPLACE',
+    UPDATE_MARKETPLACE = '@@company/marketPlaces/UPDATE_MARKETPLACE',
     CONNECT_MARKETPLACE = '@@company/marketPlaces/CONNECT_MARKETPLACE',
     DISCONNECT_MARKETPLACE = '@@company/marketPlaces/DISCONNECT_MARKETPLACE',
     RESET_CONNECT_MARKETPLACE = '@@company/marketPlaces/RESET_CONNECT_MARKETPLACE',

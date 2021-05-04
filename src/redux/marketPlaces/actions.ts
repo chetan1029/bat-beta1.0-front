@@ -22,6 +22,10 @@ export const getMarketPlace = (companyId: string | number, marketId: string | nu
     payload: { companyId, marketId }
 });
 
+export const updateMarketPlace = (companyId: string | number, marketId: string | number, data: any) => ({
+    type: MarketPlacesTypes.UPDATE_MARKETPLACE,
+    payload: { companyId, marketId, data }
+});
 
 export const connectMarketplace = (companyId: string | number, marketId: string | number) => ({
     type: MarketPlacesTypes.CONNECT_MARKETPLACE,
