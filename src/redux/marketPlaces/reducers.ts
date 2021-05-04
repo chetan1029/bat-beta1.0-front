@@ -23,6 +23,13 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
                         market: action.payload.data,
                     }
                 }
+                case MarketPlacesTypes.UPDATE_MARKETPLACE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        isMarketPlaceUpdated: true,
+                    }
+                }
                 case MarketPlacesTypes.CONNECT_MARKETPLACE: {
                     return {
                         ...state,
@@ -57,6 +64,14 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
                         error: action.payload.error
                     }
                 }
+                case MarketPlacesTypes.UPDATE_MARKETPLACE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        updateError: action.payload.error,
+                        isMarketPlaceUpdated: false,
+                    }
+                }
                 case MarketPlacesTypes.CONNECT_MARKETPLACE: {
                     return {
                         ...state,
@@ -78,10 +93,12 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
 
         case MarketPlacesTypes.GET_MARKETPLACES:
             return { ...state, isMarketsFetched: false, loading: true };
+        case MarketPlacesTypes.UPDATE_MARKETPLACE:
+            return { ...state, isMarketPlaceUpdated: false, updateError: null, loading: true };
         case MarketPlacesTypes.CONNECT_MARKETPLACE:
             return { ...state, isMarketConnected: false, loading: true };
         case MarketPlacesTypes.RESET_CONNECT_MARKETPLACE:
-            return { ...state, isMarketConnected: false, redirectUri: null, isMarketDisconnected: false };
+            return { ...state, isMarketConnected: false, redirectUri: null, isMarketDisconnected: false, isMarketPlaceUpdated: false, error: null, updateError: null };
         case MarketPlacesTypes.DISCONNECT_MARKETPLACE:
             return { ...state, isMarketDisconnected: false, loading: true };
 
