@@ -9,6 +9,8 @@ import * as Yup from 'yup';
 //components
 import Loader from "../../../components/Loader";
 import Icon from "../../../components/Icon";
+import MessageAlert from "../../../components/MessageAlert";
+import AlertDismissible from "../../../components/AlertDismissible";
 //actions
 import { getCampaigns, getMarketPlace, updateMarketPlace } from "../../../redux/actions";
 
@@ -45,7 +47,10 @@ const Details = (props: DetailsProps) => {
         if (isCampaignUpdated) {
             dispatch(getCampaigns(companyId, defaultParams));
         }
-    }, [dispatch, isCampaignUpdated, companyId, defaultParams]);
+        if (isMarketPlaceUpdated) {
+            dispatch(getMarketPlace(companyId, marketId));
+        }
+    }, [dispatch, isCampaignUpdated, isMarketPlaceUpdated, companyId, marketId, defaultParams]);
 
     const getCampaignsOfMarket = (market: any) => {
         return ((campaigns || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];
@@ -117,16 +122,25 @@ const Details = (props: DetailsProps) => {
                     <Col lg={12}>
                         <Card>
                             <Card.Body className="">
-                              { !market['email'] ?
+                              { !market['email'] || !market['email_verified'] ?
                                 <div className="loader">
                                   <Row className="justify-content-center align-items-center" style={{ height: "100%" }}>
                                     <Col lg={6} sm={8} xs={12}>
                                       <Card border="primary" className="mb-3">
-                                        <Card.Header>{t('Enter send from Email')}</Card.Header>
+                                        <Card.Header>{
+                                          !market['email']?
+                                          t('Enter send from Email'):
+                                          t('Verify your Email')
+                                        }</Card.Header>
                                         <Card.Body>
+                                          { !market['email'] ? (<>
                                           <p>{t('Your registered or approved Amazon Seller email address used to communicate with your buyers')}</p>
                                           <p><a href={"https://sellercentral."+market['sales_channel_name'].toLowerCase()+"/messaging/permissions"} className='text-link' rel="nofollow" target="blank">{t('View Registered / Approved Emails')}</a></p>
+                                        </>) :
+                                        <p>{t('We sent you an email on the below mention email. Please check and verify your email to continue.')}</p>
+                                      }
                                           <Form noValidate onSubmit={validator.handleSubmit} className="mt-3">
+
                                             <Row>
                                               <Col lg={6}>
                                                 <Form.Group>
@@ -134,8 +148,9 @@ const Details = (props: DetailsProps) => {
                                                         name="email" id="email"
                                                         onChange={validator.handleChange}
                                                         onBlur={validator.handleBlur}
-                                                        value={validator.values.email}
-                                                        isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false} />
+                                                        value={!market['email'] ? validator.values.email : market['email'] }
+                                                        isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false}
+                                                        readOnly={market['email'] ? true : false} />
 
                                                     {validator.touched.email && validator.errors.email ? (
                                                         <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
@@ -144,7 +159,7 @@ const Details = (props: DetailsProps) => {
                                               </Col>
                                             </Row>
                                             <Form.Group className="mb-0">
-                                                <Button variant="primary" type="submit">{t('Submit')}</Button>
+                                                <Button variant="primary" type="submit">{ !market['email'] ? t('Submit') : t('Resend')}</Button>
                                             </Form.Group>
                                           </Form>
                                         </Card.Body>
@@ -153,6 +168,7 @@ const Details = (props: DetailsProps) => {
                                   </Row>
                                 </div>
                                 : null}
+                                {isMarketPlaceUpdated ? <MessageAlert message={t('Email address updated')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
                                 <Row>
                                     <Col lg={12}>
                                         <div className="px-2 pb-2 mb-3">
