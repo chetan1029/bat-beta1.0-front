@@ -230,7 +230,7 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                         </p>
                     </Col>
                 </Row>
-                {campaign["name"].toLowerCase().includes("order confirmation") ?
+                {campaign["name"].toLowerCase().includes("invoice") ?
                     <Row className="mt-4">
                         <Col lg={'auto'}>
                             <Form.Label className="font-weight-semibold">Include Invoice (additional email)</Form.Label>
