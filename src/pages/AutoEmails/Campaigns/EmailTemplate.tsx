@@ -37,6 +37,7 @@ const EmailTemplate = ({ companyId, campaign, onClose }: EmailTemplateProps) => 
         dispatch(testCampaign(companyId, campaign['id'], {email}));
     }
 
+
     return <>
         <Modal show={true} onHide={onClose} size="lg">
             <Modal.Header closeButton className="add-payment-modal-header py-1"></Modal.Header>
@@ -49,9 +50,7 @@ const EmailTemplate = ({ companyId, campaign, onClose }: EmailTemplateProps) => 
                 <p className="mb-0 text-muted no-action">{template['subject']}</p>
 
                 <h6 className="mt-3 no-action">{t('Email Body')}</h6>
-                {(template['template'] || "").split("\n").map((i, key) => {
-                    return <p className="mb-1 text-muted no-action" key={key}>{i}</p>;
-                })}
+                <p className="mb-1 text-muted no-action"><div dangerouslySetInnerHTML={{__html: template['template']}} /></p>
 
 
                 <Row className="mt-4">
