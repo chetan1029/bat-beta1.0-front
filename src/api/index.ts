@@ -697,6 +697,22 @@ function updateAmazonAccount(companyId: number, id: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+/* keyword tracking */
+function getKtproducts(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking-products/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getKtproduct(companyId: number, productId: number,) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking-products/${productId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function getKeywordranks(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/product-keyword-rank/`;
+    return api.get(`${baseUrl}`, params);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -727,5 +743,6 @@ export {
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
-    getAmazonAccount, updateAmazonAccount
+    getAmazonAccount, updateAmazonAccount,
+    getKtproducts, getKtproduct, getKeywordranks
 }

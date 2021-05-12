@@ -21,8 +21,13 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
             { name: 'CreateACampaign', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Manage Campaigns', id: 'create_a_campaign', parentId: 'customercampaigns' }
           ]
         },
-        { name: 'Keywords Rank Tracker', url: "https://chrome.google.com/webstore/detail/komrsio-amazon-keyword-tr/hdlekegeaachepgfkadcjefobnmkjgdg", icon: 'graph',
-            label: 'Keywords Rank Tracker', id: 'keyword_rank_tracker', isExternal: true },
+        {
+          name: 'KeywordsRankTracker', url: ``, icon: 'graph', label: 'Keywords Rank Tracker', id: 'keywordsranktracker',
+          children: [
+            { name: 'KRDashboard', url: `/keyword-tracking/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'kr-dashboard', parentId: 'keywordsranktracker' },
+            { name: 'ChromeExtension', url: "https://chrome.google.com/webstore/detail/komrsio-amazon-keyword-tr/hdlekegeaachepgfkadcjefobnmkjgdg", icon: 'graph', label: 'Chrome Extension', id: 'chrome_extension', parentId: 'keywordsranktracker', isExternal: true }
+          ]
+        },
         { name: 'Settings', url: `/settings/${companyId}`, icon: 'settings', label: 'Settings', id: 'settings' },
         // {
         //     name: 'ProductManagement', url: `/product-management/${companyId}`, icon: 'scan', label: 'Product Management', id: 'prodManagement',
