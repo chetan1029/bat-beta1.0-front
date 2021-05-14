@@ -27,6 +27,11 @@ export const getKeywordranks = (companyId: string | number, filters?: any) => ({
     payload: { companyId, filters }
 });
 
+export const createKeywords = (companyId: string | number, params: any) => ({
+    type: KeywordTrackingTypes.CREATE_KEYWORDS,
+    payload: { companyId, params }
+});
+
 export const resetkeywordTracking = () => ({
     type: KeywordTrackingTypes.RESET
 })

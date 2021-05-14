@@ -2,6 +2,7 @@ import { KeywordTrackingTypes } from './constants';
 
 const INIT_STATE: any = {
     products: [],
+    keywords: [],
 };
 
 
@@ -15,6 +16,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         products: action.payload.data.results,
                         isKtproductsFetched: true,
                         loading: false,
+                    }
+                }
+                case KeywordTrackingTypes.CREATE_KEYWORDS: {
+                    return {
+                        ...state,
+                        keywords: action.payload.data,
+                        isKeywordsCreated: true,
+                        loading: false
                     }
                 }
                 case KeywordTrackingTypes.GET_KTPRODUCT: {
@@ -61,6 +70,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         isClientsFetched: false
                     }
                 }
+                case KeywordTrackingTypes.CREATE_KEYWORDS: {
+                    return {
+                        ...state,
+                        createKeywordsError: action.payload.error,
+                        isKeywordsCreated: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -71,6 +88,9 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
         case KeywordTrackingTypes.GET_KTPRODUCT:
             return { ...state, loading: true };
 
+        case KeywordTrackingTypes.CREATE_KEYWORDS:
+            return { ...state, isKeywordsCreated: false, loading: true, createKeywordsError: null };
+
         case KeywordTrackingTypes.GET_KEYWORDRANKS:
             return { ...state, isKeywordrankFetched: false, loading: true };
 
@@ -79,6 +99,9 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 ...state,
                 isKtproductsFetched: false,
                 isKeywordrankFetched: false,
+                isKeywordsCreated: false,
+                createKeywordsError: null,
+                keywords: null,
                 error: null,
                 updateError: null
             }

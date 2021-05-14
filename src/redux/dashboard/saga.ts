@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCampaignDashboard } from "../../api/index";
+import { getCampaignDashboard, getKeywordTrackingDashboard } from "../../api/index";
 
 import { dashboardApiResponseSuccess, dashboardApiResponseError } from "./actions";
 import { DashboardTypes } from './constants';
@@ -18,14 +18,27 @@ function* getCampaignDashboardData({ payload: { companyId, filters } }: any) {
     }
 }
 
+function* getKeywordTrackingDashboardData({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getKeywordTrackingDashboard, companyId, filters);
+        yield put(dashboardApiResponseSuccess(DashboardTypes.GET_KEYWORDTRACKING_DATA, response.data));
+    } catch (error) {
+        yield put(dashboardApiResponseError(DashboardTypes.GET_KEYWORDTRACKING_DATA, error));
+    }
+}
+
 export function* watchGetCampaignDashboard() {
     yield takeEvery(DashboardTypes.GET_CAMPAIGN_DATA, getCampaignDashboardData)
 }
 
+export function* watchGetKeywordTrackingDashboard() {
+    yield takeEvery(DashboardTypes.GET_KEYWORDTRACKING_DATA, getKeywordTrackingDashboardData)
+}
 
 function* dashboardSaga() {
     yield all([
         fork(watchGetCampaignDashboard),
+        fork(watchGetKeywordTrackingDashboard),
     ]);
 }
 

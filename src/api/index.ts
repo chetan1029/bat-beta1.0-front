@@ -713,6 +713,17 @@ function getKeywordranks(companyId: number, params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
+function getKeywordTrackingDashboard(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking/dashboard/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
+
+function createKeywords(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/save/product-keywords`;
+    return api.create(`${baseUrl}`, params);
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -744,5 +755,5 @@ export {
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount,
-    getKtproducts, getKtproduct, getKeywordranks
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords
 }

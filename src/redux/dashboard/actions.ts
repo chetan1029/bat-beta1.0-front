@@ -16,3 +16,8 @@ export const getCampaignDashboard = (companyId: string | number, filters?: any) 
     type: DashboardTypes.GET_CAMPAIGN_DATA,
     payload: { companyId, filters }
 });
+
+export const getKeywordTrackingDashboard = (companyId: string | number, filters?: any) => ({
+    type: DashboardTypes.GET_KEYWORDTRACKING_DATA,
+    payload: { companyId, filters }
+});

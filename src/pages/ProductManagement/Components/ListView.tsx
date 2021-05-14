@@ -15,7 +15,7 @@ interface ListViewProps {
 	onSelectAllComponents: any;
 	onChangePage?: any;
 	history?: any;
-	onPerformBulk?; any;
+	onPerformBulk?: any;
 }
 
 const ListView = (props: ListViewProps) => {

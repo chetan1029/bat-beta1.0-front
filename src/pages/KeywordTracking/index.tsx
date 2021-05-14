@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Table, Button } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
@@ -7,16 +7,21 @@ import Flag from 'react-flagkit';
 import { useTranslation } from 'react-i18next';
 import dummyImage from "../../assets/images/dummy_image.svg";
 import { find, get, map, size, uniqBy } from "lodash";
+import { default as dayjs } from 'dayjs';
+
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
+import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
+import OverallChart from "./OverallChart";
 
 //actions
 import { APICore } from '../../api/apiCore';
 import {
     getKtproducts,
-    getMembershipPlan
+    getMembershipPlan,
+    getKeywordTrackingDashboard,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -38,6 +43,9 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
     const api = new APICore();
 
+    const [selectedPeriod, setSelectedPeriod] = useState('all');
+    const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
+
     const loggedInUser = api.getLoggedInUser();
 
     useEffect(() => {
@@ -56,16 +64,16 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, products, redirectUri, membershipPlan } = useSelector((state: any) => ({
+    const { loading, products, redirectUri, membershipPlan, keywordTrackingDashboard } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         products: state.Company.KeywordTracking.products,
         redirectUri: state.MarketPlaces.redirectUri,
 
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
+        keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
     }));
 
-    console.log(products)
 
     const companyId = props.match.params.companyId;
 
@@ -75,21 +83,70 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         history.push(`/keyword-tracking/${companyId}/product/${product.id}/`);
     }
 
-    // get the data
-    useEffect(() => {
-        dispatch(getKtproducts(companyId, defaultParams));
-        dispatch(getMembershipPlan(companyId, { is_active: true }));
-    }, [dispatch, companyId, defaultParams]);
-
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
     const quotas = plan ? (plan['plan_quotas'] || []).find(pq => (pq['quota'] && pq['quota']['codename'] === "MARKETPLACES")) : {};
 
     const isActiveMarket = quotas && quotas['available_quota'] > 0 ? true : false;
 
+    const getDates = useCallback((period: string) => {
+      const today = new Date();
+
+      switch (period) {
+        case '1m':
+          return {
+            start_date: dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY'),
+            end_date: dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
+          }
+        case '6m':
+          let dt = new Date();
+          dt.setMonth(today.getMonth() - 6);
+          return {
+            start_date: dayjs(dt).format('MM/DD/YYYY'),
+            end_date: dayjs(today).format('MM/DD/YYYY')
+          }
+        case '1y':
+          let dt2 = new Date();
+          dt2.setMonth(today.getMonth() - 12);
+          return {
+            start_date: dayjs(dt2).format('MM/DD/YYYY'),
+            end_date: dayjs(today).format('MM/DD/YYYY')
+          }
+        default:
+          return {}
+      }
+    }, []);
+
+    // get the data
+    useEffect(() => {
+        dispatch(getKtproducts(companyId, defaultParams));
+        dispatch(getMembershipPlan(companyId, { is_active: true }));
+    }, [dispatch, companyId, defaultParams, getDates, selectedPeriod]);
+
+
+    const onPeriodChange = (period: string) => {
+      setSelectedPeriod(period);
+      const filters = {...getDates(period)};
+      if (selectedMarket) {
+        filters['marketplace'] = selectedMarket['value'];
+      }
+      dispatch(getKeywordTrackingDashboard(companyId, filters));
+    }
+
+
+    const onMarketChange = (market: any) => {
+      setSelectedMarket(market);
+      const filters = {...getDates(selectedPeriod)};
+      if (market) {
+        filters['marketplace'] = market['value'];
+      }
+      dispatch(getKeywordTrackingDashboard(companyId, filters));
+    }
+
+
     return (
         <>
-            <div className="py-4">
+            {loading ? <Loader /> : <><div className="py-4">
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
@@ -98,12 +155,25 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
                         </div>
                     </Col>
-                    <Col className="text-right"></Col>
+                    <Col className="text-right" md={2}>
+                      <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
+                        onChange={onMarketChange}
+                        className="text-left"
+                        value={selectedMarket}
+                        isSingle={true}
+                        companyId={companyId} />
+                    </Col>
                 </Row>
             </div>
 
-                    {loading ? <Loader /> : <div>
-                        <div >
+                    <div>
+                        <div>
+                            <Row className="mt-1 mb-3">
+                              <Col lg={12}>
+                                {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard['data'] : {}} changePeriod={onPeriodChange}
+                                  selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+                              </Col>
+                            </Row>
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>
@@ -146,7 +216,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                                 </Col>
                             </Row>
                         </div>
-                    </div>}
+                    </div></>}
 
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
