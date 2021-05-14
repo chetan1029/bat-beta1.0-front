@@ -59,13 +59,14 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, product, redirectUri, keywordranks, membershipPlan } = useSelector((state: any) => ({
+    const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordCreated } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         product: state.Company.KeywordTracking.product,
         redirectUri: state.MarketPlaces.redirectUri,
         keywordranks: state.Company.KeywordTracking.keywordranks,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
+        isKeywordCreated: state.Company.KeywordTracking.isKeywordCreated,
     }));
 
 
@@ -93,6 +94,38 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
       }
       dispatch(getKeywordranks(companyId, filters));
     }
+
+    /*
+    add Keywords
+    */
+    const [isOpen, setisopen] = useState(false);
+    const openModal = () => {
+        setisopen(true);
+    }
+    const closeModal = () => {
+        setisopen(false);
+    }
+
+    /*
+        hscode
+    */
+    const [selectedKeyword, setselectedKeyword] = useState<any>();
+
+    const setKeyword = (keyword: any) => {
+        setselectedKeyword(keyword);
+        setisopen(true);
+    }
+
+    /*
+    close modal for after creating hscode
+    */
+    useEffect(() => {
+        if (isKeywordCreated) {
+            setisopen(false);
+            dispatch(getKeywordranks(props.match.params.companyId, defaultParams));
+        }
+    }, [isKeywordCreated, dispatch, props.match.params.companyId]);
+
 
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
