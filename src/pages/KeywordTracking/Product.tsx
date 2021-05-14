@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Table, Button } from "react-bootstrap";
+import { Row, Col, Card, Table, Button, Form } from "react-bootstrap";
 import { useHistory, withRouter, Link } from "react-router-dom";
 import Icon from "../../components/Icon";
 import Flag from 'react-flagkit';
 import { useTranslation } from 'react-i18next';
 import dummyImage from "../../assets/images/dummy_image.svg";
 import { find, get, map, size, uniqBy } from "lodash";
+import { default as dayjs } from 'dayjs';
+import DatePicker from 'react-datepicker';
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -71,12 +73,26 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     const companyId = props.match.params.companyId;
     const productId = props.match.params.productId;
 
+    const today = new Date();
+    const [currentdate, setCurrentdate] = useState(today);
+    const defaultParams = useMemo(() => ({ 'productkeyword__amazonproduct': productId, 'date': dayjs(currentdate).format('YYYY-MM-DD') }), []);
+
     // get the data
     useEffect(() => {
         dispatch(getKtproduct(companyId, productId));
-        dispatch(getKeywordranks(companyId));
+        dispatch(getKeywordranks(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
-    }, [dispatch, companyId, productId]);
+    }, [dispatch, companyId, productId, defaultParams]);
+
+    const onDateChange = (date: any) => {
+      setCurrentdate(date);
+      const filters = [];
+      filters["productkeyword__amazonproduct"] = productId
+      if (date) {
+        filters['date'] = dayjs(date).format('YYYY-MM-DD');
+      }
+      dispatch(getKeywordranks(companyId, filters));
+    }
 
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
@@ -111,7 +127,37 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                           </div>
                       </div>
                     </Col>
-                    <Col className="text-right"></Col>
+                    <Col className="text-right" md={3}>
+                      <Row>
+                        <Col>
+                            <DatePicker
+                                popperModifiers={{
+                                    flip: {
+                                        enabled: false
+                                    },
+                                    preventOverflow: {
+                                        escapeWithReference: true
+                                    }
+                                }}
+                                placeholderText={'Activation Date'}
+                                className={"form-control"}
+                                selected={currentdate}
+                                onChange={date => onDateChange(date)}
+                                dateFormat={"yyyy-MM-dd"}
+                                timeFormat="hh:mm"
+                                id="FilterDate"
+                            />
+                        </Col>
+                        <Col>
+                            <Button
+                              variant="primary"
+                              block
+                            >
+                              {t("Add Keywords")}
+                            </Button>
+                        </Col>
+                      </Row>
+                    </Col>
                 </Row>
             </div>
 
@@ -129,7 +175,6 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                     <th>{t("Rank")}</th>
                                                     <th>{t("Page")}</th>
                                                     <th>{t("Visibility Score")}</th>
-                                                    <th>{t("Last Update")}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -141,7 +186,6 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                   <td>{keywordrank.rank}</td>
                                                   <td>{keywordrank.page}</td>
                                                   <td>{keywordrank.visibility_score}</td>
-                                                  <td></td>
                                               </tr>
                                             )}
                                             </tbody>
