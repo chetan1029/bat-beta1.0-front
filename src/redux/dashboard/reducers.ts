@@ -17,12 +17,6 @@ const Dashboard = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
-                default:
-                    return { ...state }
-            }
-
-        case DashboardTypes.API_RESPONSE_SUCCESS:
-            switch (action.payload.actionType) {
                 case DashboardTypes.GET_KEYWORDTRACKING_DATA: {
                     return {
                         ...state,
@@ -37,6 +31,13 @@ const Dashboard = (state = INIT_STATE, action: any) => {
         case DashboardTypes.API_RESPONSE_ERROR:
             switch (action.payload.actionType) {
                 case DashboardTypes.GET_CAMPAIGN_DATA: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                    }
+                }
+                case DashboardTypes.GET_KEYWORDTRACKING_DATA: {
                     return {
                         ...state,
                         loading: false,

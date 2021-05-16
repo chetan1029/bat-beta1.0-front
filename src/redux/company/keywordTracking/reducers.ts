@@ -41,6 +41,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case KeywordTrackingTypes.PERFORM_BULK: {
+                    return {
+                        ...state,
+                        bulkActionResponse: action.payload.data,
+                        isBulkActionPerformed: true,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -78,6 +86,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case KeywordTrackingTypes.PERFORM_BULK: {
+                    return {
+                        ...state,
+                        bulkActionError: action.payload.error,
+                        isBulkActionPerformed: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -94,6 +110,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
         case KeywordTrackingTypes.GET_KEYWORDRANKS:
             return { ...state, isKeywordrankFetched: false, loading: true };
 
+            case KeywordTrackingTypes.PERFORM_BULK: {
+                return {
+                    ...state,
+                    isBulkActionPerformed: false,
+                    loading: true
+                }
+            }
+
         case KeywordTrackingTypes.RESET: {
             return {
                 ...state,
@@ -103,7 +127,8 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 createKeywordsError: null,
                 keywords: null,
                 error: null,
-                updateError: null
+                updateError: null,
+                isBulkActionPerformed: false
             }
         }
         default: return { ...state };

@@ -12,7 +12,7 @@ interface OverallChartProps {
 }
 
 const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps) => {
-
+    console.log(data);
     const seriesData: Array<any> = [];
 
     for (const d in data) {
@@ -21,7 +21,7 @@ const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps)
 
     const series = [
         {
-            name: "Amount",
+            name: "Visibility Score",
             data: seriesData
         }
     ];

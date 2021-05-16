@@ -121,6 +121,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     useEffect(() => {
         dispatch(getKtproducts(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
+        dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
     }, [dispatch, companyId, defaultParams, getDates, selectedPeriod]);
 
 

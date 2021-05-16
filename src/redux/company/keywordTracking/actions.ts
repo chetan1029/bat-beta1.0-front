@@ -32,6 +32,11 @@ export const createKeywords = (companyId: string | number, params: any) => ({
     payload: { companyId, params }
 });
 
+export const performBulkActionKeywords = (companyId: string | number, action: string, ids: Array<number | string>) => ({
+    type: KeywordTrackingTypes.PERFORM_BULK,
+    payload: { companyId, action, ids }
+});
+
 export const resetkeywordTracking = () => ({
     type: KeywordTrackingTypes.RESET
 })

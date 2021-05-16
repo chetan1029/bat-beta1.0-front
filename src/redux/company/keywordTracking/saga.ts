@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getKtproducts, getKtproduct, getKeywordranks, createKeywords as addKeywords } from "../../../api/index";
+import { getKtproducts, getKtproduct, getKeywordranks, createKeywords as addKeywords, performBulkActionKeywords } from "../../../api/index";
 
 import { keywordTrackingApiResponseError, keywordTrackingApiResponseSuccess } from "./actions";
 import { KeywordTrackingTypes } from './constants';
@@ -49,6 +49,15 @@ function* createKeywords({ payload: { companyId, params } }: any) {
     }
 }
 
+function* performBulkAction({ payload: { companyId, action, ids } }: any) {
+	try {
+		const response = yield call(performBulkActionKeywords, companyId, action, ids);
+		yield put(keywordTrackingApiResponseSuccess(KeywordTrackingTypes.PERFORM_BULK, response.data));
+	} catch (error) {
+		yield put(keywordTrackingApiResponseError(KeywordTrackingTypes.PERFORM_BULK, error));
+	}
+}
+
 export function* watchGetKtproducts() {
     yield takeEvery(KeywordTrackingTypes.GET_KTPRODUCTS, getAllKtproducts)
 }
@@ -65,12 +74,17 @@ export function* watchCreateKeywords() {
     yield takeEvery(KeywordTrackingTypes.CREATE_KEYWORDS, createKeywords)
 }
 
+export function* watchPerformBulkAction() {
+	yield takeEvery(KeywordTrackingTypes.PERFORM_BULK, performBulkAction);
+}
+
 function* keywordTrackingSaga() {
     yield all([
         fork(watchGetKtproducts),
         fork(watchGetKtproduct),
         fork(watchGetKeywordranks),
         fork(watchCreateKeywords),
+        fork(watchPerformBulkAction)
     ]);
 }
 

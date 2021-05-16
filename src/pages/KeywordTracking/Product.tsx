@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Table, Button, Form, Dropdown, DropdownButton } from "react-bootstrap";
 import { useHistory, withRouter, Link } from "react-router-dom";
@@ -15,6 +15,7 @@ import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
 import AddKeywords from "./AddKeywords";
+import OverallChart from "./OverallChart";
 
 //actions
 import { APICore } from '../../api/apiCore';
@@ -22,7 +23,8 @@ import {
     getKtproduct,
     getKeywordranks,
     getMembershipPlan,
-    performBulkActionProduct
+    performBulkActionKeywords,
+    getKeywordTrackingDashboard
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -44,6 +46,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
     const api = new APICore();
 
+    const [selectedPeriod, setSelectedPeriod] = useState('all');
+
     const loggedInUser = api.getLoggedInUser();
 
     useEffect(() => {
@@ -62,7 +66,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated } = useSelector((state: any) => ({
+    const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated, keywordTrackingDashboard, isBulkActionPerformed } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         product: state.Company.KeywordTracking.product,
@@ -70,6 +74,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
         keywordranks: state.Company.KeywordTracking.keywordranks,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
         isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
+        keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
+        isBulkActionPerformed: state.Company.KeywordTracking.isBulkActionPerformed,
     }));
 
 
@@ -82,12 +88,41 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
     const defaultParams = useMemo(() => ({ 'productkeyword__amazonproduct': productId, 'date': dayjs(currentdate).format('YYYY-MM-DD') }), []);
 
+    const getDates = useCallback((period: string) => {
+      const today = new Date();
+
+      switch (period) {
+        case '1m':
+          return {
+            start_date: dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY'),
+            end_date: dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
+          }
+        case '6m':
+          let dt = new Date();
+          dt.setMonth(today.getMonth() - 6);
+          return {
+            start_date: dayjs(dt).format('MM/DD/YYYY'),
+            end_date: dayjs(today).format('MM/DD/YYYY')
+          }
+        case '1y':
+          let dt2 = new Date();
+          dt2.setMonth(today.getMonth() - 12);
+          return {
+            start_date: dayjs(dt2).format('MM/DD/YYYY'),
+            end_date: dayjs(today).format('MM/DD/YYYY')
+          }
+        default:
+          return {}
+      }
+    }, []);
+
     // get the data
     useEffect(() => {
         dispatch(getKtproduct(companyId, productId));
         dispatch(getKeywordranks(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
-    }, [dispatch, companyId, productId, defaultParams]);
+        dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
+    }, [dispatch, companyId, productId, getDates, selectedPeriod, defaultParams, isBulkActionPerformed]);
 
     const [records, setRecords] = useState<Array<any>>([]);
 
@@ -99,6 +134,13 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
         filters['date'] = dayjs(date).format('YYYY-MM-DD');
       }
       dispatch(getKeywordranks(companyId, filters));
+    }
+
+    const onPeriodChange = (period: string) => {
+      setSelectedPeriod(period);
+      const filters = {...getDates(period)};
+      filters['product'] = productId;
+      dispatch(getKeywordTrackingDashboard(companyId, filters));
     }
 
     useEffect(() => {
@@ -161,7 +203,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   	};
 
     const performBulkAction = (action: string) => {
-  		dispatch(performBulkActionProduct(companyId, action, selectedKeywords.map(c => c['id'])));
+  		dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['id'])));
   	}
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
@@ -235,6 +277,12 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
                      <div>
                         <div >
+                          <Row className="mt-1 mb-3">
+                            <Col lg={12}>
+                              {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard['data'] : {}} changePeriod={onPeriodChange}
+                                selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+                            </Col>
+                          </Row>
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>
@@ -261,10 +309,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                     <>
                                                     <th colSpan={6} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
                                                       disabled={!(selectedKeywords && selectedKeywords.length)}>
-                                                      <Dropdown.Item onClick={() => performBulkAction('active')}>{t('Active Component')}</Dropdown.Item>
-                                                      <Dropdown.Item onClick={() => performBulkAction('archive')}>{t('Archive Component')}</Dropdown.Item>
-                                                      <Dropdown.Item onClick={() => performBulkAction('draft')}>{t('Draft Component')}</Dropdown.Item>
-                                                      <Dropdown.Item onClick={() => performBulkAction('delete')}>{t('Delete Component')}</Dropdown.Item>
+                                                      <Dropdown.Item onClick={() => performBulkAction('delete')}>{t('Delete Keywords')}</Dropdown.Item>
                                                     </DropdownButton></th>
                                                     </>
                                                   }
@@ -279,7 +324,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                       key={keywordrank.id}
                                                       id={`checkbox${keywordrank.id}`}
                                                       label=""
-                                                      checked={!!find(handleOnSelectKeywords, _keywordrank => _keywordrank.id === keywordrank.id)}
+                                                      checked={!!find(selectedKeywords, _keywordrank => _keywordrank.id === keywordrank.id)}
                                                       onChange={(e: any) => handleOnSelectKeywords(e, keywordrank)}
                                                     />
                                                   </td>

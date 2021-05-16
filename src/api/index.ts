@@ -724,6 +724,11 @@ function createKeywords(companyId: number, params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+function performBulkActionKeywords(companyId, action: string, ids: Array<any>) {
+    const baseUrl = `/companies/${companyId}/product-keyword-rank/bulk_action/`;
+    return api.create(`${baseUrl}`, { action, ids });
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -755,5 +760,5 @@ export {
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount,
-    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords
 }
