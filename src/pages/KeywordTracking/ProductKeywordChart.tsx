@@ -5,14 +5,14 @@ import { default as dayjs } from 'dayjs';
 import classNames from "classnames";
 
 
-interface OverallChartProps {
+interface ProductKeywordChartProps {
     data: any;
     selectedPeriod: string;
     changePeriod: any;
 }
 
-const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps) => {
-    console.log(selectedPeriod)
+const ProductKeywordChart = ({ data, selectedPeriod, changePeriod }: ProductKeywordChartProps) => {
+
     const series: Array<any> = [];
 
     if(Object.keys(data).length !== 0){
@@ -128,4 +128,4 @@ const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps)
     </>;
 }
 
-export default OverallChart;
+export default ProductKeywordChart;

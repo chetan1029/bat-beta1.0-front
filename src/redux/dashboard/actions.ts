@@ -21,3 +21,12 @@ export const getKeywordTrackingDashboard = (companyId: string | number, filters?
     type: DashboardTypes.GET_KEYWORDTRACKING_DATA,
     payload: { companyId, filters }
 });
+
+export const getProductKeywordDashboard = (companyId: string | number, keywordId: string | number, filters?: any) => ({
+    type: DashboardTypes.GET_PRODUCTKEYWORD_DATA,
+    payload: { companyId, keywordId, filters }
+});
+
+export const resetDashboard = () => ({
+    type: DashboardTypes.RESET
+})

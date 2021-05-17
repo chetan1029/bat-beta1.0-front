@@ -16,6 +16,7 @@ import MessageAlert from "../../components/MessageAlert";
 import ConfirmMessage from "../../components/ConfirmMessage";
 import AddKeywords from "./AddKeywords";
 import OverallChart from "./OverallChart";
+import ProductKeywordChart from "./ProductKeywordChart";
 
 //actions
 import { APICore } from '../../api/apiCore';
@@ -24,7 +25,8 @@ import {
     getKeywordranks,
     getMembershipPlan,
     performBulkActionKeywords,
-    getKeywordTrackingDashboard
+    getKeywordTrackingDashboard,
+    getProductKeywordDashboard,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -46,7 +48,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
     const api = new APICore();
 
-    const [selectedPeriod, setSelectedPeriod] = useState('all');
+    const [selectedPeriod, setSelectedPeriod] = useState('1m');
 
     const loggedInUser = api.getLoggedInUser();
 
@@ -66,7 +68,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated, keywordTrackingDashboard, isBulkActionPerformed } = useSelector((state: any) => ({
+    const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated, keywordTrackingDashboard, productKeywordDashboard, isBulkActionPerformed, isProductKeywordChartFetched } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         product: state.Company.KeywordTracking.product,
@@ -76,6 +78,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
         isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
         keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
         isBulkActionPerformed: state.Company.KeywordTracking.isBulkActionPerformed,
+        productKeywordDashboard: state.Dashboard.productKeywordDashboard,
+        isProductKeywordChartFetched: state.Dashboard.isProductKeywordChartFetched,
     }));
 
 
@@ -121,8 +125,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
         dispatch(getKtproduct(companyId, productId));
         dispatch(getKeywordranks(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
-        dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
+        dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod), product_id:productId}));
     }, [dispatch, companyId, productId, getDates, selectedPeriod, defaultParams, isBulkActionPerformed]);
+
 
     const [records, setRecords] = useState<Array<any>>([]);
 
@@ -206,10 +211,16 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   		dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['id'])));
   	}
 
+
+    const showKeywordChart = (keywordrank: any) => {
+        dispatch(getProductKeywordDashboard(companyId, keywordrank.productkeyword.id, {...getDates(selectedPeriod)}));
+    }
+
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
     const quotas = plan ? (plan['plan_quotas'] || []).find(pq => (pq['quota'] && pq['quota']['codename'] === "MARKETPLACES")) : {};
 
     const isActiveMarket = quotas && quotas['available_quota'] > 0 ? true : false;
+
 
     return (
         <>
@@ -279,8 +290,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                         <div >
                           <Row className="mt-1 mb-3">
                             <Col lg={12}>
-                              {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard['data'] : {}} changePeriod={onPeriodChange}
-                                selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+                              {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard : {}} changePeriod={onPeriodChange}
+                                selectedPeriod={selectedPeriod} />: <ProductKeywordChart data={productKeywordDashboard ? productKeywordDashboard : {}} changePeriod={onPeriodChange}
+                                  selectedPeriod={selectedPeriod} />}
                             </Col>
                           </Row>
                             <Row>
@@ -304,7 +316,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                     <th>{t("Indexed")}</th>
                                                     <th>{t("Rank")}</th>
                                                     <th>{t("Page")}</th>
-                                                    <th>{t("Visibility Score")}</th></>
+                                                    <th>{t("Visibility Score")}</th>
+                                                    <th>{t("Action")}</th>
+                                                    </>
                                                     :
                                                     <>
                                                     <th colSpan={6} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
@@ -328,12 +342,13 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                       onChange={(e: any) => handleOnSelectKeywords(e, keywordrank)}
                                                     />
                                                   </td>
-                                                  <td>{keywordrank.productkeyword.keyword.name}</td>
+                                                  <td onClick={() => showKeywordChart(keywordrank)} className={"clickable-row"}>{keywordrank.productkeyword.keyword.name}</td>
                                                   <td>{keywordrank.frequency}</td>
                                                   <td>{keywordrank.index ? <Icon name="check" className="icon icon-sm svg-outline-success" />: <Icon name="x" className="icon icon-sm svg-outline-muted" />}</td>
                                                   <td>{keywordrank.rank}</td>
                                                   <td>{keywordrank.page}</td>
                                                   <td>{keywordrank.visibility_score}</td>
+                                                  <td><a href={`https://${(keywordrank.productkeyword.keyword.amazonmarketplace.sales_channel_name).toLowerCase()}/s?k=${keywordrank.productkeyword.keyword.name}&page=${keywordrank.page}`} target="_blank">View Rank</a></td>
                                               </tr>
                                             )}
                                             </tbody>

@@ -43,7 +43,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
     const api = new APICore();
 
-    const [selectedPeriod, setSelectedPeriod] = useState('all');
+    const [selectedPeriod, setSelectedPeriod] = useState('1m');
     const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
 
     const loggedInUser = api.getLoggedInUser();
@@ -171,7 +171,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                         <div>
                             <Row className="mt-1 mb-3">
                               <Col lg={12}>
-                                {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard['data'] : {}} changePeriod={onPeriodChange}
+                                {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard : {}} changePeriod={onPeriodChange}
                                   selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
                               </Col>
                             </Row>

@@ -2,7 +2,8 @@ import { DashboardTypes } from './constants';
 
 const INIT_STATE: any = {
     campaignDashboard: {},
-    keywordTrackingDashboard: {}
+    keywordTrackingDashboard: {},
+    productKeywordDashboard: {}
 };
 
 
@@ -21,6 +22,14 @@ const Dashboard = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         keywordTrackingDashboard: action.payload.data,
+                        loading: false,
+                    }
+                }
+                case DashboardTypes.GET_PRODUCTKEYWORD_DATA: {
+                    return {
+                        ...state,
+                        productKeywordDashboard: action.payload.data,
+                        isProductKeywordChartFetched: true,
                         loading: false,
                     }
                 }
@@ -44,6 +53,14 @@ const Dashboard = (state = INIT_STATE, action: any) => {
                         error: action.payload.error,
                     }
                 }
+                case DashboardTypes.GET_PRODUCTKEYWORD_DATA: {
+                    return {
+                        ...state,
+                        loading: false,
+                        isProductKeywordChartFetched: false,
+                        error: action.payload.error,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -53,6 +70,16 @@ const Dashboard = (state = INIT_STATE, action: any) => {
 
         case DashboardTypes.GET_KEYWORDTRACKING_DATA:
             return { ...state, loading: true };
+
+        case DashboardTypes.GET_PRODUCTKEYWORD_DATA:
+            return { ...state, loading: true, isProductKeywordChartFetched: false };
+
+        case DashboardTypes.RESET: {
+            return {
+                ...state,
+                isProductKeywordChartFetched: false,
+            }
+        }
 
         default: return { ...state };
     }

@@ -718,13 +718,17 @@ function getKeywordTrackingDashboard(companyId: number, filters?: any) {
     return api.get(`${baseUrl}`, filters);
 }
 
+function getProductKeywordDashboard(companyId: number, keywordId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking/${keywordId}/dashboard/`;
+    return api.get(`${baseUrl}`, filters);
+}
 
 function createKeywords(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/save/product-keywords`;
     return api.create(`${baseUrl}`, params);
 }
 
-function performBulkActionKeywords(companyId, action: string, ids: Array<any>) {
+function performBulkActionKeywords(companyId: number, action: string, ids: Array<any>) {
     const baseUrl = `/companies/${companyId}/product-keyword-rank/bulk_action/`;
     return api.create(`${baseUrl}`, { action, ids });
 }
@@ -760,5 +764,5 @@ export {
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount,
-    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard
 }

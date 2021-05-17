@@ -110,13 +110,13 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
         case KeywordTrackingTypes.GET_KEYWORDRANKS:
             return { ...state, isKeywordrankFetched: false, loading: true };
 
-            case KeywordTrackingTypes.PERFORM_BULK: {
-                return {
-                    ...state,
-                    isBulkActionPerformed: false,
-                    loading: true
-                }
+        case KeywordTrackingTypes.PERFORM_BULK: {
+            return {
+                ...state,
+                isBulkActionPerformed: false,
+                loading: true
             }
+        }
 
         case KeywordTrackingTypes.RESET: {
             return {
