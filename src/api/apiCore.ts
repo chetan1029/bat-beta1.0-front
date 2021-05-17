@@ -17,7 +17,7 @@ axios.interceptors.response.use(response => {
     let message: any;
 
     if (error && error.response && error.response.status === 404) {
-        window.location.href = '/not-found';
+        //window.location.href = '/not-found';
     } else if (error && error.response && error.response.status === 403) {
         window.location.href = '/access-denied';
     } else {

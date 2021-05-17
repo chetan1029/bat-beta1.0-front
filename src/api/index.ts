@@ -697,6 +697,42 @@ function updateAmazonAccount(companyId: number, id: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+/* keyword tracking */
+function getKtproducts(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking-products/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getKtproduct(companyId: number, productId: number,) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking-products/${productId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function getKeywordranks(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/product-keyword-rank/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getKeywordTrackingDashboard(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking/dashboard/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
+function getProductKeywordDashboard(companyId: number, keywordId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/keyword-tracking/${keywordId}/dashboard/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
+function createKeywords(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/save/product-keywords`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function performBulkActionKeywords(companyId: number, action: string, ids: Array<any>) {
+    const baseUrl = `/companies/${companyId}/product-keyword-rank/bulk_action/`;
+    return api.create(`${baseUrl}`, { action, ids });
+}
+
 export {
     getRoles, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -727,5 +763,6 @@ export {
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
-    getAmazonAccount, updateAmazonAccount
+    getAmazonAccount, updateAmazonAccount,
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard
 }

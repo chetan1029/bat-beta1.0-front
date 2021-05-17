@@ -65,7 +65,6 @@ const Campaigns = (props: CampaignsProps) => {
         isMarketConnected: state.MarketPlaces.isMarketConnected,
         redirectUri: state.MarketPlaces.redirectUri,
         isMarketDisconnected: state.MarketPlaces.isMarketDisconnected,
-
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
     }));
 
@@ -151,11 +150,9 @@ const Campaigns = (props: CampaignsProps) => {
             { loggedInUser['first_login'] ?
             <AlertDismissible heading="Getting started guide!" message="Do you wanna go through getting started guide." cancelBtnVariant="danger" cancelBtnLabel="I will figure it out!" confirmBtnVariant="primary" confirmBtnLabel="Go to Getting Started" confirmBtnLink={`/get-started/${companyId}`} />
             : null}
-            <Card>
-                <Card.Body className="">
 
                     {loading ? <Loader /> : <div>
-                        <div className="px-2">
+                        <div>
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>
@@ -276,9 +273,6 @@ const Campaigns = (props: CampaignsProps) => {
                             </Row>
                         </div>
                     </div>}
-                </Card.Body>
-            </Card>
-
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 

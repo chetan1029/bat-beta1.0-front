@@ -15,6 +15,7 @@ import assetsSaga from "./assets/saga";
 import membershipPlan from "./membershipPlan/saga";
 import autoEmails from "./autoEmails/saga";
 import amazonAccount from "./amazonCompany/saga";
+import keywordTracking from "./keywordTracking/saga";
 
 
 export default function* companySaga() {
@@ -34,6 +35,7 @@ export default function* companySaga() {
         assetsSaga(),
         membershipPlan(),
         autoEmails(),
-        amazonAccount()
+        amazonAccount(),
+        keywordTracking()
     ]);
 }

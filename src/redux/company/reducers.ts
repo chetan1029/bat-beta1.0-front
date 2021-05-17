@@ -15,6 +15,7 @@ import AssetsState from "./assets/reducers"
 import MembershipPlan from "./membershipPlan/reducers";
 import AutoEmails from "./autoEmails/reducers";
 import AmazonCompany from "./amazonCompany/reducers";
+import KeywordTracking from "./keywordTracking/reducers";
 
 export default combineReducers({
     PaymentTerms,
@@ -32,5 +33,6 @@ export default combineReducers({
     AssetsState,
     MembershipPlan,
     AutoEmails,
-    AmazonCompany
+    AmazonCompany,
+    KeywordTracking
 });

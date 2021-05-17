@@ -57,6 +57,10 @@ import Campaigns from "../pages/AutoEmails/Campaigns/";
 import CampaignDetails from "../pages/AutoEmails/Campaigns/Details";
 import EmailQueue from "../pages/AutoEmails/Emails/EmailQueue";
 
+// Keyword tracking
+import KeywordTracking from "../pages/KeywordTracking/"
+import KeywordTrackingProduct from "../pages/KeywordTracking/Product"
+
 // account
 import Login from "../pages/account/Login";
 import SignUp from "../pages/account/SignUp";
@@ -94,6 +98,9 @@ const authProtectedRoutes = [
   { path: "/invitations", component: Invitations },
   { path: "/dashboard/:companyId", component: Dashboard },
   { path: "/get-started/:companyId", component: GetStarted },
+
+  { path: "/keyword-tracking/dashboard/:companyId", component: KeywordTracking },
+  { path: "/keyword-tracking/:companyId/product/:productId", component: KeywordTrackingProduct },
 
   { path: "/supply-chain/:companyId/vendors/:categoryId/add", component: InviteVendor },
   { path: "/supply-chain/:companyId/vendors/:categoryId/:vendorId/edit", component: EditVendor },

@@ -14,3 +14,4 @@ export * from "./assets/actions";
 export * from "./membershipPlan/actions";
 export * from "./autoEmails/actions";
 export * from "./amazonCompany/actions";
+export * from "./keywordTracking/actions";
