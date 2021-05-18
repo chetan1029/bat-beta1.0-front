@@ -3,6 +3,7 @@ import { KeywordTrackingTypes } from './constants';
 const INIT_STATE: any = {
     products: [],
     keywords: [],
+    suggest_keywords: [],
 };
 
 
@@ -38,6 +39,13 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         ...state,
                         keywordranks: action.payload.data.results,
                         isKeywordrankFetched: true,
+                        loading: false,
+                    }
+                }
+                case KeywordTrackingTypes.SUGGEST_KEYWORDS: {
+                    return {
+                        ...state,
+                        suggest_keywords: action.payload.data,
                         loading: false,
                     }
                 }
@@ -86,6 +94,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case KeywordTrackingTypes.SUGGEST_KEYWORDS: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                        isClientsFetched: false
+                    }
+                }
                 case KeywordTrackingTypes.PERFORM_BULK: {
                     return {
                         ...state,
@@ -109,6 +125,9 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
 
         case KeywordTrackingTypes.GET_KEYWORDRANKS:
             return { ...state, isKeywordrankFetched: false, loading: true };
+
+        case KeywordTrackingTypes.SUGGEST_KEYWORDS:
+            return { ...state, loading: true };
 
         case KeywordTrackingTypes.PERFORM_BULK: {
             return {
