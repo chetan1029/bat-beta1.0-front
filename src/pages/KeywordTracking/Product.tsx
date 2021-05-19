@@ -203,14 +203,14 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     }
 
     /*
-    close modal for after creating Keywords
+    close modal after creating Keywords
     */
     useEffect(() => {
         if (isKeywordsCreated) {
             setisopen(false);
-            dispatch(getKeywordranks(props.match.params.companyId, filters));
+            dispatch(getKeywordranks(companyId, filters));
         }
-    }, [isKeywordsCreated, dispatch, props.match.params.companyId, filters]);
+    }, [isKeywordsCreated, dispatch, companyId, filters]);
 
     const handleOnSelectKeywords = (e: any, keywordrank: any) => {
   		const index = findIndex(selectedKeywords, _keywordrank => _keywordrank.id === keywordrank.id);

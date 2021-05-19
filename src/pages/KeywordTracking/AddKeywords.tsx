@@ -31,11 +31,10 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
 
     const [asins, setAsins] = useState<any>([]);
 
-    const { createKeywordsError, isKeywordsCreated, loading, suggest_keyword } = useSelector((state: any) => ({
+    const { createKeywordsError, isKeywordsCreated, suggestedkeywords } = useSelector((state: any) => ({
         createKeywordsError: state.Company.KeywordTracking.createKeywordsError,
         isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
-        loading: state.Company.KeywordTracking.loading,
-        suggest_keyword: state.Company.KeywordTracking.suggest_keyword,
+        suggestedkeywords: state.Company.KeywordTracking.suggestedkeywords,
     }));
 
     const handleAsinsKeyDown = (event: any) => {
@@ -45,7 +44,6 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
   			dispatch(suggestKeywords(companyId, { asins: value}));
   		}
   	};
-
 
     /*
     validation
@@ -69,6 +67,13 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
         onClose();
     }
 
+    var keywords = ""
+    if (suggestedkeywords && suggestedkeywords.data){
+      suggestedkeywords.data.map((keyword, key)=>
+      keywords += keyword.name+"\n"
+    )
+    }
+
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
             <Modal.Header closeButton className="add-hscode-modal-header">
@@ -78,9 +83,9 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
                 <div className="position-relative">
 
                     <div>
-                      <div className="d-flex align-items-center">
-                        <div className="search">
-                          <input type="text" placeholder="Search"
+                      <div className="d-flex">
+                        <div className="search w-100">
+                          <input type="text" placeholder="Enter ASIN's to search for keywords"
                             onChange={(e: any) => setAsins(e.target.value)}
                             onKeyDown={handleAsinsKeyDown} />
                           <button type="submit">
@@ -92,12 +97,11 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
                         {(!isKeywordsCreated && createKeywordsError) ? <AlertMessage error={createKeywordsError} /> : null}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
-
                             <Form.Group className="mb-4">
                                 <Form.Label htmlFor="usr">{t('Keywords')}</Form.Label>
                                 <Form.Control as="textarea" rows={15} className="form-control" id="keywords" name="keywords" placeholder="Keywords"
                                     onBlur={validator.handleBlur}
-                                    value={suggest_keyword}
+                                    value={keywords ? keywords : ""}
                                     onChange={validator.handleChange}
                                     isInvalid={validator.touched.keywords && validator.errors && validator.errors.keywords ? true : false}
                                     maxLength={200} />

@@ -3,7 +3,7 @@ import { KeywordTrackingTypes } from './constants';
 const INIT_STATE: any = {
     products: [],
     keywords: [],
-    suggest_keywords: [],
+    suggestedkeywords: [],
 };
 
 
@@ -45,7 +45,7 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 case KeywordTrackingTypes.SUGGEST_KEYWORDS: {
                     return {
                         ...state,
-                        suggest_keywords: action.payload.data,
+                        suggestedkeywords: action.payload.data,
                         loading: false,
                     }
                 }
