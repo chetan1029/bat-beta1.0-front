@@ -19,7 +19,7 @@ const getMenuItems = (companyId: string, vendorCategories: any, salesCategories:
           children: [
             { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard', parentId: 'customercampaigns' },
             { name: 'CreateACampaign', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Manage Campaigns', id: 'create_a_campaign', parentId: 'customercampaigns' },
-            { name: 'CreateATemplate', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail', label: 'Manage Templates', id: 'create_a_template', parentId: 'customercampaigns' }
+            { name: 'CreateATemplate', url: `/auto-emails/${companyId}/templates`, icon: 'mail', label: 'Manage Templates', id: 'create_a_template', parentId: 'customercampaigns' }
           ]
         },
         {
