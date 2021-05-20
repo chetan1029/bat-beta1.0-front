@@ -9,6 +9,7 @@ import dummyImage from "../../assets/images/dummy_image.svg";
 import { find, get, map, size, uniqBy, findIndex } from "lodash";
 import { default as dayjs } from 'dayjs';
 import DatePicker from 'react-datepicker';
+import searchIcon from "../../assets/images/search_icon.svg";
 
 //components
 import Loader from "../../components/Loader";
@@ -90,7 +91,14 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     const today = new Date();
     const [currentdate, setCurrentdate] = useState(today);
     const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
-    const defaultParams = useMemo(() => ({ 'productkeyword__amazonproduct': productId, 'date': dayjs(currentdate).format('YYYY-MM-DD') }), []);
+    const [filters, setFilters] = useState<any>({
+      'productkeyword__amazonproduct': productId,
+      'date': dayjs(currentdate).format('YYYY-MM-DD'),
+  	});
+    const [search, setSearch] = useState<any>({
+      'productkeyword__amazonproduct': productId,
+      'date': dayjs(currentdate).format('YYYY-MM-DD'),
+    });
 
     const getDates = useCallback((period: string) => {
       const today = new Date();
@@ -123,10 +131,13 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     // get the data
     useEffect(() => {
         dispatch(getKtproduct(companyId, productId));
-        dispatch(getKeywordranks(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
         dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod), product_id:productId}));
-    }, [dispatch, companyId, productId, getDates, selectedPeriod, defaultParams, isBulkActionPerformed]);
+    }, [dispatch, companyId, productId, getDates, selectedPeriod]);
+
+    useEffect(() => {
+        dispatch(getKeywordranks(companyId, filters));
+    }, [dispatch, companyId, productId, getDates, filters, isBulkActionPerformed]);
 
 
     const [records, setRecords] = useState<Array<any>>([]);
@@ -147,6 +158,18 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
       filters['product'] = productId;
       dispatch(getKeywordTrackingDashboard(companyId, filters));
     }
+
+    const handleSearchKeyDown = (event: any) => {
+  		const { value } = event.target;
+  		setSearch(value);
+  		if ([13].includes(event.keyCode)) {
+  			setFilters({ ...filters, search: value, offset: 0 });
+  		}
+  	};
+
+    const handleOnClickOrderBy = (value: any) => {
+  		setFilters({ ...filters, ordering: value });
+  	};
 
     useEffect(() => {
       if (keywordranks && keywordranks.length > 0) {
@@ -180,14 +203,14 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     }
 
     /*
-    close modal for after creating Keywords
+    close modal after creating Keywords
     */
     useEffect(() => {
         if (isKeywordsCreated) {
             setisopen(false);
-            dispatch(getKeywordranks(props.match.params.companyId, defaultParams));
+            dispatch(getKeywordranks(companyId, filters));
         }
-    }, [isKeywordsCreated, dispatch, props.match.params.companyId, defaultParams]);
+    }, [isKeywordsCreated, dispatch, companyId, filters]);
 
     const handleOnSelectKeywords = (e: any, keywordrank: any) => {
   		const index = findIndex(selectedKeywords, _keywordrank => _keywordrank.id === keywordrank.id);
@@ -298,7 +321,18 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>
-                                        <Table>
+                                        <div className="d-flex align-items-center">
+                                          <div className="search">
+                                            <input type="text" placeholder="Search"
+                                              onChange={(e: any) => setSearch(e.target.value)}
+                                              onKeyDown={handleSearchKeyDown} />
+                                            <button type="submit">
+                                              <img src={searchIcon} alt=""
+                                                onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                                            </button>
+                                          </div>
+                                        </div>
+                                        <Table className="mt-3">
                                             <thead>
                                                 <tr>
                                                     <th className="index">
@@ -311,12 +345,12 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                                                       />
                                                     </th>
                                                     {!(selectedKeywords && selectedKeywords.length) ?
-                                                    <><th>{t("Keywords")}</th>
-                                                    <th>{t("Search Frequency")}</th>
-                                                    <th>{t("Indexed")}</th>
-                                                    <th>{t("Rank")}</th>
-                                                    <th>{t("Page")}</th>
-                                                    <th>{t("Visibility Score")}</th>
+                                                    <><th onClick={() => handleOnClickOrderBy("-productkeyword__keyword__name")} className={"clickable-row"}>{t("Keywords")}</th>
+                                                    <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Search Frequency")}</th>
+                                                    <th onClick={() => handleOnClickOrderBy("-index")} className={"clickable-row"}>{t("Indexed")}</th>
+                                                    <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Rank")}</th>
+                                                    <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Page")}</th>
+                                                    <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Visibility Score")}</th>
                                                     <th>{t("Action")}</th>
                                                     </>
                                                     :

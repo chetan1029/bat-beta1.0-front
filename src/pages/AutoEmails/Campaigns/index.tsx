@@ -144,7 +144,13 @@ const Campaigns = (props: CampaignsProps) => {
                             <h1 className="m-0">{t('Manage Campaigns')}</h1>
                         </div>
                     </Col>
-                    <Col className="text-right"></Col>
+                    <Col className="text-right">
+                        <Button
+                          variant="primary"
+                        >
+                          {t("Add Campaign")}
+                        </Button>
+                    </Col>
                 </Row>
             </div>
             { loggedInUser['first_login'] ?

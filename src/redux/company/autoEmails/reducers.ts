@@ -2,7 +2,8 @@ import { AutoEmailsTypes } from './constants';
 
 const INIT_STATE: any = {
     campaigns: [],
-    emailqueues: []
+    emailqueues: [],
+    templates: [],
 };
 
 
@@ -45,6 +46,28 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         emailQueues: action.payload.data,
                         isEmailQueuesFetched: true,
                         loading: false,
+                    }
+                }
+                case AutoEmailsTypes.GET_TEMPLATES: {
+                    return {
+                        ...state,
+                        templates: action.payload.data.results,
+                        isTemplatesFetched: true,
+                        loading: false,
+                    }
+                }
+                case AutoEmailsTypes.GET_TEMPLATE: {
+                    return {
+                        ...state,
+                        template: action.payload.data,
+                        loading: false,
+                    }
+                }
+                case AutoEmailsTypes.DELETE_TEMPLATE: {
+                    return {
+                        ...state,
+                        isTemplateDeleted: true,
+                        loading: false
                     }
                 }
                 default:
@@ -92,6 +115,29 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isClientsFetched: false
                     }
                 }
+                case AutoEmailsTypes.GET_TEMPLATES: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                        isTemplatesFetched: false
+                    }
+                }
+                case AutoEmailsTypes.GET_TEMPLATE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                    }
+                }
+                case AutoEmailsTypes.DELETE_TEMPLATE: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isTemplateDeleted: false,
+                        loading: false
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -111,15 +157,28 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.GET_EMAILQUEUES:
             return { ...state, isEmailQueuesFetched: false, loading: true };
 
+        case AutoEmailsTypes.GET_TEMPLATES:
+            return { ...state, isTemplatesFetched: false, loading: true };
+
+        case AutoEmailsTypes.GET_TEMPLATE:
+            return { ...state, loading: true };
+
+        case AutoEmailsTypes.DELETE_TEMPLATE:
+            return {
+                ...state, isTemplateDeleted: false, loading: true
+            };
+
         case AutoEmailsTypes.RESET: {
             return {
                 ...state,
                 isCampaignsFetched: false,
                 isCampaignUpdated: false,
+                isTemplatesFetched: false,
                 isEmailQueuesFetched: false,
                 error: null,
                 campaignTestSentError: null,
-                updateError: null
+                updateError: null,
+                isTemplateDeleted: false
             }
         }
         default: return { ...state };

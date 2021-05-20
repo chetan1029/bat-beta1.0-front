@@ -647,6 +647,23 @@ function updateCampaign(companyId: number, campaignId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+/* Templates */
+function getTemplates(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-template/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getTemplate(companyId: number, templateId: number,) {
+    const baseUrl = `/companies/${companyId}/email-template/${templateId}/`;
+    return api.get(`${baseUrl}`);
+}
+
+function deleteTemplate(companyId: number, templateId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-template/${templateId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+
 /* Email queue */
 function getEmailQueues(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/email-queue/`;
@@ -728,6 +745,11 @@ function createKeywords(companyId: number, params?: any) {
     return api.create(`${baseUrl}`, params);
 }
 
+function suggestKeywords(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/suggested-keywords/`;
+    return api.get(`${baseUrl}`, params);
+}
+
 function performBulkActionKeywords(companyId: number, action: string, ids: Array<any>) {
     const baseUrl = `/companies/${companyId}/product-keyword-rank/bulk_action/`;
     return api.create(`${baseUrl}`, { action, ids });
@@ -760,9 +782,10 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
+    getTemplates, getTemplate, deleteTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount,
-    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard, suggestKeywords
 }

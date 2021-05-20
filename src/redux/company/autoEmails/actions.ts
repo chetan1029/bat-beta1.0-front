@@ -40,3 +40,19 @@ export const testCampaign = (companyId: string | number, campaignId: number | st
     type: AutoEmailsTypes.TEST_CAMPAIGN,
     payload: { companyId, campaignId, data }
 });
+
+// templates
+export const getTemplates = (companyId: string | number, filters?: any) => ({
+    type: AutoEmailsTypes.GET_TEMPLATES,
+    payload: { companyId, filters }
+});
+
+export const getTemplate = (companyId: string | number, templateId: number | string) => ({
+    type: AutoEmailsTypes.GET_TEMPLATE,
+    payload: { companyId, templateId }
+});
+
+export const deleteTemplate = (companyId: string | number, templateId) => ({
+    type: AutoEmailsTypes.DELETE_TEMPLATE,
+    payload: { companyId, templateId }
+});

@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Form, Modal, Button } from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -10,11 +10,11 @@ import * as Yup from 'yup';
 // Import loader
 import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
-
+import searchIcon from "../../assets/images/search_icon.svg";
 import ExistingDataWarning from "../../components/ExistingDataWarning";
 
 //action
-import { createKeywords, resetkeywordTracking } from "../../redux/actions";
+import { createKeywords, resetkeywordTracking, suggestKeywords } from "../../redux/actions";
 interface AddKeywordsProps {
     isOpen: boolean;
     onClose: any;
@@ -29,12 +29,21 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
         dispatch(resetkeywordTracking());
     }, [dispatch]);
 
-    const { createKeywordsError, isKeywordsCreated, loading } = useSelector((state: any) => ({
+    const [asins, setAsins] = useState<any>([]);
+
+    const { createKeywordsError, isKeywordsCreated, suggestedkeywords } = useSelector((state: any) => ({
         createKeywordsError: state.Company.KeywordTracking.createKeywordsError,
         isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
-        loading: state.Company.KeywordTracking.loading,
+        suggestedkeywords: state.Company.KeywordTracking.suggestedkeywords,
     }));
 
+    const handleAsinsKeyDown = (event: any) => {
+  		const { value } = event.target;
+  		setAsins(value);
+  		if ([13].includes(event.keyCode)) {
+  			dispatch(suggestKeywords(companyId, { asins: value}));
+  		}
+  	};
 
     /*
     validation
@@ -58,6 +67,13 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
         onClose();
     }
 
+    var keywords = ""
+    if (suggestedkeywords && suggestedkeywords.data){
+      suggestedkeywords.data.map((keyword, key)=>
+      keywords += keyword.name+"\n"
+    )
+    }
+
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
             <Modal.Header closeButton className="add-hscode-modal-header">
@@ -65,9 +81,19 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
             </Modal.Header>
             <Modal.Body>
                 <div className="position-relative">
-                    {loading ? <Loader /> : null}
 
                     <div>
+                      <div className="d-flex">
+                        <div className="search w-100">
+                          <input type="text" placeholder="Enter ASIN's to search for keywords"
+                            onChange={(e: any) => setAsins(e.target.value)}
+                            onKeyDown={handleAsinsKeyDown} />
+                          <button type="submit">
+                            <img src={searchIcon} alt=""
+                              onClick={() => dispatch(suggestKeywords(companyId, {asins: asins}))} />
+                          </button>
+                        </div>
+                      </div>
                         {(!isKeywordsCreated && createKeywordsError) ? <AlertMessage error={createKeywordsError} /> : null}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
@@ -75,7 +101,7 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
                                 <Form.Label htmlFor="usr">{t('Keywords')}</Form.Label>
                                 <Form.Control as="textarea" rows={15} className="form-control" id="keywords" name="keywords" placeholder="Keywords"
                                     onBlur={validator.handleBlur}
-                                    value={validator.values.keywords}
+                                    value={keywords ? keywords : ""}
                                     onChange={validator.handleChange}
                                     isInvalid={validator.touched.keywords && validator.errors && validator.errors.keywords ? true : false}
                                     maxLength={200} />
