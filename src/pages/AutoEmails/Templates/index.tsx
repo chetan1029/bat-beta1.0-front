@@ -80,6 +80,7 @@ const Templates = (props: TemplatesProps) => {
     // Delete template
     const ondeleteTemplate = (template: any) => {
       setselectedTemplateForDelete(template);
+      dispatch(getTemplates(companyId, defaultParams));
     };
 
     const [selectedTemplateForDelete, setselectedTemplateForDelete] = useState<any>(null);

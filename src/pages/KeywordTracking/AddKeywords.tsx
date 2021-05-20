@@ -20,8 +20,9 @@ interface AddKeywordsProps {
     onClose: any;
     companyId: any;
     productId: any;
+    amazonaccountId: any;
 }
-const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps) => {
+const AddKeywords = ({ isOpen, onClose, companyId, productId, amazonaccountId }: AddKeywordsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -41,7 +42,7 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
   		const { value } = event.target;
   		setAsins(value);
   		if ([13].includes(event.keyCode)) {
-  			dispatch(suggestKeywords(companyId, { asins: value}));
+  			dispatch(suggestKeywords(companyId, { asins: value, amazonaccount_id: amazonaccountId}));
   		}
   	};
 
@@ -68,9 +69,11 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
     }
 
     var keywords = ""
+    var keywords_count = 0
     if (suggestedkeywords && suggestedkeywords.data){
+      keywords_count = suggestedkeywords.data.length
       suggestedkeywords.data.map((keyword, key)=>
-      keywords += keyword.name+"\n"
+      validator.values.keywords += keyword+"\n"
     )
     }
 
@@ -90,7 +93,7 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
                             onKeyDown={handleAsinsKeyDown} />
                           <button type="submit">
                             <img src={searchIcon} alt=""
-                              onClick={() => dispatch(suggestKeywords(companyId, {asins: asins}))} />
+                              onClick={() => dispatch(suggestKeywords(companyId, {asins: asins, amazonaccount_id: amazonaccountId}))} />
                           </button>
                         </div>
                       </div>
@@ -101,15 +104,19 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
                                 <Form.Label htmlFor="usr">{t('Keywords')}</Form.Label>
                                 <Form.Control as="textarea" rows={15} className="form-control" id="keywords" name="keywords" placeholder="Keywords"
                                     onBlur={validator.handleBlur}
-                                    value={keywords ? keywords : ""}
+                                    value={validator.values.keywords}
                                     onChange={validator.handleChange}
                                     isInvalid={validator.touched.keywords && validator.errors && validator.errors.keywords ? true : false}
-                                    maxLength={200} />
+                                    />
 
 
                                 {validator.touched.keywords && validator.errors.keywords ? (
                                     <Form.Control.Feedback type="invalid">{validator.errors.keywords}</Form.Control.Feedback>
                                 ) : null}
+                                {keywords_count ?
+                                <Form.Text className={"text-success mt-2 h6"}>
+                                  {keywords_count} Keywords
+                                </Form.Text>: ""}
                             </Form.Group>
                             <div>
                                 <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>
