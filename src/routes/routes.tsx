@@ -56,6 +56,8 @@ import Clients from "../pages/Clients/";
 import Campaigns from "../pages/AutoEmails/Campaigns/";
 import CampaignDetails from "../pages/AutoEmails/Campaigns/Details";
 import EmailQueue from "../pages/AutoEmails/Emails/EmailQueue";
+import Templates from "../pages/AutoEmails/Templates/";
+import AddEditTemplates from "../pages/AutoEmails/Templates/AddEditTemplate";
 
 // Keyword tracking
 import KeywordTracking from "../pages/KeywordTracking/"
@@ -92,6 +94,11 @@ const authProtectedRoutes = [
   { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
   { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
   { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
+  { path: "/auto-emails/:companyId/templates/add", component: AddEditTemplates },
+  { path: "/auto-emails/:companyId/templates/edit/:templateId", component: AddEditTemplates },
+  { path: "/auto-emails/:companyId/templates", component: Templates },
+
+  { path: "/auto-emails/:companyId/templates/:templateId/", component: CampaignDetails },
 
 
   { path: "/settings/:companyId/:view?", component: Settings },

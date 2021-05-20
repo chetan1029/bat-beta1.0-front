@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import dummyImage from "../../assets/images/dummy_image.svg";
 import { find, get, map, size, uniqBy } from "lodash";
 import { default as dayjs } from 'dayjs';
-
+import DatePicker from 'react-datepicker';
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -46,6 +46,11 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     const [selectedPeriod, setSelectedPeriod] = useState('1m');
     const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
 
+    const today = new Date();
+    const [currentdate, setCurrentdate] = useState(today);
+    const [dateRange, setDateRange] = useState([null, null]);
+    const [startDate, endDate] = dateRange;
+
     const loggedInUser = api.getLoggedInUser();
 
     useEffect(() => {
@@ -77,7 +82,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
     const companyId = props.match.params.companyId;
 
-    const defaultParams = useMemo(() => ({ 'limit': 100000000 }), []);
+    const defaultParams = useMemo(() => ({ 'limit': 100000000, 'status__name': 'Active' }), []);
 
     const openDetails = (product: any) => {
         history.push(`/keyword-tracking/${companyId}/product/${product.id}/`);
@@ -144,6 +149,15 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
       dispatch(getKeywordTrackingDashboard(companyId, filters));
     }
 
+    const onDateChange = (date: any) => {
+      setCurrentdate(date);
+      const filters = [];
+      if (date) {
+        filters['date'] = dayjs(date).format('YYYY-MM-DD');
+      }
+      dispatch(getKeywordTrackingDashboard(companyId, filters));
+    }
+
 
     return (
         <>
@@ -156,13 +170,39 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
                         </div>
                     </Col>
-                    <Col className="text-right" md={2}>
-                      <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
-                        onChange={onMarketChange}
-                        className="text-left"
-                        value={selectedMarket}
-                        isSingle={true}
-                        companyId={companyId} />
+                    <Col className="text-right" md={3}>
+                      <Row>
+                        <Col>
+                            <DatePicker
+                                popperModifiers={{
+                                    flip: {
+                                        enabled: false
+                                    },
+                                    preventOverflow: {
+                                        escapeWithReference: true
+                                    }
+                                }}
+                                placeholderText={'Date Range'}
+                                className={"form-control"}
+                                selectsRange={true}
+                                startDate={startDate}
+                                endDate={endDate}
+                                onChange={(update) => {
+                                  setDateRange(update);
+                                }}
+                                id="FilterDate"
+                                isClearable={true}
+                            />
+                        </Col>
+                        <Col>
+                          <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
+                            onChange={onMarketChange}
+                            className="text-left"
+                            value={selectedMarket}
+                            isSingle={true}
+                            companyId={companyId} />
+                        </Col>
+                      </Row>
                     </Col>
                 </Row>
             </div>

@@ -32,6 +32,11 @@ export const createKeywords = (companyId: string | number, params: any) => ({
     payload: { companyId, params }
 });
 
+export const suggestKeywords = (companyId: string | number, filters?: any) => ({
+    type: KeywordTrackingTypes.SUGGEST_KEYWORDS,
+    payload: { companyId, filters }
+});
+
 export const performBulkActionKeywords = (companyId: string | number, action: string, ids: Array<number | string>) => ({
     type: KeywordTrackingTypes.PERFORM_BULK,
     payload: { companyId, action, ids }
