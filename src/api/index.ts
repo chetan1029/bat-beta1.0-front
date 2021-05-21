@@ -658,6 +658,16 @@ function getTemplate(companyId: number, templateId: number,) {
     return api.get(`${baseUrl}`);
 }
 
+function createTemplate(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-template/`;
+    return api.create(`${baseUrl}`, params);
+}
+
+function updateTemplate(companyId: number, templateId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-template/${templateId}/`;
+    return api.update(`${baseUrl}`, params);
+}
+
 function deleteTemplate(companyId: number, templateId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/email-template/${templateId}/`;
     return api.delete(`${baseUrl}`);
@@ -782,7 +792,7 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign,
-    getTemplates, getTemplate, deleteTemplate,
+    getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,

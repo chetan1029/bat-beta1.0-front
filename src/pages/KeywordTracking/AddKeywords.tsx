@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Modal, Button, Row, Col } from "react-bootstrap";
+import { Form, Modal, Button } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -8,10 +8,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 // Import loader
-import Loader from "../../components/Loader";
 import AlertMessage from "../../components/AlertMessage";
 import searchIcon from "../../assets/images/search_icon.svg";
-import ExistingDataWarning from "../../components/ExistingDataWarning";
+import Loader from "../../components/Loader";
 
 //action
 import { createKeywords, resetkeywordTracking, suggestKeywords } from "../../redux/actions";
@@ -20,8 +19,9 @@ interface AddKeywordsProps {
     onClose: any;
     companyId: any;
     productId: any;
+    amazonaccountId: any;
 }
-const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps) => {
+const AddKeywords = ({ isOpen, onClose, companyId, productId, amazonaccountId }: AddKeywordsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -31,19 +31,32 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
 
     const [asins, setAsins] = useState<any>([]);
 
-    const { createKeywordsError, isKeywordsCreated, suggestedkeywords } = useSelector((state: any) => ({
+    const { createKeywordsError, isKeywordsCreated, suggestedkeywords, suggestedKeywordLoading } = useSelector((state: any) => ({
         createKeywordsError: state.Company.KeywordTracking.createKeywordsError,
         isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
         suggestedkeywords: state.Company.KeywordTracking.suggestedkeywords,
+        suggestedKeywordLoading: state.Company.KeywordTracking.suggestedKeywordLoading,
     }));
 
     const handleAsinsKeyDown = (event: any) => {
-  		const { value } = event.target;
-  		setAsins(value);
-  		if ([13].includes(event.keyCode)) {
-  			dispatch(suggestKeywords(companyId, { asins: value}));
-  		}
-  	};
+        const { value } = event.target;
+        setAsins(value);
+        if ([13].includes(event.keyCode)) {
+            dispatch(suggestKeywords(companyId, { asins: value, amazonaccount_id: amazonaccountId }));
+        }
+    };
+
+    const [defaultKeywords, setDefaultKeywords] = useState("");
+
+    useEffect(() => {
+        if (!suggestedKeywordLoading && suggestedkeywords && suggestedkeywords['data']) {
+            let keywords = "";
+            suggestedkeywords.data.map(keyword =>
+                keywords += keyword + "\n"
+            )
+            setDefaultKeywords(keywords);
+        }
+    }, [suggestedkeywords, suggestedKeywordLoading]);
 
     /*
     validation
@@ -51,13 +64,13 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
-            keywords: '',
+            keywords: defaultKeywords,
         },
         validationSchema: Yup.object({
             keywords: Yup.string().required(t('Keywords is required')),
         }),
         onSubmit: values => {
-          dispatch(createKeywords(companyId, { ...values, amazon_product_pk: productId}));
+            dispatch(createKeywords(companyId, { ...values, amazon_product_pk: productId }));
         },
     });
 
@@ -66,13 +79,8 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
         validator.resetForm();
         onClose();
     }
-
-    var keywords = ""
-    if (suggestedkeywords && suggestedkeywords.data){
-      suggestedkeywords.data.map((keyword, key)=>
-      keywords += keyword.name+"\n"
-    )
-    }
+    
+    const keywordsCount = (validator.values.keywords || "").split("\n").length;
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">
@@ -81,19 +89,19 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
             </Modal.Header>
             <Modal.Body>
                 <div className="position-relative">
-
+                    {suggestedKeywordLoading ? <Loader /> : null}
                     <div>
-                      <div className="d-flex">
-                        <div className="search w-100">
-                          <input type="text" placeholder="Enter ASIN's to search for keywords"
-                            onChange={(e: any) => setAsins(e.target.value)}
-                            onKeyDown={handleAsinsKeyDown} />
-                          <button type="submit">
-                            <img src={searchIcon} alt=""
-                              onClick={() => dispatch(suggestKeywords(companyId, {asins: asins}))} />
-                          </button>
+                        <div className="d-flex">
+                            <div className="search w-100">
+                                <input type="text" placeholder="Enter ASIN's to search for keywords"
+                                    onChange={(e: any) => setAsins(e.target.value)}
+                                    onKeyDown={handleAsinsKeyDown} />
+                                <button type="submit">
+                                    <img src={searchIcon} alt=""
+                                        onClick={() => dispatch(suggestKeywords(companyId, { asins: asins, amazonaccount_id: amazonaccountId }))} />
+                                </button>
+                            </div>
                         </div>
-                      </div>
                         {(!isKeywordsCreated && createKeywordsError) ? <AlertMessage error={createKeywordsError} /> : null}
 
                         <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
@@ -101,15 +109,19 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId }: AddKeywordsProps
                                 <Form.Label htmlFor="usr">{t('Keywords')}</Form.Label>
                                 <Form.Control as="textarea" rows={15} className="form-control" id="keywords" name="keywords" placeholder="Keywords"
                                     onBlur={validator.handleBlur}
-                                    value={keywords ? keywords : ""}
+                                    value={validator.values.keywords}
                                     onChange={validator.handleChange}
                                     isInvalid={validator.touched.keywords && validator.errors && validator.errors.keywords ? true : false}
-                                    maxLength={200} />
+                                />
 
 
                                 {validator.touched.keywords && validator.errors.keywords ? (
                                     <Form.Control.Feedback type="invalid">{validator.errors.keywords}</Form.Control.Feedback>
                                 ) : null}
+                                {keywordsCount ?
+                                    <Form.Text className={"text-success mt-2 h6"}>
+                                        {keywordsCount} Keywords
+                                </Form.Text> : ""}
                             </Form.Group>
                             <div>
                                 <Button type="button" onClick={() => onCancel()} variant="outline-primary" className="mr-3" >{t('Cancel')}</Button>

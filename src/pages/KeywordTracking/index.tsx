@@ -1,24 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card, Table, Button } from "react-bootstrap";
+import { Row, Col, Table } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
 import Icon from "../../components/Icon";
-import Flag from 'react-flagkit';
 import { useTranslation } from 'react-i18next';
 import dummyImage from "../../assets/images/dummy_image.svg";
-import { find, get, map, size, uniqBy } from "lodash";
+import { find, get, size } from "lodash";
 import { default as dayjs } from 'dayjs';
 import DatePicker from 'react-datepicker';
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
-import ConfirmMessage from "../../components/ConfirmMessage";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
 import OverallChart from "./OverallChart";
 
 //actions
-import { APICore } from '../../api/apiCore';
 import {
+    getMarketPlaces,
     getKtproducts,
     getMembershipPlan,
     getKeywordTrackingDashboard,
@@ -41,17 +39,11 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     const [successMsg, setSuccessMsg] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState<any>(null);
 
-    const api = new APICore();
-
     const [selectedPeriod, setSelectedPeriod] = useState('1m');
     const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
 
-    const today = new Date();
-    const [currentdate, setCurrentdate] = useState(today);
-    const [dateRange, setDateRange] = useState([null, null]);
-    const [startDate, endDate] = dateRange;
-
-    const loggedInUser = api.getLoggedInUser();
+    const [startDate, setStartDate] = useState<any>(null);
+    const [endDate, setEndDate] = useState<any>(null);
 
     useEffect(() => {
         const params = new URLSearchParams(queryParam);
@@ -69,7 +61,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, products, redirectUri, membershipPlan, keywordTrackingDashboard } = useSelector((state: any) => ({
+    const { loading, products, keywordTrackingDashboard, markets, isMarketsFetched } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         products: state.Company.KeywordTracking.products,
@@ -77,6 +69,9 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
         keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
+
+        markets: state.MarketPlaces.markets,
+        isMarketsFetched: state.MarketPlaces.isMarketsFetched,
     }));
 
 
@@ -87,12 +82,6 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     const openDetails = (product: any) => {
         history.push(`/keyword-tracking/${companyId}/product/${product.id}/`);
     }
-
-
-    const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
-    const quotas = plan ? (plan['plan_quotas'] || []).find(pq => (pq['quota'] && pq['quota']['codename'] === "MARKETPLACES")) : {};
-
-    const isActiveMarket = quotas && quotas['available_quota'] > 0 ? true : false;
 
     const getDates = useCallback((period: string) => {
       const today = new Date();
@@ -122,11 +111,32 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
       }
     }, []);
 
+    const onMarketChange = useCallback((market: any) => {
+      setSelectedMarket(market);
+      const filters = {...getDates(selectedPeriod)};
+      if (market) {
+        filters['marketplace'] = market['value'];
+      }
+      dispatch(getKeywordTrackingDashboard(companyId, filters));
+    }, [dispatch, companyId, getDates, selectedPeriod]);
+
+    useEffect(() => {
+      if (isMarketsFetched) {
+        const activeMarkets = markets ? markets.filter(m => m['status'] === 'active'): [];
+        if (activeMarkets && activeMarkets.length) {
+          onMarketChange({label: t('Amazon') + " " + activeMarkets[0]['country'], value: activeMarkets[0]['id']});
+        } else {
+          dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
+        }
+      }
+    }, [dispatch, markets, getDates, t, companyId, selectedPeriod, onMarketChange, isMarketsFetched]);
+
+
     // get the data
     useEffect(() => {
+        dispatch(getMarketPlaces(companyId, { 'limit': 100000000 }));
         dispatch(getKtproducts(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
-        dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
     }, [dispatch, companyId, defaultParams, getDates, selectedPeriod]);
 
 
@@ -139,24 +149,35 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
       dispatch(getKeywordTrackingDashboard(companyId, filters));
     }
 
+    const onDateChange = (dates: any) => {
+      const filters = {};
+      const dateFormat = 'MM/DD/YYYY';
 
-    const onMarketChange = (market: any) => {
-      setSelectedMarket(market);
-      const filters = {...getDates(selectedPeriod)};
-      if (market) {
-        filters['marketplace'] = market['value'];
+      if (dates) {
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+
+        if (start && end) {
+          filters['start_date'] = dayjs(start).format(dateFormat);
+          filters['end_date'] = dayjs(end).format(dateFormat);
+          dispatch(getKeywordTrackingDashboard(companyId, filters));
+        }
+      } else {
+        setStartDate(null);
+        setEndDate(null);
+        dispatch(getKeywordTrackingDashboard(companyId, filters));
       }
-      dispatch(getKeywordTrackingDashboard(companyId, filters));
     }
 
-    const onDateChange = (date: any) => {
-      setCurrentdate(date);
-      const filters = [];
-      if (date) {
-        filters['date'] = dayjs(date).format('YYYY-MM-DD');
+    const getSelectdValue = () => {
+      const dateFormat = 'MM/DD/YYYY';
+      let dateStr = startDate ? dayjs(startDate).format(dateFormat) : "";
+      if (dateStr && endDate) {
+        dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
       }
-      dispatch(getKeywordTrackingDashboard(companyId, filters));
-    }
+      return dateStr;
+    };
 
 
     return (
@@ -182,16 +203,17 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                                         escapeWithReference: true
                                     }
                                 }}
+                                selectsRange={true}
                                 placeholderText={'Date Range'}
                                 className={"form-control"}
-                                selectsRange={true}
                                 startDate={startDate}
                                 endDate={endDate}
-                                onChange={(update) => {
-                                  setDateRange(update);
-                                }}
+                                onChange={onDateChange}
                                 id="FilterDate"
                                 isClearable={true}
+                                shouldCloseOnSelect={false}
+                                value={getSelectdValue()}
+                                selected={startDate}
                             />
                         </Col>
                         <Col>

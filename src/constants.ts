@@ -285,6 +285,12 @@ const LANGS: any = {
   "sv": "Swedish"
 }
 
+const TEMPLATE_LANGS: any = {
+  "English": "English",
+  "German": "German",
+  "Italian": "Italian"
+}
+
 const JOB_TITLES: any = {
     "CEO": "CEO",
     "Supply Chain Manager": "Supply Chain Manager",
@@ -294,4 +300,4 @@ const JOB_TITLES: any = {
     "Sales": "Sales"
 }
 
-export { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS, TIMEZONES, LENGTHS, LANGS, JOB_TITLES };
+export { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS, TIMEZONES, LENGTHS, LANGS, JOB_TITLES, TEMPLATE_LANGS };

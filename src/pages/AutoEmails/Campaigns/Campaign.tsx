@@ -16,13 +16,15 @@ import { updateCampaign, } from "../../../redux/actions";
 
 import EmailTemplate from "./EmailTemplate";
 import EditCompanyInfo from "./EditCompanyInfo";
-
+import classNames from "classnames";
+import Select from "react-select";
 interface CampaignProps {
     campaign: any;
+    templates: any;
     market: any;
     companyId: string | number;
 }
-const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
+const Campaign = ({ companyId, campaign, templates, market }: CampaignProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -37,8 +39,18 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
         return typeof value === 'string' ? new Date(Date.parse(value)) : value;
     }
 
+    const defaultTemplates =
+      templates && templates.length > 0 &&
+      templates.map((template) => {
+        return {
+          label: template.name,
+          value: template.id,
+        };
+      });
+
     const [status, setStatus] = useState(campaign['status'] && campaign['status']['name'] && campaign['status']['name'].toLowerCase() === 'active');
 
+    const [campaignTemplate, setCampaignTemplate] = useState({ label: campaign["emailtemplate"]["name"], value: campaign["emailtemplate"]["id"] });
     const [scheduledays, setScheduledays] = useState(campaign['schedule_days']);
     const [activationdate, setActivationdate] = useState(getDate(campaign['activation_date']));
     const [includeInvoice, setIncludeInvoice] = useState<any>(campaign['include_invoice']);
@@ -215,6 +227,19 @@ const Campaign = ({ companyId, campaign, market }: CampaignProps) => {
                 <Row className="mt-4">
                     <Col lg={12}>
                         <Form.Label className="font-weight-semibold">Email Template</Form.Label>
+                        <Select
+                          id="current_location"
+                          name="current_location"
+                          placeholder={t("Select asset location")}
+                          isClearable
+                          options={defaultTemplates || []}
+                          value={campaignTemplate}
+                          className={classNames(
+                            "react-select",
+                            "react-select-regular",
+                          )}
+                          classNamePrefix="react-select"
+                        />
                         <p className="mb-0 text-muted font-weight-semibold">
                             {campaign['emailtemplate']['name']}
 

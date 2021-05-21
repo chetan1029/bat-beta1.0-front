@@ -17,7 +17,7 @@ import ConfirmMessage from "../../../components/ConfirmMessage";
 import { APICore } from '../../../api/apiCore';
 import {
     getTemplates,
-    getMembershipPlan, deleteTemplate
+    getMembershipPlan, deleteTemplate, resetAutoEmails
 } from "../../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -57,9 +57,10 @@ const Templates = (props: TemplatesProps) => {
     }, [queryParam]);
 
 
-    const { loading, templates, markets, membershipPlan, isTemplatesFetched } = useSelector((state: any) => ({
+    const { loading, templates, markets, membershipPlan, isTemplatesFetched, isTemplateDeleted } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isTemplatesFetched: state.Company.AutoEmails.isTemplatesFetched,
+        isTemplateDeleted: state.Company.AutoEmails.isTemplateDeleted,
         templates: state.Company.AutoEmails.templates,
         markets: state.MarketPlaces.markets,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
@@ -72,6 +73,7 @@ const Templates = (props: TemplatesProps) => {
 
     // get the data
     useEffect(() => {
+        dispatch(resetAutoEmails());
         dispatch(getTemplates(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
     }, [dispatch, companyId, defaultParams]);
@@ -81,6 +83,11 @@ const Templates = (props: TemplatesProps) => {
     const ondeleteTemplate = (template: any) => {
       setselectedTemplateForDelete(template);
     };
+
+    if(isTemplateDeleted){
+      dispatch(resetAutoEmails());
+      dispatch(getTemplates(companyId, defaultParams));
+    }
 
     const [selectedTemplateForDelete, setselectedTemplateForDelete] = useState<any>(null);
 
