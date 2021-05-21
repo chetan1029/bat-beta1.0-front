@@ -28,7 +28,6 @@ const ProductKeywordChart = ({ data, selectedPeriod, changePeriod }: ProductKeyw
         series.push(seriesName)
       })
     }
-    console.log(series)
 
     // const series = [
     //     {
