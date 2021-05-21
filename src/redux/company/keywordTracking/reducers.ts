@@ -46,7 +46,7 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         suggestedkeywords: action.payload.data,
-                        loading: false,
+                        suggestedKeywordLoading: false,
                     }
                 }
                 case KeywordTrackingTypes.PERFORM_BULK: {
@@ -97,9 +97,8 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 case KeywordTrackingTypes.SUGGEST_KEYWORDS: {
                     return {
                         ...state,
-                        loading: false,
-                        error: action.payload.error,
-                        isClientsFetched: false
+                        suggestedKeywordLoading: false,
+                        error: action.payload.error
                     }
                 }
                 case KeywordTrackingTypes.PERFORM_BULK: {
@@ -127,7 +126,7 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
             return { ...state, isKeywordrankFetched: false, loading: true };
 
         case KeywordTrackingTypes.SUGGEST_KEYWORDS:
-            return { ...state, loading: true };
+            return { ...state, suggestedKeywordLoading: true };
 
         case KeywordTrackingTypes.PERFORM_BULK: {
             return {
