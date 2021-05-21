@@ -63,6 +63,21 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case AutoEmailsTypes.CREATE_TEMPLATE: {
+                    return {
+                        ...state,
+                        newAsset: action.payload.data,
+                        isTemplateCreated: true,
+                        loading: false
+                    }
+                }
+                case AutoEmailsTypes.EDIT_TEMPLATE: {
+                    return {
+                        ...state,
+                        isTemplateUpdated: true,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.DELETE_TEMPLATE: {
                     return {
                         ...state,
@@ -130,6 +145,22 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         error: action.payload.error,
                     }
                 }
+                case AutoEmailsTypes.CREATE_TEMPLATE: {
+                    return {
+                        ...state,
+                        createAssetError: action.payload.error,
+                        isTemplateCreated: false,
+                        loading: false
+                    }
+                }
+                case AutoEmailsTypes.EDIT_TEMPLATE: {
+                    return {
+                        ...state,
+                        editAssetError: action.payload.error,
+                        isTemplateUpdated: false,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.DELETE_TEMPLATE: {
                     return {
                         ...state,
@@ -163,6 +194,18 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.GET_TEMPLATE:
             return { ...state, loading: true };
 
+        case AutoEmailsTypes.CREATE_TEMPLATE:
+            return { ...state, isTemplateCreated: false, loading: true, createTemplateError: null };
+
+        case AutoEmailsTypes.EDIT_TEMPLATE:
+            return {
+                ...state,
+                isTemplateUpdated: false, isTemplateCreated: false,
+                isTemplateDeleted: false,
+                createTemplateError: null, editTemplateError: null,
+                loading: true
+            };
+
         case AutoEmailsTypes.DELETE_TEMPLATE:
             return {
                 ...state, isTemplateDeleted: false, loading: true
@@ -178,7 +221,12 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 error: null,
                 campaignTestSentError: null,
                 updateError: null,
-                isTemplateDeleted: false
+                isTemplateCreated: false,
+                isTemplateUpdated: false,
+                isTemplateDeleted: false,
+                createTemplateError: null,
+                editTemplateError: null,
+                template: null,
             }
         }
         default: return { ...state };

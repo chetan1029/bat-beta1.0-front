@@ -52,6 +52,17 @@ export const getTemplate = (companyId: string | number, templateId: number | str
     payload: { companyId, templateId }
 });
 
+export const createTemplate = (companyId: string | number, params: any) => ({
+    type: AutoEmailsTypes.CREATE_TEMPLATE,
+    payload: { companyId, params }
+});
+
+export const editTemplate = (companyId: string | number, templateId, params: any) => ({
+    type: AutoEmailsTypes.EDIT_TEMPLATE,
+    payload: { companyId, templateId, params }
+});
+
+
 export const deleteTemplate = (companyId: string | number, templateId) => ({
     type: AutoEmailsTypes.DELETE_TEMPLATE,
     payload: { companyId, templateId }
