@@ -57,9 +57,10 @@ const Templates = (props: TemplatesProps) => {
     }, [queryParam]);
 
 
-    const { loading, templates, markets, membershipPlan, isTemplatesFetched } = useSelector((state: any) => ({
+    const { loading, templates, markets, membershipPlan, isTemplatesFetched, isTemplateDeleted } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isTemplatesFetched: state.Company.AutoEmails.isTemplatesFetched,
+        isTemplateDeleted: state.Company.AutoEmails.isTemplateDeleted,
         templates: state.Company.AutoEmails.templates,
         markets: state.MarketPlaces.markets,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
@@ -81,8 +82,12 @@ const Templates = (props: TemplatesProps) => {
     // Delete template
     const ondeleteTemplate = (template: any) => {
       setselectedTemplateForDelete(template);
-      dispatch(getTemplates(companyId, defaultParams));
     };
+
+    if(isTemplateDeleted){
+      dispatch(resetAutoEmails());
+      dispatch(getTemplates(companyId, defaultParams));
+    }
 
     const [selectedTemplateForDelete, setselectedTemplateForDelete] = useState<any>(null);
 

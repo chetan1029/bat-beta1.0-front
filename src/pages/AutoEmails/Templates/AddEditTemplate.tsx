@@ -19,8 +19,11 @@ import { TEMPLATE_LANGS, TemplateLanguageDropdown } from "../../../components/Te
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { format } from 'date-fns'
-//import { Editor } from 'react-draft-wysiwyg';
-//import '../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import '../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 //actions
 import { APICore } from '../../../api/apiCore';
 import {
@@ -91,6 +94,8 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
         }
       },
     });
+
+
 
     return (
         <>
@@ -168,6 +173,22 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
 
                       <Form.Group className="mb-4">
                         <Form.Label htmlFor="usr">{t("Email Content")}</Form.Label>
+                        {/*
+                        <Editor
+                          wrapperClassName="wrapper-class"
+                          editorClassName="editor-class form-control"
+                          toolbarClassName="toolbar-class"
+                          toolbar={{
+                            options: ['inline', 'blockType', 'fontSize', 'list', 'remove', 'history'],
+                            inline: {
+                              inDropdown: false,
+                              className: undefined,
+                              component: undefined,
+                              dropdownClassName: undefined,
+                              options: ['bold', 'italic', 'underline'],
+                            }
+                          }}
+                        />*/}
 
                         <Form.Control
                           as="textarea"

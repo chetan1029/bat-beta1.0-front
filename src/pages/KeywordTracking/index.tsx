@@ -74,7 +74,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         isMarketsFetched: state.MarketPlaces.isMarketsFetched,
     }));
 
-    
+
     const companyId = props.match.params.companyId;
 
     const defaultParams = useMemo(() => ({ 'limit': 100000000, 'status__name': 'Active' }), []);
@@ -131,7 +131,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
       }
     }, [dispatch, markets, getDates, t, companyId, selectedPeriod, onMarketChange, isMarketsFetched]);
 
-    
+
     // get the data
     useEffect(() => {
         dispatch(getMarketPlaces(companyId, { 'limit': 100000000 }));
