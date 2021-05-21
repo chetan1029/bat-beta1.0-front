@@ -66,7 +66,7 @@ function* getAllTemplates({ payload: { companyId, filters } }: any) {
 
 function* getTemplateDetails({ payload: { companyId, templateId } }: any) {
     try {
-        const response = yield call(getCampaign, companyId, templateId);
+        const response = yield call(getTemplate, companyId, templateId);
         yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.GET_TEMPLATE, response.data));
     } catch (error) {
         yield put(autoEmailsApiResponseError(AutoEmailsTypes.GET_TEMPLATE, error));

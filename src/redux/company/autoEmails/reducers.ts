@@ -226,6 +226,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 isTemplateDeleted: false,
                 createTemplateError: null,
                 editTemplateError: null,
+                template: null,
             }
         }
         default: return { ...state };

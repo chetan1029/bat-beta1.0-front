@@ -17,7 +17,7 @@ import ConfirmMessage from "../../../components/ConfirmMessage";
 import { APICore } from '../../../api/apiCore';
 import {
     getTemplates,
-    getMembershipPlan, deleteTemplate
+    getMembershipPlan, deleteTemplate, resetAutoEmails
 } from "../../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -72,6 +72,7 @@ const Templates = (props: TemplatesProps) => {
 
     // get the data
     useEffect(() => {
+        dispatch(resetAutoEmails());
         dispatch(getTemplates(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
     }, [dispatch, companyId, defaultParams]);
