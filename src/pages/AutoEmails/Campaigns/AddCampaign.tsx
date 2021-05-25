@@ -14,6 +14,7 @@ import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 import EmailTemplate from "./EmailTemplate";
+import MarketPlacesDropdown from "../../../components/MarketPlacesDropdown";
 
 //plug-ins
 import { get } from 'lodash';
@@ -39,12 +40,11 @@ const AddCampaign = (props: AddCampaignProps) => {
 
     const api = new APICore();
 
-    const { loading, templates, market, orderStatuses, isCampaignCreated } = useSelector((state: any) => ({
+    const { loading, templates, orderStatuses, isCampaignCreated } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isCampaignCreated: state.Company.AutoEmails.isCampaignCreated,
         templates: state.Company.AutoEmails.templates,
         orderStatuses: state.Common.statuses,
-        market: state.MarketPlaces.market,
     }));
 
 
@@ -57,7 +57,7 @@ const AddCampaign = (props: AddCampaignProps) => {
     const [excludeOrders, setExcludeOrders] = useState(["With Returns", "With Refunds"]);
     const [purchaseCount, setPurchaseCount] = useState(["1st Purchase"]);
 
-    const defaultParams = useMemo(() => ({ 'limit': 100000000, 'marketplace': marketId }), [marketId]);
+    const defaultParams = { 'limit': 100000000};
 
     const defaultTemplates =
       templates && templates.length > 0 &&
@@ -132,13 +132,12 @@ const AddCampaign = (props: AddCampaignProps) => {
     useEffect(() => {
         dispatch(resetAutoEmails());
         dispatch(getTemplates(companyId, defaultParams));
-        dispatch(getMarketPlace(companyId, marketId));
         dispatch(getAllStatuses({'parent_name': "Order"}));
     }, [dispatch, companyId]);
 
 
     if (isCampaignCreated){
-        history.push(`/auto-emails/${companyId}/campaigns/${marketId}`);
+        history.push(`/auto-emails/${companyId}/campaigns`);
     }
 
     const validator = useFormik({
@@ -148,15 +147,17 @@ const AddCampaign = (props: AddCampaignProps) => {
         emailtemplate: null,
         order_status: null,
         schedule: null,
+        amazonmarketplace: null,
       },
       validationSchema: Yup.object({
         name: Yup.string().required(t("Name is required")),
         emailtemplate: Yup.object().required(t("Email Template is required")).nullable(),
         order_status: Yup.object().required(t("Order Status is required")).nullable(),
         schedule: Yup.object().required(t("Schedule is required")).nullable(),
+        amazonmarketplace: Yup.object().required(t("Marketplace is required")).nullable(),
       }),
       onSubmit: values => {
-        dispatch(createCampaign(companyId, { ...values, amazonmarketplace: marketId, order_status: get(values, 'order_status.value'),
+        dispatch(createCampaign(companyId, { ...values, amazonmarketplace: get(values, 'amazonmarketplace.value'), order_status: get(values, 'order_status.value'),
         emailtemplate: get(values, 'emailtemplate.value'), schedule: get(values, 'schedule.value'), channel: channels, exclude_orders: excludeOrders, buyer_purchase_count: purchaseCount, status: values["status"] ? 'Active': 'Inactive'}));
       },
     });
@@ -170,16 +171,11 @@ const AddCampaign = (props: AddCampaignProps) => {
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
-                          <Link to={`/auto-emails/${companyId}/campaigns/${marketId}`}>
+                          <Link to={`/auto-emails/${companyId}/campaigns`}>
                               <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                           </Link>
                           <div className="d-flex">
-                            {market?
-                            <div className="border rounded-sm p-1 mr-2 d-flex align-items-end">
-                                <Flag country={market['country']} />
-                            </div>
-                            : ""}
-                            <h1 className="m-0">{t('Add Campaign')}</h1>
+                            <h1 className="m-0">{t('Create a Campaign')}</h1>
                           </div>
                         </div>
                     </Col>
@@ -190,7 +186,7 @@ const AddCampaign = (props: AddCampaignProps) => {
               <Card>
                 <Card.Body>
                     <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
-                      <Row className="mt-4">
+                      <Row>
                           <Col sm={6}>
                             <Form.Label htmlFor="usr">{t("Campaign Name")}</Form.Label>
                               <Form.Control
@@ -214,6 +210,32 @@ const AddCampaign = (props: AddCampaignProps) => {
                               {validator.touched.name && validator.errors.name ? (
                                 <Form.Control.Feedback type="invalid">
                                   {validator.errors.name}
+                                </Form.Control.Feedback>
+                              ) : null}
+                          </Col>
+                      </Row>
+                      <Row className={"mt-4"}>
+                          <Col sm={2}>
+                            <Form.Label htmlFor="usr">{t("Marketplace")}</Form.Label>
+                              <MarketPlacesDropdown
+                                name='amazonmarketplace'
+                                placeholder={t('Amazon Marketplace')}
+                                className={classNames(
+                                  validator.touched.emailtemplate &&
+                                  validator.errors.emailtemplate &&
+                                  "is-invalid"
+                                )}
+                                isSingle={true}
+                                companyId={companyId}
+                                value={validator.values.amazonmarketplace}
+                                onChange={(value: any) => {
+                                  validator.setFieldValue("amazonmarketplace", value);
+                                }}
+                                 />
+
+                              {validator.touched.amazonmarketplace && validator.errors.amazonmarketplace ? (
+                                <Form.Control.Feedback type="invalid">
+                                  {validator.errors.amazonmarketplace}
                                 </Form.Control.Feedback>
                               ) : null}
                           </Col>
@@ -429,12 +451,12 @@ const AddCampaign = (props: AddCampaignProps) => {
                       <div className="mt-4">
                         <Link
                           className="btn btn-outline-primary mr-3"
-                          to={`/auto-emails/${companyId}/campaign/${marketId}`}
+                          to={`/auto-emails/${companyId}/campaign`}
                         >
                           {t("Cancel")}
                         </Link>
                         <Button type="submit" variant="primary">
-                          {t("Add Campaign")}
+                          {t("Create a Campaign")}
                         </Button>
                       </div>
                     </Form>

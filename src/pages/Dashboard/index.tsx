@@ -124,7 +124,7 @@ const Dashboard = (props: DashboardProps) => {
     </div>
 
     <Card>
-      <Card.Body className="">
+      <Card.Body className="mb-4">
         {loading ? <Loader /> : null}
 
         <div>
@@ -136,7 +136,10 @@ const Dashboard = (props: DashboardProps) => {
                   className=""
                   value={selectedMarket}
                   isSingle={true}
-                  companyId={companyId} />
+                  companyId={companyId}
+                  showAll={true}
+                  isClearable={true}
+                   />
               </Col>
             </Row>
             <Row className="mt-1 mb-3">

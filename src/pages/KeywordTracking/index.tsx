@@ -8,6 +8,7 @@ import dummyImage from "../../assets/images/dummy_image.svg";
 import { find, get, size } from "lodash";
 import { default as dayjs } from 'dayjs';
 import DatePicker from 'react-datepicker';
+import searchIcon from "../../assets/images/search_icon.svg";
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -239,6 +240,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                             </Row>
                             <Row>
                                 <Col lg={12}>
+                                    
                                     <div className={"list-view"}>
                                         <Table>
                                             <thead>

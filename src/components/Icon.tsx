@@ -591,6 +591,17 @@ const Icon = ({ name, className }: Props) => {
           <path id="Stroke 3" fillRule="evenodd" clipRule="evenodd" d="M14.4614 6.63442C14.4972 4.60916 12.0095 1.3446 8.97792 1.40074C8.74213 1.40495 8.55336 1.60144 8.54283 1.83653C8.46634 3.50179 8.5695 5.65969 8.62704 6.63793C8.64459 6.94249 8.88388 7.18179 9.18774 7.19934C10.1934 7.25688 12.4298 7.33548 14.0713 7.08705C14.2944 7.05337 14.4579 6.85969 14.4614 6.63442Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
 
+      case 'add':
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g id="Iconly/Light/Plus">
+        <g id="Plus">
+        <path id="Line_185" d="M8.00008 5.55151V10.4358" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="Line_186" d="M10.4443 7.99367H5.55542" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="Path" fill-rule="evenodd" clip-rule="evenodd" d="M11.1237 1.33331H4.87611C2.69833 1.33331 1.33325 2.8747 1.33325 5.05675V10.9432C1.33325 13.1253 2.69198 14.6666 4.87611 14.6666H11.1237C13.3079 14.6666 14.6666 13.1253 14.6666 10.9432V5.05675C14.6666 2.8747 13.3079 1.33331 11.1237 1.33331Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        </g>
+        </svg>
+
 
       default:
         return null;
