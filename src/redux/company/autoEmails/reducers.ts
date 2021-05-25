@@ -26,6 +26,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         loading: false,
                     }
                 }
+                case AutoEmailsTypes.CREATE_CAMPAIGN: {
+                    return {
+                        ...state,
+                        newCampaign: action.payload.data,
+                        isCampaignCreated: true,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.TEST_CAMPAIGN: {
                     return {
                         ...state,
@@ -66,7 +74,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 case AutoEmailsTypes.CREATE_TEMPLATE: {
                     return {
                         ...state,
-                        newAsset: action.payload.data,
+                        newTemplate: action.payload.data,
                         isTemplateCreated: true,
                         loading: false
                     }
@@ -104,6 +112,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         ...state,
                         loading: false,
                         error: action.payload.error,
+                    }
+                }
+                case AutoEmailsTypes.CREATE_CAMPAIGN: {
+                    return {
+                        ...state,
+                        createCampaignError: action.payload.error,
+                        isCampaignCreated: false,
+                        loading: false
                     }
                 }
                 case AutoEmailsTypes.TEST_CAMPAIGN: {
@@ -148,7 +164,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 case AutoEmailsTypes.CREATE_TEMPLATE: {
                     return {
                         ...state,
-                        createAssetError: action.payload.error,
+                        createTemplateError: action.payload.error,
                         isTemplateCreated: false,
                         loading: false
                     }
@@ -178,6 +194,9 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
 
         case AutoEmailsTypes.GET_CAMPAIGN:
             return { ...state, loading: true };
+
+        case AutoEmailsTypes.CREATE_CAMPAIGN:
+            return { ...state, isCampaignCreated: false, loading: true, createCampaignError: null };
 
         case AutoEmailsTypes.TEST_CAMPAIGN:
             return { ...state, campaignTestLoading: true, campaignTestSent: false };
@@ -215,6 +234,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
             return {
                 ...state,
                 isCampaignsFetched: false,
+                isCampaignCreated: false,
                 isCampaignUpdated: false,
                 isTemplatesFetched: false,
                 isEmailQueuesFetched: false,
@@ -225,6 +245,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 isTemplateUpdated: false,
                 isTemplateDeleted: false,
                 createTemplateError: null,
+                createCampaignError: null,
                 editTemplateError: null,
                 template: null,
             }

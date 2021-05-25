@@ -22,6 +22,11 @@ export const getCampaign = (companyId: string | number, campaignId: number | str
     payload: { companyId, campaignId }
 });
 
+export const createCampaign = (companyId: string | number, params: any) => ({
+    type: AutoEmailsTypes.CREATE_CAMPAIGN,
+    payload: { companyId, params }
+});
+
 export const updateCampaign = (companyId: string | number, campaignId: number | string, data: any) => ({
     type: AutoEmailsTypes.UPDATE_CAMPAIGN,
     payload: { companyId, campaignId, data }
