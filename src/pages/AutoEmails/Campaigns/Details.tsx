@@ -12,7 +12,7 @@ import Icon from "../../../components/Icon";
 import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 //actions
-import { getCampaigns, getMarketPlace, updateMarketPlace, getTemplates } from "../../../redux/actions";
+import { getCampaigns, getMarketPlace, updateMarketPlace, getTemplates, getAllStatuses } from "../../../redux/actions";
 
 import Campaign from "./Campaign";
 
@@ -23,11 +23,12 @@ const Details = (props: DetailsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { loading, campaigns, templates, market, isCampaignUpdated, isMarketPlaceUpdated } = useSelector((state: any) => ({
+    const { loading, campaigns, templates, market, orderStatuses, isCampaignUpdated, isMarketPlaceUpdated } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
         templates: state.Company.AutoEmails.templates,
+        orderStatuses: state.Common.statuses,
         market: state.MarketPlaces.market,
         isCampaignUpdated: state.Company.AutoEmails.isCampaignUpdated,
         isMarketPlaceUpdated: state.MarketPlaces.isMarketPlaceUpdated,
@@ -43,6 +44,7 @@ const Details = (props: DetailsProps) => {
         dispatch(getCampaigns(companyId, defaultParams));
         dispatch(getTemplates(companyId, defaultParams));
         dispatch(getMarketPlace(companyId, marketId));
+        dispatch(getAllStatuses({'parent_name': "Order"}));
     }, [dispatch, companyId, marketId, defaultParams]);
 
     useEffect(() => {
@@ -117,6 +119,14 @@ const Details = (props: DetailsProps) => {
                                 </div>
                             </div>
                         </Col>
+                        <Col className="text-right">
+                          <Link
+                          className="btn btn-primary"
+                            to={`/auto-emails/${companyId}/campaigns/${marketId}/add`}
+                          >
+                            {t("Add Campaign")}
+                          </Link>
+                        </Col>
                     </Row>
                 </div>
 
@@ -184,7 +194,7 @@ const Details = (props: DetailsProps) => {
                                         </div>
 
                                         <div>
-                                            {selectedCampaign ? <Campaign campaign={selectedCampaign} templates={templates} companyId={companyId} market={market} /> : null}
+                                            {selectedCampaign ? <Campaign campaign={selectedCampaign} templates={templates} companyId={companyId} market={market} orderStatuses={orderStatuses} /> : null}
                                         </div>
                                     </Col>
                                 </Row>

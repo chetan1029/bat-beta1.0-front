@@ -55,6 +55,7 @@ import Clients from "../pages/Clients/";
 // auto emails
 import Campaigns from "../pages/AutoEmails/Campaigns/";
 import CampaignDetails from "../pages/AutoEmails/Campaigns/Details";
+import AddCampaign from "../pages/AutoEmails/Campaigns/AddCampaign";
 import EmailQueue from "../pages/AutoEmails/Emails/EmailQueue";
 import Templates from "../pages/AutoEmails/Templates/";
 import AddEditTemplates from "../pages/AutoEmails/Templates/AddEditTemplate";
@@ -92,6 +93,7 @@ const authProtectedRoutes = [
 
   { path: "/auto-emails/:companyId/campaigns/:campaignId/email-queue/:status", component: EmailQueue },
   { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
+  { path: "/auto-emails/:companyId/campaigns/:marketId/add", component: AddCampaign },
   { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
   { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
   { path: "/auto-emails/:companyId/templates/add", component: AddEditTemplates },

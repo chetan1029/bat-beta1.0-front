@@ -16,3 +16,8 @@ export const getAllRoles = () => ({
     type: CommonTypes.GET_ROLES,
     payload: {}
 });
+
+export const getAllStatuses = (filters?: any) => ({
+    type: CommonTypes.GET_STATUSES,
+    payload: {filters}
+});
