@@ -119,14 +119,7 @@ const Details = (props: DetailsProps) => {
                                 </div>
                             </div>
                         </Col>
-                        <Col className="text-right">
-                          <Link
-                          className="btn btn-primary"
-                            to={`/auto-emails/${companyId}/campaigns/${marketId}/add`}
-                          >
-                            {t("Add Campaign")}
-                          </Link>
-                        </Col>
+                        
                     </Row>
                 </div>
 

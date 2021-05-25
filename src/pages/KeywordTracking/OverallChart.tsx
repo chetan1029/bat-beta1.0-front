@@ -12,7 +12,6 @@ interface OverallChartProps {
 }
 
 const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps) => {
-    console.log(selectedPeriod)
     const series: Array<any> = [];
 
     if(Object.keys(data).length !== 0){
