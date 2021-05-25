@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate } from "../../../api/index";
+import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate, createCampaign as AddCampaign } from "../../../api/index";
 
 import { autoEmailsApiResponseError, autoEmailsApiResponseSuccess } from "./actions";
 import { AutoEmailsTypes } from './constants';
@@ -24,6 +24,19 @@ function* getCampaignDetails({ payload: { companyId, campaignId } }: any) {
         yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.GET_CAMPAIGN, response.data));
     } catch (error) {
         yield put(autoEmailsApiResponseError(AutoEmailsTypes.GET_CAMPAIGN, error));
+    }
+}
+
+/*
+create campaign
+*/
+function* createCampaign({ payload: { companyId, params } }: any) {
+    try {
+        const response = yield call(AddCampaign, companyId, params);
+        yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.CREATE_CAMPAIGN, response.data));
+
+    } catch (error) {
+        yield put(autoEmailsApiResponseError(AutoEmailsTypes.CREATE_CAMPAIGN, error));
     }
 }
 
@@ -119,6 +132,10 @@ export function* watchGetCampaign() {
     yield takeEvery(AutoEmailsTypes.GET_CAMPAIGN, getCampaignDetails)
 }
 
+export function* watchCampaign() {
+    yield takeEvery(AutoEmailsTypes.CREATE_CAMPAIGN, createCampaign)
+}
+
 export function* watchUpdateCampain() {
     yield takeEvery(AutoEmailsTypes.UPDATE_CAMPAIGN, updateCampaign)
 }
@@ -155,6 +172,7 @@ function* autoEmailsSaga() {
     yield all([
         fork(watchGetCampaigns),
         fork(watchGetCampaign),
+        fork(watchCampaign),
         fork(watchUpdateCampain),
         fork(watchTestCampain),
         fork(watchGetEmailQueues),

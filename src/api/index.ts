@@ -10,6 +10,11 @@ function getRoles() {
     return api.get(`${baseUrl}`);
 }
 
+function getStatuses(filters?: any) {
+    const baseUrl = "/status/";
+    return api.get(`${baseUrl}`, filters);
+}
+
 // account
 function login(params?: any) {
     const baseUrl = "/login/";
@@ -637,6 +642,11 @@ function getCampaign(companyId: number, campaignId: number,) {
     return api.get(`${baseUrl}`);
 }
 
+function createCampaign(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign/`;
+    return api.create(`${baseUrl}`, params);
+}
+
 function testCampaign(companyId: number, campaignId: number, data: any) {
     const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/test_email/`;
     return api.create(`${baseUrl}`, data);
@@ -766,7 +776,7 @@ function performBulkActionKeywords(companyId: number, action: string, ids: Array
 }
 
 export {
-    getRoles, getCompanyCategories,
+    getRoles, getStatuses, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
     updateProfile, updateProfilePicture,
     getInvitataions, acceptInvite, rejectInvite,
@@ -791,7 +801,7 @@ export {
     createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
-    getCampaigns, getCampaign, updateCampaign, testCampaign,
+    getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign,
     getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
