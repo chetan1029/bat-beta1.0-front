@@ -112,9 +112,6 @@ const Dashboard = (props: DashboardProps) => {
       history.push(`/auto-emails/${companyId}/email-queue/${status}`);
   }
 
-  if(asinperformance){
-    console.log(asinperformance[0].best)
-  }
 
   return (<>
     <div className="py-4">
@@ -214,7 +211,7 @@ const Dashboard = (props: DashboardProps) => {
                         </tr>
                     </thead>
                     <tbody>
-                      { asinperformance[0].best.map((best, key) =>
+                      { asinperformance && asinperformance[0] &&  asinperformance[0].best.map((best, key) =>
                         <tr>
                             <td>{key+1}</td>
                             <td>{best.asin}</td>
@@ -235,7 +232,7 @@ const Dashboard = (props: DashboardProps) => {
                         </tr>
                     </thead>
                     <tbody>
-                    { asinperformance[0].worst.map((best, key) =>
+                    { asinperformance && asinperformance[0] && asinperformance[0].worst.map((best, key) =>
                       <tr>
                           <td>{key+1}</td>
                           <td>{best.asin}</td>
