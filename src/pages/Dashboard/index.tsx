@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Table } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { withRouter, useHistory } from "react-router-dom";
 import { default as dayjs } from 'dayjs';
@@ -11,7 +11,7 @@ import Loader from "../../components/Loader";
 import ToolTips from "../../components/ToolTips"
 import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
-import { getCampaignDashboard } from "../../redux/actions";
+import { getCampaignDashboard, getAsinPerformance } from "../../redux/actions";
 import { CURRENCIES } from "../../constants";
 
 
@@ -32,9 +32,10 @@ const Dashboard = (props: DashboardProps) => {
   const [selectedPeriod, setSelectedPeriod] = useState('all');
   const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
 
-  const { loading, campaignDashboard } = useSelector((state: any) => ({
+  const { loading, campaignDashboard, asinperformance } = useSelector((state: any) => ({
     loading: state.Dashboard.loading,
     campaignDashboard: state.Dashboard.campaignDashboard,
+    asinperformance: state.Company.KeywordTracking.asinperformance,
   }));
 
   const getDates = useCallback((period: string) => {
@@ -67,6 +68,7 @@ const Dashboard = (props: DashboardProps) => {
 
   useEffect(() => {
     dispatch(getCampaignDashboard(companyId, {...getDates(selectedPeriod)}));
+    dispatch(getAsinPerformance(companyId, {...getDates(selectedPeriod)}));
   }, [dispatch, companyId, getDates, selectedPeriod, selectedCurrency]);
 
   const onPeriodChange = (period: string) => {
@@ -110,6 +112,10 @@ const Dashboard = (props: DashboardProps) => {
       history.push(`/auto-emails/${companyId}/email-queue/${status}`);
   }
 
+  if(asinperformance){
+    console.log(asinperformance[0].best)
+  }
+
   return (<>
     <div className="py-4">
       <Row className='align-items-center'>
@@ -119,7 +125,18 @@ const Dashboard = (props: DashboardProps) => {
             <h1 className="m-0">Dashboard</h1>
           </div>
         </Col>
-        <Col className="text-right"></Col>
+        <Col></Col>
+        <Col sm={3} >
+          <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
+            onChange={onMarketChange}
+            className=""
+            value={selectedMarket}
+            isSingle={true}
+            companyId={companyId}
+            showAll={true}
+            isClearable={true}
+             />
+        </Col>
       </Row>
     </div>
 
@@ -129,127 +146,108 @@ const Dashboard = (props: DashboardProps) => {
 
         <div>
           <div className="px-2">
-            <Row className="mt-0 mb-3">
-            <Col lg={3}>
-                <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
-                  onChange={onMarketChange}
-                  className=""
-                  value={selectedMarket}
-                  isSingle={true}
-                  companyId={companyId}
-                  showAll={true}
-                  isClearable={true}
-                   />
-              </Col>
-            </Row>
             <Row className="mt-1 mb-3">
-              <Col lg={12}>
+              <Col lg={6}>
                 {!loading ? <OrderChart data={campaignDashboard ? campaignDashboard['data'] : {}} changePeriod={onPeriodChange}
                   selectedCurrency={selectedCurrency['value']} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+
+                  <Row className="mt-3">
+                    <Col>
+                      <Card className="card-stats mb-2">
+                        <Card.Body className="">
+                          <p className="header">
+                          {t('Sales')}
+                          <span className="float-right">
+                            <ToolTips placement="auto" label="" message="Message on hover over" />
+                          </span>
+                          </p>
+                          <p className="sub-header mt-1">
+                            {getAmount('total_sales')}
+                            {/* <small className="text-success"><i className="up"></i>10%</small> */}
+                          </p>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col>
+                      <Card className="card-stats mb-2">
+                        <Card.Body className="">
+                          <p className="header">
+                          {t('Orders')}
+                          <span className="float-right">
+                            <ToolTips placement="auto" label="" message="Message on hover over" />
+                          </span>
+                          </p>
+                          <p className="sub-header mt-1">
+                            {getNumber('total_orders')}
+                            {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                          </p>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col>
+                      <Card className="card-stats mb-2">
+                        <Card.Body className="clickable-row" onClick={() =>openDetails("send")}>
+                          <p className="header">
+                          {t('Email Sent')}
+                          <span className="float-right">
+                            <ToolTips placement="auto" label="" message="Message on hover over" />
+                          </span>
+                          </p>
+                          <p className="sub-header mt-1">
+                            {getNumber('total_email_sent')}
+                            {/* <small className="text-success"><i className="up"></i>10%</small> */}
+                          </p>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+
+                  </Row>
+              </Col>
+              <Col lg={3}>
+                <h4>Best Performing ASIN</h4>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>{t('#')}</th>
+                            <th>{t('ASIN')}</th>
+                            <th>{t('Visibility Score')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      { asinperformance[0].best.map((best, key) =>
+                        <tr>
+                            <td>{key+1}</td>
+                            <td>{best.asin}</td>
+                            <td>{best.visibility_score}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                </Table>
+              </Col>
+              <Col lg={3}>
+                <h4>Worst Performing ASIN</h4>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>{t('#')}</th>
+                            <th>{t('ASIN')}</th>
+                            <th>{t('Visibility Score')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    { asinperformance[0].worst.map((best, key) =>
+                      <tr>
+                          <td>{key+1}</td>
+                          <td>{best.asin}</td>
+                          <td>{best.visibility_score}</td>
+                      </tr>
+                    )}
+                    </tbody>
+                </Table>
               </Col>
             </Row>
 
-            <Row className="mt-3">
-              <Col lg={2}>
-                <Card className="card-stats mb-2">
-                  <Card.Body className="">
-                    <p className="header">
-                    {t('Sales')}
-                    <span className="float-right">
-                      <ToolTips placement="auto" label="" message="Message on hover over" />
-                    </span>
-                    </p>
-                    <p className="sub-header mt-1">
-                      {getAmount('total_sales')}
-                      {/* <small className="text-success"><i className="up"></i>10%</small> */}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col lg={2}>
-                <Card className="card-stats mb-2">
-                  <Card.Body className="">
-                    <p className="header">
-                    {t('Orders')}
-                    <span className="float-right">
-                      <ToolTips placement="auto" label="" message="Message on hover over" />
-                    </span>
-                    </p>
-                    <p className="sub-header mt-1">
-                      {getNumber('total_orders')}
-                      {/* <small className="text-danger"><i className="down"></i>10%</small> */}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col lg={2}>
-                <Card className="card-stats mb-2">
-                  <Card.Body className="clickable-row" onClick={() =>openDetails("send")}>
-                    <p className="header">
-                    {t('Email Sent')}
-                    <span className="float-right">
-                      <ToolTips placement="auto" label="" message="Message on hover over" />
-                    </span>
-                    </p>
-                    <p className="sub-header mt-1">
-                      {getNumber('total_email_sent')}
-                      {/* <small className="text-success"><i className="up"></i>10%</small> */}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col lg={2}>
-                <Card className="card-stats mb-2">
-                  <Card.Body className="clickable-row" onClick={() =>openDetails("queued")}>
-                    <p className="header">
 
-                    {t('Email in Queue')}
-                    <span className="float-right">
-                      <ToolTips placement="auto" label="" message="Message on hover over" />
-                    </span>
-                    </p>
-                    <p className="sub-header mt-1">
-                      {getNumber('total_email_in_queue')}
-                      {/* <small className="text-danger"><i className="down"></i>10%</small> */}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col lg={2}>
-                <Card className="card-stats mb-2">
-                  <Card.Body className="clickable-row" onClick={() =>openDetails("opt-out")}>
-                    <p className="header">
-
-                    {t('Opt-out Emails')}
-                    <span className="float-right">
-                      <ToolTips placement="auto" label="" message="Message on hover over" />
-                    </span>
-                    </p>
-                    <p className="sub-header mt-1">
-                      {getNumber('total_opt_out_email')}
-                      {/* <small className="text-danger"><i className="down"></i>10%</small> */}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col lg={2}>
-                <Card className="card-stats mb-2">
-                  <Card.Body className="">
-                    <p className="header">
-
-                    {t('Opt-out Rate(%)')}
-                    <span className="float-right">
-                      <ToolTips placement="auto" label="" message="Message on hover over" />
-                    </span>
-                    </p>
-                    <p className="sub-header mt-1">
-                      {getNumber('opt_out_rate')}%
-                      {/* <small className="text-danger"><i className="down"></i>10%</small> */}
-                    </p>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
           </div>
         </div>
       </Card.Body>
