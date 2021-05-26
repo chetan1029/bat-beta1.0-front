@@ -53,6 +53,7 @@ import InviteChannel from "../pages/SalesChannels/InviteChannel";
 import Clients from "../pages/Clients/";
 
 // auto emails
+import AutoEmailsDashboard from "../pages/AutoEmails/Dashboard/";
 import Campaigns from "../pages/AutoEmails/Campaigns/";
 import CampaignDetails from "../pages/AutoEmails/Campaigns/Details";
 import AddCampaign from "../pages/AutoEmails/Campaigns/AddCampaign";
@@ -91,9 +92,10 @@ const authProtectedRoutes = [
 
   { path: "/clients/:companyId", component: Clients, layoutProps: { 'mainSidebar': true } },
 
+  { path: "/auto-emails/dashboard/:companyId", component: AutoEmailsDashboard },
   { path: "/auto-emails/:companyId/campaigns/:campaignId/email-queue/:status", component: EmailQueue },
   { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
-  { path: "/auto-emails/:companyId/campaigns/:marketId/add", component: AddCampaign },
+  { path: "/auto-emails/:companyId/campaigns/add", component: AddCampaign },
   { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
   { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
   { path: "/auto-emails/:companyId/templates/add", component: AddEditTemplates },

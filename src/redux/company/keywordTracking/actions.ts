@@ -42,6 +42,11 @@ export const performBulkActionKeywords = (companyId: string | number, action: st
     payload: { companyId, action, ids }
 });
 
+export const getAsinPerformance = (companyId: string | number, filters?: any) => ({
+    type: KeywordTrackingTypes.GET_ASINPERFORMANCE,
+    payload: { companyId, filters }
+});
+
 export const resetkeywordTracking = () => ({
     type: KeywordTrackingTypes.RESET
 })

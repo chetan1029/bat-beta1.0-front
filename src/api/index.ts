@@ -775,6 +775,11 @@ function performBulkActionKeywords(companyId: number, action: string, ids: Array
     return api.create(`${baseUrl}`, { action, ids });
 }
 
+function getAsinPerformance(companyId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/asin-performance/`;
+    return api.get(`${baseUrl}`);
+}
+
 export {
     getRoles, getStatuses, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -807,5 +812,6 @@ export {
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getCampaignDashboard,
     getAmazonAccount, updateAmazonAccount,
-    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard, suggestKeywords
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard, suggestKeywords,
+    getAsinPerformance
 }

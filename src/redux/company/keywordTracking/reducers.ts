@@ -4,6 +4,7 @@ const INIT_STATE: any = {
     products: [],
     keywords: [],
     suggestedkeywords: [],
+    asinperformance: [],
 };
 
 
@@ -55,6 +56,13 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         bulkActionResponse: action.payload.data,
                         isBulkActionPerformed: true,
                         loading: false
+                    }
+                }
+                case KeywordTrackingTypes.GET_ASINPERFORMANCE: {
+                    return {
+                        ...state,
+                        asinperformance: action.payload.data,
+                        loading: false,
                     }
                 }
                 default:
@@ -109,6 +117,13 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case KeywordTrackingTypes.GET_ASINPERFORMANCE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -135,6 +150,8 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 loading: true
             }
         }
+        case KeywordTrackingTypes.GET_ASINPERFORMANCE:
+            return { ...state, loading: true };
 
         case KeywordTrackingTypes.RESET: {
             return {
@@ -144,6 +161,7 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 isKeywordsCreated: false,
                 createKeywordsError: null,
                 keywords: null,
+                asinperformance: null,
                 error: null,
                 updateError: null,
                 isBulkActionPerformed: false

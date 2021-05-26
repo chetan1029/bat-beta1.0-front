@@ -5,36 +5,36 @@ import { default as dayjs } from 'dayjs';
 import classNames from "classnames";
 
 
-interface OverallChartProps {
+interface OrderChartProps {
     data: any;
+    selectedCurrency: string;
     selectedPeriod: string;
     changePeriod: any;
 }
 
-const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps) => {
-    const series: Array<any> = [];
+const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: OrderChartProps) => {
 
-    if(Object.keys(data).length !== 0){
-      data.forEach((s) => {
-        const seriesData: Array<any> = [];
-        const seriesName: Array<any> = [];
-        const data_b = s["data"]
-        for (const d in data_b) {
-          seriesData.push([d, data_b[d]]);
-        }
-        seriesName["name"] = s["name"]
-        seriesName["data"] = seriesData
-        series.push(seriesName)
-      })
+    const getFormmater = () => {
+        const cFormatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: selectedCurrency,
+            maximumFractionDigits: 2
+        });
+        return cFormatter;
     }
-    console.log(series)
 
-    // const series = [
-    //     {
-    //         name: "Visibility Score",
-    //         data: seriesData
-    //     }
-    // ];
+    const seriesData: Array<any> = [];
+
+    for (const d in data) {
+        seriesData.push([d, data[d]]);
+    }
+
+    const series = [
+        {
+            name: "Amount",
+            data: seriesData
+        }
+    ];
 
     const options = {
         chart: {
@@ -67,7 +67,7 @@ const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps)
         yaxis: {
             labels: {
                 formatter: (value, timestamp, opts) => {
-                    return value ? value : "";
+                    return value ? getFormmater().format(value) : "";
                 }
             }
         },
@@ -77,7 +77,7 @@ const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps)
             },
             y: {
                 formatter: (value) => {
-                    return value ? value : "";
+                    return value ? getFormmater().format(value) : "";
                 }
             }
         },
@@ -127,4 +127,4 @@ const OverallChart = ({ data, selectedPeriod, changePeriod }: OverallChartProps)
     </>;
 }
 
-export default OverallChart;
+export default OrderChart;

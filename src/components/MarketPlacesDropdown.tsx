@@ -14,9 +14,11 @@ interface MarketPlacesDropdownProps {
     className?: any;
     isSingle?: boolean;
     companyId: any;
+    showAll?: boolean;
+    isClearable?: boolean;
 }
 
-const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, isSingle, companyId }: MarketPlacesDropdownProps) => {
+const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, isSingle, showAll, isClearable, companyId }: MarketPlacesDropdownProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -31,10 +33,12 @@ const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, i
 
     let marketOpts: Array<any> = [];
 
-    marketOpts.push({
-        label: "All",
-        value: "all"
-    });
+    if (showAll){
+      marketOpts.push({
+          label: "All",
+          value: "all"
+      });
+    }
 
     for (const market of markets.filter(m => m['status'] === 'active')) {
         marketOpts.push({
@@ -50,7 +54,7 @@ const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, i
             value={value}
             onChange={onChange}
             isMulti={!isSingle}
-            isClearable={true}
+            isClearable={isClearable}
             className={classNames("react-select", "react-select-regular", className)}
             classNamePrefix="react-select"
         />

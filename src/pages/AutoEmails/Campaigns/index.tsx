@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Table, Button } from "react-bootstrap";
-import { useHistory, withRouter } from "react-router-dom";
+import { useHistory, withRouter, Link } from "react-router-dom";
 import Icon from "../../../components/Icon";
 import Flag from 'react-flagkit';
 import { useTranslation } from 'react-i18next';
@@ -144,7 +144,14 @@ const Campaigns = (props: CampaignsProps) => {
                             <h1 className="m-0">{t('Manage Campaigns')}</h1>
                         </div>
                     </Col>
-                    
+                    <Col className="text-right">
+                      <Link
+                      className="btn btn-primary"
+                        to={`/auto-emails/${companyId}/campaigns/add`}
+                      >
+                        {t("Create a Campaign")}
+                      </Link>
+                    </Col>
                 </Row>
             </div>
             { loggedInUser['first_login'] ?
