@@ -106,6 +106,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const [search, setSearch] = useState<any>({
     'productkeyword__amazonproduct': productId,
     'date': dayjs(currentdate).format('YYYY-MM-DD'),
+    'limit': 10000,
   });
 
   const getDates = useCallback((period: string) => {
@@ -155,6 +156,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     const dateFormat = 'YYYY-MM-DD';
 
     filters["productkeyword__amazonproduct"] = productId;
+    filters["limit"] = 10000;
 
     if (dates) {
       const [start, end] = dates;
