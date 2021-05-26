@@ -15,7 +15,7 @@ import { getCampaignDashboard, getAsinPerformance } from "../../redux/actions";
 import { CURRENCIES } from "../../constants";
 
 
-import OrderChart from "./OrderChart";
+import OrderChart from "../KeywordTracking/OrderChart";
 
 interface DashboardProps {
   match?: any;
@@ -123,7 +123,7 @@ const Dashboard = (props: DashboardProps) => {
           </div>
         </Col>
         <Col></Col>
-        <Col sm={3} >
+        <Col sm={2} >
           <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
             onChange={onMarketChange}
             className=""

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Table } from "react-bootstrap";
+import { Row, Col, Table, Card } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
 import Icon from "../../components/Icon";
 import { useTranslation } from 'react-i18next';
@@ -14,13 +14,15 @@ import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
 import OverallChart from "./OverallChart";
-
+import OrderChart from "./OrderChart";
+import { CURRENCIES } from "../../constants";
 //actions
 import {
     getMarketPlaces,
     getKtproducts,
     getMembershipPlan,
     getKeywordTrackingDashboard,
+    getCampaignDashboard,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -41,10 +43,12 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     const [errorMsg, setErrorMsg] = useState<any>(null);
 
     const [selectedPeriod, setSelectedPeriod] = useState('1m');
-    const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
+    const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all', icon: ''});
 
     const [startDate, setStartDate] = useState<any>(null);
     const [endDate, setEndDate] = useState<any>(null);
+
+    const [selectedCurrency, setSelectedCurrency] = useState({label: CURRENCIES['USD'], value: 'USD'});
 
     useEffect(() => {
         const params = new URLSearchParams(queryParam);
@@ -62,7 +66,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, products, keywordTrackingDashboard, markets, isMarketsFetched } = useSelector((state: any) => ({
+    const { loading, products, keywordTrackingDashboard, markets, isMarketsFetched, salesChartData } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         products: state.Company.KeywordTracking.products,
@@ -70,6 +74,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
         keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
+        salesChartData: state.Dashboard.campaignDashboard,
 
         markets: state.MarketPlaces.markets,
         isMarketsFetched: state.MarketPlaces.isMarketsFetched,
@@ -119,15 +124,17 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         filters['marketplace'] = market['value'];
       }
       dispatch(getKeywordTrackingDashboard(companyId, filters));
+      dispatch(getCampaignDashboard(companyId, filters));
     }, [dispatch, companyId, getDates, selectedPeriod]);
 
     useEffect(() => {
       if (isMarketsFetched) {
         const activeMarkets = markets ? markets.filter(m => m['status'] === 'active'): [];
         if (activeMarkets && activeMarkets.length) {
-          onMarketChange({label: t('Amazon') + " " + activeMarkets[0]['country'], value: activeMarkets[0]['id']});
+          onMarketChange({label: t('Amazon') + " " + activeMarkets[0]['country'], value: activeMarkets[0]['id'], icon: activeMarkets[0]['country']});
         } else {
           dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
+          dispatch(getCampaignDashboard(companyId, {...getDates(selectedPeriod)}));
         }
       }
     }, [dispatch, markets, getDates, t, companyId, selectedPeriod, onMarketChange, isMarketsFetched]);
@@ -148,6 +155,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         filters['marketplace'] = selectedMarket['value'];
       }
       dispatch(getKeywordTrackingDashboard(companyId, filters));
+      dispatch(getCampaignDashboard(companyId, filters));
     }
 
     const onDateChange = (dates: any) => {
@@ -163,11 +171,13 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
           filters['start_date'] = dayjs(start).format(dateFormat);
           filters['end_date'] = dayjs(end).format(dateFormat);
           dispatch(getKeywordTrackingDashboard(companyId, filters));
+          dispatch(getCampaignDashboard(companyId, filters));
         }
       } else {
         setStartDate(null);
         setEndDate(null);
         dispatch(getKeywordTrackingDashboard(companyId, filters));
+        dispatch(getCampaignDashboard(companyId, filters));
       }
     }
 
@@ -229,18 +239,30 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                     </Col>
                 </Row>
             </div>
-
+            <Card>
+              <Card.Body className="mb-4">
                     <div>
                         <div>
                             <Row className="mt-1 mb-3">
-                              <Col lg={12}>
+                              <Col lg={4}>
+                                <h4>Keyword visibility</h4>
+                                {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard : {}} changePeriod={onPeriodChange}
+                                  selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+                              </Col>
+                              <Col lg={4}>
+                                <h4>Sales</h4>
+                                {!loading ? <OrderChart data={salesChartData ? salesChartData['data'] : {}} changePeriod={onPeriodChange}
+                                  selectedCurrency={selectedCurrency['value']} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+                              </Col>
+                              <Col lg={4}>
+                                <h4>Session and page views</h4>
                                 {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard : {}} changePeriod={onPeriodChange}
                                   selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
                               </Col>
                             </Row>
                             <Row>
                                 <Col lg={12}>
-                                    
+
                                     <div className={"list-view"}>
                                         <Table>
                                             <thead>
@@ -281,7 +303,10 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                                 </Col>
                             </Row>
                         </div>
-                    </div></>}
+                    </div>
+                    </Card.Body>
+                  </Card>
+                </>}
 
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
