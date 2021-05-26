@@ -14,11 +14,11 @@ export interface MenuItemProp {
 const getMenuItems = (companyId: string, vendorCategories: any, salesCategories: any) => {
 
     let menuItems: Array<MenuItemProp> = [
-        { name: 'Dashboard', url: `/settings/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
+        { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'dashboard' },
         {
           name: 'CustomerCampaigns', url: ``, icon: 'mail2', label: 'Customer Campaigns', id: 'customercampaigns',
           children: [
-            { name: 'Dashboard', url: `/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'autoemail-dashboard', parentId: 'customercampaigns' },
+            { name: 'Dashboard', url: `/auto-emails/dashboard/${companyId}`, icon: 'home', label: 'Dashboard', id: 'autoemail-dashboard', parentId: 'customercampaigns' },
             { name: 'CraeteACampaign', url: `/auto-emails/${companyId}/campaigns/add`, icon: 'add', label: 'Create a Campaign', id: 'create_a_campaigns', parentId: 'customercampaigns' },
             { name: 'ManageCampaigns', url: `/auto-emails/${companyId}/campaigns`, icon: 'mail2', label: 'Manage Campaigns', id: 'manage_campaigns', parentId: 'customercampaigns' },
             { name: 'ManageTemplates', url: `/auto-emails/${companyId}/templates`, icon: 'mail', label: 'Manage Templates', id: 'manage_templates', parentId: 'customercampaigns' }

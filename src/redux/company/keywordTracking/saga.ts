@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getKtproducts, getKtproduct, getKeywordranks, createKeywords as addKeywords, performBulkActionKeywords, suggestKeywords } from "../../../api/index";
+import { getKtproducts, getKtproduct, getKeywordranks, createKeywords as addKeywords, performBulkActionKeywords, suggestKeywords, getAsinPerformance } from "../../../api/index";
 
 import { keywordTrackingApiResponseError, keywordTrackingApiResponseSuccess } from "./actions";
 import { KeywordTrackingTypes } from './constants';
@@ -67,6 +67,15 @@ function* performBulkAction({ payload: { companyId, action, ids } }: any) {
 	}
 }
 
+function* getAllAsinPerformance({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getAsinPerformance, companyId, filters);
+        yield put(keywordTrackingApiResponseSuccess(KeywordTrackingTypes.GET_ASINPERFORMANCE, response.data));
+    } catch (error) {
+        yield put(keywordTrackingApiResponseError(KeywordTrackingTypes.GET_ASINPERFORMANCE, error));
+    }
+}
+
 export function* watchGetKtproducts() {
     yield takeEvery(KeywordTrackingTypes.GET_KTPRODUCTS, getAllKtproducts)
 }
@@ -91,6 +100,10 @@ export function* watchPerformBulkAction() {
 	yield takeEvery(KeywordTrackingTypes.PERFORM_BULK, performBulkAction);
 }
 
+export function* watchGetAsinPerformanceAction() {
+	yield takeEvery(KeywordTrackingTypes.GET_ASINPERFORMANCE, getAllAsinPerformance);
+}
+
 function* keywordTrackingSaga() {
     yield all([
         fork(watchGetKtproducts),
@@ -98,7 +111,8 @@ function* keywordTrackingSaga() {
         fork(watchGetKeywordranks),
         fork(watchCreateKeywords),
         fork(watchGetSuggestKeywords),
-        fork(watchPerformBulkAction)
+        fork(watchPerformBulkAction),
+        fork(watchGetAsinPerformanceAction)
     ]);
 }
 
