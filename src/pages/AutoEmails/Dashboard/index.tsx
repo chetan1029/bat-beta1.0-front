@@ -119,7 +119,18 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
             <h1 className="m-0">Dashboard</h1>
           </div>
         </Col>
-        <Col className="text-right"></Col>
+        <Col></Col>
+        <Col sm={2}>
+            <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
+              onChange={onMarketChange}
+              className=""
+              value={selectedMarket}
+              isSingle={true}
+              companyId={companyId}
+              showAll={true}
+              isClearable={true}
+               />
+          </Col>
       </Row>
     </div>
 
@@ -129,21 +140,14 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
 
         <div>
           <div className="px-2">
-            <Row className="mt-0 mb-3">
-            <Col lg={3}>
-                <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
-                  onChange={onMarketChange}
-                  className=""
-                  value={selectedMarket}
-                  isSingle={true}
-                  companyId={companyId}
-                  showAll={true}
-                  isClearable={true}
-                   />
-              </Col>
-            </Row>
             <Row className="mt-1 mb-3">
-              <Col lg={12}>
+              <Col lg={6}>
+                <h4>Sales</h4>
+                {!loading ? <OrderChart data={campaignDashboard ? campaignDashboard['data'] : {}} changePeriod={onPeriodChange}
+                  selectedCurrency={selectedCurrency['value']} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+              </Col>
+              <Col lg={6}>
+                <h4>Pages views and sessions</h4>
                 {!loading ? <OrderChart data={campaignDashboard ? campaignDashboard['data'] : {}} changePeriod={onPeriodChange}
                   selectedCurrency={selectedCurrency['value']} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
               </Col>
