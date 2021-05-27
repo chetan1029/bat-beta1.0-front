@@ -11,11 +11,14 @@ import Loader from "../../../components/Loader";
 import ToolTips from "../../../components/ToolTips"
 import CurrenciesDropdown from "../../../components/CurrenciesDropdown";
 import MarketPlacesDropdown from "../../../components/MarketPlacesDropdown";
-import { getCampaignDashboard } from "../../../redux/actions";
+import { getEmailChartData } from "../../../redux/actions";
 import { CURRENCIES } from "../../../constants";
 
 
-import OrderChart from "./OrderChart";
+import OverallChart from "../../Dashboard/OverallChart";
+
+//Plug-in's
+import DatePicker from 'react-datepicker';
 
 interface AutoEmailsDashboardProps {
   match?: any;
@@ -31,10 +34,13 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
   const [selectedCurrency, setSelectedCurrency] = useState({label: CURRENCIES['USD'], value: 'USD'});
   const [selectedPeriod, setSelectedPeriod] = useState('all');
   const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all', icon: ''});
+  const [startDate, setStartDate] = useState<any>(null);
+  const [endDate, setEndDate] = useState<any>(null);
+  const [filters, setFilters] = useState<any>(null);
 
-  const { loading, campaignDashboard } = useSelector((state: any) => ({
+  const { loading, emailChartData } = useSelector((state: any) => ({
     loading: state.Dashboard.loading,
-    campaignDashboard: state.Dashboard.campaignDashboard,
+    emailChartData: state.Dashboard.emailChartData,
   }));
 
   const getDates = useCallback((period: string) => {
@@ -66,30 +72,27 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getCampaignDashboard(companyId, {...getDates(selectedPeriod)}));
-  }, [dispatch, companyId, getDates, selectedPeriod, selectedCurrency]);
+    dispatch(getEmailChartData(companyId, filters));
+  }, [dispatch, companyId, getDates, filters]);
 
   const onPeriodChange = (period: string) => {
     setSelectedPeriod(period);
-    const filters = {...getDates(period)};
+    setFilters({...getDates(period)});
     if (selectedMarket) {
-      filters['marketplace'] = selectedMarket['value'];
+      setFilters({...filters,'marketplace':selectedMarket['value']});
     }
-    dispatch(getCampaignDashboard(companyId, filters));
   }
 
 
   const onMarketChange = (market: any) => {
     setSelectedMarket(market);
-    const filters = {...getDates(selectedPeriod)};
+    setFilters({...getDates(selectedPeriod)});
     if (market) {
-      filters['marketplace'] = market['value'];
+      setFilters({...filters,'marketplace':market['value']});
     }
-    dispatch(getCampaignDashboard(companyId, filters));
   }
 
-  const getAmount = (key: string) => {
-    const amt = campaignDashboard ? campaignDashboard[key] || 0 : 0;
+  const getAmount = (amt: any) => {
     const cFormatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: selectedCurrency['value'],
@@ -98,8 +101,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
     return cFormatter.format(amt);
   }
 
-  const getNumber = (key: string) => {
-    const amt = campaignDashboard ? campaignDashboard[key] || 0 : 0;
+  const getNumber = (amt: any) => {
     const cFormatter = new Intl.NumberFormat('en-US', {
       maximumFractionDigits: 2
     });
@@ -109,6 +111,34 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
   const openDetails = (status: any) => {
       history.push(`/auto-emails/${companyId}/email-queue/${status}`);
   }
+
+  const onDateChange = (dates: any) => {
+    const dateFormat = 'MM/DD/YYYY';
+  
+    if (dates) {
+      const [start, end] = dates;
+      setStartDate(start);
+      setEndDate(end);
+
+      if (start && end) {
+        setFilters({...filters, 'start_date': dayjs(start).format(dateFormat), 'end_date': dayjs(end).format(dateFormat)});
+      }
+    } else {
+      setStartDate(null);
+      setEndDate(null);
+      setFilters({...filters, 'start_date': null, 'end_date': null});
+    }
+  }
+
+  const getSelectdValue = () => {
+    const dateFormat = 'MM/DD/YYYY';
+    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : "";
+    if (dateStr && endDate) {
+      dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
+    }
+    return dateStr;
+  };
+
 
   return (<>
     <div className="py-4">
@@ -120,6 +150,29 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
           </div>
         </Col>
         <Col></Col>
+        <Col sm={2}>
+        <DatePicker
+              popperModifiers={{
+                  flip: {
+                      enabled: false
+                  },
+                  preventOverflow: {
+                      escapeWithReference: true
+                  }
+              }}
+              selectsRange={true}
+              placeholderText={'Date Range'}
+              className={"form-control"}
+              startDate={startDate}
+              endDate={endDate}
+              onChange={onDateChange}
+              id="FilterDate"
+              isClearable={true}
+              shouldCloseOnSelect={false}
+              value={getSelectdValue()}
+              selected={startDate}
+          />
+        </Col>
         <Col sm={2}>
             <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
               onChange={onMarketChange}
@@ -134,52 +187,16 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
       </Row>
     </div>
 
-    <Card>
-      <Card.Body className="mb-4">
-        {loading ? <Loader /> : null}
+  {loading ? <Loader /> : null}
 
         <div>
           <div className="px-2">
             <Row className="mt-1 mb-3">
               <Col lg={6}>
-                {!loading ? <OrderChart data={campaignDashboard ? campaignDashboard['data'] : {}} changePeriod={onPeriodChange}
-                  selectedCurrency={selectedCurrency['value']} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+              {!loading ? <OverallChart data={emailChartData && emailChartData.chartData ? emailChartData.chartData : {}} changePeriod={onPeriodChange}
+                selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
               </Col>
               <Col lg={6}>
-                <Row className="mb-3">
-                  <Col>
-                    <Card className="card-stats mb-2">
-                      <Card.Body className="">
-                        <p className="header">
-                        {t('Sales')}
-                        <span className="float-right">
-                          <ToolTips placement="auto" label="" message="Message on hover over" />
-                        </span>
-                        </p>
-                        <p className="sub-header mt-1">
-                          {getAmount('total_sales')}
-                          {/* <small className="text-success"><i className="up"></i>10%</small> */}
-                        </p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                  <Col>
-                    <Card className="card-stats mb-2">
-                      <Card.Body className="">
-                        <p className="header">
-                        {t('Orders')}
-                        <span className="float-right">
-                          <ToolTips placement="auto" label="" message="Message on hover over" />
-                        </span>
-                        </p>
-                        <p className="sub-header mt-1">
-                          {getNumber('total_orders')}
-                          {/* <small className="text-danger"><i className="down"></i>10%</small> */}
-                        </p>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                </Row>
                 <Row className="mb-3">
                   <Col>
                     <Card className="card-stats mb-2">
@@ -191,7 +208,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </span>
                         </p>
                         <p className="sub-header mt-1">
-                          {getNumber('total_email_sent')}
+                          { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_email_sent"] || 0 : 0)}
                           {/* <small className="text-success"><i className="up"></i>10%</small> */}
                         </p>
                       </Card.Body>
@@ -208,7 +225,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </span>
                         </p>
                         <p className="sub-header mt-1">
-                          {getNumber('total_email_in_queue')}
+                          { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_email_in_queue"] || 0 : 0)}
                           {/* <small className="text-danger"><i className="down"></i>10%</small> */}
                         </p>
                       </Card.Body>
@@ -227,7 +244,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </span>
                         </p>
                         <p className="sub-header mt-1">
-                          {getNumber('total_opt_out_email')}
+                          { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_opt_out_email"] || 0 : 0)}
                           {/* <small className="text-danger"><i className="down"></i>10%</small> */}
                         </p>
                       </Card.Body>
@@ -244,7 +261,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </span>
                         </p>
                         <p className="sub-header mt-1">
-                          {getNumber('opt_out_rate')}%
+                          { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate"] || 0 : 0)}%
                           {/* <small className="text-danger"><i className="down"></i>10%</small> */}
                         </p>
                       </Card.Body>
@@ -255,8 +272,6 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
             </Row>
           </div>
         </div>
-      </Card.Body>
-    </Card>
   </>);
 }
 
