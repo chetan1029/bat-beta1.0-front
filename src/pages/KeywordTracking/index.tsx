@@ -241,7 +241,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
             </div>
             <div>
                         <div>
-                            <Row className="mt-1 mb-3">
+                            <Row className="mb-3">
                               <Col lg={4}>
                                 <h4>Keyword visibility</h4>
                                 {!loading ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}} changePeriod={onPeriodChange}
@@ -249,7 +249,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                               </Col>
                               <Col lg={4}>
                                 <h4>Sales</h4>
-                                {!loading ? <OverallChart data={salesChartData ? salesChartData : {}} changePeriod={onPeriodChange}
+                                {!loading ? <OverallChart data={salesChartData && salesChartData.chartData ? salesChartData.chartData : {}} changePeriod={onPeriodChange}
                                   selectedCurrency={selectedCurrency['value']} extraYaxis={true} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
                               </Col>
                               <Col lg={4}>

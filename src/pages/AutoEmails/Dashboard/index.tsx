@@ -114,7 +114,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
 
   const onDateChange = (dates: any) => {
     const dateFormat = 'MM/DD/YYYY';
-  
+
     if (dates) {
       const [start, end] = dates;
       setStartDate(start);
@@ -126,7 +126,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
     } else {
       setStartDate(null);
       setEndDate(null);
-      setFilters({...filters, 'start_date': null, 'end_date': null});
+      setFilters({...filters, 'start_date': "", 'end_date': ""});
     }
   }
 

@@ -128,6 +128,7 @@ const Dashboard = (props: DashboardProps) => {
     } else {
       setStartDate(null);
       setEndDate(null);
+      setFilters({...filters, 'start_date': "", 'end_date': ""});
     }
   }
 
