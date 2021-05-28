@@ -350,8 +350,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
           <div >
             <Row className="mt-1 mb-3">
               <Col lg={12}>
-                {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}} changePeriod={onPeriodChange}
-                  selectedPeriod={selectedPeriod} /> : <ProductKeywordChart data={productKeywordData ? productKeywordData : {}} changePeriod={onPeriodChange}
+                {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}}
+                  /> : <ProductKeywordChart data={productKeywordData ? productKeywordData : {}} changePeriod={onPeriodChange}
                     selectedPeriod={selectedPeriod} />}
               </Col>
             </Row>

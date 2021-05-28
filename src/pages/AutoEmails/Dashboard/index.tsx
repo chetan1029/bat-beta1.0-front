@@ -193,8 +193,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
           <div className="px-2">
             <Row className="mt-1 mb-3">
               <Col lg={6}>
-              {!loading ? <OverallChart data={emailChartData && emailChartData.chartData ? emailChartData.chartData : {}} changePeriod={onPeriodChange}
-                selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+              {!loading ? <OverallChart data={emailChartData && emailChartData.chartData ? emailChartData.chartData : {}} />: <div style={{height: 350}}></div>}
               </Col>
               <Col lg={6}>
                 <Row className="mb-3">

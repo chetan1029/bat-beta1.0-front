@@ -11,6 +11,7 @@ import Loader from "../../components/Loader";
 import ToolTips from "../../components/ToolTips"
 import CurrenciesDropdown from "../../components/CurrenciesDropdown";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
+import ComparePercentage from "../../components/ComparePercentage";
 import { getSalesChartData, getAsinPerformance, getEmailChartData } from "../../redux/actions";
 import { CURRENCIES } from "../../constants";
 
@@ -35,7 +36,6 @@ const Dashboard = (props: DashboardProps) => {
   const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
   const [startDate, setStartDate] = useState<any>(null);
   const [endDate, setEndDate] = useState<any>(null);
-  const [filters, setFilters] = useState<any>(null);
 
   const { loading, salesChartData, emailChartData, asinperformance } = useSelector((state: any) => ({
     loading: state.Dashboard.loading,
@@ -44,33 +44,20 @@ const Dashboard = (props: DashboardProps) => {
     asinperformance: state.Company.KeywordTracking.asinperformance,
   }));
 
-  const getDates = useCallback((period: string) => {
+  const getDates = useCallback(() => {
     const today = new Date();
 
-    switch (period) {
-      case '1m':
-        return {
-          start_date: dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY'),
-          end_date: dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
-        }
-      case '6m':
-        let dt = new Date();
-        dt.setMonth(today.getMonth() - 6);
-        return {
-          start_date: dayjs(dt).format('MM/DD/YYYY'),
-          end_date: dayjs(today).format('MM/DD/YYYY')
-        }
-      case '1y':
-        let dt2 = new Date();
-        dt2.setMonth(today.getMonth() - 12);
-        return {
-          start_date: dayjs(dt2).format('MM/DD/YYYY'),
-          end_date: dayjs(today).format('MM/DD/YYYY')
-        }
-      default:
-        return {}
+    const start_date = dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY');
+    const end_date = dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
+
+    return {
+      start_date: start_date,
+      end_date: end_date
     }
   }, []);
+
+  const [filters, setFilters] = useState<any>({...getDates()});
+
 
   useEffect(() => {
     dispatch(getSalesChartData(companyId, filters));
@@ -78,18 +65,9 @@ const Dashboard = (props: DashboardProps) => {
     dispatch(getAsinPerformance(companyId, filters));
   }, [dispatch, companyId, getDates, filters]);
 
-  const onPeriodChange = (period: string) => {
-    setSelectedPeriod(period);
-    setFilters({...getDates(period)});
-    if (selectedMarket) {
-      setFilters({...filters,'marketplace':selectedMarket['value']});
-    }
-  }
-
 
   const onMarketChange = (market: any) => {
     setSelectedMarket(market);
-    setFilters({...getDates(selectedPeriod)});
     if (market) {
       setFilters({...filters,'marketplace':market['value']});
     }
@@ -110,6 +88,7 @@ const Dashboard = (props: DashboardProps) => {
     });
     return cFormatter.format(amt);
   }
+
 
   const openDetails = (status: any) => {
       history.push(`/auto-emails/${companyId}/email-queue/${status}`);
@@ -195,8 +174,8 @@ const Dashboard = (props: DashboardProps) => {
           <div className="px-2">
             <Row className="mt-1 mb-3">
               <Col lg={6}>
-                { !loading ? <OverallChart data={salesChartData && salesChartData.chartData ? salesChartData.chartData : {}} changePeriod={onPeriodChange}
-                  selectedCurrency={selectedCurrency['value']} extraYaxis={true} selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div> }
+                { !loading ? <OverallChart data={salesChartData && salesChartData.chartData ? salesChartData.chartData : {}}
+                  selectedCurrency={selectedCurrency['value']} extraYaxis={true} />: <div style={{height: 350}}></div> }
 
                   <Row className="mt-3">
                     <Col>
@@ -210,7 +189,7 @@ const Dashboard = (props: DashboardProps) => {
                           </p>
                           <p className="sub-header mt-1">
                             { getAmount(salesChartData && salesChartData.stats ? salesChartData.stats["total_sales"] || 0 : 0)}
-                            {/* <small className="text-success"><i className="up"></i>10%</small> */}
+                            <ComparePercentage value={ salesChartData && salesChartData.stats ? salesChartData.stats["total_sales_percentage"] || 0 : 0 } />
                           </p>
                         </Card.Body>
                       </Card>
@@ -226,7 +205,7 @@ const Dashboard = (props: DashboardProps) => {
                           </p>
                           <p className="sub-header mt-1">
                             { getNumber(salesChartData && salesChartData.stats ? salesChartData.stats["total_orders"] || 0 : 0)}
-                            {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                            <ComparePercentage value={ salesChartData && salesChartData.stats ? salesChartData.stats["total_orders_percentage"] || 0 : 0 } />
                           </p>
                         </Card.Body>
                       </Card>
