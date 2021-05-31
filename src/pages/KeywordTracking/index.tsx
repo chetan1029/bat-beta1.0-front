@@ -202,32 +202,31 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
                         </div>
                     </Col>
-                    <Col className="text-right" md={3}>
-                      <Row>
-                        <Col>
-                            <DatePicker
-                                popperModifiers={{
-                                    flip: {
-                                        enabled: false
-                                    },
-                                    preventOverflow: {
-                                        escapeWithReference: true
-                                    }
-                                }}
-                                selectsRange={true}
-                                placeholderText={'Date Range'}
-                                className={"form-control"}
-                                startDate={startDate}
-                                endDate={endDate}
-                                onChange={onDateChange}
-                                id="FilterDate"
-                                isClearable={true}
-                                shouldCloseOnSelect={false}
-                                value={getSelectdValue()}
-                                selected={startDate}
-                            />
+                    <Col></Col>
+                    <Col sm={2}>
+                          <DatePicker
+                              popperModifiers={{
+                                  flip: {
+                                      enabled: false
+                                  },
+                                  preventOverflow: {
+                                      escapeWithReference: true
+                                  }
+                              }}
+                              selectsRange={true}
+                              placeholderText={'Date Range'}
+                              className={"form-control"}
+                              startDate={startDate}
+                              endDate={endDate}
+                              onChange={onDateChange}
+                              id="FilterDate"
+                              isClearable={true}
+                              shouldCloseOnSelect={false}
+                              value={getSelectdValue()}
+                              selected={startDate}
+                          />
                         </Col>
-                        <Col>
+                        <Col sm={2}>
                           <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
                             onChange={onMarketChange}
                             className="text-left"
@@ -235,8 +234,6 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                             isSingle={true}
                             companyId={companyId} />
                         </Col>
-                      </Row>
-                    </Col>
                 </Row>
             </div>
             <div>

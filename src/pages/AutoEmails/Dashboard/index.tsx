@@ -13,7 +13,7 @@ import CurrenciesDropdown from "../../../components/CurrenciesDropdown";
 import MarketPlacesDropdown from "../../../components/MarketPlacesDropdown";
 import { getEmailChartData } from "../../../redux/actions";
 import { CURRENCIES } from "../../../constants";
-
+import ComparePercentage from "../../../components/ComparePercentage";
 
 import OverallChart from "../../Dashboard/OverallChart";
 
@@ -208,7 +208,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </p>
                         <p className="sub-header mt-1">
                           { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_email_sent"] || 0 : 0)}
-                          {/* <small className="text-success"><i className="up"></i>10%</small> */}
+                          <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["email_sent_percentage"] || 0 : 0 } />
                         </p>
                       </Card.Body>
                     </Card>
@@ -225,7 +225,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </p>
                         <p className="sub-header mt-1">
                           { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_email_in_queue"] || 0 : 0)}
-                          {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                          <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["email_in_queue_percentage"] || 0 : 0 } />
                         </p>
                       </Card.Body>
                     </Card>
@@ -244,7 +244,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </p>
                         <p className="sub-header mt-1">
                           { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_opt_out_email"] || 0 : 0)}
-                          {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                          <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_email_percentage"] || 0 : 0 } />
                         </p>
                       </Card.Body>
                     </Card>
@@ -261,7 +261,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
                         </p>
                         <p className="sub-header mt-1">
                           { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate"] || 0 : 0)}%
-                          {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                          <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate_percentage"] || 0 : 0 } />
                         </p>
                       </Card.Body>
                     </Card>

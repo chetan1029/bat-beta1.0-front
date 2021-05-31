@@ -10,7 +10,7 @@ const ComparePercentage = ({ value }: ComparePercentageProps) => {
 
     return <>
     {value ?
-      <small className={perClass}><i className={perState}></i>{value}%</small>
+      <span className={"percentage-change"}><small className={perClass}><i className={perState}></i>{value}%</small></span>
       : null
     }
     </>;

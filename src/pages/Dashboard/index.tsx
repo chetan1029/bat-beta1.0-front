@@ -223,7 +223,7 @@ const Dashboard = (props: DashboardProps) => {
                           </p>
                           <p className="sub-header mt-1">
                             { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["total_email_sent"] || 0 : 0)}
-                            {/* <small className="text-success"><i className="up"></i>10%</small> */}
+                            <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["email_sent_percentage"] || 0 : 0 } />
                           </p>
                         </Card.Body>
                       </Card>
@@ -240,7 +240,7 @@ const Dashboard = (props: DashboardProps) => {
                           </p>
                           <p className="sub-header mt-1">
                             { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate"] || 0 : 0)}%
-                            {/* <small className="text-danger"><i className="down"></i>10%</small> */}
+                            <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate_percentage"] || 0 : 0 } />
                           </p>
                         </Card.Body>
                       </Card>
@@ -263,7 +263,10 @@ const Dashboard = (props: DashboardProps) => {
                         <tr>
                             <td>{key+1}</td>
                             <td>{best.asin}</td>
-                            <td>{best.sum_visibility_score}</td>
+                            <td>
+                            {best.visibility_score}
+                            <ComparePercentage value={ best.visibility_score_per ? best.visibility_score_per : 0 } />
+                            </td>
                         </tr>
                       )}
                     </tbody>
@@ -284,7 +287,10 @@ const Dashboard = (props: DashboardProps) => {
                       <tr>
                           <td>{key+1}</td>
                           <td>{worst.asin}</td>
-                          <td>{worst.sum_visibility_score}</td>
+                          <td>
+                          {worst.visibility_score}
+                          <ComparePercentage value={ worst.visibility_score_per ? worst.visibility_score_per : 0 } />
+                          </td>
                       </tr>
                     )}
                     </tbody>
@@ -305,7 +311,10 @@ const Dashboard = (props: DashboardProps) => {
                       <tr>
                           <td>{key+1}</td>
                           <td>{trending.asin}</td>
-                          <td>{trending.sum_visibility_score}</td>
+                          <td>
+                          {trending.visibility_score}
+                          <ComparePercentage value={ trending.visibility_score_per ? trending.visibility_score_per : 0 } />
+                          </td>
                       </tr>
                     )}
                     </tbody>
