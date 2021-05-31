@@ -717,8 +717,8 @@ function disConnectMarketPlace(companyId: number, marketId: string | number) {
 }
 
 
-function getCampaignDashboard(companyId: number, filters?: any) {
-    const baseUrl = `/companies/${companyId}/email-campaign-dashboard/`;
+function getEmailChartData(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/email-chart-data/`;
     return api.get(`${baseUrl}`, filters);
 }
 
@@ -735,6 +735,12 @@ function updateAmazonAccount(companyId: number, id: number, data: any) {
 }
 
 /* keyword tracking */
+
+function getSalesChartData(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/sales-chart-data/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
 function getKtproducts(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/keyword-tracking-products/`;
     return api.get(`${baseUrl}`, params);
@@ -750,12 +756,12 @@ function getKeywordranks(companyId: number, params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
-function getKeywordTrackingDashboard(companyId: number, filters?: any) {
+function getKeywordTrackingData(companyId: number, filters?: any) {
     const baseUrl = `/companies/${companyId}/keyword-tracking/dashboard/`;
     return api.get(`${baseUrl}`, filters);
 }
 
-function getProductKeywordDashboard(companyId: number, keywordId: number, filters?: any) {
+function getProductKeywordData(companyId: number, keywordId: number, filters?: any) {
     const baseUrl = `/companies/${companyId}/keyword-tracking/${keywordId}/dashboard/`;
     return api.get(`${baseUrl}`, filters);
 }
@@ -777,7 +783,7 @@ function performBulkActionKeywords(companyId: number, action: string, ids: Array
 
 function getAsinPerformance(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/asin-performance/`;
-    return api.get(`${baseUrl}`);
+    return api.get(`${baseUrl}`, params);
 }
 
 export {
@@ -810,8 +816,8 @@ export {
     getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
-    getCampaignDashboard,
+    getSalesChartData,
     getAmazonAccount, updateAmazonAccount,
-    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingDashboard, createKeywords, performBulkActionKeywords, getProductKeywordDashboard, suggestKeywords,
-    getAsinPerformance
+    getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingData, createKeywords, performBulkActionKeywords, getProductKeywordData, suggestKeywords,
+    getAsinPerformance, getEmailChartData
 }

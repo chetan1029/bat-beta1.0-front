@@ -12,17 +12,22 @@ export const dashboardApiResponseError = (actionType: string, error: string) => 
     payload: { actionType, error }
 });
 
-export const getCampaignDashboard = (companyId: string | number, filters?: any) => ({
-    type: DashboardTypes.GET_CAMPAIGN_DATA,
+export const getSalesChartData = (companyId: string | number, filters?: any) => ({
+    type: DashboardTypes.GET_SALESCHART_DATA,
     payload: { companyId, filters }
 });
 
-export const getKeywordTrackingDashboard = (companyId: string | number, filters?: any) => ({
+export const getEmailChartData = (companyId: string | number, filters?: any) => ({
+    type: DashboardTypes.GET_EMAILCHART_DATA,
+    payload: { companyId, filters }
+});
+
+export const getKeywordTrackingData = (companyId: string | number, filters?: any) => ({
     type: DashboardTypes.GET_KEYWORDTRACKING_DATA,
     payload: { companyId, filters }
 });
 
-export const getProductKeywordDashboard = (companyId: string | number, keywordId: string | number, filters?: any) => ({
+export const getProductKeywordData = (companyId: string | number, keywordId: string | number, filters?: any) => ({
     type: DashboardTypes.GET_PRODUCTKEYWORD_DATA,
     payload: { companyId, keywordId, filters }
 });

@@ -5,14 +5,14 @@ import { default as dayjs } from 'dayjs';
 import classNames from "classnames";
 
 
-interface OrderChartProps {
+interface OverallChartProps {
     data: any;
-    selectedCurrency: string;
-    selectedPeriod: string;
-    changePeriod: any;
+    selectedCurrency?: string;
+    extraYaxis?: boolean;
 }
 
-const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: OrderChartProps) => {
+const OverallChart = ({ data, selectedCurrency, extraYaxis }: OverallChartProps) => {
+    const series: Array<any> = [];
 
     const getFormmater = () => {
         const cFormatter = new Intl.NumberFormat('en-US', {
@@ -23,18 +23,65 @@ const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: Or
         return cFormatter;
     }
 
-    const seriesData: Array<any> = [];
-
-    for (const d in data) {
-        seriesData.push([d, data[d]]);
+    if(Object.keys(data).length !== 0){
+      data.forEach((s) => {
+        const seriesData: Array<any> = [];
+        const seriesName: Array<any> = [];
+        const data_b = s["data"]
+        for (const d in data_b) {
+          seriesData.push([d, data_b[d]]);
+        }
+        seriesName["name"] = s["name"]
+        seriesName["data"] = seriesData
+        series.push(seriesName)
+      })
     }
 
-    const series = [
+    // const series = [
+    //     {
+    //         name: "Visibility Score",
+    //         data: seriesData
+    //     }
+    // ];
+
+    var yAxis: Array<any> = [];
+    if(extraYaxis){
+      yAxis = [
         {
-            name: "Amount",
-            data: seriesData
+            labels: {
+                formatter: (value, timestamp, opts) => {
+                    if(selectedCurrency){
+                      return value ? getFormmater().format(value) : "";
+                    }else{
+                      return value ? value : "";
+                    }
+                }
+            }
+        },
+        {
+            opposite: true,
+            labels: {
+                formatter: (value, timestamp, opts) => {
+                    return value ? value : "";
+                }
+            }
         }
-    ];
+      ]
+    }else{
+      yAxis = [
+        {
+            labels: {
+                formatter: (value, timestamp, opts) => {
+                    if(selectedCurrency){
+                      return value ? getFormmater().format(value) : "";
+                    }else{
+                      return value ? value : "";
+                    }
+                }
+            }
+        }
+      ]
+    }
 
     const options = {
         chart: {
@@ -64,20 +111,19 @@ const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: Or
                 }
             }
         },
-        yaxis: {
-            labels: {
-                formatter: (value, timestamp, opts) => {
-                    return value ? getFormmater().format(value) : "";
-                }
-            }
-        },
+        yaxis: yAxis,
         tooltip: {
             x: {
                 format: 'dd MMM yyyy'
             },
             y: {
-                formatter: (value) => {
+                formatter: (value, { series, seriesIndex, dataPointIndex, w }) => {
+                  const seriesName = w.globals.seriesNames[seriesIndex];
+                  if(selectedCurrency && seriesName.includes("Amount")){
                     return value ? getFormmater().format(value) : "";
+                  }else{
+                    return value ? value : "";
+                  }
                 }
             }
         },
@@ -99,21 +145,12 @@ const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: Or
         },
     };
 
-    const onChangePeriod = (period) => {
-        changePeriod(period);
-    }
 
     return <>
         <Row>
             <Col lg={12}>
                 <Card>
-                    <Card.Body className="p-0">
-                        <div className="mb-2 mt-3 ml-3">
-                            <Button variant={selectedPeriod === '1m' ? "primary" : "white"} id="one_month" onClick={() => onChangePeriod('1m')} className={classNames('mr-1', 'btn-chart')}>1M</Button>
-                            <Button variant={selectedPeriod === '6m' ? "primary" : "white"} id="six_month" onClick={() => onChangePeriod('6m')} className={classNames('mr-1', 'btn-chart')}>6M</Button>
-                            <Button variant={selectedPeriod === '1y' ? "primary" : "white"} id="one_year" onClick={() => onChangePeriod('1y')} className={classNames('mr-1', 'btn-chart')}>1Y</Button>
-                            <Button variant={selectedPeriod === 'all' ? "primary" : "white"} id="all" onClick={() => onChangePeriod('all')} className={classNames('mr-1', 'btn-chart')}>All</Button>
-                        </div>
+                    <Card.Body className="p-0 pt-3">
                         <Chart
                             options={options}
                             series={series}
@@ -127,4 +164,4 @@ const OrderChart = ({ data, selectedCurrency, selectedPeriod, changePeriod }: Or
     </>;
 }
 
-export default OrderChart;
+export default OverallChart;

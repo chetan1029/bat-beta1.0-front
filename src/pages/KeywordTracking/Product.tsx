@@ -14,7 +14,7 @@ import searchIcon from "../../assets/images/search_icon.svg";
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import AddKeywords from "./AddKeywords";
-import OverallChart from "./OverallChart";
+import OverallChart from "../Dashboard/OverallChart";
 import ProductKeywordChart from "./ProductKeywordChart";
 
 //actions
@@ -25,8 +25,8 @@ import {
   getKeywordranks,
   getMembershipPlan,
   performBulkActionKeywords,
-  getKeywordTrackingDashboard,
-  getProductKeywordDashboard,
+  getKeywordTrackingData,
+  getProductKeywordData,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -68,7 +68,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }, [queryParam]);
 
 
-  const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated, keywordTrackingDashboard, productKeywordDashboard, isBulkActionPerformed, isProductKeywordChartFetched } = useSelector((state: any) => ({
+  const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated, keywordTrackingData, productKeywordData, isBulkActionPerformed, isProductKeywordChartFetched } = useSelector((state: any) => ({
     loading: state.Company.KeywordTracking.loading,
     isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
     product: state.Company.KeywordTracking.product,
@@ -76,9 +76,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     keywordranks: state.Company.KeywordTracking.keywordranks,
     membershipPlan: state.Company.MembershipPlan.membershipPlan,
     isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
-    keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
+    keywordTrackingData: state.Dashboard.keywordTrackingData,
     isBulkActionPerformed: state.Company.KeywordTracking.isBulkActionPerformed,
-    productKeywordDashboard: state.Dashboard.productKeywordDashboard,
+    productKeywordData: state.Dashboard.productKeywordData,
     isProductKeywordChartFetched: state.Dashboard.isProductKeywordChartFetched,
   }));
 
@@ -141,7 +141,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   useEffect(() => {
     dispatch(getKtproduct(companyId, productId));
     dispatch(getMembershipPlan(companyId, { is_active: true }));
-    dispatch(getKeywordTrackingDashboard(companyId, { ...getDates(selectedPeriod), product_id: productId }));
+    dispatch(getKeywordTrackingData(companyId, { ...getDates(selectedPeriod), product_id: productId }));
   }, [dispatch, companyId, productId, getDates, selectedPeriod]);
 
   useEffect(() => {
@@ -188,7 +188,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     setSelectedPeriod(period);
     const filters = { ...getDates(period) };
     filters['product'] = productId;
-    dispatch(getKeywordTrackingDashboard(companyId, filters));
+    dispatch(getKeywordTrackingData(companyId, filters));
   }
 
   const handleSearchKeyDown = (event: any) => {
@@ -268,7 +268,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
 
   const showKeywordChart = (keywordrank: any) => {
-    dispatch(getProductKeywordDashboard(companyId, keywordrank.productkeyword.id, { ...getDates(selectedPeriod) }));
+    dispatch(getProductKeywordData(companyId, keywordrank.productkeyword.id, { ...getDates(selectedPeriod) }));
   }
 
   const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
@@ -350,8 +350,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
           <div >
             <Row className="mt-1 mb-3">
               <Col lg={12}>
-                {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard : {}} changePeriod={onPeriodChange}
-                  selectedPeriod={selectedPeriod} /> : <ProductKeywordChart data={productKeywordDashboard ? productKeywordDashboard : {}} changePeriod={onPeriodChange}
+                {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}}
+                  /> : <ProductKeywordChart data={productKeywordData ? productKeywordData : {}} changePeriod={onPeriodChange}
                     selectedPeriod={selectedPeriod} />}
               </Col>
             </Row>

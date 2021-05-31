@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import classNames from "classnames";
 import { useTranslation } from 'react-i18next';
-
+import Flag from 'react-flagkit';
 import { getMarketPlaces } from "../redux/actions";
 
 interface MarketPlacesDropdownProps {
@@ -17,6 +17,25 @@ interface MarketPlacesDropdownProps {
     showAll?: boolean;
     isClearable?: boolean;
 }
+
+const { Option } = components;
+const CustomSelectOption = props => (
+  <Option {...props}>
+    { props.data.icon ?
+    <Flag country={props.data.icon} className={"mr-1"} size={16} />
+    : "" }
+     {props.data.label}
+  </Option>
+);
+
+const CustomSelectValue = props => (
+  <div>
+    { props.data.icon ?
+      <Flag country={props.data.icon} className={"mr-1"} size={16} />
+      : "" }
+    {props.data.label}
+  </div>
+)
 
 const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, isSingle, showAll, isClearable, companyId }: MarketPlacesDropdownProps) => {
     const { t } = useTranslation();
@@ -36,6 +55,7 @@ const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, i
     if (showAll){
       marketOpts.push({
           label: "All",
+          icon: "",
           value: "all"
       });
     }
@@ -43,6 +63,7 @@ const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, i
     for (const market of markets.filter(m => m['status'] === 'active')) {
         marketOpts.push({
             label: t('Amazon') + " " + market['country'],
+            icon: market['country'],
             value: market['id']
         });
     }
@@ -51,6 +72,7 @@ const MarketPlacesDropdown = ({ placeholder, name, value, onChange, className, i
         <Select
             placeholder={placeholder}
             options={marketOpts}
+            components={{ Option: CustomSelectOption, SingleValue: CustomSelectValue }}
             value={value}
             onChange={onChange}
             isMulti={!isSingle}

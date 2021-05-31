@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Table } from "react-bootstrap";
+import { Row, Col, Table, Card } from "react-bootstrap";
 import { useHistory, withRouter } from "react-router-dom";
 import Icon from "../../components/Icon";
 import { useTranslation } from 'react-i18next';
@@ -13,14 +13,16 @@ import searchIcon from "../../assets/images/search_icon.svg";
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
-import OverallChart from "./OverallChart";
-
+import OverallChart from "../Dashboard/OverallChart";
+import OrderChart from "../Dashboard/OrderChart";
+import { CURRENCIES } from "../../constants";
 //actions
 import {
     getMarketPlaces,
     getKtproducts,
     getMembershipPlan,
-    getKeywordTrackingDashboard,
+    getKeywordTrackingData,
+    getSalesChartData,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -41,10 +43,12 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     const [errorMsg, setErrorMsg] = useState<any>(null);
 
     const [selectedPeriod, setSelectedPeriod] = useState('1m');
-    const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all'});
+    const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all', icon: ''});
 
     const [startDate, setStartDate] = useState<any>(null);
     const [endDate, setEndDate] = useState<any>(null);
+
+    const [selectedCurrency, setSelectedCurrency] = useState({label: CURRENCIES['USD'], value: 'USD'});
 
     useEffect(() => {
         const params = new URLSearchParams(queryParam);
@@ -62,14 +66,15 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, products, keywordTrackingDashboard, markets, isMarketsFetched } = useSelector((state: any) => ({
+    const { loading, products, keywordTrackingData, markets, isMarketsFetched, salesChartData } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         products: state.Company.KeywordTracking.products,
         redirectUri: state.MarketPlaces.redirectUri,
 
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
-        keywordTrackingDashboard: state.Dashboard.keywordTrackingDashboard,
+        keywordTrackingData: state.Dashboard.keywordTrackingData,
+        salesChartData: state.Dashboard.salesChartData,
 
         markets: state.MarketPlaces.markets,
         isMarketsFetched: state.MarketPlaces.isMarketsFetched,
@@ -118,16 +123,18 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
       if (market) {
         filters['marketplace'] = market['value'];
       }
-      dispatch(getKeywordTrackingDashboard(companyId, filters));
+      dispatch(getKeywordTrackingData(companyId, filters));
+      dispatch(getSalesChartData(companyId, filters));
     }, [dispatch, companyId, getDates, selectedPeriod]);
 
     useEffect(() => {
       if (isMarketsFetched) {
         const activeMarkets = markets ? markets.filter(m => m['status'] === 'active'): [];
         if (activeMarkets && activeMarkets.length) {
-          onMarketChange({label: t('Amazon') + " " + activeMarkets[0]['country'], value: activeMarkets[0]['id']});
+          onMarketChange({label: t('Amazon') + " " + activeMarkets[0]['country'], value: activeMarkets[0]['id'], icon: activeMarkets[0]['country']});
         } else {
-          dispatch(getKeywordTrackingDashboard(companyId, {...getDates(selectedPeriod)}));
+          dispatch(getKeywordTrackingData(companyId, {...getDates(selectedPeriod)}));
+          dispatch(getSalesChartData(companyId, {...getDates(selectedPeriod)}));
         }
       }
     }, [dispatch, markets, getDates, t, companyId, selectedPeriod, onMarketChange, isMarketsFetched]);
@@ -147,7 +154,8 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
       if (selectedMarket) {
         filters['marketplace'] = selectedMarket['value'];
       }
-      dispatch(getKeywordTrackingDashboard(companyId, filters));
+      dispatch(getKeywordTrackingData(companyId, filters));
+      dispatch(getSalesChartData(companyId, filters));
     }
 
     const onDateChange = (dates: any) => {
@@ -162,12 +170,14 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         if (start && end) {
           filters['start_date'] = dayjs(start).format(dateFormat);
           filters['end_date'] = dayjs(end).format(dateFormat);
-          dispatch(getKeywordTrackingDashboard(companyId, filters));
+          dispatch(getKeywordTrackingData(companyId, filters));
+          dispatch(getSalesChartData(companyId, filters));
         }
       } else {
         setStartDate(null);
         setEndDate(null);
-        dispatch(getKeywordTrackingDashboard(companyId, filters));
+        dispatch(getKeywordTrackingData(companyId, filters));
+        dispatch(getSalesChartData(companyId, filters));
       }
     }
 
@@ -192,32 +202,31 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
                         </div>
                     </Col>
-                    <Col className="text-right" md={3}>
-                      <Row>
-                        <Col>
-                            <DatePicker
-                                popperModifiers={{
-                                    flip: {
-                                        enabled: false
-                                    },
-                                    preventOverflow: {
-                                        escapeWithReference: true
-                                    }
-                                }}
-                                selectsRange={true}
-                                placeholderText={'Date Range'}
-                                className={"form-control"}
-                                startDate={startDate}
-                                endDate={endDate}
-                                onChange={onDateChange}
-                                id="FilterDate"
-                                isClearable={true}
-                                shouldCloseOnSelect={false}
-                                value={getSelectdValue()}
-                                selected={startDate}
-                            />
+                    <Col></Col>
+                    <Col sm={2}>
+                          <DatePicker
+                              popperModifiers={{
+                                  flip: {
+                                      enabled: false
+                                  },
+                                  preventOverflow: {
+                                      escapeWithReference: true
+                                  }
+                              }}
+                              selectsRange={true}
+                              placeholderText={'Date Range'}
+                              className={"form-control"}
+                              startDate={startDate}
+                              endDate={endDate}
+                              onChange={onDateChange}
+                              id="FilterDate"
+                              isClearable={true}
+                              shouldCloseOnSelect={false}
+                              value={getSelectdValue()}
+                              selected={startDate}
+                          />
                         </Col>
-                        <Col>
+                        <Col sm={2}>
                           <MarketPlacesDropdown name='marketplace' placeholder={t('Market')}
                             onChange={onMarketChange}
                             className="text-left"
@@ -225,22 +234,28 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                             isSingle={true}
                             companyId={companyId} />
                         </Col>
-                      </Row>
-                    </Col>
                 </Row>
             </div>
-
-                    <div>
+            <div>
                         <div>
-                            <Row className="mt-1 mb-3">
-                              <Col lg={12}>
-                                {!loading ? <OverallChart data={keywordTrackingDashboard ? keywordTrackingDashboard : {}} changePeriod={onPeriodChange}
-                                  selectedPeriod={selectedPeriod} />: <div style={{height: 350}}></div>}
+                            <Row className="mb-3">
+                              <Col lg={4}>
+                                <h4>Keyword visibility</h4>
+                                {!loading ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}} />: <div style={{height: 350}}></div>}
+                              </Col>
+                              <Col lg={4}>
+                                <h4>Sales</h4>
+                                {!loading ? <OverallChart data={salesChartData && salesChartData.chartData ? salesChartData.chartData : {}}
+                                  selectedCurrency={selectedCurrency['value']} extraYaxis={true} />: <div style={{height: 350}}></div>}
+                              </Col>
+                              <Col lg={4}>
+                                <h4>Session and page views</h4>
+                                {!loading ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}} />: <div style={{height: 350}}></div>}
                               </Col>
                             </Row>
                             <Row>
                                 <Col lg={12}>
-                                    
+
                                     <div className={"list-view"}>
                                         <Table>
                                             <thead>
@@ -281,7 +296,8 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                                 </Col>
                             </Row>
                         </div>
-                    </div></>}
+                    </div>
+                </>}
 
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
