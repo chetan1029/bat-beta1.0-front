@@ -40,9 +40,10 @@ const AddCampaign = (props: AddCampaignProps) => {
 
     const api = new APICore();
 
-    const { loading, templates, orderStatuses, isCampaignCreated } = useSelector((state: any) => ({
+    const { loading, templates, orderStatuses, isCampaignCreated, createCampaignError } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isCampaignCreated: state.Company.AutoEmails.isCampaignCreated,
+        createCampaignError: state.Company.AutoEmails.createCampaignError,
         templates: state.Company.AutoEmails.templates,
         orderStatuses: state.Common.statuses,
     }));
@@ -128,6 +129,7 @@ const AddCampaign = (props: AddCampaignProps) => {
       setStatus(value);
     }
 
+
     // get the data
     useEffect(() => {
         dispatch(resetAutoEmails());
@@ -148,6 +150,8 @@ const AddCampaign = (props: AddCampaignProps) => {
         order_status: null,
         schedule: null,
         amazonmarketplace: null,
+        include_invoice: false,
+        send_optout: false,
       },
       validationSchema: Yup.object({
         name: Yup.string().required(t("Name is required")),
@@ -350,6 +354,42 @@ const AddCampaign = (props: AddCampaignProps) => {
                       </Row>
 
                       <Row className="mt-4">
+                          <Col lg={'auto'}>
+                              <Form.Label className="font-weight-semibold">{t('Include Invoice (additional email)')}</Form.Label>
+                              <Row>
+                                  <Col lg="auto">
+                                      <Form.Check
+                                      type='switch'
+                                      id="include_invoice-check"
+                                      label="Yes"
+                                      checked={validator.values.include_invoice}
+                                      onChange={(e: any) => validator.setFieldValue("include_invoice", e.target.checked)}
+                                      />
+                                  </Col>
+
+                              </Row>
+                          </Col>
+                      </Row>
+
+                      <Row className="mt-4">
+                          <Col lg={'auto'}>
+                              <Form.Label className="font-weight-semibold">{t('Sent Review Template for Opt-Out users')}</Form.Label>
+                              <Row>
+                                  <Col lg="auto">
+                                      <Form.Check
+                                      type='switch'
+                                      id="include_optout-check"
+                                      label="Yes"
+                                      checked={validator.values.send_optout}
+                                      onChange={(e: any) => validator.setFieldValue("send_optout", e.target.checked)}
+                                      />
+                                  </Col>
+
+                              </Row>
+                          </Col>
+                      </Row>
+
+                      <Row className="mt-4">
                           <Col lg={12}>
                               <Form.Label className="font-weight-semibold">{t('Channel')}</Form.Label>
                               <div key={`custom-checkbox`}>
@@ -464,6 +504,10 @@ const AddCampaign = (props: AddCampaignProps) => {
         				</Card>
             </div>
             {showEmailTemplate ? <EmailTemplate campaign={""} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+
+            {isCampaignCreated ? <MessageAlert message={t('The campaign is created successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {createCampaignError ? <MessageAlert message={createCampaignError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+
         </>
     );
 }

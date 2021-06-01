@@ -12,6 +12,7 @@ import DisplayDate from "../../../components/DisplayDate";
 import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
+import searchIcon from "../../../assets/images/search_icon.svg";
 
 //actions
 import { APICore } from '../../../api/apiCore';
@@ -36,6 +37,8 @@ const Templates = (props: TemplatesProps) => {
     const queryParam: any = props.location.search;
     const [successMsg, setSuccessMsg] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState<any>(null);
+    const [filters, setFilters] = useState<any>(null);
+    const [search, setSearch] = useState<any>("");
 
     const api = new APICore();
 
@@ -74,9 +77,9 @@ const Templates = (props: TemplatesProps) => {
     // get the data
     useEffect(() => {
         dispatch(resetAutoEmails());
-        dispatch(getTemplates(companyId, defaultParams));
+        dispatch(getTemplates(companyId, {...defaultParams, "search":search}));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
-    }, [dispatch, companyId, defaultParams]);
+    }, [dispatch, companyId, defaultParams, filters]);
 
 
     // Delete template
@@ -91,6 +94,14 @@ const Templates = (props: TemplatesProps) => {
 
     const [selectedTemplateForDelete, setselectedTemplateForDelete] = useState<any>(null);
 
+
+    const handleSearchKeyDown = (event: any) => {
+      const { value } = event.target;
+      setSearch(value);
+      if ([13].includes(event.keyCode)) {
+        setFilters({ ...filters, search: value, offset: 0 });
+      }
+    };
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
     const quotas = plan ? (plan['plan_quotas'] || []).find(pq => (pq['quota'] && pq['quota']['codename'] === "MARKETPLACES")) : {};
@@ -122,7 +133,18 @@ const Templates = (props: TemplatesProps) => {
             : null}
 
                     {loading ? <Loader /> : <div>
-                        <div>
+                      <div className="d-flex align-items-center">
+                        <div className="search">
+                          <input type="text" placeholder="Search"
+                            onChange={(e: any) => setSearch(e.target.value)}
+                            onKeyDown={handleSearchKeyDown} value={search} />
+                          <button type="submit">
+                            <img src={searchIcon} alt=""
+                              onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                          </button>
+                        </div>
+                      </div>
+                        <div className="mt-3">
                             <Row>
                                 <Col lg={12}>
                                     <div className={"list-view"}>

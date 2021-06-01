@@ -23,7 +23,7 @@ const Details = (props: DetailsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { loading, campaigns, templates, market, orderStatuses, isCampaignUpdated, isMarketPlaceUpdated } = useSelector((state: any) => ({
+    const { loading, campaigns, templates, market, orderStatuses, isCampaignUpdated, isMarketPlaceUpdated, updateError } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
@@ -32,6 +32,7 @@ const Details = (props: DetailsProps) => {
         market: state.MarketPlaces.market,
         isCampaignUpdated: state.Company.AutoEmails.isCampaignUpdated,
         isMarketPlaceUpdated: state.MarketPlaces.isMarketPlaceUpdated,
+        updateError: state.Company.AutoEmails.updateError,
     }));
 
     const companyId = props.match.params.companyId;
@@ -48,13 +49,13 @@ const Details = (props: DetailsProps) => {
     }, [dispatch, companyId, marketId, defaultParams]);
 
     useEffect(() => {
-        if (isCampaignUpdated) {
+        if (isCampaignUpdated || updateError) {
             dispatch(getCampaigns(companyId, defaultParams));
         }
         if (isMarketPlaceUpdated) {
             dispatch(getMarketPlace(companyId, marketId));
         }
-    }, [dispatch, isCampaignUpdated, isMarketPlaceUpdated, companyId, marketId, defaultParams]);
+    }, [dispatch, isCampaignUpdated, isMarketPlaceUpdated, companyId, marketId, defaultParams, updateError]);
 
     const getCampaignsOfMarket = (market: any) => {
         return ((campaigns || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];
@@ -119,7 +120,7 @@ const Details = (props: DetailsProps) => {
                                 </div>
                             </div>
                         </Col>
-                        
+
                     </Row>
                 </div>
 
