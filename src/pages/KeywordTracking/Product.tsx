@@ -419,7 +419,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                           <td>{keywordrank.rank}</td>
                           <td>{keywordrank.page}</td>
                           <td>{keywordrank.visibility_score}</td>
-                          <td><a href={`https://${(keywordrank.productkeyword.keyword.amazonmarketplace.sales_channel_name).toLowerCase()}/s?k=${keywordrank.productkeyword.keyword.name}&page=${keywordrank.page}`} target="_blank">View Rank</a></td>
+                          <td><a href={`https://${(product.amazonaccounts.marketplace.sales_channel_name).toLowerCase()}/s?k=${keywordrank.productkeyword.keyword.name}&page=${keywordrank.page}`} target="_blank">View Rank</a></td>
                         </tr>
                       )}
                     </tbody>
