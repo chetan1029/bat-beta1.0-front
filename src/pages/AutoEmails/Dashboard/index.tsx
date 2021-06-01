@@ -36,57 +36,34 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
   const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all', icon: ''});
   const [startDate, setStartDate] = useState<any>(null);
   const [endDate, setEndDate] = useState<any>(null);
-  const [filters, setFilters] = useState<any>(null);
+
 
   const { loading, emailChartData } = useSelector((state: any) => ({
     loading: state.Dashboard.loading,
     emailChartData: state.Dashboard.emailChartData,
   }));
 
-  const getDates = useCallback((period: string) => {
+  const getDates = useCallback(() => {
     const today = new Date();
 
-    switch (period) {
-      case '1m':
-        return {
-          start_date: dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY'),
-          end_date: dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
-        }
-      case '6m':
-        let dt = new Date();
-        dt.setMonth(today.getMonth() - 6);
-        return {
-          start_date: dayjs(dt).format('MM/DD/YYYY'),
-          end_date: dayjs(today).format('MM/DD/YYYY')
-        }
-      case '1y':
-        let dt2 = new Date();
-        dt2.setMonth(today.getMonth() - 12);
-        return {
-          start_date: dayjs(dt2).format('MM/DD/YYYY'),
-          end_date: dayjs(today).format('MM/DD/YYYY')
-        }
-      default:
-        return {}
+    const start_date = dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY');
+    const end_date = dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
+
+    return {
+      start_date: start_date,
+      end_date: end_date
     }
   }, []);
+
+  const [filters, setFilters] = useState<any>({...getDates()});
 
   useEffect(() => {
     dispatch(getEmailChartData(companyId, filters));
   }, [dispatch, companyId, getDates, filters]);
 
-  const onPeriodChange = (period: string) => {
-    setSelectedPeriod(period);
-    setFilters({...getDates(period)});
-    if (selectedMarket) {
-      setFilters({...filters,'marketplace':selectedMarket['value']});
-    }
-  }
-
 
   const onMarketChange = (market: any) => {
     setSelectedMarket(market);
-    setFilters({...getDates(selectedPeriod)});
     if (market) {
       setFilters({...filters,'marketplace':market['value']});
     }
