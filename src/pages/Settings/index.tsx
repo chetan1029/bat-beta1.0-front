@@ -129,13 +129,13 @@ const Index = ({ match }: IndexProps) => {
           desc:
             "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
         },
-        // {
-        //   title: "Amazon Accounts",
-        //   key: "amazon_accounts",
-        //   icon: "amazon",
-        //   desc:
-        //     "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
-        // },
+        {
+          title: "Marketplace Permissions",
+          key: "marketplace-permissions",
+          icon: "amazon",
+          desc:
+            "Non, massa orci turpis aliquet diam mangna. Pleatea senectus nisl id.",
+        },
       ],
     },
     // {

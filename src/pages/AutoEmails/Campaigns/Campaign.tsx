@@ -66,6 +66,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: Cam
     const [emailOrderStatus, setEmailOrderStatus] = useState({ label: campaign["order_status"]["name"], value: campaign["order_status"]["id"] });
     const [activationdate, setActivationdate] = useState(getDate(campaign['activation_date']));
     const [includeInvoice, setIncludeInvoice] = useState<any>(campaign['include_invoice']);
+    const [sendOptout, setSendOptout] = useState<any>(campaign['send_optout']);
     const [channels, setChannels] = useState(campaign['channel']);
     const [schedule, setSchedule] = useState({ label: campaign['schedule'], value: campaign['schedule'] });
 
@@ -126,6 +127,8 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: Cam
     const saveCampaign = (field: string, value: any) => {
         const camp: any = {};
 
+        camp["amazonmarketplace"] = campaign['amazonmarketplace']['id']
+
         switch (field) {
             case 'status': {
                 camp['status'] = value ? 'Active' : 'Inactive';
@@ -140,6 +143,11 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: Cam
             case 'includeInvoice': {
                 camp['include_invoice'] = value;
                 setIncludeInvoice(value);
+                break;
+            }
+            case 'sendOptout': {
+                camp['send_optout'] = value;
+                setSendOptout(value);
                 break;
             }
             case 'channles': {
@@ -324,8 +332,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: Cam
   											/>
                     </Col>
                 </Row>
-                {campaign["name"].toLowerCase().includes("invoice") ?
-                    <Row className="mt-4">
+                <Row className="mt-4">
                         <Col lg={'auto'}>
                             <Form.Label className="font-weight-semibold">{t('Include Invoice (additional email)')}</Form.Label>
                             <Row>
@@ -343,9 +350,23 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: Cam
                                 </Col>
                             </Row>
                         </Col>
-                    </Row>
-                    : null
-                }
+                </Row>
+                <Row className="mt-4">
+                        <Col lg={'auto'}>
+                            <Form.Label className="font-weight-semibold">{t('Sent Review Template for Opt-Out users')}</Form.Label>
+                            <Row>
+                                <Col lg="auto">
+                                    <Form.Check
+                                        type='switch'
+                                        id="include_optout-check"
+                                        label="Yes"
+                                        checked={sendOptout}
+                                        onChange={(e: any) => saveCampaign('sendOptout', e.target.checked)}
+                                    />
+                                </Col>
+                            </Row>
+                        </Col>
+                </Row>
 
                 <Row className="mt-4">
                     <Col lg={12}>
