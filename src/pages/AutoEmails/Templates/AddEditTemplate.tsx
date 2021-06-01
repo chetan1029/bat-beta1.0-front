@@ -106,7 +106,7 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
                           <Link to={`/auto-emails/${companyId}/templates`}>
                               <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                           </Link>
-                          <h1 className="m-0">{t('Add Template')}</h1>
+                          <h1 className="m-0">{ templateDetail ? t('Edit Template'): t('Add Template')}</h1>
                         </div>
                     </Col>
                 </Row>

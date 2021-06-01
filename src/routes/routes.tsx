@@ -13,6 +13,7 @@ import MemberDetails from "../pages/Settings/Members/MemberDetails";
 import Invitations from "../pages/Invitations/";
 import Profile from "../pages/Profile/";
 import ChangePassword from "../pages/account/ChangePassword";
+import MarketplacePermissions from "../pages/Settings/MarketplacePermissions";
 // import Companies from "../pages/Companies/";
 // import AddNewCompany from "../pages/Companies/AddNew";
 import EditCompany from "../pages/Companies/EditCompany";
@@ -89,6 +90,8 @@ const authProtectedRoutes = [
   { path: "/settings/:companyId/members/add", component: AddEditMember },
   { path: "/settings/:companyId/members/:memberId", component: MemberDetails },
   { path: "/settings/:companyId/edit", component: EditCompany },
+
+  { path: "/settings/:companyId/marketplace-permissions", component: MarketplacePermissions },
 
   { path: "/clients/:companyId", component: Clients, layoutProps: { 'mainSidebar': true } },
 

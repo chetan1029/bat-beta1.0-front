@@ -2,33 +2,32 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Row, Col, Card, Table, Button } from "react-bootstrap";
 import { useHistory, withRouter, Link } from "react-router-dom";
-import Icon from "../../../components/Icon";
+import Icon from "../../components/Icon";
 import Flag from 'react-flagkit';
 import { useTranslation } from 'react-i18next';
 
 //components
-import Loader from "../../../components/Loader";
-import DisplayDate from "../../../components/DisplayDate";
-import MessageAlert from "../../../components/MessageAlert";
-import AlertDismissible from "../../../components/AlertDismissible";
-import ConfirmMessage from "../../../components/ConfirmMessage";
+import Loader from "../../components/Loader";
+import MessageAlert from "../../components/MessageAlert";
+import AlertDismissible from "../../components/AlertDismissible";
+import ConfirmMessage from "../../components/ConfirmMessage";
 
 //actions
-import { APICore } from '../../../api/apiCore';
+import { APICore } from '../../api/apiCore';
 import {
-    getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace,
+    getMarketPlaces, connectMarketplace, resetConnectMarketplace,
     getMembershipPlan, disConnectMarketplace
-} from "../../../redux/actions";
+} from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-interface CampaignsProps {
+interface MarketplacePermissionsProps {
     match: any;
     location?: any;
 }
-const Campaigns = (props: CampaignsProps) => {
+const MarketplacePermissions = (props: MarketplacePermissionsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -75,30 +74,10 @@ const Campaigns = (props: CampaignsProps) => {
     // get the data
     useEffect(() => {
         dispatch(resetConnectMarketplace());
-        dispatch(getCampaigns(companyId, defaultParams));
         dispatch(getMarketPlaces(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
     }, [dispatch, companyId, defaultParams]);
 
-    const getCampaignsOfMarket = (market: any) => {
-        return ((campaigns || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];
-    }
-
-    const getTotalOfMarket = (market: any, key: string) => {
-        const camps = getCampaignsOfMarket(market);
-        return camps.reduce((a, b) => a + (b[key] || 0), 0);
-    }
-
-    const getLastSentOfMarket = (market: any) => {
-        let camps = getCampaignsOfMarket(market);
-        if (camps.length) {
-            camps = camps.sort(function (a: any, b: any) {
-                return b['last_email_send_in_queue'] && a['last_email_send_in_queue'] ? (new Date(Date.parse(b['last_email_send_in_queue'])).getTime() - new Date(Date.parse(a['last_email_send_in_queue'])).getTime()) : '';
-            });
-            return camps[0]['last_email_send_in_queue']
-        }
-        return "";
-    }
 
     const [selectedMarket, setSelectedMarket] = useState<any>(null);
 
@@ -121,7 +100,6 @@ const Campaigns = (props: CampaignsProps) => {
     useEffect(() => {
         if (isMarketDisconnected) {
             setMarketForDisconnect(null);
-            dispatch(getCampaigns(companyId, defaultParams));
             dispatch(getMarketPlaces(companyId, defaultParams));
             dispatch(getMembershipPlan(companyId, { is_active: true }));
         }
@@ -140,17 +118,14 @@ const Campaigns = (props: CampaignsProps) => {
                 <Row className='align-items-center'>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <Icon name="mail2" className="icon icon-xs  mr-2" />
-                            <h1 className="m-0">{t('Manage Campaigns')}</h1>
+                            <Link to={`/settings/${companyId}`}>
+                                <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
+                            </Link>
+                            <h1 className="m-0">{t('Marketplace Permissions')}</h1>
                         </div>
                     </Col>
                     <Col className="text-right">
-                      <Link
-                      className="btn btn-primary"
-                        to={`/auto-emails/${companyId}/campaigns/add`}
-                      >
-                        {t("Create a Campaign")}
-                      </Link>
+
                     </Col>
                 </Row>
             </div>
@@ -167,17 +142,13 @@ const Campaigns = (props: CampaignsProps) => {
                                             <thead>
                                                 <tr>
                                                     <th>{t("MarketPlace Name")}</th>
-                                                    <th>{t("Sent Emails")}</th>
-                                                    <th>{t("Email in Queue")}</th>
-                                                    <th>{t("Opt-out Rate")}</th>
                                                     <th>{t("Status")}</th>
                                                     <th>{t("Action")}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {sortedMarkets.map((market, idx) => {
-
-                                                    return capitalizeFirstLetter(market['status']) === 'Active' ? <React.Fragment key={idx}>
+                                                    return <React.Fragment key={idx}>
                                                         <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && !isActiveMarket ? 'opacity-3' : '')}>
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
 
@@ -191,27 +162,6 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     </div>
                                                                 </div>
                                                             </td>
-                                                            { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
-                                                              {getTotalOfMarket(market, 'email_sent')}
-                                                            </td>
-                                                            :
-                                                            <td>-</td>
-                                                            }
-                                                            { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
-                                                              {getTotalOfMarket(market, 'email_in_queue')}
-                                                            </td>
-                                                            :
-                                                            <td>-</td>
-                                                            }
-                                                            { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
-                                                              {getTotalOfMarket(market, 'opt_out_rate')}%
-                                                            </td>
-                                                            :
-                                                            <td>-</td>
-                                                            }
                                                             <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {capitalizeFirstLetter(market['status'])}
                                                             </td>
@@ -221,59 +171,11 @@ const Campaigns = (props: CampaignsProps) => {
                                                                     <Button onClick={() => openDetails(market)} disabled={!isActiveMarket}
                                                                         className="btn btn-sm btn-primary">{t('Connect')}</Button>
                                                                     : <>
-                                                                        <Button onClick={() => openDetails(market)}
-                                                                            className="btn btn-sm btn-primary">{t('Manage')}</Button>
-                                                                        <Button onClick={() => setMarketForDisconnect(market)}
-                                                                            className="btn btn-sm btn-danger ml-2">{t('Disconnect')}</Button></>}
+                                                                    <Button onClick={() => setMarketForDisconnect(market)}
+                                                                            className="btn btn-sm btn-danger">{t('Disconnect')}</Button></>}
                                                             </td>
                                                         </tr>
-                                                        {capitalizeFirstLetter(market['status']) === 'Active' && getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
-                                                            <td className="text-muted font-weight-normal">
-                                                                <div className="d-flex">
-                                                                    <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
-                                                                    <div>
-                                                                        {t("Campaign Name")}
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                            <td className="text-muted font-weight-normal">{t("Sent Emails")}</td>
-                                                            <td className="text-muted font-weight-normal">{t("Email in Queue")}</td>
-                                                            <td className="text-muted font-weight-normal">{t("Opt-out Rate")}</td>
-                                                            <td className="text-muted font-weight-normal">{t("Status")}</td>
-                                                            <td></td>
-                                                        </tr> : null}
-
-                                                        { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                          getCampaignsOfMarket(market).map((campaign, cidx) => {
-                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light clickable-row' onClick={() => openDetails(market)}>
-                                                                <td>
-                                                                    <div className="d-flex">
-                                                                        <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
-                                                                        <div>
-                                                                            <h6 className="font-weight-normal my-0">{campaign['name']}</h6>
-                                                                            <p className="text-muted">{campaign['emailtemplate']['name']}</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                  { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
-                                                                    campaign['email_sent'] : "-"}
-                                                                </td>
-                                                                <td>
-                                                                  { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
-                                                                    campaign['email_in_queue'] : "-"}
-                                                                </td>
-                                                                <td>
-                                                                  { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
-                                                                    campaign['opt_out_rate']+"%" : "-"}
-                                                                </td>
-                                                                <td>
-                                                                    {capitalizeFirstLetter(campaign['status']['name'])}
-                                                                </td>
-                                                                <td></td>
-                                                            </tr>
-                                                        }) : null}
-                                                    </React.Fragment>: null
+                                                    </React.Fragment>
                                                 })}
                                             </tbody>
                                         </Table>
@@ -310,4 +212,4 @@ const Campaigns = (props: CampaignsProps) => {
     );
 }
 
-export default withRouter(Campaigns);
+export default withRouter(MarketplacePermissions);

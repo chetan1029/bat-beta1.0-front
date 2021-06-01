@@ -120,31 +120,6 @@
   }
   .sub-header{
     font-size: $h1-font-size;
-
-    small{
-      font-size: $font-size-sm;
-    }
-    i{
-      display: inline-block;
-      vertical-align: middle;
-      content: "";
-      font-size: $h5-font-size;
-      margin-left: 5px;
-      margin-right: 5px;
-    }
-    .down{
-      border-top: 0.3em solid;
-      border-right: 0.3em solid transparent;
-      border-bottom: 0;
-      border-left: 0.3em solid transparent;
-    }
-    .up{
-      border-top: 0.3em solid;
-      border-right: 0.3em solid transparent;
-      border-bottom: 0;
-      border-left: 0.3em solid transparent;
-      transform: rotate(180deg);
-    }
   }
 }
 
