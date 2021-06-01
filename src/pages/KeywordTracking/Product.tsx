@@ -434,7 +434,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
         {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
       </> : null}
 
-      {isOpen ? <AddKeywords isOpen={isOpen} onClose={closeModal} companyId={companyId} productId={productId} amazonaccountId={product.amazonaccounts} /> : null}
+      {isOpen ? <AddKeywords isOpen={isOpen} onClose={closeModal} companyId={companyId} productId={productId} amazonaccountId={product.amazonaccounts.id} /> : null}
     </>
   );
 }
