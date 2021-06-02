@@ -5,6 +5,7 @@ const INIT_STATE: any = {
     keywords: [],
     suggestedkeywords: [],
     asinperformance: [],
+    totalKeywordranks: 0,
 };
 
 
@@ -39,6 +40,7 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         keywordranks: action.payload.data.results,
+                        totalKeywordranks: action.payload.data.count,
                         isKeywordrankFetched: true,
                         loading: false,
                     }
@@ -164,7 +166,8 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 asinperformance: null,
                 error: null,
                 updateError: null,
-                isBulkActionPerformed: false
+                isBulkActionPerformed: false,
+                totalKeywordranks: 0,
             }
         }
         default: return { ...state };

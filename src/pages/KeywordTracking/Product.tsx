@@ -41,10 +41,14 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const history = useHistory();
+  const orderAsc = 1;
+  const orderDesc = -1;
 
   const queryParam: any = props.location.search;
   const [successMsg, setSuccessMsg] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState<any>(null);
+  const [orderBy, setOrderBy] = useState<any>("");
+  const [orderDirection, setOrderDirection] = useState<any>(orderAsc);
 
   const api = new APICore();
 
@@ -68,12 +72,13 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }, [queryParam]);
 
 
-  const { loading, product, redirectUri, keywordranks, membershipPlan, isKeywordsCreated, keywordTrackingData, productKeywordData, isBulkActionPerformed, isProductKeywordChartFetched } = useSelector((state: any) => ({
+  const { loading, product, redirectUri, keywordranks, totalKeywordranks, membershipPlan, isKeywordsCreated, keywordTrackingData, productKeywordData, isBulkActionPerformed, isProductKeywordChartFetched } = useSelector((state: any) => ({
     loading: state.Company.KeywordTracking.loading,
     isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
     product: state.Company.KeywordTracking.product,
     redirectUri: state.MarketPlaces.redirectUri,
     keywordranks: state.Company.KeywordTracking.keywordranks,
+    totalKeywordranks: state.Company.KeywordTracking.totalKeywordranks,
     membershipPlan: state.Company.MembershipPlan.membershipPlan,
     isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
     keywordTrackingData: state.Dashboard.keywordTrackingData,
@@ -200,7 +205,20 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   };
 
   const handleOnClickOrderBy = (value: any) => {
-    setFilters({ ...filters, ordering: value });
+    var orderType = "";
+    if (orderBy === value){
+      if(orderDirection === orderAsc){
+        setOrderDirection(orderDesc);
+        orderType = "-";
+      }else{
+        setOrderDirection(orderAsc);
+        orderType = "";
+      }
+    }
+    setOrderBy(value);
+    const orderValue = orderType+""+value;
+    setFilters({ ...filters, ordering: orderValue });
+
   };
 
   useEffect(() => {
@@ -356,19 +374,26 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
               </Col>
             </Row>
             <Row>
+              <Col sm={8}>
+                <div className="d-flex align-items-center">
+                  <div className="search">
+                    <input type="text" placeholder="Search"
+                      onChange={(e: any) => setSearch(e.target.value)}
+                      onKeyDown={handleSearchKeyDown} />
+                    <button type="submit">
+                      <img src={searchIcon} alt=""
+                        onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                    </button>
+                  </div>
+                </div>
+              </Col>
+              <Col sm={4}>
+                <h3 className="text-right mt-3">{totalKeywordranks} Keywords</h3>
+              </Col>
+            </Row>
+            <Row>
               <Col lg={12}>
                 <div className={"list-view"}>
-                  <div className="d-flex align-items-center">
-                    <div className="search">
-                      <input type="text" placeholder="Search"
-                        onChange={(e: any) => setSearch(e.target.value)}
-                        onKeyDown={handleSearchKeyDown} />
-                      <button type="submit">
-                        <img src={searchIcon} alt=""
-                          onClick={() => setFilters({ ...filters, search, offset: 0 })} />
-                      </button>
-                    </div>
-                  </div>
                   <Table className="mt-3">
                     <thead>
                       <tr>
@@ -382,17 +407,17 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                           />
                         </th>
                         {!(selectedKeywords && selectedKeywords.length) ?
-                          <><th onClick={() => handleOnClickOrderBy("-productkeyword__keyword__name")} className={"clickable-row"}>{t("Keywords")}</th>
-                            <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Search Frequency")}</th>
-                            <th onClick={() => handleOnClickOrderBy("-index")} className={"clickable-row"}>{t("Indexed")}</th>
-                            <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Rank")}</th>
-                            <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Page")}</th>
-                            <th onClick={() => handleOnClickOrderBy("-frequency")} className={"clickable-row"}>{t("Visibility Score")}</th>
+                          <><th onClick={() => handleOnClickOrderBy("productkeyword__keyword__name")} className={"clickable-row"}>{t("Keywords")}</th>
+                            <th onClick={() => handleOnClickOrderBy("frequency")} className={"clickable-row"}>{t("Search Frequency")}</th>
+                            <th onClick={() => handleOnClickOrderBy("index")} className={"clickable-row"}>{t("Indexed")}</th>
+                            <th onClick={() => handleOnClickOrderBy("rank")} className={"clickable-row"}>{t("Rank")}</th>
+                            <th onClick={() => handleOnClickOrderBy("page")} className={"clickable-row"}>{t("Page")}</th>
+                            <th onClick={() => handleOnClickOrderBy("visibility_score")} className={"clickable-row"}>{t("Visibility Score")}</th>
                             <th>{t("Action")}</th>
                           </>
                           :
                           <>
-                            <th colSpan={6} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
+                            <th colSpan={7} className="pt-0 pb-0"><DropdownButton variant="outline-secondary" id="dropdown-button-more-action" title={t('More Actions')}
                               disabled={!(selectedKeywords && selectedKeywords.length)}>
                               <Dropdown.Item onClick={() => performBulkAction('delete')}>{t('Delete Keywords')}</Dropdown.Item>
                             </DropdownButton></th>
