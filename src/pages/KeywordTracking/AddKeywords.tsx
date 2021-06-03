@@ -79,8 +79,8 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId, amazonaccountId }:
         validator.resetForm();
         onClose();
     }
-    
-    const keywordsCount = (validator.values.keywords || "").split("\n").length;
+
+    const keywordsCount = (validator.values.keywords || "" ? validator.values.keywords.split("\n").length : 0);
 
     return (
         <Modal show={isOpen} onHide={onClose} size="lg">

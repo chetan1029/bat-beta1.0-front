@@ -1,4 +1,4 @@
-// 
+//
 // topbar.scss
 //
 header {
@@ -31,7 +31,6 @@ header {
     box-sizing: border-box;
     border-radius: $border-radius;
     display: flex;
-    width: 44%;
     height: 46px;
     padding: 0 15px;
     button {
@@ -184,7 +183,7 @@ header {
             }
         }
         &:last-child {
-            
+
             opacity: 0.5;
             &:hover {
                 opacity: 1;

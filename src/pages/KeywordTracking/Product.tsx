@@ -8,8 +8,9 @@ import dummyImage from "../../assets/images/dummy_image.svg";
 import { find, get, map, size, uniqBy, findIndex } from "lodash";
 import { default as dayjs } from 'dayjs';
 import DatePicker from 'react-datepicker';
+import Select from "react-select";
 import searchIcon from "../../assets/images/search_icon.svg";
-
+import classNames from "classnames";
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -114,6 +115,10 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     'limit': 10000,
   });
 
+  const [keywordFrequency, setKeywordFrequency] = useState<any>("All Keywords");
+  const [searchType, setSearchType] = useState<any>("");
+
+
   const getDates = useCallback((period: string) => {
     const today = new Date();
 
@@ -200,8 +205,13 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     const { value } = event.target;
     setSearch(value);
     if ([13].includes(event.keyCode)) {
-      setFilters({ ...filters, search: value, offset: 0 });
+      setFilters({ ...filters, search_keywords: value, offset: 0, searchtype: searchType.value });
     }
+  };
+
+  const handleOnClickSearch = (value: string) => {
+    setSearch(value);
+    setFilters({ ...filters, search_keywords: value, offset: 0, searchtype: searchType.value });
   };
 
   const handleOnClickOrderBy = (value: any) => {
@@ -214,6 +224,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
         setOrderDirection(orderAsc);
         orderType = "";
       }
+    }else{
+      setOrderDirection(orderAsc);
+      orderType = "";
     }
     setOrderBy(value);
     const orderValue = orderType+""+value;
@@ -288,6 +301,19 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const showKeywordChart = (keywordrank: any) => {
     dispatch(getProductKeywordData(companyId, keywordrank.productkeyword.id, { ...getDates(selectedPeriod) }));
   }
+
+
+  let keywordFrequencyOptions: Array<any> = [{label: "All Keywords", value: "10000"}, {label: "Top 100", value: "100"} , {label: "Top 200", value: "200"}, {label: "Top 500", value: "500"}, {label: "Top 1000", value: "1000"}];
+
+  const handleonSelectKeywordFrequency = (keywordFrequency: any) => {
+    setOrderDirection(orderAsc);
+    setOrderBy("frequency");
+    const orderValue = "frequency";
+    setFilters({ ...filters, limit: keywordFrequency.value, ordering: orderValue });
+    setKeywordFrequency(keywordFrequency);
+  };
+
+  let searchTypeOptions: Array<any> = [{label: "Inclusive (All)", value: "inclusive-all"}, {label: "Inclusive (Any)", value: "inclusive-any"} , {label: "Exclusive (All)", value: "exclusive-all"}, {label: "Exclusive (Any)", value: "exclusive-any"}];
 
   const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
   const quotas = plan ? (plan['plan_quotas'] || []).find(pq => (pq['quota'] && pq['quota']['codename'] === "MARKETPLACES")) : {};
@@ -374,20 +400,52 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
               </Col>
             </Row>
             <Row>
-              <Col sm={8}>
-                <div className="d-flex align-items-center">
-                  <div className="search">
+              <Col sm={3}>
+                <Select
+                  placeholder={t('All Keywords')}
+                  options={keywordFrequencyOptions}
+                  classNamePrefix="react-select"
+                  name= "order_status"
+                  id="order_status"
+                  onChange={(value: any) => {
+                    handleonSelectKeywordFrequency(value);
+                  }}
+                  value={keywordFrequency}
+                  className={classNames(
+                    "react-select",
+                    "react-select-regular",
+                  )}
+                />
+              </Col>
+              <Col sm={3}>
+                <Select
+                  placeholder={t('Search Type')}
+                  options={searchTypeOptions}
+                  classNamePrefix="react-select"
+                  name= "order_status"
+                  id="order_status"
+                  onChange={(value: any) => {
+                    setSearchType(value);
+                  }}
+                  value={searchType}
+                  className={classNames(
+                    "react-select",
+                    "react-select-regular",
+                  )}
+                />
+              </Col>
+              <Col sm={3}>
+                <div className="search">
                     <input type="text" placeholder="Search"
                       onChange={(e: any) => setSearch(e.target.value)}
                       onKeyDown={handleSearchKeyDown} />
                     <button type="submit">
                       <img src={searchIcon} alt=""
-                        onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                        onClick={() => handleOnClickSearch(search)} />
                     </button>
-                  </div>
                 </div>
               </Col>
-              <Col sm={4}>
+              <Col sm={3}>
                 <h3 className="text-right mt-3">{totalKeywordranks} Keywords</h3>
               </Col>
             </Row>
