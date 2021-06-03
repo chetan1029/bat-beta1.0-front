@@ -217,14 +217,9 @@ const Campaigns = (props: CampaignsProps) => {
                                                             </td>
 
                                                             <td>
-                                                                {capitalizeFirstLetter(market['status']) === 'Inactive' ?
-                                                                    <Button onClick={() => openDetails(market)} disabled={!isActiveMarket}
-                                                                        className="btn btn-sm btn-primary">{t('Connect')}</Button>
-                                                                    : <>
-                                                                        <Button onClick={() => openDetails(market)}
-                                                                            className="btn btn-sm btn-primary">{t('Manage')}</Button>
-                                                                        <Button onClick={() => setMarketForDisconnect(market)}
-                                                                            className="btn btn-sm btn-danger ml-2">{t('Disconnect')}</Button></>}
+                                                                {capitalizeFirstLetter(market['status']) === 'Active' ?
+                                                                <Button onClick={() => openDetails(market)}
+                                                                    className="btn btn-sm btn-primary">{t('Manage')}</Button>: null}
                                                             </td>
                                                         </tr>
                                                         {capitalizeFirstLetter(market['status']) === 'Active' && getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">

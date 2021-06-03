@@ -610,6 +610,16 @@ aria-describedby="desc" role="img">
         </g>
         </svg>
 
+      case 'arrow-down':
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.6667 5.66669L8.00004 10.3334L3.33337 5.66669" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+      case 'arrow-up':
+        return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="Stroke 1" d="M3.33329 10.3333L7.99996 5.66665L12.6666 10.3333" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
 
       default:
         return null;

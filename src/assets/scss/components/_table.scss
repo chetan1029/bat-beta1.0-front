@@ -8,6 +8,27 @@
       border-bottom: $table-border-width solid $table-border-color;
       font-weight: $font-weight-normal;
       color: $text-muted;
+
+      .orderby{
+        font-size: 16px;
+        margin-left: 5px;
+        color: #0a0c32;
+        display: inline-block;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+      }
+
+      .orderby.asc:after{
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+      }
+
+      .orderby.desc:after {
+        transform: rotate(180deg);
+      }
   }
   tbody td{
     vertical-align: middle;

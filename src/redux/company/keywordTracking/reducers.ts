@@ -5,6 +5,7 @@ const INIT_STATE: any = {
     keywords: [],
     suggestedkeywords: [],
     asinperformance: [],
+    totalKeywordranks: 0,
 };
 
 
@@ -39,6 +40,7 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         keywordranks: action.payload.data.results,
+                        totalKeywordranks: action.payload.data.count,
                         isKeywordrankFetched: true,
                         loading: false,
                     }
@@ -62,6 +64,13 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         asinperformance: action.payload.data,
+                        loading: false,
+                    }
+                }
+                case KeywordTrackingTypes.EXPORT_KEYWORDS: {
+                    return {
+                        ...state,
+                        isExported: true,
                         loading: false,
                     }
                 }
@@ -124,6 +133,14 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                         error: action.payload.error,
                     }
                 }
+                case KeywordTrackingTypes.EXPORT_KEYWORDS: {
+                    return {
+                        ...state,
+                        exportKeywordsError: action.payload.error,
+                        isExported: false,
+                        loading: false,
+                    }
+                }
                 default:
                     return { ...state }
             }
@@ -153,6 +170,9 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
         case KeywordTrackingTypes.GET_ASINPERFORMANCE:
             return { ...state, loading: true };
 
+        case KeywordTrackingTypes.EXPORT_KEYWORDS:
+            return { ...state, isExported: false, loading: true };
+
         case KeywordTrackingTypes.RESET: {
             return {
                 ...state,
@@ -164,7 +184,10 @@ const KeywordTracking = (state = INIT_STATE, action: any) => {
                 asinperformance: null,
                 error: null,
                 updateError: null,
-                isBulkActionPerformed: false
+                isBulkActionPerformed: false,
+                totalKeywordranks: 0,
+                isExported: false,
+                exportKeywordsError: null,
             }
         }
         default: return { ...state };

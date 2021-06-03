@@ -46,7 +46,7 @@ const Topbar = (props: TopbarProps) => {
           </div>
           <div className="d-flex justify-content-between header_bot">
 
-            <form className="search">
+            <form className="search w-50">
               <input type="text" placeholder="Search" />
               <button type="submit">
                 <Icon name='search' className="icon" />
