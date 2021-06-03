@@ -133,17 +133,19 @@ const Templates = (props: TemplatesProps) => {
             : null}
 
                     {loading ? <Loader /> : <div>
-                      <div className="d-flex align-items-center">
-                        <div className="search">
-                          <input type="text" placeholder="Search"
-                            onChange={(e: any) => setSearch(e.target.value)}
-                            onKeyDown={handleSearchKeyDown} value={search} />
-                          <button type="submit">
-                            <img src={searchIcon} alt=""
-                              onClick={() => setFilters({ ...filters, search, offset: 0 })} />
-                          </button>
-                        </div>
-                      </div>
+                        <Row>
+                          <Col sm={5}>
+                            <div className="search">
+                              <input type="text" placeholder="Search"
+                                onChange={(e: any) => setSearch(e.target.value)}
+                                onKeyDown={handleSearchKeyDown} value={search} />
+                              <button type="submit">
+                                <img src={searchIcon} alt=""
+                                  onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                              </button>
+                            </div>
+                          </Col>
+                        </Row>
                         <div className="mt-3">
                             <Row>
                                 <Col lg={12}>

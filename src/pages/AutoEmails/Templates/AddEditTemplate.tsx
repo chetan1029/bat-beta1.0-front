@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 //components
 import Loader from "../../../components/Loader";
 import { TEMPLATE_LANGS, TemplateLanguageDropdown } from "../../../components/TemplateLanguageDropdown";
+import ShowVariables from "./ShowVariables";
 
 //plug-ins
 import { useFormik } from "formik";
@@ -100,6 +101,17 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
     }
   }, [templateDetail]);
 
+  /*
+  Show variables
+  */
+  const [isOpen, setisopen] = useState(false);
+  const openModal = () => {
+    setisopen(true);
+  }
+  const closeModal = () => {
+    setisopen(false);
+  }
+
   return (
     <>
       <div className="py-4">
@@ -190,6 +202,12 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
                       options: ['bold', 'italic', 'underline'],
                     }
                   }}
+                  toolbarCustomButtons={[<Button className="mb-1"
+                    variant="primary" size="sm" onClick={() => {
+                      openModal();
+                    }}>
+                    {t("Variables")}
+                  </Button>]}
                   editorState={editorState}
                   onEditorStateChange={(eState: any) => {
                     const body = draftToHtml(convertToRaw(eState.getCurrentContent()));
@@ -256,7 +274,7 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
           </Card.Body>
         </Card>
       </div>
-
+      {isOpen ? <ShowVariables isOpen={isOpen} onClose={closeModal} /> : null}
     </>
   );
 }
