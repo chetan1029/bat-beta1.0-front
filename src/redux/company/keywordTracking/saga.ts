@@ -1,10 +1,10 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getKtproducts, getKtproduct, getKeywordranks, createKeywords as addKeywords, performBulkActionKeywords, suggestKeywords, getAsinPerformance } from "../../../api/index";
+import { exportKeywordsCSVFile, exportKeywordsXLSFile, getKtproducts, getKtproduct, getKeywordranks, createKeywords as addKeywords, performBulkActionKeywords, suggestKeywords, getAsinPerformance } from "../../../api/index";
 
 import { keywordTrackingApiResponseError, keywordTrackingApiResponseSuccess } from "./actions";
 import { KeywordTrackingTypes } from './constants';
-
+import { downloadFile } from "../../../api/utils";
 
 /**
  * get all
@@ -76,6 +76,40 @@ function* getAllAsinPerformance({ payload: { companyId, filters } }: any) {
     }
 }
 
+/**
+ * export component
+ */
+function* exportKeywords({ payload: { companyId, fileType, filters } }: any) {
+	try {
+		const isCsv = fileType === "csv" || fileType === "csv-filtered";
+		let fileName: string = "keywords.csv";
+
+		switch (fileType) {
+			case 'csv-filtered':
+				fileName = 'keywords-filtered.csv';
+				break;
+			case 'xls-filtered':
+				fileName = 'keywords-filtered.xlsx';
+				break;
+			case 'xls':
+				fileName = 'keywords.xlsx';
+				break;
+		}
+
+		if (fileType) {
+			const response = yield call(isCsv ? exportKeywordsCSVFile : exportKeywordsXLSFile, companyId, filters);
+			if (isCsv) {
+				downloadFile(response.data, fileName);
+			} else {
+				downloadFile(response.data, fileName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+			}
+			yield put(keywordTrackingApiResponseSuccess(KeywordTrackingTypes.EXPORT_KEYWORDS, true));
+		}
+	} catch (error) {
+		yield put(keywordTrackingApiResponseError(KeywordTrackingTypes.EXPORT_KEYWORDS, error));
+	}
+}
+
 export function* watchGetKtproducts() {
     yield takeEvery(KeywordTrackingTypes.GET_KTPRODUCTS, getAllKtproducts)
 }
@@ -104,6 +138,10 @@ export function* watchGetAsinPerformanceAction() {
 	yield takeEvery(KeywordTrackingTypes.GET_ASINPERFORMANCE, getAllAsinPerformance);
 }
 
+export function* watchExportKeywords() {
+	yield takeEvery(KeywordTrackingTypes.EXPORT_KEYWORDS, exportKeywords);
+}
+
 function* keywordTrackingSaga() {
     yield all([
         fork(watchGetKtproducts),
@@ -112,7 +150,8 @@ function* keywordTrackingSaga() {
         fork(watchCreateKeywords),
         fork(watchGetSuggestKeywords),
         fork(watchPerformBulkAction),
-        fork(watchGetAsinPerformanceAction)
+        fork(watchGetAsinPerformanceAction),
+        fork(watchExportKeywords)
     ]);
 }
 

@@ -9,6 +9,7 @@ export enum KeywordTrackingTypes {
     CREATE_KEYWORDS = '@@company/keywordTracking/CREATE_KEYWORDS',
     SUGGEST_KEYWORDS = '@@company/keywordTracking/SUGGEST_KEYWORDS',
     GET_ASINPERFORMANCE = '@@company/keywordTracking/GET_ASINPERFORMANCE',
+    EXPORT_KEYWORDS = '@@productManagement/components/EXPORT_KEYWORDS',
     PERFORM_BULK = '@@company/keywordTracking/PERFORM_BULK',
     RESET = '@@company/keywordTracking/RESET',
 }

@@ -42,6 +42,11 @@ export const performBulkActionKeywords = (companyId: string | number, action: st
     payload: { companyId, action, ids }
 });
 
+export const exportKeywords = (companyId: string | number, fileType: string, filters?: any) => ({
+    type: KeywordTrackingTypes.EXPORT_KEYWORDS,
+    payload: { companyId, fileType, filters }
+});
+
 export const getAsinPerformance = (companyId: string | number, filters?: any) => ({
     type: KeywordTrackingTypes.GET_ASINPERFORMANCE,
     payload: { companyId, filters }
