@@ -471,7 +471,7 @@ function exportCSVFile(companyId: number, filters?: any) {
 }
 
 function exportXLSFile(companyId: number, filters?: any) {
-    return api.getFile(`${componentUrl(companyId)}xlsxeport/`, filters);
+    return api.getFile(`${componentUrl(companyId)}xlsexport/`, filters);
 }
 
 // Component Packing Box
@@ -786,6 +786,16 @@ function getAsinPerformance(companyId: number, params?: any) {
     return api.get(`${baseUrl}`, params);
 }
 
+function exportKeywordsCSVFile(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/product-keyword-rank/csvexport/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
+function exportKeywordsXLSFile(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/product-keyword-rank/xlsexport/`;
+    return api.getFile(`${baseUrl}`, filters);
+}
+
 export {
     getRoles, getStatuses, getCompanyCategories,
     login, logout, signup, forgotPassword, forgotPasswordConfirm, changePassword,
@@ -819,5 +829,6 @@ export {
     getSalesChartData,
     getAmazonAccount, updateAmazonAccount,
     getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingData, createKeywords, performBulkActionKeywords, getProductKeywordData, suggestKeywords,
+    exportKeywordsCSVFile, exportKeywordsXLSFile,
     getAsinPerformance, getEmailChartData
 }

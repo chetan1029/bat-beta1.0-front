@@ -17,6 +17,7 @@ import MessageAlert from "../../components/MessageAlert";
 import AddKeywords from "./AddKeywords";
 import OverallChart from "../Dashboard/OverallChart";
 import ProductKeywordChart from "./ProductKeywordChart";
+import OrderByIcon from "../../components/OrderByIcon";
 
 //actions
 import { APICore } from '../../api/apiCore';
@@ -28,6 +29,7 @@ import {
   performBulkActionKeywords,
   getKeywordTrackingData,
   getProductKeywordData,
+  exportKeywords,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -38,6 +40,14 @@ interface KeywordTrackingProps {
   match: any;
   location?: any;
 }
+
+const FILETYPES: Array<any> = [
+	{ label: "As csv", value: "csv" },
+	{ label: "As xls", value: "xls" },
+	{ label: "As csv (Filtered Data)", value: "csv-filtered" },
+	{ label: "As xls (Filtered Data)", value: "xls-filtered" },
+];
+
 const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -115,8 +125,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     'limit': 10000,
   });
 
-  const [keywordFrequency, setKeywordFrequency] = useState<any>("All Keywords");
-  const [searchType, setSearchType] = useState<any>("");
+  const [keywordFrequency, setKeywordFrequency] = useState<any>({label: "All Keywords", value: "10000"});
+  const [searchType, setSearchType] = useState<any>({label: "Inclusive (All)", value: "inclusive-all"});
 
 
   const getDates = useCallback((period: string) => {
@@ -436,7 +446,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
               </Col>
               <Col sm={3}>
                 <div className="search">
-                    <input type="text" placeholder="Search"
+                    <input type="text" placeholder="Separate multiple keywords by comma(,)"
                       onChange={(e: any) => setSearch(e.target.value)}
                       onKeyDown={handleSearchKeyDown} />
                     <button type="submit">
@@ -446,12 +456,34 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                 </div>
               </Col>
               <Col sm={3}>
-                <h3 className="text-right mt-3">{totalKeywordranks} Keywords</h3>
+                <Dropdown className="float-right">
+  								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 mt-3 export'
+  									as={Link}>
+  									<Icon name="export" className="icon icon-xs  mr-2" />
+  									<span className='font-weight-bold'>{t('Export')}</span>
+  								</Dropdown.Toggle>
+
+  								<Dropdown.Menu>
+  									{map(FILETYPES, (file, index) => (
+  										<Dropdown.Item key={index}
+                      onClick={() => {
+												if (file.value === 'csv-filtered' || file.value === 'xls-filtered')
+													dispatch(exportKeywords(companyId, file.value, filters))
+												else
+													dispatch(exportKeywords(companyId, file.value))
+											}}
+                      >
+  											{file.label}
+  										</Dropdown.Item>
+  									))}
+  								</Dropdown.Menu>
+  							</Dropdown>
               </Col>
             </Row>
             <Row>
               <Col lg={12}>
                 <div className={"list-view"}>
+                  <p className="mt-3">{totalKeywordranks} Keywords</p>
                   <Table className="mt-3">
                     <thead>
                       <tr>
@@ -465,12 +497,12 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                           />
                         </th>
                         {!(selectedKeywords && selectedKeywords.length) ?
-                          <><th onClick={() => handleOnClickOrderBy("productkeyword__keyword__name")} className={"clickable-row"}>{t("Keywords")}</th>
-                            <th onClick={() => handleOnClickOrderBy("frequency")} className={"clickable-row"}>{t("Search Frequency")}</th>
-                            <th onClick={() => handleOnClickOrderBy("index")} className={"clickable-row"}>{t("Indexed")}</th>
-                            <th onClick={() => handleOnClickOrderBy("rank")} className={"clickable-row"}>{t("Rank")}</th>
-                            <th onClick={() => handleOnClickOrderBy("page")} className={"clickable-row"}>{t("Page")}</th>
-                            <th onClick={() => handleOnClickOrderBy("visibility_score")} className={"clickable-row"}>{t("Visibility Score")}</th>
+                          <><th onClick={() => handleOnClickOrderBy("productkeyword__keyword__name")} className={"clickable-row"}>{t("Keywords")} <OrderByIcon orderField={"productkeyword__keyword__name"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                            <th onClick={() => handleOnClickOrderBy("frequency")} className={"clickable-row"}>{t("Search Frequency")} <OrderByIcon orderField={"frequency"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                            <th onClick={() => handleOnClickOrderBy("index")} className={"clickable-row"}>{t("Indexed")} <OrderByIcon orderField={"index"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                            <th onClick={() => handleOnClickOrderBy("rank")} className={"clickable-row"}>{t("Rank")} <OrderByIcon orderField={"rank"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                            <th onClick={() => handleOnClickOrderBy("page")} className={"clickable-row"}>{t("Page")} <OrderByIcon orderField={"page"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                            <th onClick={() => handleOnClickOrderBy("visibility_score")} className={"clickable-row"}>{t("Visibility Score")} <OrderByIcon orderField={"visibility_score"} orderBy={orderBy} orderDirection={orderDirection} /></th>
                             <th>{t("Action")}</th>
                           </>
                           :
