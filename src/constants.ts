@@ -300,4 +300,17 @@ const JOB_TITLES: any = {
     "Sales": "Sales"
 }
 
-export { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS, TIMEZONES, LENGTHS, LANGS, JOB_TITLES, TEMPLATE_LANGS };
+const TEMPLATE_VARIABLES: any = {
+  "Seller Name": "{{seller_name}}",
+  "Order ID": "{{order_id}}",
+  "Purchase Date": "{{purchase_date}}",
+  "Shipping Date": "{{shipping_date}}",
+  "Order item count": "{{order_items_count}}",
+  "Total Amount": "{{total_amount}}",
+  "Product Title": "{{product_title}}",
+  "Product ASIN": "{{asin}}",
+  "Product SKU": "{{sku}}",
+  "List of order items": "{{order_items}}",
+}
+
+export { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS, TIMEZONES, LENGTHS, LANGS, JOB_TITLES, TEMPLATE_LANGS, TEMPLATE_VARIABLES};

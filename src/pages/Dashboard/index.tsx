@@ -4,6 +4,8 @@ import { Row, Col, Card, Table } from "react-bootstrap";
 import { useTranslation } from 'react-i18next';
 import { withRouter, useHistory } from "react-router-dom";
 import { default as dayjs } from 'dayjs';
+import { find, get, size } from "lodash";
+import Flag from 'react-flagkit';
 
 //components
 import Icon from "../../components/Icon";
@@ -14,7 +16,7 @@ import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
 import ComparePercentage from "../../components/ComparePercentage";
 import { getSalesChartData, getAsinPerformance, getEmailChartData } from "../../redux/actions";
 import { CURRENCIES } from "../../constants";
-
+import dummyImage from "../../assets/images/dummy_image.svg";
 import OverallChart from "./OverallChart";
 
 //Plug-in's
@@ -48,7 +50,7 @@ const Dashboard = (props: DashboardProps) => {
     const today = new Date();
 
     const start_date = dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY');
-    const end_date = dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
+    const end_date = dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY');
 
     return {
       start_date: start_date,
@@ -248,12 +250,106 @@ const Dashboard = (props: DashboardProps) => {
 
                   </Row>
               </Col>
+              { selectedMarket.value == "all" ? <>
               <Col lg={2}>
+                <h4>Best Performing Marketplaces</h4>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>{t('Marketplace')}</th>
+                            <th>{t('Visibility Score')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      { asinperformance && asinperformance[0] &&  asinperformance[0].best.map((best, key) =>
+                        <tr>
+                            <td>
+                              <div className="d-flex">
+                                  <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
+                                      <Flag country={best.name} />
+                                  </div>
+                                  <div>
+                                      <h6 className='my-0'>Amazon {best.name}</h6>
+                                  </div>
+                              </div>
+                            </td>
+                            <td>
+                            {best.visibility_score}
+                            <ComparePercentage value={ best.visibility_score_per ? best.visibility_score_per : 0 } />
+                            </td>
+                        </tr>
+                      )}
+                    </tbody>
+                </Table>
+              </Col>
+              <Col lg={2}>
+                <h4>Worst Performing Marketplaces</h4>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>{t('Marketplace')}</th>
+                            <th>{t('Visibility Score')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    { asinperformance && asinperformance[0] && asinperformance[0].worst.map((worst, key) =>
+                      <tr>
+                          <td>
+                            <div className="d-flex">
+                                <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
+                                    <Flag country={worst.name} />
+                                </div>
+                                <div>
+                                    <h6 className='my-0'>Amazon {worst.name}</h6>
+                                </div>
+                            </div>
+                          </td>
+                          <td>
+                          {worst.visibility_score}
+                          <ComparePercentage value={ worst.visibility_score_per ? worst.visibility_score_per : 0 } />
+                          </td>
+                      </tr>
+                    )}
+                    </tbody>
+                </Table>
+              </Col>
+              <Col lg={2}>
+                <h4>Trending Marketplaces</h4>
+                <Table hover>
+                    <thead>
+                        <tr>
+                            <th>{t('Marketplace')}</th>
+                            <th>{t('Visibility Score')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    { asinperformance && asinperformance[0] && asinperformance[0].trending.map((trending, key) =>
+                      <tr>
+                          <td>
+                            <div className="d-flex">
+                                <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
+                                    <Flag country={trending.name} />
+                                </div>
+                                <div>
+                                    <h6 className='my-0'>Amazon {trending.name}</h6>
+                                </div>
+                            </div>
+                          </td>
+                          <td>
+                          {trending.visibility_score}
+                          <ComparePercentage value={ trending.visibility_score_per ? trending.visibility_score_per : 0 } />
+                          </td>
+                      </tr>
+                    )}
+                    </tbody>
+                </Table>
+              </Col> </>
+              :
+              <><Col lg={2}>
                 <h4>Best Performing ASIN</h4>
                 <Table hover>
                     <thead>
                         <tr>
-                            <th>{t('#')}</th>
                             <th>{t('ASIN')}</th>
                             <th>{t('Visibility Score')}</th>
                         </tr>
@@ -261,8 +357,21 @@ const Dashboard = (props: DashboardProps) => {
                     <tbody>
                       { asinperformance && asinperformance[0] &&  asinperformance[0].best.map((best, key) =>
                         <tr>
-                            <td>{key+1}</td>
-                            <td>{best.asin}</td>
+                            <td>
+                              <div className="d-flex">
+                                  <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
+                                    <img className="img-sm" src={size(best.images) > 0 ? (
+                                      find(best.images, img => !!img.main_image) ?
+                                        find(best.images, img => !!img.main_image).image :
+                                        get(best, "images[0].image")) :
+                                      dummyImage}
+                                      alt={best.title} width="30" />
+                                  </div>
+                                  <div>
+                                      <h6 className='my-0'>{best.asin}</h6>
+                                  </div>
+                              </div>
+                            </td>
                             <td>
                             {best.visibility_score}
                             <ComparePercentage value={ best.visibility_score_per ? best.visibility_score_per : 0 } />
@@ -277,7 +386,6 @@ const Dashboard = (props: DashboardProps) => {
                 <Table hover>
                     <thead>
                         <tr>
-                            <th>{t('#')}</th>
                             <th>{t('ASIN')}</th>
                             <th>{t('Visibility Score')}</th>
                         </tr>
@@ -285,8 +393,21 @@ const Dashboard = (props: DashboardProps) => {
                     <tbody>
                     { asinperformance && asinperformance[0] && asinperformance[0].worst.map((worst, key) =>
                       <tr>
-                          <td>{key+1}</td>
-                          <td>{worst.asin}</td>
+                          <td>
+                            <div className="d-flex">
+                                <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
+                                  <img className="img-sm" src={size(worst.images) > 0 ? (
+                                    find(worst.images, img => !!img.main_image) ?
+                                      find(worst.images, img => !!img.main_image).image :
+                                      get(worst, "images[0].image")) :
+                                    dummyImage}
+                                    alt={worst.title} width="30" />
+                                </div>
+                                <div>
+                                    <h6 className='my-0'>{worst.asin}</h6>
+                                </div>
+                            </div>
+                          </td>
                           <td>
                           {worst.visibility_score}
                           <ComparePercentage value={ worst.visibility_score_per ? worst.visibility_score_per : 0 } />
@@ -301,7 +422,6 @@ const Dashboard = (props: DashboardProps) => {
                 <Table hover>
                     <thead>
                         <tr>
-                            <th>{t('#')}</th>
                             <th>{t('ASIN')}</th>
                             <th>{t('Visibility Score')}</th>
                         </tr>
@@ -309,8 +429,21 @@ const Dashboard = (props: DashboardProps) => {
                     <tbody>
                     { asinperformance && asinperformance[0] && asinperformance[0].trending.map((trending, key) =>
                       <tr>
-                          <td>{key+1}</td>
-                          <td>{trending.asin}</td>
+                          <td>
+                            <div className="d-flex">
+                                <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
+                                  <img className="img-sm" src={size(trending.images) > 0 ? (
+                                    find(trending.images, img => !!img.main_image) ?
+                                      find(trending.images, img => !!img.main_image).image :
+                                      get(trending, "images[0].image")) :
+                                    dummyImage}
+                                    alt={trending.title} width="30" />
+                                </div>
+                                <div>
+                                    <h6 className='my-0'>{trending.asin}</h6>
+                                </div>
+                            </div>
+                          </td>
                           <td>
                           {trending.visibility_score}
                           <ComparePercentage value={ trending.visibility_score_per ? trending.visibility_score_per : 0 } />
@@ -319,7 +452,8 @@ const Dashboard = (props: DashboardProps) => {
                     )}
                     </tbody>
                 </Table>
-              </Col>
+              </Col> </>
+            }
             </Row>
 
 
