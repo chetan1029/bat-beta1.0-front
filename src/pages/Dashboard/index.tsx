@@ -360,11 +360,7 @@ const Dashboard = (props: DashboardProps) => {
                             <td>
                               <div className="d-flex">
                                   <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
-                                    <img className="img-sm" src={size(best.images) > 0 ? (
-                                      find(best.images, img => !!img.main_image) ?
-                                        find(best.images, img => !!img.main_image).image :
-                                        get(best, "images[0].image")) :
-                                      dummyImage}
+                                    <img className="img-sm" src={best.thumbnail? best.thumbnail:dummyImage}
                                       alt={best.title} width="30" />
                                   </div>
                                   <div>
@@ -396,11 +392,7 @@ const Dashboard = (props: DashboardProps) => {
                           <td>
                             <div className="d-flex">
                                 <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
-                                  <img className="img-sm" src={size(worst.images) > 0 ? (
-                                    find(worst.images, img => !!img.main_image) ?
-                                      find(worst.images, img => !!img.main_image).image :
-                                      get(worst, "images[0].image")) :
-                                    dummyImage}
+                                  <img className="img-sm" src={worst.thumbnail? worst.thumbnail:dummyImage}
                                     alt={worst.title} width="30" />
                                 </div>
                                 <div>
@@ -432,11 +424,7 @@ const Dashboard = (props: DashboardProps) => {
                           <td>
                             <div className="d-flex">
                                 <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
-                                  <img className="img-sm" src={size(trending.images) > 0 ? (
-                                    find(trending.images, img => !!img.main_image) ?
-                                      find(trending.images, img => !!img.main_image).image :
-                                      get(trending, "images[0].image")) :
-                                    dummyImage}
+                                  <img className="img-sm" src={trending.thumbnail? trending.thumbnail:dummyImage}
                                     alt={trending.title} width="30" />
                                 </div>
                                 <div>
