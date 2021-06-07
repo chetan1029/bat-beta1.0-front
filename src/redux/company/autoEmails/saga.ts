@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate, createCampaign as AddCampaign } from "../../../api/index";
+import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate ,testTemplate as testTemplateApi, createCampaign as AddCampaign } from "../../../api/index";
 
 import { autoEmailsApiResponseError, autoEmailsApiResponseSuccess } from "./actions";
 import { AutoEmailsTypes } from './constants';
@@ -111,6 +111,15 @@ function* editTemplate({ payload: { companyId, templateId, params } }: any) {
     }
 }
 
+function* testTemplate({ payload: { companyId, templateId, data } }: any) {
+    try {
+        const response = yield call(testTemplateApi, companyId, templateId, data);
+        yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.TEST_TEMPLATE, response.data));
+    } catch (error) {
+        yield put(autoEmailsApiResponseError(AutoEmailsTypes.TEST_TEMPLATE, error));
+    }
+}
+
 /*
 delete asset
 */
@@ -164,6 +173,10 @@ export function* watchEditTemplate() {
     yield takeEvery(AutoEmailsTypes.EDIT_TEMPLATE, editTemplate)
 }
 
+export function* watchTestTemplate() {
+    yield takeEvery(AutoEmailsTypes.TEST_TEMPLATE, testTemplate)
+}
+
 export function* watchDeleteTemplate() {
     yield takeEvery(AutoEmailsTypes.DELETE_TEMPLATE, deleteTemplate)
 }
@@ -181,6 +194,7 @@ function* autoEmailsSaga() {
         fork(watchTemplate),
         fork(watchEditTemplate),
         fork(watchDeleteTemplate),
+        fork(watchTestTemplate),
     ]);
 }
 

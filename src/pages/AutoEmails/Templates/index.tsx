@@ -13,7 +13,7 @@ import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 import searchIcon from "../../../assets/images/search_icon.svg";
-
+import EmailTemplate from "./EmailTemplate";
 //actions
 import { APICore } from '../../../api/apiCore';
 import {
@@ -93,7 +93,8 @@ const Templates = (props: TemplatesProps) => {
     }
 
     const [selectedTemplateForDelete, setselectedTemplateForDelete] = useState<any>(null);
-
+    const [showEmailTemplate, setShowEmailTemplate] = useState(false);
+    const [testTemplate, setTestTemplate] = useState<any>(null);
 
     const handleSearchKeyDown = (event: any) => {
       const { value } = event.target;
@@ -101,6 +102,11 @@ const Templates = (props: TemplatesProps) => {
       if ([13].includes(event.keyCode)) {
         setFilters({ ...filters, search: value, offset: 0 });
       }
+    };
+
+    const testEmailTemplate = (emailtemplatemodel: boolean, emailtemplate: any) => {
+      setShowEmailTemplate(emailtemplatemodel);
+      setTestTemplate(emailtemplate);
     };
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
@@ -173,7 +179,8 @@ const Templates = (props: TemplatesProps) => {
                                                               {template['subject']}
                                                             </td>
                                                             <td>
-                                                                <Link to={`/auto-emails/${companyId}/templates/edit/${template.id}`} className="btn btn-sm btn-primary">{t('Edit')}</Link>
+                                                                <Link className="btn btn-sm btn-primary" to='#' onClick={() => testEmailTemplate(true, template)}>{t("Test Email Template")}</Link>
+                                                                <Link to={`/auto-emails/${companyId}/templates/edit/${template.id}`} className="btn btn-sm btn-primary ml-2">{t('Edit')}</Link>
                                                                 <Button onClick={() => ondeleteTemplate(template)} className="btn btn-sm btn-danger ml-2">{t('Delete')}</Button>
                                                             </td>
                                                         </tr>
@@ -193,6 +200,7 @@ const Templates = (props: TemplatesProps) => {
 
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {showEmailTemplate ? <EmailTemplate emailTemplate={testTemplate} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
         </>
     );
 }

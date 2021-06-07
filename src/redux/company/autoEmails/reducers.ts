@@ -86,6 +86,13 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AutoEmailsTypes.TEST_TEMPLATE: {
+                    return {
+                        ...state,
+                        templateTestSent: true,
+                        templateTestLoading: false,
+                    }
+                }
                 case AutoEmailsTypes.DELETE_TEMPLATE: {
                     return {
                         ...state,
@@ -177,6 +184,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AutoEmailsTypes.TEST_TEMPLATE: {
+                    return {
+                        ...state,
+                        templateTestLoading: false,
+                        templateTestSentError: action.payload.error,
+                        templateTestSent: false
+                    }
+                }
                 case AutoEmailsTypes.DELETE_TEMPLATE: {
                     return {
                         ...state,
@@ -225,6 +240,9 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 loading: true
             };
 
+        case AutoEmailsTypes.TEST_TEMPLATE:
+            return { ...state, templateTestLoading: true, templateTestSent: false };
+
         case AutoEmailsTypes.DELETE_TEMPLATE:
             return {
                 ...state, isTemplateDeleted: false, loading: true
@@ -248,6 +266,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 createCampaignError: null,
                 editTemplateError: null,
                 template: null,
+                templateTestSentError: null,
             }
         }
         default: return { ...state };

@@ -678,6 +678,11 @@ function updateTemplate(companyId: number, templateId: number, params?: any) {
     return api.update(`${baseUrl}`, params);
 }
 
+function testTemplate(companyId: number, templateId: number, data: any) {
+    const baseUrl = `/companies/${companyId}/email-template/${templateId}/test_email/`;
+    return api.create(`${baseUrl}`, data);
+}
+
 function deleteTemplate(companyId: number, templateId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/email-template/${templateId}/`;
     return api.delete(`${baseUrl}`);
@@ -823,7 +828,7 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign,
-    getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate,
+    getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate, testTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getSalesChartData,
