@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getGlobalTemplates, getGlobalTemplate, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate ,testTemplate as testTemplateApi, createCampaign as AddCampaign } from "../../../api/index";
+import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, deleteCampaign as deleteCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getGlobalTemplates, getGlobalTemplate, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate ,testTemplate as testTemplateApi, createCampaign as AddCampaign } from "../../../api/index";
 
 import { autoEmailsApiResponseError, autoEmailsApiResponseSuccess } from "./actions";
 import { AutoEmailsTypes } from './constants';
@@ -46,6 +46,19 @@ function* updateCampaign({ payload: { companyId, campaignId, data } }: any) {
         yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.UPDATE_CAMPAIGN, response.data));
     } catch (error) {
         yield put(autoEmailsApiResponseError(AutoEmailsTypes.UPDATE_CAMPAIGN, error));
+    }
+}
+
+/*
+delete campaign
+*/
+function* deleteCampaign({ payload: { companyId, campaignId } }: any) {
+    try {
+        const response = yield call(deleteCampaignApi, companyId, campaignId);
+        yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.DELETE_CAMPAIGN, response.data));
+
+    } catch (error) {
+        yield put(autoEmailsApiResponseError(AutoEmailsTypes.DELETE_CAMPAIGN, error));
     }
 }
 
@@ -140,7 +153,7 @@ function* testTemplate({ payload: { companyId, templateId, data } }: any) {
 }
 
 /*
-delete asset
+delete template
 */
 function* deleteTemplate({ payload: { companyId, templateId } }: any) {
     try {
@@ -166,6 +179,10 @@ export function* watchCampaign() {
 
 export function* watchUpdateCampain() {
     yield takeEvery(AutoEmailsTypes.UPDATE_CAMPAIGN, updateCampaign)
+}
+
+export function* watchDeleteCampaign() {
+    yield takeEvery(AutoEmailsTypes.DELETE_CAMPAIGN, deleteCampaign)
 }
 
 export function* watchTestCampain() {
@@ -214,6 +231,7 @@ function* autoEmailsSaga() {
         fork(watchGetCampaign),
         fork(watchCampaign),
         fork(watchUpdateCampain),
+        fork(watchDeleteCampaign),
         fork(watchTestCampain),
         fork(watchGetEmailQueues),
         fork(watchGetGlobalTemplates),

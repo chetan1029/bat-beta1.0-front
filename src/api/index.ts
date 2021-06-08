@@ -657,6 +657,11 @@ function updateCampaign(companyId: number, campaignId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+function deleteCampaign(companyId: number, campaignId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
 /* Global Templates */
 function getGlobalTemplates(params?: any) {
     const baseUrl = `/global-email-templates/`;
@@ -838,7 +843,7 @@ export {
     createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
-    getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign,
+    getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign, deleteCampaign,
     getGlobalTemplates, getGlobalTemplate,
     getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate, testTemplate,
     getEmailQueues,

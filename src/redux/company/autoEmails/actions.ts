@@ -32,6 +32,11 @@ export const updateCampaign = (companyId: string | number, campaignId: number | 
     payload: { companyId, campaignId, data }
 });
 
+export const deleteCampaign = (companyId: string | number, campaignId) => ({
+    type: AutoEmailsTypes.DELETE_CAMPAIGN,
+    payload: { companyId, campaignId }
+});
+
 export const getEmailQueues = (companyId: string | number, filters?: any) => ({
     type: AutoEmailsTypes.GET_EMAILQUEUES,
     payload: { companyId, filters }

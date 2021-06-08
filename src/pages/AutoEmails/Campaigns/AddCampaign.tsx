@@ -53,14 +53,13 @@ const AddCampaign = (props: AddCampaignProps) => {
     const companyId = props.match.params.companyId;
     const marketId = props.match.params.marketId;
 
-    const [status, setStatus] = useState(false);
+    const [campaignStatus, setCampaignStatus] = useState(false);
     const [showEmailTemplate, setShowEmailTemplate] = useState(false);
     const [templateId, setTemplateId] = useState("");
     const [channels, setChannels] = useState(['FBA', 'FBM']);
     const [excludeOrders, setExcludeOrders] = useState(["With Returns", "With Refunds"]);
     const [purchaseCount, setPurchaseCount] = useState(["1st Purchase"]);
     const [scheduleType, setScheduleType] = useState("As soon as possible");
-    const [activationDate, setActivationDate] = useState(new Date());
 
     const defaultParams = { 'limit': 100000000};
 
@@ -72,6 +71,7 @@ const AddCampaign = (props: AddCampaignProps) => {
           value: template.id,
         };
       });
+
 
     const orderStatusOptions =
       orderStatuses.results && orderStatuses.results.length > 0 &&
@@ -129,8 +129,8 @@ const AddCampaign = (props: AddCampaignProps) => {
         setPurchaseCount(purchase);
     }
 
-    const onChangeStatus = (value: any) => {
-      setStatus(value);
+    const onChangeStatus = (checked: any) => {
+      setCampaignStatus(checked);
     }
 
 
@@ -150,7 +150,7 @@ const AddCampaign = (props: AddCampaignProps) => {
       enableReinitialize: true,
       initialValues: {
         name: "",
-        status: status,
+        status: false,
         emailtemplate: null,
         order_status: null,
         schedule: null,
@@ -158,6 +158,7 @@ const AddCampaign = (props: AddCampaignProps) => {
         amazonmarketplace: null,
         include_invoice: false,
         send_optout: false,
+        activation_date: "",
       },
       validationSchema: Yup.object({
         name: Yup.string().required(t("Name is required")),
@@ -168,7 +169,7 @@ const AddCampaign = (props: AddCampaignProps) => {
       }),
       onSubmit: values => {
         dispatch(createCampaign(companyId, { ...values, amazonmarketplace: get(values, 'amazonmarketplace.value'), order_status: get(values, 'order_status.value'),
-        emailtemplate: get(values, 'emailtemplate.value'), schedule: get(values, 'schedule.value'), channel: channels, exclude_orders: excludeOrders, buyer_purchase_count: purchaseCount, status: status ? 'Active': 'Inactive'}));
+        emailtemplate: get(values, 'emailtemplate.value'), schedule: get(values, 'schedule.value'), channel: channels, exclude_orders: excludeOrders, buyer_purchase_count: purchaseCount, status: campaignStatus ? 'Active': 'Inactive'}));
       },
     });
 
@@ -262,7 +263,7 @@ const AddCampaign = (props: AddCampaignProps) => {
                             <BootstrapSwitchButton
                                 onlabel='Active'
                                 offlabel='Inactive'
-                                checked={status}
+                                checked={campaignStatus}
                                 width={150}
                                 height={40}
                                 style={"status-switch"}
@@ -288,13 +289,13 @@ const AddCampaign = (props: AddCampaignProps) => {
                                   placeholderText={'Activation Date'}
                                   className={"form-control"}
                                   name="activation_date"
-                                  selected={activationDate}
+                                  selected={validator.values.activation_date}
                                   dateFormat={"yyyy-MM-dd"}
                                   timeFormat="hh:mm"
                                   minDate={minActivationDate}
                                   startDate={minActivationDate}
                                   onChange={(date: any) => {
-                                    setActivationDate(date);
+                                    validator.setFieldValue("activation_date", date);
                                   }}
                                   id="activation_date"
                               />

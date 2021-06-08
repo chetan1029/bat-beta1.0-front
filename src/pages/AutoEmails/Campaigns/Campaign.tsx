@@ -419,8 +419,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                     </Col>
                 </Row>
 
-                {campaign["name"].toLowerCase().includes("review request") ?
-                    <Row className="mt-4">
+                <Row className="mt-4">
                         <Col lg={12}>
                             <Form.Label className="font-weight-semibold">
                                 {t('Exclude Orders')}
@@ -442,8 +441,6 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                             </div>
                         </Col>
                     </Row>
-                    : null
-                }
 
                 <Row className="mt-4">
                     <Col sm={12}>

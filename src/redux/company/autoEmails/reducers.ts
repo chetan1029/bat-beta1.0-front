@@ -49,6 +49,13 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isCampaignUpdated: true,
                     }
                 }
+                case AutoEmailsTypes.DELETE_CAMPAIGN: {
+                    return {
+                        ...state,
+                        isCampaignDeleted: true,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.GET_EMAILQUEUES: {
                     return {
                         ...state,
@@ -161,6 +168,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isCampaignUpdated: false,
                     }
                 }
+                case AutoEmailsTypes.DELETE_CAMPAIGN: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isCampaignDeleted: false,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.GET_EMAILQUEUES: {
                     return {
                         ...state,
@@ -250,6 +265,11 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.UPDATE_CAMPAIGN:
             return { ...state, loading: true, isCampaignUpdated: false, updateError: null };
 
+        case AutoEmailsTypes.DELETE_CAMPAIGN:
+            return {
+                ...state, isCampaignDeleted: false, loading: true
+            };
+
         case AutoEmailsTypes.GET_EMAILQUEUES:
             return { ...state, isEmailQueuesFetched: false, loading: true };
 
@@ -305,6 +325,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 editTemplateError: null,
                 template: null,
                 templateTestSentError: null,
+                isCampaignDeleted: false,
             }
         }
         default: return { ...state };
