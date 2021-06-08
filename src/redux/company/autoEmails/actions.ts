@@ -46,6 +46,17 @@ export const testCampaign = (companyId: string | number, campaignId: number | st
     payload: { companyId, campaignId, data }
 });
 
+// Global templates
+export const getGlobalTemplates = (filters?: any) => ({
+    type: AutoEmailsTypes.GET_GLOBALTEMPLATES,
+    payload: { filters }
+});
+
+export const getGlobalTemplate = (templateId: number | string) => ({
+    type: AutoEmailsTypes.GET_GLOBALTEMPLATE,
+    payload: { templateId }
+});
+
 // templates
 export const getTemplates = (companyId: string | number, filters?: any) => ({
     type: AutoEmailsTypes.GET_TEMPLATES,

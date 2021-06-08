@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate ,testTemplate as testTemplateApi, createCampaign as AddCampaign } from "../../../api/index";
+import { getCampaigns, getCampaign, updateCampaign as updateCampaignApi, testCampaign as testCampaignApi, getEmailQueues, getGlobalTemplates, getGlobalTemplate, getTemplates, getTemplate, deleteTemplate as deleteTemplateApi, createTemplate as addTemplate, updateTemplate ,testTemplate as testTemplateApi, createCampaign as AddCampaign } from "../../../api/index";
 
 import { autoEmailsApiResponseError, autoEmailsApiResponseSuccess } from "./actions";
 import { AutoEmailsTypes } from './constants';
@@ -64,6 +64,25 @@ function* getAllEmailQueues({ payload: { companyId, filters } }: any) {
         yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.GET_EMAILQUEUES, response.data));
     } catch (error) {
         yield put(autoEmailsApiResponseError(AutoEmailsTypes.GET_EMAILQUEUES, error));
+    }
+}
+
+/* template */
+function* getAllGlobalTemplates({ payload: { filters } }: any) {
+    try {
+        const response = yield call(getGlobalTemplates, filters);
+        yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.GET_GLOBALTEMPLATES, response.data));
+    } catch (error) {
+        yield put(autoEmailsApiResponseError(AutoEmailsTypes.GET_GLOBALTEMPLATES, error));
+    }
+}
+
+function* getGlobalTemplateDetails({ payload: { templateId } }: any) {
+    try {
+        const response = yield call(getGlobalTemplate, templateId);
+        yield put(autoEmailsApiResponseSuccess(AutoEmailsTypes.GET_GLOBALTEMPLATE, response.data));
+    } catch (error) {
+        yield put(autoEmailsApiResponseError(AutoEmailsTypes.GET_GLOBALTEMPLATE, error));
     }
 }
 
@@ -157,6 +176,14 @@ export function* watchGetEmailQueues() {
     yield takeEvery(AutoEmailsTypes.GET_EMAILQUEUES, getAllEmailQueues)
 }
 
+export function* watchGetGlobalTemplates() {
+    yield takeEvery(AutoEmailsTypes.GET_GLOBALTEMPLATES, getAllGlobalTemplates)
+}
+
+export function* watchGetGlobalTemplate() {
+    yield takeEvery(AutoEmailsTypes.GET_GLOBALTEMPLATE, getGlobalTemplateDetails)
+}
+
 export function* watchGetTemplates() {
     yield takeEvery(AutoEmailsTypes.GET_TEMPLATES, getAllTemplates)
 }
@@ -189,6 +216,8 @@ function* autoEmailsSaga() {
         fork(watchUpdateCampain),
         fork(watchTestCampain),
         fork(watchGetEmailQueues),
+        fork(watchGetGlobalTemplates),
+        fork(watchGetGlobalTemplate),
         fork(watchGetTemplates),
         fork(watchGetTemplate),
         fork(watchTemplate),

@@ -12,7 +12,7 @@ import Icon from "../../../components/Icon";
 import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 //actions
-import { getCampaigns, getMarketPlace, updateMarketPlace, getTemplates, getAllStatuses } from "../../../redux/actions";
+import { resetAutoEmails, getCampaigns, getMarketPlace, updateMarketPlace, getTemplates, getAllStatuses } from "../../../redux/actions";
 
 import Campaign from "./Campaign";
 
@@ -23,7 +23,7 @@ const Details = (props: DetailsProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
-    const { loading, campaigns, templates, market, orderStatuses, isCampaignUpdated, isMarketPlaceUpdated, updateError } = useSelector((state: any) => ({
+    const { loading, campaigns, templates, market, orderStatuses, isCampaignUpdated, isMarketPlaceUpdated, updateError, isCampaignsFetched } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
@@ -40,8 +40,13 @@ const Details = (props: DetailsProps) => {
 
     const defaultParams = useMemo(() => ({ 'limit': 100000000, 'marketplace': marketId }), [marketId]);
 
+    const [selectedCampaignId, setSelectedCampaignId] = useState<any>(null);
+    const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
+
+
     // get the data
     useEffect(() => {
+        dispatch(resetAutoEmails());
         dispatch(getCampaigns(companyId, defaultParams));
         dispatch(getTemplates(companyId, defaultParams));
         dispatch(getMarketPlace(companyId, marketId));
@@ -50,7 +55,13 @@ const Details = (props: DetailsProps) => {
 
     useEffect(() => {
         if (isCampaignUpdated || updateError) {
+            const updatedCampaign = selectedCampaign;
             dispatch(getCampaigns(companyId, defaultParams));
+            if(updatedCampaign && updatedCampaign.length){
+              setSelectedCampaignId(updatedCampaign.id);
+              setSelectedCampaign(updatedCampaign);
+            }
+            console.log("updated");
         }
         if (isMarketPlaceUpdated) {
             dispatch(getMarketPlace(companyId, marketId));
@@ -66,8 +77,6 @@ const Details = (props: DetailsProps) => {
         return camps.reduce((a, b) => a + (b[key] || 0), 0);
     }
 
-    const [selectedCampaignId, setSelectedCampaignId] = useState<any>(null);
-    const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
 
     useEffect(() => {
         if (campaigns && campaigns.length) {
@@ -84,6 +93,17 @@ const Details = (props: DetailsProps) => {
             setSelectedCampaign(campaign);
         });
     }
+
+    useEffect(() => {
+        if (isCampaignUpdated || updateError) {
+            const updatedCampaign = selectedCampaign;
+            dispatch(getCampaigns(companyId, defaultParams));
+            if(updatedCampaign && updatedCampaign.length){
+              setSelectedCampaignId(updatedCampaign.id);
+              setSelectedCampaign(updatedCampaign);
+            }
+        }
+    }, [dispatch, isCampaignUpdated, companyId, defaultParams, updateError]);
 
     const validator = useFormik({
         enableReinitialize: true,
@@ -177,6 +197,7 @@ const Details = (props: DetailsProps) => {
                                 {isMarketPlaceUpdated ? <MessageAlert message={t('Email address updated')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
                                 <Row>
                                     <Col lg={12}>
+                                      {campaigns.length ? <>
                                         <div className="px-2 pb-2 mb-3">
                                             <Nav variant="tabs" className="nav-bordered m-0" activeKey={selectedCampaignId} as='ul'>
                                                 {(campaigns || []).map((campaign: any, idx: number) => {
@@ -188,8 +209,9 @@ const Details = (props: DetailsProps) => {
                                         </div>
 
                                         <div>
-                                            {selectedCampaign ? <Campaign campaign={selectedCampaign} templates={templates} companyId={companyId} market={market} orderStatuses={orderStatuses} /> : null}
+                                            {selectedCampaign ? <Campaign campaign={selectedCampaign} templates={templates} companyId={companyId} market={market} orderStatuses={orderStatuses} setSelectedCampaign={setSelectedCampaign} /> : null}
                                         </div>
+                                        </> : <><h4>No campaign found. please add campaign for this marketplace.</h4></> }
                                     </Col>
                                 </Row>
                             </Card.Body>

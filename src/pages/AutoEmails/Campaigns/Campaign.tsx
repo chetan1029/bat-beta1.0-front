@@ -25,8 +25,9 @@ interface CampaignProps {
     market: any;
     companyId: string | number;
     orderStatuses: any;
+    setSelectedCampaign: any;
 }
-const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: CampaignProps) => {
+const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSelectedCampaign }: CampaignProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const history = useHistory();
@@ -184,7 +185,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market }: Cam
                 break;
             }
         }
-
+        setSelectedCampaign(campaign);
         dispatch(updateCampaign(companyId, campaign['id'], camp));
     }
 

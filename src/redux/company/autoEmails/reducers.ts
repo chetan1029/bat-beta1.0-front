@@ -4,6 +4,7 @@ const INIT_STATE: any = {
     campaigns: [],
     emailqueues: [],
     templates: [],
+    globaltemplates: [],
 };
 
 
@@ -53,6 +54,21 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         ...state,
                         emailQueues: action.payload.data,
                         isEmailQueuesFetched: true,
+                        loading: false,
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATES: {
+                    return {
+                        ...state,
+                        globaltemplates: action.payload.data.results,
+                        isGlobalTemplatesFetched: true,
+                        loading: false,
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATE: {
+                    return {
+                        ...state,
+                        globaltemplate: action.payload.data,
                         loading: false,
                     }
                 }
@@ -153,6 +169,21 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isClientsFetched: false
                     }
                 }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATES: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                        isGlobalTemplatesFetched: false
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                    }
+                }
                 case AutoEmailsTypes.GET_TEMPLATES: {
                     return {
                         ...state,
@@ -222,6 +253,12 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.GET_EMAILQUEUES:
             return { ...state, isEmailQueuesFetched: false, loading: true };
 
+        case AutoEmailsTypes.GET_GLOBALTEMPLATES:
+            return { ...state, isGlobalTemplatesFetched: false, loading: true };
+
+        case AutoEmailsTypes.GET_GLOBALTEMPLATE:
+            return { ...state, loading: true };
+
         case AutoEmailsTypes.GET_TEMPLATES:
             return { ...state, isTemplatesFetched: false, loading: true };
 
@@ -255,6 +292,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 isCampaignCreated: false,
                 isCampaignUpdated: false,
                 isTemplatesFetched: false,
+                isGlobalTemplatesFetched: false,
                 isEmailQueuesFetched: false,
                 error: null,
                 campaignTestSentError: null,

@@ -17,5 +17,8 @@ export enum AutoEmailsTypes {
     EDIT_TEMPLATE = '@@company/autoEmails/EDIT_TEMPLATE',
     DELETE_TEMPLATE = '@@company/autoEmails/DELETE_TEMPLATE',
 
+    GET_GLOBALTEMPLATES = '@@company/autoEmails/GET_GLOBALTEMPLATES',
+    GET_GLOBALTEMPLATE = '@@company/autoEmails/GET_GLOBALTEMPLATE',
+
     RESET = '@@company/autoEmails/RESET',
 }

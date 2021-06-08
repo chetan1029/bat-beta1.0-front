@@ -13,7 +13,7 @@ import DisplayDate from "../../../components/DisplayDate";
 import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
-import EmailTemplate from "./EmailTemplate";
+import EmailTemplate from "../Templates/EmailTemplate";
 import MarketPlacesDropdown from "../../../components/MarketPlacesDropdown";
 
 //plug-ins
@@ -26,7 +26,7 @@ import DatePicker from 'react-datepicker';
 //actions
 import { APICore } from '../../../api/apiCore';
 import {
-    resetAutoEmails, createCampaign, getTemplates, getAllStatuses, getMarketPlace
+    resetAutoEmails, createCampaign, getTemplates, getTemplate, getAllStatuses, getMarketPlace
 } from "../../../redux/actions";
 
 
@@ -40,11 +40,12 @@ const AddCampaign = (props: AddCampaignProps) => {
 
     const api = new APICore();
 
-    const { loading, templates, orderStatuses, isCampaignCreated, createCampaignError } = useSelector((state: any) => ({
+    const { loading, templates, template, orderStatuses, isCampaignCreated, createCampaignError } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isCampaignCreated: state.Company.AutoEmails.isCampaignCreated,
         createCampaignError: state.Company.AutoEmails.createCampaignError,
         templates: state.Company.AutoEmails.templates,
+        template: state.Company.AutoEmails.template,
         orderStatuses: state.Common.statuses,
     }));
 
@@ -54,9 +55,11 @@ const AddCampaign = (props: AddCampaignProps) => {
 
     const [status, setStatus] = useState(false);
     const [showEmailTemplate, setShowEmailTemplate] = useState(false);
+    const [templateId, setTemplateId] = useState("");
     const [channels, setChannels] = useState(['FBA', 'FBM']);
     const [excludeOrders, setExcludeOrders] = useState(["With Returns", "With Refunds"]);
     const [purchaseCount, setPurchaseCount] = useState(["1st Purchase"]);
+    const [scheduleType, setScheduleType] = useState("As soon as possible");
 
     const defaultParams = { 'limit': 100000000};
 
@@ -149,6 +152,7 @@ const AddCampaign = (props: AddCampaignProps) => {
         emailtemplate: null,
         order_status: null,
         schedule: null,
+        scheduledays: 5,
         amazonmarketplace: null,
         include_invoice: false,
         send_optout: false,
@@ -168,6 +172,12 @@ const AddCampaign = (props: AddCampaignProps) => {
 
     const minActivationDate = new Date(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
     const activationdate = new Date();
+
+    const viewEmailTemplate = () =>{
+      setShowEmailTemplate(true);
+      dispatch(getTemplate(companyId, templateId));
+    }
+
 
     return (
         <>
@@ -298,6 +308,7 @@ const AddCampaign = (props: AddCampaignProps) => {
                                     options={defaultTemplates || []}
                                     onChange={(value: any) => {
                                       validator.setFieldValue("emailtemplate", value);
+                                      setTemplateId(value.value);
                                     }}
                                     value={validator.values.emailtemplate}
                                     className={classNames(
@@ -317,7 +328,7 @@ const AddCampaign = (props: AddCampaignProps) => {
                                 </Col>
                                 <Col sm={3}>
                                   <p className="mb-0 text-muted font-weight-semibold">
-                                      <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>{t('View Email Template')}</Link>
+                                      <Link to='#' className='ml-4 text-link' onClick={() => viewEmailTemplate()}>{t('View Email Template')}</Link>
                                   </p>
                                 </Col>
                               </Row>
@@ -445,6 +456,7 @@ const AddCampaign = (props: AddCampaignProps) => {
                                     classNamePrefix="react-select"
                                     onChange={(value: any) => {
                                       validator.setFieldValue("schedule", value);
+                                      setScheduleType(value.value);
                                     }}
                                     value={validator.values.schedule}
                                     className={classNames(
@@ -460,6 +472,24 @@ const AddCampaign = (props: AddCampaignProps) => {
                                       {validator.errors.schedule}
                                     </Form.Control.Feedback>
                                   ) : null}
+                                </Col>
+                                <Col sm={3}>
+                                  <p className="mb-0 text-muted font-weight-semibold">
+                                      {scheduleType === "Daily" ? "Number of Days": ""}
+                                  </p>
+                                {scheduleType === "Daily" ?
+                                      <Form.Control as="select" size="sm" className="mt-1 col-3" placeholder={t("Number of Days")}
+                                          name="schedule_days" id="schedule_days"
+                                          value={validator.values.scheduledays}
+                                          onChange={(e: any) => validator.setFieldValue('scheduledays', e.target.value)}
+                                      >
+                                          {[...Array(61)].map((e, i) => {
+                                              return i >= 5 ?
+                                                  <option value={i} key={i}>{i}</option>
+                                                  : ""
+                                          })}
+                                      </Form.Control>
+                                      : ""}
                                 </Col>
                               </Row>
                           </Col>
@@ -503,7 +533,7 @@ const AddCampaign = (props: AddCampaignProps) => {
                   </Card.Body>
         				</Card>
             </div>
-            {showEmailTemplate ? <EmailTemplate campaign={""} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+            {showEmailTemplate ? <EmailTemplate emailTemplate={template} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
 
             {isCampaignCreated ? <MessageAlert message={t('The campaign is created successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {createCampaignError ? <MessageAlert message={createCampaignError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}

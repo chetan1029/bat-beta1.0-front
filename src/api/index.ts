@@ -657,6 +657,17 @@ function updateCampaign(companyId: number, campaignId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+/* Global Templates */
+function getGlobalTemplates(params?: any) {
+    const baseUrl = `/global-email-templates/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getGlobalTemplate(templateId: number,) {
+    const baseUrl = `/global-email-templates/${templateId}/`;
+    return api.get(`${baseUrl}`);
+}
+
 /* Templates */
 function getTemplates(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/email-template/`;
@@ -828,6 +839,7 @@ export {
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
     getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign,
+    getGlobalTemplates, getGlobalTemplate,
     getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate, testTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
