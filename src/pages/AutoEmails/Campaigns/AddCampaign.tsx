@@ -60,6 +60,7 @@ const AddCampaign = (props: AddCampaignProps) => {
     const [excludeOrders, setExcludeOrders] = useState(["With Returns", "With Refunds"]);
     const [purchaseCount, setPurchaseCount] = useState(["1st Purchase"]);
     const [scheduleType, setScheduleType] = useState("As soon as possible");
+    const [activationDate, setActivationDate] = useState(new Date());
 
     const defaultParams = { 'limit': 100000000};
 
@@ -149,10 +150,11 @@ const AddCampaign = (props: AddCampaignProps) => {
       enableReinitialize: true,
       initialValues: {
         name: "",
+        status: status,
         emailtemplate: null,
         order_status: null,
         schedule: null,
-        scheduledays: 5,
+        schedule_days: 5,
         amazonmarketplace: null,
         include_invoice: false,
         send_optout: false,
@@ -166,12 +168,12 @@ const AddCampaign = (props: AddCampaignProps) => {
       }),
       onSubmit: values => {
         dispatch(createCampaign(companyId, { ...values, amazonmarketplace: get(values, 'amazonmarketplace.value'), order_status: get(values, 'order_status.value'),
-        emailtemplate: get(values, 'emailtemplate.value'), schedule: get(values, 'schedule.value'), channel: channels, exclude_orders: excludeOrders, buyer_purchase_count: purchaseCount, status: values["status"] ? 'Active': 'Inactive'}));
+        emailtemplate: get(values, 'emailtemplate.value'), schedule: get(values, 'schedule.value'), channel: channels, exclude_orders: excludeOrders, buyer_purchase_count: purchaseCount, status: status ? 'Active': 'Inactive'}));
       },
     });
 
     const minActivationDate = new Date(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
-    const activationdate = new Date();
+
 
     const viewEmailTemplate = () =>{
       setShowEmailTemplate(true);
@@ -285,13 +287,16 @@ const AddCampaign = (props: AddCampaignProps) => {
                                   }}
                                   placeholderText={'Activation Date'}
                                   className={"form-control"}
-                                  name="activationDate"
-                                  selected={activationdate}
+                                  name="activation_date"
+                                  selected={activationDate}
                                   dateFormat={"yyyy-MM-dd"}
                                   timeFormat="hh:mm"
                                   minDate={minActivationDate}
                                   startDate={minActivationDate}
-                                  id="activationDate"
+                                  onChange={(date: any) => {
+                                    setActivationDate(date);
+                                  }}
+                                  id="activation_date"
                               />
                           </Col>
                       </Row>
@@ -480,8 +485,8 @@ const AddCampaign = (props: AddCampaignProps) => {
                                 {scheduleType === "Daily" ?
                                       <Form.Control as="select" size="sm" className="mt-1 col-3" placeholder={t("Number of Days")}
                                           name="schedule_days" id="schedule_days"
-                                          value={validator.values.scheduledays}
-                                          onChange={(e: any) => validator.setFieldValue('scheduledays', e.target.value)}
+                                          value={validator.values.schedule_days}
+                                          onChange={(e: any) => validator.setFieldValue('schedule_days', e.target.value)}
                                       >
                                           {[...Array(61)].map((e, i) => {
                                               return i >= 5 ?
@@ -521,7 +526,7 @@ const AddCampaign = (props: AddCampaignProps) => {
                       <div className="mt-4">
                         <Link
                           className="btn btn-outline-primary mr-3"
-                          to={`/auto-emails/${companyId}/campaign`}
+                          to={`/auto-emails/${companyId}/campaigns`}
                         >
                           {t("Cancel")}
                         </Link>

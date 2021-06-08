@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Row, Col, Form, Card } from "react-bootstrap";
+import { Row, Col, Form, Card, Button } from "react-bootstrap";
 import { Link, withRouter, useHistory } from "react-router-dom";
 import DatePicker from 'react-datepicker';
 
@@ -8,13 +8,15 @@ import { useTranslation } from 'react-i18next';
 
 //components
 import MessageAlert from "../../../components/MessageAlert";
-
+import EmailTemplate from "../Templates/EmailTemplate";
 //plug-ins
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { get } from 'lodash';
 //actions
-import { updateCampaign, } from "../../../redux/actions";
+import { updateCampaign, getTemplate } from "../../../redux/actions";
 
-import EmailTemplate from "./EmailTemplate";
 import EditCompanyInfo from "./EditCompanyInfo";
 import classNames from "classnames";
 import Select from "react-select";
@@ -32,11 +34,19 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const { isCampaignUpdated, updateError, isCompanyUpdated } = useSelector((state: any) => ({
+    const { isCampaignUpdated, updateError, isCompanyUpdated, template } = useSelector((state: any) => ({
         isCampaignUpdated: state.Company.AutoEmails.isCampaignUpdated,
         updateError: state.Company.AutoEmails.updateError,
         isCompanyUpdated: state.Company.AmazonCompany.isCompanyUpdated,
+        template: state.Company.AutoEmails.template,
     }));
+
+    useEffect(() => {
+        if(campaign && campaign.length){
+          dispatch(getTemplate(companyId, campaign["emailtemplate"]["id"]));
+        }
+    }, [dispatch, campaign]);
+
 
     const getDate = (value) => {
         return typeof value === 'string' ? new Date(Date.parse(value)) : value;
@@ -62,14 +72,10 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
 
     const [status, setStatus] = useState(campaign['status'] && campaign['status']['name'] && campaign['status']['name'].toLowerCase() === 'active');
 
-    const [emailTemplate, setEmailTemplate] = useState({ label: campaign["emailtemplate"]["name"], value: campaign["emailtemplate"]["id"] });
-    const [scheduledays, setScheduledays] = useState(campaign['schedule_days']);
-    const [emailOrderStatus, setEmailOrderStatus] = useState({ label: campaign["order_status"]["name"], value: campaign["order_status"]["id"] });
-    const [activationdate, setActivationdate] = useState(getDate(campaign['activation_date']));
-    const [includeInvoice, setIncludeInvoice] = useState<any>(campaign['include_invoice']);
-    const [sendOptout, setSendOptout] = useState<any>(campaign['send_optout']);
     const [channels, setChannels] = useState(campaign['channel']);
-    const [schedule, setSchedule] = useState({ label: campaign['schedule'], value: campaign['schedule'] });
+
+    const [templateId, setTemplateId] = useState(campaign["emailtemplate"]["id"]);
+    const [scheduleType, setScheduleType] = useState(campaign['schedule']);
 
     const CHANNELS: Array<string> = ['FBA', 'FBM'];
 
@@ -81,7 +87,6 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
             chs = chs.filter(c => c !== channel);
         }
         setChannels(chs);
-        saveCampaign('channles', chs);
     }
 
     const SCHEDULES: Array<string> = ["Daily", "As soon as possible"];
@@ -107,7 +112,6 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
             orders = orders.filter(c => c !== orderStr);
         }
         setExcludeOrders(orders);
-        saveCampaign('exclude_orders', orders);
     }
 
     const PURCHASE_COUNT = ["1st Purchase", "2nd Purchase", "3rd Purchase", "4th Purchase"];
@@ -122,72 +126,41 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
             purchase = purchase.filter(c => c !== purchaseStr);
         }
         setPurchaseCount(purchase);
-        saveCampaign('buyer_purchase_count', purchase);
     }
 
-    const saveCampaign = (field: string, value: any) => {
-        const camp: any = {};
-
-        camp["amazonmarketplace"] = campaign['amazonmarketplace']['id']
-
-        switch (field) {
-            case 'status': {
-                camp['status'] = value ? 'Active' : 'Inactive';
-                setStatus(value);
-                break;
-            }
-            case 'activation_date': {
-                camp['activation_date'] = value;
-                setActivationdate(value);
-                break;
-            }
-            case 'includeInvoice': {
-                camp['include_invoice'] = value;
-                setIncludeInvoice(value);
-                break;
-            }
-            case 'sendOptout': {
-                camp['send_optout'] = value;
-                setSendOptout(value);
-                break;
-            }
-            case 'channles': {
-                camp['channel'] = value;
-                break;
-            }
-            case 'exclude_orders':{
-                camp['exclude_orders'] = value;
-                break;
-            }
-            case 'schedule_days': {
-                camp['schedule_days'] = value;
-                setScheduledays(value);
-                break;
-            }
-            case 'emailtemplate': {
-                camp['emailtemplate'] = value.value;
-                setEmailTemplate(value);
-                break;
-            }
-            case 'order_status': {
-                camp['order_status'] = value.value;
-                setEmailOrderStatus(value);
-                break;
-            }
-            case 'schedule': {
-                camp['schedule'] = value.value;
-                setSchedule(value);
-                break;
-            }
-            case 'buyer_purchase_count': {
-                camp['buyer_purchase_count'] = value;
-                setPurchaseCount(value);
-                break;
-            }
-        }
-        setSelectedCampaign(campaign);
-        dispatch(updateCampaign(companyId, campaign['id'], camp));
+    const onChangeStatus = (value: any) => {
+      setStatus(value);
     }
+
+    const viewEmailTemplate = () =>{
+      setShowEmailTemplate(true);
+      dispatch(getTemplate(companyId, templateId));
+    }
+
+    const validator = useFormik({
+      enableReinitialize: true,
+      initialValues: {
+        name: campaign["name"],
+        status: status,
+        emailtemplate: { label: campaign["emailtemplate"]["name"], value: campaign["emailtemplate"]["id"] },
+        order_status: { label: campaign['order_status']['name'], value: campaign['order_status']['id'] },
+        schedule: { label: campaign['schedule'], value: campaign['schedule'] },
+        schedule_days: campaign['schedule_days'],
+        include_invoice: campaign['include_invoice'],
+        send_optout: campaign['send_optout'],
+        activation_date: getDate(campaign['activation_date']),
+      },
+      validationSchema: Yup.object({
+        name: Yup.string().required(t("Name is required")),
+        emailtemplate: Yup.object().required(t("Email Template is required")).nullable(),
+        order_status: Yup.object().required(t("Order Status is required")).nullable(),
+        schedule: Yup.object().required(t("Schedule is required")).nullable(),
+      }),
+      onSubmit: values => {
+        dispatch(updateCampaign(companyId, campaign["id"],{ ...values, amazonmarketplace: get(values, 'amazonmarketplace.value'), order_status: get(values, 'order_status.value'),
+        emailtemplate: get(values, 'emailtemplate.value'), schedule: get(values, 'schedule.value'), channel: channels, exclude_orders: excludeOrders, buyer_purchase_count: purchaseCount, status: status ? 'Active': 'Inactive'}));
+      },
+    });
 
     const [showEmailTemplate, setShowEmailTemplate] = useState(false);
 
@@ -252,6 +225,35 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                       </Card>
                   </Col>
               </Row>
+              <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
+                <Row>
+                    <Col sm={6}>
+                      <Form.Label htmlFor="usr">{t("Campaign Name")}</Form.Label>
+                        <Form.Control
+                          type="text"
+                          className="form-control"
+                          id="name"
+                          name="name"
+                          placeholder="Campaign Name"
+                          value={validator.values.name}
+                          onBlur={validator.handleBlur}
+                          onChange={validator.handleChange}
+                          isInvalid={
+                            validator.touched.name &&
+                              validator.errors &&
+                              validator.errors.name
+                              ? true
+                              : false
+                          }
+                        />
+
+                        {validator.touched.name && validator.errors.name ? (
+                          <Form.Control.Feedback type="invalid">
+                            {validator.errors.name}
+                          </Form.Control.Feedback>
+                        ) : null}
+                    </Col>
+                </Row>
                 <Row className="mt-4">
                     <Col lg={12}>
                       <Form.Label className="font-weight-semibold">{t("Status")}</Form.Label><br />
@@ -264,7 +266,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                           style={"status-switch"}
                           onstyle='success'
                           offstyle='danger'
-                          onChange={(checked: boolean) => saveCampaign('status', checked)}
+                          onChange={(checked: boolean) => onChangeStatus(checked)}
                       />
                     </Col>
                 </Row>
@@ -282,13 +284,16 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                             }}
                             placeholderText={'Activation Date'}
                             className={"form-control"}
-                            selected={activationdate}
-                            onChange={date => saveCampaign('activation_date', date)}
+                            name="activation_date"
+                            selected={validator.values.activation_date}
                             dateFormat={"yyyy-MM-dd"}
                             timeFormat="hh:mm"
                             minDate={minActivationDate}
                             startDate={minActivationDate}
-                            id="activationDate"
+                            onChange={(date: any) => {
+                              validator.setFieldValue("activation_date", date);
+                            }}
+                            id="activation_date"
                         />
                     </Col>
                 </Row>
@@ -301,20 +306,30 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                               id="emailtemplate"
                               name="emailtemplate"
                               placeholder={t("Select Email Template")}
-                              isClearable
                               options={defaultTemplates || []}
-                              value={emailTemplate}
+                              value={validator.values.emailtemplate}
                               className={classNames(
                                 "react-select",
                                 "react-select-regular",
+                                validator.touched.emailtemplate &&
+                                validator.errors.emailtemplate &&
+                                "is-invalid"
                               )}
-                              onChange={emailTemplate => saveCampaign('emailtemplate', emailTemplate)}
+                              onChange={(value: any) => {
+                                validator.setFieldValue("emailtemplate", value);
+                                setTemplateId(value.value);
+                              }}
                               classNamePrefix="react-select"
                             />
+                            {validator.touched.emailtemplate && validator.errors.emailtemplate ? (
+                              <Form.Control.Feedback type="invalid">
+                                {validator.errors.emailtemplate}
+                              </Form.Control.Feedback>
+                            ) : null}
                           </Col>
                           <Col sm={3}>
                             <p className="mb-0 text-muted font-weight-semibold">
-                                <Link to='#' className='ml-4 text-link' onClick={() => setShowEmailTemplate(true)}>{t('View Email Template')}</Link>
+                                <Link to='#' className='ml-4 text-link' onClick={() => viewEmailTemplate()}>{t('View Email Template')}</Link>
                             </p>
                           </Col>
                         </Row>
@@ -324,13 +339,28 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                     <Col sm={2}>
                         <Form.Label className="font-weight-semibold">{t('Order Status')}</Form.Label>
                         <Select
-  												placeholder={t('Status')}
-  												options={orderStatusOptions}
-  												value={emailOrderStatus}
-                          onChange={emailOrderStatus => saveCampaign('order_status', emailOrderStatus)}
-  												className={"react-select react-select-regular"}
-  												classNamePrefix="react-select"
-  											/>
+                          placeholder={t('Status')}
+                          options={orderStatusOptions}
+                          classNamePrefix="react-select"
+                          name= "order_status"
+                          id="order_status"
+                          onChange={(value: any) => {
+                            validator.setFieldValue("order_status", value);
+                          }}
+                          value={validator.values.order_status}
+                          className={classNames(
+                            "react-select",
+                            "react-select-regular",
+                            validator.touched.order_status &&
+                            validator.errors.order_status &&
+                            "is-invalid"
+                          )}
+                        />
+                        {validator.touched.order_status && validator.errors.order_status ? (
+                          <Form.Control.Feedback type="invalid">
+                            {validator.errors.order_status}
+                          </Form.Control.Feedback>
+                        ) : null}
                     </Col>
                 </Row>
                 <Row className="mt-4">
@@ -342,8 +372,8 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                                         type='switch'
                                         id="include_invoice-check"
                                         label="Yes"
-                                        checked={includeInvoice}
-                                        onChange={(e: any) => saveCampaign('includeInvoice', e.target.checked)}
+                                        checked={validator.values.include_invoice}
+                                        onChange={(e: any) => validator.setFieldValue("include_invoice", e.target.checked)}
                                     />
                                 </Col>
                                 <Col>
@@ -361,8 +391,8 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                                         type='switch'
                                         id="include_optout-check"
                                         label="Yes"
-                                        checked={sendOptout}
-                                        onChange={(e: any) => saveCampaign('sendOptout', e.target.checked)}
+                                        checked={validator.values.send_optout}
+                                        onChange={(e: any) => validator.setFieldValue("send_optout", e.target.checked)}
                                     />
                                 </Col>
                             </Row>
@@ -421,23 +451,39 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                         <Row>
                           <Col sm={2}>
                             <Select
+                              name="schedule"
+                              id="schedule"
                               placeholder={t('Schedule')}
                               options={scheduleOptions}
-                              className={"react-select react-select-regular"}
                               classNamePrefix="react-select"
-                              value={schedule}
-                              onChange={schedule => saveCampaign('schedule', schedule)}
+                              onChange={(value: any) => {
+                                validator.setFieldValue("schedule", value);
+                                setScheduleType(value.value);
+                              }}
+                              value={validator.values.schedule}
+                              className={classNames(
+                                "react-select",
+                                "react-select-regular",
+                                validator.touched.schedule &&
+                                validator.errors.schedule &&
+                                "is-invalid"
+                              )}
                             />
+                            {validator.touched.schedule && validator.errors.schedule ? (
+                              <Form.Control.Feedback type="invalid">
+                                {validator.errors.schedule}
+                              </Form.Control.Feedback>
+                            ) : null}
                           </Col>
                           <Col sm={3}>
                             <p className="mb-0 text-muted font-weight-semibold">
-                                {campaign['schedule'] === "Daily" ? "Number of Days after order is " + campaign['order_status']['name'] : ""}
+                                {scheduleType === "Daily" ? "Number of Days after order is " + campaign['order_status']['name'] : ""}
                             </p>
-                          {campaign['schedule'] === "Daily" ?
+                          {scheduleType === "Daily" ?
                                 <Form.Control as="select" size="sm" className="mt-1 col-3" placeholder={t("Number of Days")}
                                     name="schedule_days" id="schedule_days"
-                                    value={scheduledays}
-                                    onChange={(e: any) => saveCampaign('schedule_days', e.target.value)}
+                                    value={validator.values.schedule_days}
+                                    onChange={(e: any) => validator.setFieldValue('schedule_days', e.target.value)}
                                 >
                                     {[...Array(61)].map((e, i) => {
                                         return i >= 5 ?
@@ -481,13 +527,25 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                         </div>
                     </Col>
                 </Row>
+                <div className="mt-4">
+                  <Link
+                    className="btn btn-outline-primary mr-3"
+                    to={`/auto-emails/${companyId}/campaigns`}
+                  >
+                    {t("Cancel")}
+                  </Link>
+                  <Button type="submit" variant="primary">
+                    {t("Update Campaign")}
+                  </Button>
+                </div>
+              </Form>
             </div> : null}
 
             {isCompanyUpdated ? <MessageAlert message={t('The company account updated')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {isCampaignUpdated ? <MessageAlert message={t('The campaign is updated successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {updateError ? <MessageAlert message={updateError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {showEmailTemplate ? <EmailTemplate campaign={campaign} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+            {showEmailTemplate ? <EmailTemplate emailTemplate={template} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
 
             {showCompanyAccount ? <EditCompanyInfo companyId={companyId} market={market} onClose={() => setShowCompanyAccount(false)} /> : null}
         </>

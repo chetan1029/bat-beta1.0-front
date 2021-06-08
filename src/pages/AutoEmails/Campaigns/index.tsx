@@ -171,7 +171,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                     <th>{t("Email in Queue")}</th>
                                                     <th>{t("Opt-out Rate")}</th>
                                                     <th>{t("Status")}</th>
-                                                    <th>{t("Action")}</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -217,9 +217,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                             </td>
 
                                                             <td>
-                                                                {capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                                <Button onClick={() => openDetails(market)}
-                                                                    className="btn btn-sm btn-primary">{t('Manage')}</Button>: null}
+
                                                             </td>
                                                         </tr>
                                                         {capitalizeFirstLetter(market['status']) === 'Active' && getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
@@ -235,13 +233,13 @@ const Campaigns = (props: CampaignsProps) => {
                                                             <td className="text-muted font-weight-normal">{t("Email in Queue")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Opt-out Rate")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Status")}</td>
-                                                            <td></td>
+                                                            <td className="text-muted font-weight-normal">{t("Action")}</td>
                                                         </tr> : null}
 
                                                         { capitalizeFirstLetter(market['status']) === 'Active' ?
                                                           getCampaignsOfMarket(market).map((campaign, cidx) => {
-                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light clickable-row' onClick={() => openDetails(market)}>
-                                                                <td>
+                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
+                                                                <td className='clickable-row' onClick={() => openDetails(market)}>
                                                                     <div className="d-flex">
                                                                         <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
                                                                         <div>
@@ -250,22 +248,26 @@ const Campaigns = (props: CampaignsProps) => {
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market)}>
                                                                   { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
                                                                     campaign['email_sent'] : "-"}
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market)}>
                                                                   { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
                                                                     campaign['email_in_queue'] : "-"}
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market)}>
                                                                   { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
                                                                     campaign['opt_out_rate']+"%" : "-"}
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market)}>
                                                                     {capitalizeFirstLetter(campaign['status']['name'])}
                                                                 </td>
-                                                                <td></td>
+                                                                <td>
+                                                                  {capitalizeFirstLetter(market['status']) === 'Active' ?
+                                                                  <Button onClick={() => openDetails(market)}
+                                                                      className="btn btn-sm btn-primary">{t('Manage')}</Button>: null}
+                                                                </td>
                                                             </tr>
                                                         }) : null}
                                                     </React.Fragment>: null
