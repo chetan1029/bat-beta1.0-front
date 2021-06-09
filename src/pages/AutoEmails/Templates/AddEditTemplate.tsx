@@ -69,6 +69,7 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
+
   const validator = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -267,7 +268,7 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
                   {t("Cancel")}
                 </Link>
                 <Button type="submit" variant="primary">
-                  {templateDetail ? t("Edit Template") : t("Add Template")}
+                  {t("Save Template")}
                 </Button>
               </div>
             </Form>

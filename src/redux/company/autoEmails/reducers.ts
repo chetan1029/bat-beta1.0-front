@@ -4,6 +4,7 @@ const INIT_STATE: any = {
     campaigns: [],
     emailqueues: [],
     templates: [],
+    globaltemplates: [],
 };
 
 
@@ -48,11 +49,33 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isCampaignUpdated: true,
                     }
                 }
+                case AutoEmailsTypes.DELETE_CAMPAIGN: {
+                    return {
+                        ...state,
+                        isCampaignDeleted: true,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.GET_EMAILQUEUES: {
                     return {
                         ...state,
                         emailQueues: action.payload.data,
                         isEmailQueuesFetched: true,
+                        loading: false,
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATES: {
+                    return {
+                        ...state,
+                        globaltemplates: action.payload.data.results,
+                        isGlobalTemplatesFetched: true,
+                        loading: false,
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATE: {
+                    return {
+                        ...state,
+                        globaltemplate: action.payload.data,
                         loading: false,
                     }
                 }
@@ -84,6 +107,13 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         ...state,
                         isTemplateUpdated: true,
                         loading: false
+                    }
+                }
+                case AutoEmailsTypes.TEST_TEMPLATE: {
+                    return {
+                        ...state,
+                        templateTestSent: true,
+                        templateTestLoading: false,
                     }
                 }
                 case AutoEmailsTypes.DELETE_TEMPLATE: {
@@ -138,12 +168,35 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         isCampaignUpdated: false,
                     }
                 }
+                case AutoEmailsTypes.DELETE_CAMPAIGN: {
+                    return {
+                        ...state,
+                        error: action.payload.error,
+                        isCampaignDeleted: false,
+                        loading: false
+                    }
+                }
                 case AutoEmailsTypes.GET_EMAILQUEUES: {
                     return {
                         ...state,
                         loading: false,
                         error: action.payload.error,
                         isClientsFetched: false
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATES: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                        isGlobalTemplatesFetched: false
+                    }
+                }
+                case AutoEmailsTypes.GET_GLOBALTEMPLATE: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
                     }
                 }
                 case AutoEmailsTypes.GET_TEMPLATES: {
@@ -177,6 +230,14 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                         loading: false
                     }
                 }
+                case AutoEmailsTypes.TEST_TEMPLATE: {
+                    return {
+                        ...state,
+                        templateTestLoading: false,
+                        templateTestSentError: action.payload.error,
+                        templateTestSent: false
+                    }
+                }
                 case AutoEmailsTypes.DELETE_TEMPLATE: {
                     return {
                         ...state,
@@ -204,8 +265,19 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
         case AutoEmailsTypes.UPDATE_CAMPAIGN:
             return { ...state, loading: true, isCampaignUpdated: false, updateError: null };
 
+        case AutoEmailsTypes.DELETE_CAMPAIGN:
+            return {
+                ...state, isCampaignDeleted: false, loading: true
+            };
+
         case AutoEmailsTypes.GET_EMAILQUEUES:
             return { ...state, isEmailQueuesFetched: false, loading: true };
+
+        case AutoEmailsTypes.GET_GLOBALTEMPLATES:
+            return { ...state, isGlobalTemplatesFetched: false, loading: true };
+
+        case AutoEmailsTypes.GET_GLOBALTEMPLATE:
+            return { ...state, loading: true };
 
         case AutoEmailsTypes.GET_TEMPLATES:
             return { ...state, isTemplatesFetched: false, loading: true };
@@ -225,6 +297,9 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 loading: true
             };
 
+        case AutoEmailsTypes.TEST_TEMPLATE:
+            return { ...state, templateTestLoading: true, templateTestSent: false };
+
         case AutoEmailsTypes.DELETE_TEMPLATE:
             return {
                 ...state, isTemplateDeleted: false, loading: true
@@ -237,6 +312,7 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 isCampaignCreated: false,
                 isCampaignUpdated: false,
                 isTemplatesFetched: false,
+                isGlobalTemplatesFetched: false,
                 isEmailQueuesFetched: false,
                 error: null,
                 campaignTestSentError: null,
@@ -248,6 +324,8 @@ const AutoEmails = (state = INIT_STATE, action: any) => {
                 createCampaignError: null,
                 editTemplateError: null,
                 template: null,
+                templateTestSentError: null,
+                isCampaignDeleted: false,
             }
         }
         default: return { ...state };

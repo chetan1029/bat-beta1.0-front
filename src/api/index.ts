@@ -657,6 +657,22 @@ function updateCampaign(companyId: number, campaignId: number, data: any) {
     return api.updatePatch(`${baseUrl}`, data);
 }
 
+function deleteCampaign(companyId: number, campaignId: number, params?: any) {
+    const baseUrl = `/companies/${companyId}/email-campaign/${campaignId}/`;
+    return api.delete(`${baseUrl}`);
+}
+
+/* Global Templates */
+function getGlobalTemplates(params?: any) {
+    const baseUrl = `/global-email-templates/`;
+    return api.get(`${baseUrl}`, params);
+}
+
+function getGlobalTemplate(templateId: number,) {
+    const baseUrl = `/global-email-templates/${templateId}/`;
+    return api.get(`${baseUrl}`);
+}
+
 /* Templates */
 function getTemplates(companyId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/email-template/`;
@@ -676,6 +692,11 @@ function createTemplate(companyId: number, params?: any) {
 function updateTemplate(companyId: number, templateId: number, params?: any) {
     const baseUrl = `/companies/${companyId}/email-template/${templateId}/`;
     return api.update(`${baseUrl}`, params);
+}
+
+function testTemplate(companyId: number, templateId: number, data: any) {
+    const baseUrl = `/companies/${companyId}/email-template/${templateId}/test_email/`;
+    return api.create(`${baseUrl}`, data);
 }
 
 function deleteTemplate(companyId: number, templateId: number, params?: any) {
@@ -822,8 +843,9 @@ export {
     createComponentME, getComponentME, deleteComponentME, archiveComponentME, restoreComponentME, editComponentME, uploadComponentMEFile, deleteComponentMEFile,
     createComponentProducts, getComponentProducts, deleteComponentProducts, archiveComponentProducts, restoreComponentProducts, editComponentProducts,
 
-    getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign,
-    getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate,
+    getCampaigns, getCampaign, updateCampaign, testCampaign, createCampaign, deleteCampaign,
+    getGlobalTemplates, getGlobalTemplate,
+    getTemplates, getTemplate, deleteTemplate, createTemplate, updateTemplate, testTemplate,
     getEmailQueues,
     getMarketPlaces, getMarketPlace, updateMarketPlace, connectMarketPlace, disConnectMarketPlace,
     getSalesChartData,

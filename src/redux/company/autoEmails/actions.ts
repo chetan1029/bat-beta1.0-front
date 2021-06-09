@@ -32,6 +32,11 @@ export const updateCampaign = (companyId: string | number, campaignId: number | 
     payload: { companyId, campaignId, data }
 });
 
+export const deleteCampaign = (companyId: string | number, campaignId) => ({
+    type: AutoEmailsTypes.DELETE_CAMPAIGN,
+    payload: { companyId, campaignId }
+});
+
 export const getEmailQueues = (companyId: string | number, filters?: any) => ({
     type: AutoEmailsTypes.GET_EMAILQUEUES,
     payload: { companyId, filters }
@@ -44,6 +49,17 @@ export const resetAutoEmails = () => ({
 export const testCampaign = (companyId: string | number, campaignId: number | string, data: any) => ({
     type: AutoEmailsTypes.TEST_CAMPAIGN,
     payload: { companyId, campaignId, data }
+});
+
+// Global templates
+export const getGlobalTemplates = (filters?: any) => ({
+    type: AutoEmailsTypes.GET_GLOBALTEMPLATES,
+    payload: { filters }
+});
+
+export const getGlobalTemplate = (templateId: number | string) => ({
+    type: AutoEmailsTypes.GET_GLOBALTEMPLATE,
+    payload: { templateId }
 });
 
 // templates
@@ -67,6 +83,10 @@ export const editTemplate = (companyId: string | number, templateId, params: any
     payload: { companyId, templateId, params }
 });
 
+export const testTemplate = (companyId: string | number, templateId: number | string, data: any) => ({
+    type: AutoEmailsTypes.TEST_TEMPLATE,
+    payload: { companyId, templateId, data }
+});
 
 export const deleteTemplate = (companyId: string | number, templateId) => ({
     type: AutoEmailsTypes.DELETE_TEMPLATE,

@@ -9,12 +9,17 @@ export enum AutoEmailsTypes {
     CREATE_CAMPAIGN = '@@company/autoEmails/CREATE_CAMPAIGN',
     TEST_CAMPAIGN = '@@company/autoEmails/TEST_CAMPAIGN',
     GET_EMAILQUEUES = '@@company/autoEmails/GET_EMAILQUEUES',
+    DELETE_CAMPAIGN = '@@company/autoEmails/DELETE_CAMPAIGN',
 
     GET_TEMPLATES = '@@company/autoEmails/GET_TEMPLATES',
     GET_TEMPLATE = '@@company/autoEmails/GET_TEMPLATE',
     CREATE_TEMPLATE = '@@company/autoEmails/CREATE_TEMPLATE',
+    TEST_TEMPLATE = '@@company/autoEmails/TEST_TEMPLATE',
     EDIT_TEMPLATE = '@@company/autoEmails/EDIT_TEMPLATE',
     DELETE_TEMPLATE = '@@company/autoEmails/DELETE_TEMPLATE',
+
+    GET_GLOBALTEMPLATES = '@@company/autoEmails/GET_GLOBALTEMPLATES',
+    GET_GLOBALTEMPLATE = '@@company/autoEmails/GET_GLOBALTEMPLATE',
 
     RESET = '@@company/autoEmails/RESET',
 }

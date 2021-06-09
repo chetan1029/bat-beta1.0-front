@@ -13,7 +13,8 @@ import MessageAlert from "../../../components/MessageAlert";
 import AlertDismissible from "../../../components/AlertDismissible";
 import ConfirmMessage from "../../../components/ConfirmMessage";
 import searchIcon from "../../../assets/images/search_icon.svg";
-
+import EmailTemplate from "./EmailTemplate";
+import ImportTemplate from "./ImportTemplate";
 //actions
 import { APICore } from '../../../api/apiCore';
 import {
@@ -60,13 +61,13 @@ const Templates = (props: TemplatesProps) => {
     }, [queryParam]);
 
 
-    const { loading, templates, markets, membershipPlan, isTemplatesFetched, isTemplateDeleted } = useSelector((state: any) => ({
+    const { loading, templates, membershipPlan, isTemplatesFetched, isTemplateDeleted, isTemplateCreated } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isTemplatesFetched: state.Company.AutoEmails.isTemplatesFetched,
         isTemplateDeleted: state.Company.AutoEmails.isTemplateDeleted,
         templates: state.Company.AutoEmails.templates,
-        markets: state.MarketPlaces.markets,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
+        isTemplateCreated: state.Company.AutoEmails.isTemplateCreated,
     }));
 
 
@@ -87,13 +88,16 @@ const Templates = (props: TemplatesProps) => {
       setselectedTemplateForDelete(template);
     };
 
-    if(isTemplateDeleted){
+    if(isTemplateDeleted || isTemplateCreated){
       dispatch(resetAutoEmails());
       dispatch(getTemplates(companyId, defaultParams));
     }
 
     const [selectedTemplateForDelete, setselectedTemplateForDelete] = useState<any>(null);
+    const [showEmailTemplate, setShowEmailTemplate] = useState(false);
+    const [testTemplate, setTestTemplate] = useState<any>(null);
 
+    const [showImportTemplate, setShowImportTemplate] = useState(false);
 
     const handleSearchKeyDown = (event: any) => {
       const { value } = event.target;
@@ -101,6 +105,15 @@ const Templates = (props: TemplatesProps) => {
       if ([13].includes(event.keyCode)) {
         setFilters({ ...filters, search: value, offset: 0 });
       }
+    };
+
+    const testEmailTemplate = (emailtemplatemodel: boolean, emailtemplate: any) => {
+      setShowEmailTemplate(emailtemplatemodel);
+      setTestTemplate(emailtemplate);
+    };
+
+    const importEmailTemplate = () => {
+      setShowImportTemplate(true);
     };
 
     const plan = membershipPlan && membershipPlan.results && membershipPlan.results.length ? membershipPlan.results[0]['plan'] : null;
@@ -124,6 +137,13 @@ const Templates = (props: TemplatesProps) => {
                           to={`/auto-emails/${companyId}/templates/add`}
                         >
                           {t("Add Template")}
+                        </Link>
+                        <Link
+                          className="btn btn-outline-primary ml-2"
+                          to="#"
+                          onClick={() => importEmailTemplate()}
+                        >
+                          {t("Import Prebuild Template")}
                         </Link>
                     </Col>
                 </Row>
@@ -173,7 +193,8 @@ const Templates = (props: TemplatesProps) => {
                                                               {template['subject']}
                                                             </td>
                                                             <td>
-                                                                <Link to={`/auto-emails/${companyId}/templates/edit/${template.id}`} className="btn btn-sm btn-primary">{t('Edit')}</Link>
+                                                                <Link className="btn btn-sm btn-primary" to='#' onClick={() => testEmailTemplate(true, template)}>{t("Test Email Template")}</Link>
+                                                                <Link to={`/auto-emails/${companyId}/templates/edit/${template.id}`} className="btn btn-sm btn-primary ml-2">{t('Edit')}</Link>
                                                                 <Button onClick={() => ondeleteTemplate(template)} className="btn btn-sm btn-danger ml-2">{t('Delete')}</Button>
                                                             </td>
                                                         </tr>
@@ -188,11 +209,13 @@ const Templates = (props: TemplatesProps) => {
                     </div>}
 
               {selectedTemplateForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedTemplateForDelete.name}?`} onConfirm={() => {
-                  dispatch(deleteTemplate(companyId, selectedTemplateForDelete.id));
+                  dispatch(deleteTemplate(companyId, selectedTemplateForDelete.id)); setselectedTemplateForDelete(null);
               }} onClose={() => setselectedTemplateForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
 
             {successMsg ? <MessageAlert message={successMsg} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {errorMsg ? <MessageAlert message={errorMsg} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
+            {showEmailTemplate ? <EmailTemplate emailTemplate={testTemplate} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+            {showImportTemplate ? <ImportTemplate companyId={companyId} onClose={() => setShowImportTemplate(false)} /> : null}
         </>
     );
 }
