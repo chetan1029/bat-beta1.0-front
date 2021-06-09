@@ -542,7 +542,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
             {isCampaignUpdated ? <MessageAlert message={t('The campaign is updated successfully')} icon={"check"} iconWrapperClass="bg-success text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
             {updateError ? <MessageAlert message={updateError} icon={"x"} iconWrapperClass="bg-danger text-white p-2 rounded-circle" iconClass="icon-sm" /> : null}
 
-            {showEmailTemplate ? <EmailTemplate emailTemplate={template} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+            {showEmailTemplate ? <EmailTemplate emailTemplate={template} companyId={companyId} campaignId={campaign["id"]} onClose={() => setShowEmailTemplate(false)} /> : null}
 
             {showCompanyAccount ? <EditCompanyInfo companyId={companyId} market={market} onClose={() => setShowCompanyAccount(false)} /> : null}
         </>
