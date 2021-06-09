@@ -17,8 +17,9 @@ interface EmailTemplateProps {
     emailTemplate: any;
     companyId: string | number;
     onClose: any;
+    campaignId?: string| number;
 }
-const EmailTemplate = ({ companyId, emailTemplate, onClose }: EmailTemplateProps) => {
+const EmailTemplate = ({ companyId, emailTemplate, onClose, campaignId }: EmailTemplateProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
 
@@ -34,7 +35,7 @@ const EmailTemplate = ({ companyId, emailTemplate, onClose }: EmailTemplateProps
     const isEnabled = email && isValidEmail(email) ? true: false;
 
     const sendTest = () => {
-        dispatch(testTemplate(companyId, emailTemplate['id'], {email}));
+        dispatch(testTemplate(companyId, emailTemplate['id'], {email, "campaign_id": campaignId}));
     }
 
 
