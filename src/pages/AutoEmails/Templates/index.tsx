@@ -61,12 +61,13 @@ const Templates = (props: TemplatesProps) => {
     }, [queryParam]);
 
 
-    const { loading, templates, membershipPlan, isTemplatesFetched, isTemplateDeleted } = useSelector((state: any) => ({
+    const { loading, templates, membershipPlan, isTemplatesFetched, isTemplateDeleted, isTemplateCreated } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isTemplatesFetched: state.Company.AutoEmails.isTemplatesFetched,
         isTemplateDeleted: state.Company.AutoEmails.isTemplateDeleted,
         templates: state.Company.AutoEmails.templates,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
+        isTemplateCreated: state.Company.AutoEmails.isTemplateCreated,
     }));
 
 
@@ -87,7 +88,7 @@ const Templates = (props: TemplatesProps) => {
       setselectedTemplateForDelete(template);
     };
 
-    if(isTemplateDeleted){
+    if(isTemplateDeleted || isTemplateCreated){
       dispatch(resetAutoEmails());
       dispatch(getTemplates(companyId, defaultParams));
     }

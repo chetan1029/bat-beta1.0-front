@@ -60,6 +60,7 @@ const AddCampaign = (props: AddCampaignProps) => {
     const [excludeOrders, setExcludeOrders] = useState(["With Returns", "With Refunds"]);
     const [purchaseCount, setPurchaseCount] = useState(["1st Purchase"]);
     const [scheduleType, setScheduleType] = useState("As soon as possible");
+    const [activationDateDefault, setActivationDateDefault] = useState(new Date());
 
     const defaultParams = { 'limit': 100000000};
 
@@ -146,6 +147,7 @@ const AddCampaign = (props: AddCampaignProps) => {
         history.push(`/auto-emails/${companyId}/campaigns`);
     }
 
+
     const validator = useFormik({
       enableReinitialize: true,
       initialValues: {
@@ -158,7 +160,7 @@ const AddCampaign = (props: AddCampaignProps) => {
         amazonmarketplace: null,
         include_invoice: false,
         send_optout: false,
-        activation_date: "",
+        activation_date: activationDateDefault,
       },
       validationSchema: Yup.object({
         name: Yup.string().required(t("Name is required")),

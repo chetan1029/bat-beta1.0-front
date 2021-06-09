@@ -60,9 +60,11 @@ const Details = (props: DetailsProps) => {
               setSelectedCampaignId(updatedCampaign.id);
               setSelectedCampaign(updatedCampaign);
             }
-            console.log("updated");
         }
-    }, [dispatch, isCampaignUpdated, companyId, updateError]);
+        if (isMarketPlaceUpdated) {
+            dispatch(getMarketPlace(companyId, marketId));
+        }
+    }, [dispatch, isCampaignUpdated, isMarketPlaceUpdated, companyId, updateError]);
 
     const getCampaignsOfMarket = (market: any) => {
         return ((campaign || []).filter(c => c['amazonmarketplace']['id'] + '' === market['id'] + '')) || [];
@@ -101,11 +103,16 @@ const Details = (props: DetailsProps) => {
         }
     }, [dispatch, isCampaignUpdated, companyId, campaignId, updateError]);
 
+    let email = "";
+    if(market && market['email']){
+      email = market['email'];
+    }
+
     // change this one later
     const validator = useFormik({
         enableReinitialize: true,
         initialValues: {
-            email: '',
+            email: email,
         },
         validationSchema: Yup.object({
             email: Yup.string().required(t('Email is required')),
@@ -171,9 +178,9 @@ const Details = (props: DetailsProps) => {
                                                         name="email" id="email"
                                                         onChange={validator.handleChange}
                                                         onBlur={validator.handleBlur}
-                                                        value={!market['email'] ? validator.values.email : market['email'] }
+                                                        value={validator.values.email}
                                                         isInvalid={validator.touched.email && validator.errors && validator.errors.email ? true : false}
-                                                        readOnly={market['email'] ? true : false} />
+                                                         />
 
                                                     {validator.touched.email && validator.errors.email ? (
                                                         <Form.Control.Feedback type="invalid">{validator.errors.email}</Form.Control.Feedback>
