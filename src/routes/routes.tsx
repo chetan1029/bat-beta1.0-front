@@ -99,7 +99,7 @@ const authProtectedRoutes = [
   { path: "/auto-emails/:companyId/campaigns/:campaignId/email-queue/:status", component: EmailQueue },
   { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
   { path: "/auto-emails/:companyId/campaigns/add", component: AddCampaign },
-  { path: "/auto-emails/:companyId/campaigns/:marketId/", component: CampaignDetails },
+  { path: "/auto-emails/:companyId/campaigns/:marketId/:campaignId/", component: CampaignDetails },
   { path: "/auto-emails/:companyId/campaigns", component: Campaigns },
   { path: "/auto-emails/:companyId/templates/add", component: AddEditTemplates },
   { path: "/auto-emails/:companyId/templates/edit/:templateId", component: AddEditTemplates },

@@ -17,7 +17,7 @@ import ConfirmMessage from "../../../components/ConfirmMessage";
 import { APICore } from '../../../api/apiCore';
 import {
     getCampaigns, getMarketPlaces, connectMarketplace, resetConnectMarketplace,
-    getMembershipPlan, disConnectMarketplace
+    getMembershipPlan, disConnectMarketplace, resetAutoEmails, deleteCampaign
 } from "../../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -57,15 +57,15 @@ const Campaigns = (props: CampaignsProps) => {
     }, [queryParam]);
 
 
-    const { loading, campaigns, markets, redirectUri, isMarketConnected, membershipPlan, isMarketDisconnected } = useSelector((state: any) => ({
+    const { loading, campaigns, markets, redirectUri, isMarketConnected, membershipPlan, isCampaignDeleted } = useSelector((state: any) => ({
         loading: state.Company.AutoEmails.loading || state.MarketPlaces.loading,
         isCampaignsFetched: state.Company.AutoEmails.isCampaignsFetched,
         campaigns: state.Company.AutoEmails.campaigns,
         markets: state.MarketPlaces.markets,
         isMarketConnected: state.MarketPlaces.isMarketConnected,
         redirectUri: state.MarketPlaces.redirectUri,
-        isMarketDisconnected: state.MarketPlaces.isMarketDisconnected,
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
+        isCampaignDeleted: state.Company.AutoEmails.isCampaignDeleted,
     }));
 
     const companyId = props.match.params.companyId;
@@ -102,12 +102,8 @@ const Campaigns = (props: CampaignsProps) => {
 
     const [selectedMarket, setSelectedMarket] = useState<any>(null);
 
-    const openDetails = (market: any) => {
-        if (market.status === 'active')
-            history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/`);
-        else {
-            setSelectedMarket(market);
-        }
+    const openDetails = (market: any, campaign:any) => {
+        history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/${campaign['id']}/`);
     }
 
     const [marketForDisconnect, setMarketForDisconnect] = useState<any>(null);
@@ -119,13 +115,20 @@ const Campaigns = (props: CampaignsProps) => {
     }, [redirectUri, isMarketConnected]);
 
     useEffect(() => {
-        if (isMarketDisconnected) {
+        if (isCampaignDeleted) {
             setMarketForDisconnect(null);
             dispatch(getCampaigns(companyId, defaultParams));
             dispatch(getMarketPlaces(companyId, defaultParams));
             dispatch(getMembershipPlan(companyId, { is_active: true }));
         }
-    }, [dispatch, isMarketDisconnected, companyId, defaultParams]);
+    }, [dispatch, companyId, defaultParams, isCampaignDeleted]);
+
+    // Delete campaign
+    const ondeleteCampaign = (campaign: any) => {
+      setselectedCampaignForDelete(campaign);
+    };
+
+    const [selectedCampaignForDelete, setselectedCampaignForDelete] = useState<any>(null);
 
 
     const sortedMarkets = [...markets.filter(m => m['status'] === 'active'), ...markets.filter(m => m['status'] !== 'active')];
@@ -171,7 +174,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                     <th>{t("Email in Queue")}</th>
                                                     <th>{t("Opt-out Rate")}</th>
                                                     <th>{t("Status")}</th>
-                                                    <th>{t("Action")}</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -179,7 +182,7 @@ const Campaigns = (props: CampaignsProps) => {
 
                                                     return capitalizeFirstLetter(market['status']) === 'Active' ? <React.Fragment key={idx}>
                                                         <tr className={"" + (capitalizeFirstLetter(market['status']) === 'Inactive' && !isActiveMarket ? 'opacity-3' : '')}>
-                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
+                                                            <td className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
 
                                                                 <div className="d-flex">
                                                                     <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
@@ -192,34 +195,32 @@ const Campaigns = (props: CampaignsProps) => {
                                                                 </div>
                                                             </td>
                                                             { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
+                                                            <td className='clickable-row'>
                                                               {getTotalOfMarket(market, 'email_sent')}
                                                             </td>
                                                             :
                                                             <td>-</td>
                                                             }
                                                             { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
+                                                            <td className='clickable-row'>
                                                               {getTotalOfMarket(market, 'email_in_queue')}
                                                             </td>
                                                             :
                                                             <td>-</td>
                                                             }
                                                             { capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                            <td onClick={() =>openDetails(market)} className='clickable-row'>
+                                                            <td className='clickable-row'>
                                                               {getTotalOfMarket(market, 'opt_out_rate')}%
                                                             </td>
                                                             :
                                                             <td>-</td>
                                                             }
-                                                            <td onClick={() => capitalizeFirstLetter(market['status']) === 'Active' ? openDetails(market): undefined} className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
+                                                            <td className={capitalizeFirstLetter(market['status']) === 'Active'?'clickable-row': ''}>
                                                                 {capitalizeFirstLetter(market['status'])}
                                                             </td>
 
                                                             <td>
-                                                                {capitalizeFirstLetter(market['status']) === 'Active' ?
-                                                                <Button onClick={() => openDetails(market)}
-                                                                    className="btn btn-sm btn-primary">{t('Manage')}</Button>: null}
+
                                                             </td>
                                                         </tr>
                                                         {capitalizeFirstLetter(market['status']) === 'Active' && getCampaignsOfMarket(market).length > 0 ? <tr className="bg-light">
@@ -235,13 +236,13 @@ const Campaigns = (props: CampaignsProps) => {
                                                             <td className="text-muted font-weight-normal">{t("Email in Queue")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Opt-out Rate")}</td>
                                                             <td className="text-muted font-weight-normal">{t("Status")}</td>
-                                                            <td></td>
+                                                            <td className="text-muted font-weight-normal">{t("Action")}</td>
                                                         </tr> : null}
 
                                                         { capitalizeFirstLetter(market['status']) === 'Active' ?
                                                           getCampaignsOfMarket(market).map((campaign, cidx) => {
-                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light clickable-row' onClick={() => openDetails(market)}>
-                                                                <td>
+                                                            return <tr key={`camp-${idx}-${cidx}`} className='bg-light'>
+                                                                <td className='clickable-row' onClick={() => openDetails(market, campaign)}>
                                                                     <div className="d-flex">
                                                                         <div className="border rounded-sm p-1 mr-2 d-flex align-items-end invisible" style={{ width: '34px' }}></div>
                                                                         <div>
@@ -250,22 +251,26 @@ const Campaigns = (props: CampaignsProps) => {
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market, campaign)}>
                                                                   { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
                                                                     campaign['email_sent'] : "-"}
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market, campaign)}>
                                                                   { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
                                                                     campaign['email_in_queue'] : "-"}
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market, campaign)}>
                                                                   { capitalizeFirstLetter(campaign['status']['name']) === 'Active' ?
                                                                     campaign['opt_out_rate']+"%" : "-"}
                                                                 </td>
-                                                                <td>
+                                                                <td className='clickable-row' onClick={() => openDetails(market, campaign)}>
                                                                     {capitalizeFirstLetter(campaign['status']['name'])}
                                                                 </td>
-                                                                <td></td>
+                                                                <td>
+                                                                  <Button onClick={() => openDetails(market, campaign)}
+                                                                    className="btn btn-sm btn-primary">{t('Manage')}</Button>
+                                                                  <Button onClick={() => ondeleteCampaign(campaign)} className="btn btn-sm btn-danger ml-2">{t('Delete')}</Button>
+                                                                </td>
                                                             </tr>
                                                         }) : null}
                                                     </React.Fragment>: null
@@ -301,6 +306,10 @@ const Campaigns = (props: CampaignsProps) => {
                         onClose={() => setMarketForDisconnect(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Confirm')} />
                     : null
             }
+
+            {selectedCampaignForDelete ? <ConfirmMessage message={`Are you sure you want to delete ${selectedCampaignForDelete.name}?`} onConfirm={() => {
+                dispatch(deleteCampaign(companyId, selectedCampaignForDelete.id)); setselectedCampaignForDelete(null);
+            }} onClose={() => setselectedCampaignForDelete(null)} confirmBtnVariant="primary" confirmBtnLabel={t('Delete')}></ConfirmMessage> : null}
         </>
     );
 }

@@ -311,8 +311,8 @@ const TEMPLATE_VARIABLES: any = {
   "Product ASIN": "{{asin}}",
   "Product SKU": "{{sku}}",
   "List of order items": "{{order_items}}",
-  "Product Review Link": "{{product_review_link}}",
-  "Feedback Review Link": "{{feedback_review_link}}"
+  "Product Review Link": "{{product_review_link|safe}}",
+  "Feedback Review Link": "{{feedback_review_link|safe}}"
 }
 
 export { COUNTRIES, CURRENCIES, WEIGHTS, UNIT_SYSTEMS, TIMEZONES, LENGTHS, LANGS, JOB_TITLES, TEMPLATE_LANGS, TEMPLATE_VARIABLES};

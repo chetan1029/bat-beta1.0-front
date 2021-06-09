@@ -603,21 +603,21 @@ aria-describedby="desc" role="img">
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g id="Iconly/Light/Plus">
         <g id="Plus">
-        <path id="Line_185" d="M8.00008 5.55151V10.4358" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path id="Line_186" d="M10.4443 7.99367H5.55542" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path id="Path" fill-rule="evenodd" clip-rule="evenodd" d="M11.1237 1.33331H4.87611C2.69833 1.33331 1.33325 2.8747 1.33325 5.05675V10.9432C1.33325 13.1253 2.69198 14.6666 4.87611 14.6666H11.1237C13.3079 14.6666 14.6666 13.1253 14.6666 10.9432V5.05675C14.6666 2.8747 13.3079 1.33331 11.1237 1.33331Z" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="Line_185" d="M8.00008 5.55151V10.4358" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path id="Line_186" d="M10.4443 7.99367H5.55542" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        <path id="Path" fillRule="evenodd" clipRule="evenodd" d="M11.1237 1.33331H4.87611C2.69833 1.33331 1.33325 2.8747 1.33325 5.05675V10.9432C1.33325 13.1253 2.69198 14.6666 4.87611 14.6666H11.1237C13.3079 14.6666 14.6666 13.1253 14.6666 10.9432V5.05675C14.6666 2.8747 13.3079 1.33331 11.1237 1.33331Z" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </g>
         </g>
         </svg>
 
       case 'arrow-down':
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12.6667 5.66669L8.00004 10.3334L3.33337 5.66669" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12.6667 5.66669L8.00004 10.3334L3.33337 5.66669" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
 
       case 'arrow-up':
         return <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path id="Stroke 1" d="M3.33329 10.3333L7.99996 5.66665L12.6666 10.3333" stroke="#130F26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path id="Stroke 1" d="M3.33329 10.3333L7.99996 5.66665L12.6666 10.3333" stroke="#130F26" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
 
 
