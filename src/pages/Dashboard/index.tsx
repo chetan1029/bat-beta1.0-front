@@ -96,8 +96,9 @@ const Dashboard = (props: DashboardProps) => {
       history.push(`/auto-emails/${companyId}/email-queue/${status}`);
   }
 
+  const dateFormat = 'MM/DD/YYYY';
+  
   const onDateChange = (dates: any) => {
-    const dateFormat = 'MM/DD/YYYY';
     if (dates) {
       const [start, end] = dates;
       setStartDate(start);
@@ -113,14 +114,38 @@ const Dashboard = (props: DashboardProps) => {
     }
   }
 
+  const defaultDates = getDates();
+
   const getSelectdValue = () => {
-    const dateFormat = 'MM/DD/YYYY';
-    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : "";
+    
+    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : defaultDates['start_date'];
     if (dateStr && endDate) {
       dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
+    } else if (dateStr && defaultDates['end_date']) {
+      dateStr = `${dateStr} - ${defaultDates['end_date']}`;
     }
     return dateStr;
   };
+
+  let noOfDays = 0;
+  
+  if (startDate && endDate) {
+    noOfDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+  } else if (defaultDates && defaultDates['start_date'] && defaultDates['end_date']) {
+    const st = Date.parse(defaultDates['start_date']);
+    const en = Date.parse(defaultDates['end_date']);
+    noOfDays = Math.round((en - st) / (1000 * 60 * 60 * 24));
+  }
+
+  let prevStartDate = new Date();
+  let prevEndDate = new Date();
+
+  if (startDate || defaultDates['start_date']) {
+    const st = startDate || new Date(Date.parse(defaultDates['start_date']));
+    prevStartDate.setDate(st.getDate() - noOfDays - 1);
+    prevEndDate.setDate(st.getDate() - 1);
+  }
+  
 
   return (<>
     <div className="py-4">
@@ -166,6 +191,13 @@ const Dashboard = (props: DashboardProps) => {
             isClearable={true}
              />
         </Col>
+      </Row>
+      <Row>
+        <Col></Col>
+        {prevStartDate && prevEndDate ? <Col sm={2}>
+          <span className="pl-2 text-muted">Compared to {dayjs(prevStartDate).format(dateFormat)}-{dayjs(prevEndDate).format(dateFormat)}</span>
+        </Col> : null}
+        <Col sm={2}></Col>
       </Row>
     </div>
 

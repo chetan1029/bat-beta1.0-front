@@ -93,7 +93,7 @@ const MarketplacePermissions = (props: MarketplacePermissionsProps) => {
 
     useEffect(() => {
         if (redirectUri && isMarketConnected) {
-            window.open(redirectUri, '_blank');
+            window.open(redirectUri, '_self');
         }
     }, [redirectUri, isMarketConnected]);
 
