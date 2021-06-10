@@ -144,7 +144,7 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
               endDate={endDate}
               onChange={onDateChange}
               id="FilterDate"
-              isClearable={true}
+              isClearable={false}
               shouldCloseOnSelect={false}
               value={getSelectdValue()}
               selected={startDate}
