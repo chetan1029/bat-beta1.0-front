@@ -344,12 +344,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                 </Link>
 
                 <div className="border rounded-sm p-1 mr-2 d-flex align-items-center">
-
-                  <img className="img-sm" src={size(product.images) > 0 ? (
-                    find(product.images, img => !!img.main_image) ?
-                      find(product.images, img => !!img.main_image).image :
-                      get(product, "images[0].image")) :
-                    dummyImage}
+                  <img className="img-sm" src={product.thumbnail? product.thumbnail:dummyImage}
                     alt={product.title} width="50" />
                 </div>
                 <div>

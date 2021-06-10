@@ -96,7 +96,8 @@ const authProtectedRoutes = [
   { path: "/clients/:companyId", component: Clients, layoutProps: { 'mainSidebar': true } },
 
   { path: "/auto-emails/dashboard/:companyId", component: AutoEmailsDashboard },
-  { path: "/auto-emails/:companyId/campaigns/:campaignId/email-queue/:status", component: EmailQueue },
+  { path: "/auto-emails/:companyId/campaigns/:marketId/:campaignId/email-queue/:status", component: EmailQueue },
+  { path: "/auto-emails/:companyId/email-queue/:status", component: EmailQueue },
   { path: "/auto-emails/:companyId/email-queue", component: EmailQueue },
   { path: "/auto-emails/:companyId/campaigns/add", component: AddCampaign },
   { path: "/auto-emails/:companyId/campaigns/:marketId/:campaignId/", component: CampaignDetails },
