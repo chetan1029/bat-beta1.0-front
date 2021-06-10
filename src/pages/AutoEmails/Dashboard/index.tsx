@@ -89,8 +89,9 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
       history.push(`/auto-emails/${companyId}/email-queue/${status}`);
   }
 
+const dateFormat = 'MM/DD/YYYY';
   const onDateChange = (dates: any) => {
-    const dateFormat = 'MM/DD/YYYY';
+
 
     if (dates) {
       const [start, end] = dates;
@@ -107,14 +108,38 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
     }
   }
 
+  const defaultDates = getDates();
+
   const getSelectdValue = () => {
-    const dateFormat = 'MM/DD/YYYY';
-    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : "";
+
+    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : defaultDates['start_date'];
     if (dateStr && endDate) {
       dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
+    } else if (dateStr && defaultDates['end_date']) {
+      dateStr = `${dateStr} - ${defaultDates['end_date']}`;
     }
     return dateStr;
   };
+
+  let noOfDays = 0;
+
+  if (startDate && endDate) {
+    noOfDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+  } else if (defaultDates && defaultDates['start_date'] && defaultDates['end_date']) {
+    const st = Date.parse(defaultDates['start_date']);
+    const en = Date.parse(defaultDates['end_date']);
+    noOfDays = Math.round((en - st) / (1000 * 60 * 60 * 24));
+  }
+
+  let prevStartDate = new Date();
+  let prevEndDate = new Date();
+
+  if (startDate || defaultDates['start_date']) {
+    const st = startDate || new Date(Date.parse(defaultDates['start_date']));
+    prevStartDate.setDate(st.getDate() - noOfDays - 1);
+    prevEndDate.setDate(st.getDate() - 1);
+  }
+
 
 
   return (<>
@@ -126,7 +151,13 @@ const AutoEmailsDashboard = (props: AutoEmailsDashboardProps) => {
             <h1 className="m-0">Dashboard</h1>
           </div>
         </Col>
-        <Col></Col>
+        <Col>
+          <div className="text-right">
+          {prevStartDate && prevEndDate ?
+            <span className="pl-2 text-muted">Compared to {dayjs(prevStartDate).format(dateFormat)}-{dayjs(prevEndDate).format(dateFormat)}</span>
+          : null}
+          </div>
+        </Col>
         <Col sm={2}>
         <DatePicker
               popperModifiers={{

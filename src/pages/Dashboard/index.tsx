@@ -97,7 +97,7 @@ const Dashboard = (props: DashboardProps) => {
   }
 
   const dateFormat = 'MM/DD/YYYY';
-  
+
   const onDateChange = (dates: any) => {
     if (dates) {
       const [start, end] = dates;
@@ -117,7 +117,7 @@ const Dashboard = (props: DashboardProps) => {
   const defaultDates = getDates();
 
   const getSelectdValue = () => {
-    
+
     let dateStr = startDate ? dayjs(startDate).format(dateFormat) : defaultDates['start_date'];
     if (dateStr && endDate) {
       dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
@@ -128,7 +128,7 @@ const Dashboard = (props: DashboardProps) => {
   };
 
   let noOfDays = 0;
-  
+
   if (startDate && endDate) {
     noOfDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
   } else if (defaultDates && defaultDates['start_date'] && defaultDates['end_date']) {
@@ -145,7 +145,7 @@ const Dashboard = (props: DashboardProps) => {
     prevStartDate.setDate(st.getDate() - noOfDays - 1);
     prevEndDate.setDate(st.getDate() - 1);
   }
-  
+
 
   return (<>
     <div className="py-4">
@@ -156,7 +156,13 @@ const Dashboard = (props: DashboardProps) => {
             <h1 className="m-0">Dashboard</h1>
           </div>
         </Col>
-        <Col></Col>
+        <Col>
+          <div className="text-right">
+          {prevStartDate && prevEndDate ?
+            <span className="pl-2 text-muted">Compared to {dayjs(prevStartDate).format(dateFormat)}-{dayjs(prevEndDate).format(dateFormat)}</span>
+          : null}
+          </div>
+        </Col>
         <Col sm={2}>
           <DatePicker
                 popperModifiers={{
@@ -174,7 +180,7 @@ const Dashboard = (props: DashboardProps) => {
                 endDate={endDate}
                 onChange={onDateChange}
                 id="FilterDate"
-                isClearable={true}
+                isClearable={false}
                 shouldCloseOnSelect={false}
                 value={getSelectdValue()}
                 selected={startDate}
@@ -191,13 +197,6 @@ const Dashboard = (props: DashboardProps) => {
             isClearable={true}
              />
         </Col>
-      </Row>
-      <Row>
-        <Col></Col>
-        {prevStartDate && prevEndDate ? <Col sm={2}>
-          <span className="pl-2 text-muted">Compared to {dayjs(prevStartDate).format(dateFormat)}-{dayjs(prevEndDate).format(dateFormat)}</span>
-        </Col> : null}
-        <Col sm={2}></Col>
       </Row>
     </div>
 
