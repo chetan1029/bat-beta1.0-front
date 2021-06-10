@@ -65,7 +65,7 @@ const TagsInput = (props: TagsInputProps) => {
 
     return (
         <>
-            <Form.Label htmlFor="tags">{props.label}</Form.Label>
+            {props.label ?<Form.Label htmlFor="tags">{props.label}</Form.Label> : null}
             <Form.Control
                 type="text"
                 className={classNames("form-control", error && "border-danger")}
