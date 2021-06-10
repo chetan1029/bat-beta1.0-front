@@ -11,6 +11,7 @@ import DatePicker from 'react-datepicker';
 import Select from "react-select";
 import searchIcon from "../../assets/images/search_icon.svg";
 import classNames from "classnames";
+
 //components
 import Loader from "../../components/Loader";
 import MessageAlert from "../../components/MessageAlert";
@@ -18,6 +19,7 @@ import AddKeywords from "./AddKeywords";
 import OverallChart from "../Dashboard/OverallChart";
 import ProductKeywordChart from "./ProductKeywordChart";
 import OrderByIcon from "../../components/OrderByIcon";
+import TagsInput from "../../components/TagsInput";
 
 //actions
 import { APICore } from '../../api/apiCore';
@@ -440,17 +442,20 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                 />
               </Col>
               <Col sm={3}>
-                <div className="search">
-                    <input type="text" placeholder="Separate multiple keywords by comma(,)"
-                      onChange={(e: any) => setSearch(e.target.value)}
-                      onKeyDown={handleSearchKeyDown} />
-                    <button type="submit">
-                      <img src={searchIcon} alt=""
-                        onClick={() => handleOnClickSearch(search)} />
-                    </button>
-                </div>
+                <TagsInput
+                  label={''}
+                  placeholder={t('Enter keywords')}
+                  id="search"
+                  name="search"
+                  selectedTags={(tags: [string]) => setSearch(tags.join())}
+                />
               </Col>
-              <Col sm={3}>
+              <Col sm={1}>
+                <button className="btn btn-primary" onClick={() => handleOnClickSearch(search)}>
+                  Search
+                </button>
+              </Col>
+              <Col sm={2}>
                 <Dropdown className="float-right">
   								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 mt-3 export'
   									as={Link}>

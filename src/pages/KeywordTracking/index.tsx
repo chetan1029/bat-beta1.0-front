@@ -15,6 +15,7 @@ import MessageAlert from "../../components/MessageAlert";
 import MarketPlacesDropdown from "../../components/MarketPlacesDropdown";
 import OverallChart from "../Dashboard/OverallChart";
 import OrderChart from "../Dashboard/OrderChart";
+import OrderByIcon from "../../components/OrderByIcon";
 import { CURRENCIES } from "../../constants";
 //actions
 import {
@@ -38,9 +39,14 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+    const orderAsc = 1;
+    const orderDesc = -1;
+
     const queryParam: any = props.location.search;
     const [successMsg, setSuccessMsg] = useState<any>(null);
     const [errorMsg, setErrorMsg] = useState<any>(null);
+    const [orderBy, setOrderBy] = useState<any>("");
+    const [orderDirection, setOrderDirection] = useState<any>(orderAsc);
 
     const [selectedPeriod, setSelectedPeriod] = useState('1m');
     const [selectedMarket, setSelectedMarket] = useState<any>({label: "All", value: 'all', icon: ''});
@@ -83,112 +89,124 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
     const companyId = props.match.params.companyId;
 
-    const defaultParams = useMemo(() => ({ 'limit': 100000000, 'status__name': 'Active' }), []);
 
     const openDetails = (product: any) => {
         history.push(`/keyword-tracking/${companyId}/product/${product.id}/`);
     }
 
-    const getDates = useCallback((period: string) => {
+    const getDates = useCallback(() => {
       const today = new Date();
 
-      switch (period) {
-        case '1m':
-          return {
-            start_date: dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY'),
-            end_date: dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
-          }
-        case '6m':
-          let dt = new Date();
-          dt.setMonth(today.getMonth() - 6);
-          return {
-            start_date: dayjs(dt).format('MM/DD/YYYY'),
-            end_date: dayjs(today).format('MM/DD/YYYY')
-          }
-        case '1y':
-          let dt2 = new Date();
-          dt2.setMonth(today.getMonth() - 12);
-          return {
-            start_date: dayjs(dt2).format('MM/DD/YYYY'),
-            end_date: dayjs(today).format('MM/DD/YYYY')
-          }
-        default:
-          return {}
+      const start_date = dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY');
+      const end_date = dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY');
+
+      return {
+        start_date: start_date,
+        end_date: end_date
       }
     }, []);
 
-    const onMarketChange = useCallback((market: any) => {
-      setSelectedMarket(market);
-      const filters = {...getDates(selectedPeriod)};
-      if (market) {
-        filters['marketplace'] = market['value'];
-      }
-      dispatch(getKeywordTrackingData(companyId, filters));
-      dispatch(getSalesChartData(companyId, filters));
-    }, [dispatch, companyId, getDates, selectedPeriod]);
-
-    useEffect(() => {
-      if (isMarketsFetched) {
-        const activeMarkets = markets ? markets.filter(m => m['status'] === 'active'): [];
-        if (activeMarkets && activeMarkets.length) {
-          onMarketChange({label: t('Amazon') + " " + activeMarkets[0]['country'], value: activeMarkets[0]['id'], icon: activeMarkets[0]['country']});
-        } else {
-          dispatch(getKeywordTrackingData(companyId, {...getDates(selectedPeriod)}));
-          dispatch(getSalesChartData(companyId, {...getDates(selectedPeriod)}));
-        }
-      }
-    }, [dispatch, markets, getDates, t, companyId, selectedPeriod, onMarketChange, isMarketsFetched]);
-
+    const [filters, setFilters] = useState<any>({...getDates()});
+    const [search, setSearch] = useState<any>("");
 
     // get the data
     useEffect(() => {
         dispatch(getMarketPlaces(companyId, { 'limit': 100000000 }));
-        dispatch(getKtproducts(companyId, defaultParams));
         dispatch(getMembershipPlan(companyId, { is_active: true }));
-    }, [dispatch, companyId, defaultParams, getDates, selectedPeriod]);
+    }, [dispatch, companyId]);
 
 
-    const onPeriodChange = (period: string) => {
-      setSelectedPeriod(period);
-      const filters = {...getDates(period)};
-      if (selectedMarket) {
-        filters['marketplace'] = selectedMarket['value'];
+    useEffect(() => {
+        dispatch(getKtproducts(companyId, {...filters, 'limit': 100000000, 'status__name': 'Active'}));
+        dispatch(getKeywordTrackingData(companyId, filters));
+        dispatch(getSalesChartData(companyId, filters));
+    }, [dispatch, companyId, filters]);
+
+    const onMarketChange = (market: any) => {
+      setSelectedMarket(market);
+      if (market) {
+        setFilters({...filters,'marketplace':market['value']});
       }
-      dispatch(getKeywordTrackingData(companyId, filters));
-      dispatch(getSalesChartData(companyId, filters));
     }
 
-    const onDateChange = (dates: any) => {
-      const filters = {};
-      const dateFormat = 'MM/DD/YYYY';
+    const handleSearchKeyDown = (event: any) => {
+      const { value } = event.target;
+      setSearch(value);
+      if ([13].includes(event.keyCode)) {
+        setFilters({ ...filters, search: value, offset: 0 });
+      }
+    };
 
+    const handleOnClickOrderBy = (value: any) => {
+      var orderType = "";
+      if (orderBy === value){
+        if(orderDirection === orderAsc){
+          setOrderDirection(orderDesc);
+          orderType = "-";
+        }else{
+          setOrderDirection(orderAsc);
+          orderType = "";
+        }
+      }else{
+        setOrderDirection(orderAsc);
+        orderType = "";
+      }
+      setOrderBy(value);
+      const orderValue = orderType+""+value;
+      setFilters({ ...filters, ordering: orderValue });
+
+    };
+
+    const dateFormat = 'MM/DD/YYYY';
+
+    const onDateChange = (dates: any) => {
       if (dates) {
         const [start, end] = dates;
         setStartDate(start);
         setEndDate(end);
 
         if (start && end) {
-          filters['start_date'] = dayjs(start).format(dateFormat);
-          filters['end_date'] = dayjs(end).format(dateFormat);
-          dispatch(getKeywordTrackingData(companyId, filters));
-          dispatch(getSalesChartData(companyId, filters));
+          setFilters({...filters, 'start_date': dayjs(start).format(dateFormat), 'end_date': dayjs(end).format(dateFormat)});
         }
       } else {
         setStartDate(null);
         setEndDate(null);
-        dispatch(getKeywordTrackingData(companyId, filters));
-        dispatch(getSalesChartData(companyId, filters));
+        setFilters({...filters, 'start_date': "", 'end_date': ""});
       }
     }
 
+    const defaultDates = getDates();
+
     const getSelectdValue = () => {
-      const dateFormat = 'MM/DD/YYYY';
-      let dateStr = startDate ? dayjs(startDate).format(dateFormat) : "";
+
+      let dateStr = startDate ? dayjs(startDate).format(dateFormat) : defaultDates['start_date'];
       if (dateStr && endDate) {
         dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
+      } else if (dateStr && defaultDates['end_date']) {
+        dateStr = `${dateStr} - ${defaultDates['end_date']}`;
       }
       return dateStr;
     };
+
+    let noOfDays = 0;
+
+    if (startDate && endDate) {
+      noOfDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+    } else if (defaultDates && defaultDates['start_date'] && defaultDates['end_date']) {
+      const st = Date.parse(defaultDates['start_date']);
+      const en = Date.parse(defaultDates['end_date']);
+      noOfDays = Math.round((en - st) / (1000 * 60 * 60 * 24));
+    }
+
+    let prevStartDate = new Date();
+    let prevEndDate = new Date();
+
+    if (startDate || defaultDates['start_date']) {
+      const st = startDate || new Date(Date.parse(defaultDates['start_date']));
+      prevStartDate.setDate(st.getDate() - noOfDays - 1);
+      prevEndDate.setDate(st.getDate() - 1);
+    }
+
 
 
     return (
@@ -202,7 +220,13 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
 
                         </div>
                     </Col>
-                    <Col></Col>
+                    <Col>
+                      {/*<div className="text-right">
+                      {prevStartDate && prevEndDate ?
+                        <span className="pl-2 text-muted">Compared to {dayjs(prevStartDate).format(dateFormat)}-{dayjs(prevEndDate).format(dateFormat)}</span>
+                      : null}
+                      </div>*/}
+                    </Col>
                     <Col sm={2}>
                           <DatePicker
                               popperModifiers={{
@@ -220,7 +244,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                               endDate={endDate}
                               onChange={onDateChange}
                               id="FilterDate"
-                              isClearable={true}
+                              isClearable={false}
                               shouldCloseOnSelect={false}
                               value={getSelectdValue()}
                               selected={startDate}
@@ -254,15 +278,30 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                               </Col>
                             </Row>
                             <Row>
+                              <Col sm={5}>
+                                <div className="search">
+                                  <input type="text" placeholder={t("Search")}
+                                    onChange={(e: any) => setSearch(e.target.value)}
+                                    onKeyDown={handleSearchKeyDown} value={search} />
+                                  <button type="submit">
+                                    <img src={searchIcon} alt=""
+                                      onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                                  </button>
+                                </div>
+                              </Col>
+                            </Row>
+                            <Row className="mt-3">
                                 <Col lg={12}>
 
                                     <div className={"list-view"}>
                                         <Table>
                                             <thead>
                                                 <tr>
-                                                    <th>{t("Product")}</th>
-                                                    <th>{t("Keywords")}</th>
-                                                    <th>{t("Visibility Score")}</th>
+                                                    <th onClick={() => handleOnClickOrderBy("title")} className={"clickable-row"}>{t("Product")} <OrderByIcon orderField={"title"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                                                    <th onClick={() => handleOnClickOrderBy("keywords")} className={"clickable-row"}>{t("Keywords")} <OrderByIcon orderField={"keywords"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                                                    <th onClick={() => handleOnClickOrderBy("visibility_score")} className={"clickable-row"}>{t("Visibility Score")} <OrderByIcon orderField={"visibility_score"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                                                    <th onClick={() => handleOnClickOrderBy("sessions")} className={"clickable-row"}>{t("Sessions")} <OrderByIcon orderField={"sessions"} orderBy={orderBy} orderDirection={orderDirection} /></th>
+                                                    <th onClick={() => handleOnClickOrderBy("pageviews")} className={"clickable-row"}>{t("Page views")} <OrderByIcon orderField={"pageviews"} orderBy={orderBy} orderDirection={orderDirection} /></th>
                                                     <th>{t("Status")}</th>
                                                 </tr>
                                             </thead>
@@ -283,6 +322,8 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                                                 </td>
                                                 <td>{product.keywords}</td>
                                                 <td>{product.visibility_score}</td>
+                                                <td>{product.sessions}</td>
+                                                <td>{product.pageviews}</td>
                                                 <td>{capitalizeFirstLetter(product.status.name)}</td>
                                               </tr>
                                             )}
