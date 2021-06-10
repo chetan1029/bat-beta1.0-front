@@ -210,7 +210,7 @@ const Campaigns = (props: CampaignsProps) => {
                                                             }
                                                             { capitalizeFirstLetter(market['status']) === 'Active' ?
                                                             <td className='clickable-row'>
-                                                              {getTotalOfMarket(market, 'opt_out_rate')}%
+                                                              {parseFloat(getTotalOfMarket(market, 'opt_out_rate')).toFixed(2)}%
                                                             </td>
                                                             :
                                                             <td>-</td>
