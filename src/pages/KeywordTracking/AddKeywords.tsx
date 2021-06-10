@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Modal, Button } from "react-bootstrap";
+import { Form, Modal, Button, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 //plug-ins
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
 // Import loader
 import AlertMessage from "../../components/AlertMessage";
 import searchIcon from "../../assets/images/search_icon.svg";
 import Loader from "../../components/Loader";
+import TagsInput from "../../components/TagsInput";
 
 //action
 import { createKeywords, resetkeywordTracking, suggestKeywords } from "../../redux/actions";
@@ -92,15 +92,26 @@ const AddKeywords = ({ isOpen, onClose, companyId, productId, amazonaccountId }:
                     {suggestedKeywordLoading ? <Loader /> : null}
                     <div>
                         <div className="d-flex">
-                            <div className="search w-100">
-                                <input type="text" placeholder="Enter ASIN's to search for keywords"
+                            <div className="w-100">
+                                {/* <input type="text" placeholder="Enter ASIN's to search for keywords"
                                     onChange={(e: any) => setAsins(e.target.value)}
-                                    onKeyDown={handleAsinsKeyDown} />
-                                <button type="submit">
-                                    <img src={searchIcon} alt=""
-                                        onClick={() => dispatch(suggestKeywords(companyId, { asins: asins, amazonaccount_id: amazonaccountId }))} />
-                                </button>
+                                     onKeyDown={handleAsinsKeyDown} /> */}
+
+
                             </div>
+                        </div>
+
+                        <TagsInput
+                          label={''}
+                          placeholder={t('ASIN')}
+                          id="asin"
+                          name="asin"
+                          selectedTags={(tags: [string]) => setAsins(tags.join())}
+                        />
+                        <div className="text-right">
+                          <button type="submit" className="btn btn-primary" onClick={() => dispatch(suggestKeywords(companyId, { asins: asins, amazonaccount_id: amazonaccountId }))}>
+                              Search
+                          </button>
                         </div>
                         {(!isKeywordsCreated && createKeywordsError) ? <AlertMessage error={createKeywordsError} /> : null}
 
