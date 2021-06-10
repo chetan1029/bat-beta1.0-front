@@ -128,6 +128,7 @@ const EmailQueue = (props: EmailQueueProps) => {
 
     const companyId = props.match.params.companyId;
     const campaignId = props.match.params.campaignId || "";
+    const marketId = props.match.params.marketId || "";
     const status = props.match.params.status || "";
     /*
         Email Queue
@@ -182,16 +183,16 @@ const EmailQueue = (props: EmailQueueProps) => {
                 <Row>
                     <Col>
                         <div className="d-flex align-items-center">
-                            {campaignId ?
-                            <Link to={`/auto-emails/${companyId}/campaigns/${campaignId}/`}>
+                            {campaignId && marketId ?
+                            <Link to={`/auto-emails/${companyId}/campaigns/${marketId}/${campaignId}/`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
                             :
-                            <Link to={`/auto-emails/${companyId}/campaigns/`}>
+                            <Link to={`/auto-emails/dashboard/${companyId}`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
                             }
-                            <h1 className="m-0">{t('Email Queue')}</h1>
+                            <h1 className="m-0">{t('Email Queue')} ({status})</h1>
                         </div>
                     </Col>
 
@@ -203,22 +204,20 @@ const EmailQueue = (props: EmailQueueProps) => {
                     <Loader />
                     :
                     <div>
-                        <Card>
-                            <Card.Body className="">
-                                <div className="d-flex align-items-center justify-content-between mb-3">
-                                  <div className="d-flex align-items-center w-50">
-                                    <div className="search">
-                                      <input type="text" placeholder={t("Search By Order ID")}
-                                        onChange={(e: any) => setSearch(e.target.value)}
-                                        onKeyDown={handleSearchKeyDown} />
-                                      <button type="submit">
-                                        <img src={searchIcon} alt=""
-                                          onClick={() => setFilters({ ...filters, search, offset: 0 })} />
-                                      </button>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div>
+                        <Row>
+                          <Col sm={5}>
+                            <div className="search">
+                              <input type="text" placeholder={t("Search By Order ID")}
+                                onChange={(e: any) => setSearch(e.target.value)}
+                                onKeyDown={handleSearchKeyDown} />
+                              <button type="submit">
+                                <img src={searchIcon} alt=""
+                                  onClick={() => setFilters({ ...filters, search, offset: 0 })} />
+                              </button>
+                            </div>
+                          </Col>
+                        </Row>
+                        <div className="mt-3">
                                     {
                                         get(emailQueues, "count") > 0 ?
                                         <EmailQueueTable emailqueues={emailQueues}
@@ -227,9 +226,7 @@ const EmailQueue = (props: EmailQueueProps) => {
                                         : <EmptyState />
 
                                     }
-                                </div>
-                            </Card.Body>
-                        </Card>
+                          </div>
                     </div>
             }
 

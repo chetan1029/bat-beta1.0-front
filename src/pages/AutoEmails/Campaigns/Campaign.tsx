@@ -169,7 +169,7 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
     const minActivationDate = new Date(new Date().getTime() - (10 * 24 * 60 * 60 * 1000));
 
     const openDetails = (status: any) => {
-        history.push(`/auto-emails/${companyId}/campaigns/${campaign['id']}/email-queue/${status}`);
+        history.push(`/auto-emails/${companyId}/campaigns/${market['id']}/${campaign['id']}/email-queue/${status}`);
     }
 
     return (

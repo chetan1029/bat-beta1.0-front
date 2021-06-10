@@ -156,7 +156,7 @@ const Templates = (props: TemplatesProps) => {
                         <Row>
                           <Col sm={5}>
                             <div className="search">
-                              <input type="text" placeholder="Search"
+                              <input type="text" placeholder={t("Search")}
                                 onChange={(e: any) => setSearch(e.target.value)}
                                 onKeyDown={handleSearchKeyDown} value={search} />
                               <button type="submit">
