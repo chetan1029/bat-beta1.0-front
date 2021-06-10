@@ -98,7 +98,7 @@ const MarketPlaces = (state = INIT_STATE, action: any) => {
         case MarketPlacesTypes.CONNECT_MARKETPLACE:
             return { ...state, isMarketConnected: false, loading: true };
         case MarketPlacesTypes.RESET_CONNECT_MARKETPLACE:
-            return { ...state, isMarketConnected: false, redirectUri: null, isMarketDisconnected: false, isMarketPlaceUpdated: false, error: null, updateError: null };
+            return { ...state, loading: false, isMarketConnected: false, redirectUri: null, isMarketDisconnected: false, isMarketPlaceUpdated: false, error: null, updateError: null };
         case MarketPlacesTypes.DISCONNECT_MARKETPLACE:
             return { ...state, isMarketDisconnected: false, loading: true };
 

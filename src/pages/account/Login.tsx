@@ -10,10 +10,12 @@ import { useSelector, useDispatch } from 'react-redux';
 //import loader
 import Loader from '../../components/Loader';
 import { useQuery } from "../../components/Hooks";
+import { APICore } from '../../api/apiCore';
 
 import { loginUser, resetAuth } from "../../redux/actions";
 
 const Login = () => {
+    const api = new APICore();
     const dispatch = useDispatch();
 
     const query: any = useQuery();
@@ -50,16 +52,14 @@ const Login = () => {
         },
     });
 
-    const { loading, userLoggedIn, user, error } = useSelector((state: any) => ({
+    const { loading, error } = useSelector((state: any) => ({
         loading: state.Auth.loading,
-        user: state.Auth.user,
-        error: state.Auth.error,
-        userLoggedIn: state.Auth.userLoggedIn
+        error: state.Auth.error
     }));
 
 
     return <>
-        {userLoggedIn || user ? <Redirect to={next ? next : '/'}></Redirect> : null}
+        {api.isUserAuthenticated() ? <Redirect to={next ? next : '/'}></Redirect> : null}
 
         <div className="h-100 d-flex align-items-center">
             <Container>
