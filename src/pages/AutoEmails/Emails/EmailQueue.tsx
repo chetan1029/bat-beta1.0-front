@@ -182,9 +182,15 @@ const EmailQueue = (props: EmailQueueProps) => {
                 <Row>
                     <Col>
                         <div className="d-flex align-items-center">
-                            <Link to={`/auto-emails/${companyId}/campaigns`}>
+                            {campaignId ?
+                            <Link to={`/auto-emails/${companyId}/campaigns/${campaignId}/`}>
                                 <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
                             </Link>
+                            :
+                            <Link to={`/auto-emails/${companyId}/campaigns/`}>
+                                <Icon name="arrow_left_2" className="icon icon-xs  mr-2" />
+                            </Link>
+                            }
                             <h1 className="m-0">{t('Email Queue')}</h1>
                         </div>
                     </Col>
