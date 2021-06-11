@@ -116,6 +116,11 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
 
   const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
+  const [defaultFilters, setDefaultFilters] = useState<any>({
+    'productkeyword__amazonproduct': productId,
+    'date': dayjs(currentdate).format('YYYY-MM-DD'),
+    'limit': 10000,
+  });
   const [filters, setFilters] = useState<any>({
     'productkeyword__amazonproduct': productId,
     'date': dayjs(currentdate).format('YYYY-MM-DD'),
@@ -167,11 +172,21 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }, [dispatch, companyId, productId, getDates, selectedPeriod]);
 
   useEffect(() => {
-    dispatch(getKeywordranks(companyId, filters));
-  }, [dispatch, companyId, productId, getDates, filters, isBulkActionPerformed]);
+    if(isBulkActionPerformed){
+      dispatch(getKeywordranks(companyId, defaultFilters));
+    }else{
+      dispatch(getKeywordranks(companyId, filters));
+    }
+  }, [dispatch, companyId, productId, getDates, filters, defaultFilters, isBulkActionPerformed]);
 
 
   const [records, setRecords] = useState<Array<any>>([]);
+
+  useEffect(() => {
+    if (keywordranks && keywordranks.length > 0) {
+      setRecords(keywordranks);
+    }
+  }, [keywordranks]);
 
   const onDateChange = (dates: any) => {
     const filters = {};
@@ -246,15 +261,16 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   };
 
-  useEffect(() => {
-    if (keywordranks && keywordranks.length > 0) {
-      setRecords(prevArray => [...prevArray, ...keywordranks]);
-    }
-  }, [keywordranks]);
+  // useEffect(() => {
+  //   if (keywordranks && keywordranks.length > 0) {
+  //     setRecords(prevArray => [...prevArray, ...keywordranks]);
+  //   }
+  // }, [keywordranks]);
 
   const uniq = uniqBy(records, (e) => {
     return e.id;
   });
+
 
   /*
   add Keywords
@@ -307,6 +323,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   const performBulkAction = (action: string) => {
     dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['id'])));
+    setSelectedKeywords([]);
   }
 
 
