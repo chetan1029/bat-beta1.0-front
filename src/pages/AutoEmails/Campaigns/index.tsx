@@ -86,12 +86,7 @@ const Campaigns = (props: CampaignsProps) => {
 
     const getTotalOfMarket = (market: any, key: string) => {
         const camps = getCampaignsOfMarket(market);
-        let data = camps.reduce((a, b) => a + (b[key] || 0), 0);
-        if(key=="opt_out_rate"){
-          let totalcamps = camps.length
-          data = data/totalcamps;
-        }
-        return data
+        return camps.reduce((a, b) => a + (b[key] || 0), 0);
     }
 
     const getLastSentOfMarket = (market: any) => {
@@ -104,6 +99,7 @@ const Campaigns = (props: CampaignsProps) => {
         }
         return "";
     }
+
 
     const [selectedMarket, setSelectedMarket] = useState<any>(null);
 
