@@ -173,6 +173,12 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   const [records, setRecords] = useState<Array<any>>([]);
 
+  useEffect(() => {
+    if (keywordranks && keywordranks.length > 0) {
+      setRecords(keywordranks);
+    }
+  }, [keywordranks]);
+
   const onDateChange = (dates: any) => {
     const filters = {};
     const dateFormat = 'YYYY-MM-DD';
@@ -246,15 +252,16 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   };
 
-  useEffect(() => {
-    if (keywordranks && keywordranks.length > 0) {
-      setRecords(prevArray => [...prevArray, ...keywordranks]);
-    }
-  }, [keywordranks]);
+  // useEffect(() => {
+  //   if (keywordranks && keywordranks.length > 0) {
+  //     setRecords(prevArray => [...prevArray, ...keywordranks]);
+  //   }
+  // }, [keywordranks]);
 
   const uniq = uniqBy(records, (e) => {
     return e.id;
   });
+
 
   /*
   add Keywords
@@ -307,6 +314,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   const performBulkAction = (action: string) => {
     dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['id'])));
+    setSelectedKeywords([]);
   }
 
 
