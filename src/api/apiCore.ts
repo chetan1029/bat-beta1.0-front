@@ -175,10 +175,13 @@ class APICore {
     }
 
     setLoggedInUser = (session: any) => {
-        if (session)
+        if (!session) {
+            cookies.remove('_bat_session_', { path: '/' });
+            cookies.remove('_bat_session_', { maxAge: 86400, domain: window.location.hostname, path: '/'  });
+        }
+        else {
             cookies.set('_bat_session_', JSON.stringify(session), { maxAge: 86400, domain: window.location.hostname });
-        else
-            cookies.remove('_bat_session_');
+        }            
     }
 
     /**
