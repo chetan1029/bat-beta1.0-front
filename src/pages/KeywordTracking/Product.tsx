@@ -116,6 +116,11 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
 
   const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
+  const [defaultFilters, setDefaultFilters] = useState<any>({
+    'productkeyword__amazonproduct': productId,
+    'date': dayjs(currentdate).format('YYYY-MM-DD'),
+    'limit': 10000,
+  });
   const [filters, setFilters] = useState<any>({
     'productkeyword__amazonproduct': productId,
     'date': dayjs(currentdate).format('YYYY-MM-DD'),
@@ -167,8 +172,12 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }, [dispatch, companyId, productId, getDates, selectedPeriod]);
 
   useEffect(() => {
-    dispatch(getKeywordranks(companyId, filters));
-  }, [dispatch, companyId, productId, getDates, filters, isBulkActionPerformed]);
+    if(isBulkActionPerformed){
+      dispatch(getKeywordranks(companyId, defaultFilters));
+    }else{
+      dispatch(getKeywordranks(companyId, filters));
+    }
+  }, [dispatch, companyId, productId, getDates, filters, defaultFilters, isBulkActionPerformed]);
 
 
   const [records, setRecords] = useState<Array<any>>([]);
