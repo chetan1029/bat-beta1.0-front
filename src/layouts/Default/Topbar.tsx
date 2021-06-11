@@ -109,7 +109,7 @@ const Topbar = (props: TopbarProps) => {
 
                   <Dropdown.Divider></Dropdown.Divider>
 
-                  <Dropdown.Item href='/logout'>
+                  <Dropdown.Item to='/logout' as={Link}>
                     <Icon name="logout" className='icon icon-xs' />
                     <span>{t('Log Out')}</span>
                   </Dropdown.Item>
