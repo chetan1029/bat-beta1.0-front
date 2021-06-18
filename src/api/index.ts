@@ -743,6 +743,11 @@ function getEmailChartData(companyId: number, filters?: any) {
     return api.get(`${baseUrl}`, filters);
 }
 
+function getSessionChartData(companyId: number, filters?: any) {
+    const baseUrl = `/companies/${companyId}/session-chart-data/`;
+    return api.get(`${baseUrl}`, filters);
+}
+
 /* amazon account */
 
 function getAmazonAccount(companyId: number, id: number,) {
@@ -852,5 +857,5 @@ export {
     getAmazonAccount, updateAmazonAccount,
     getKtproducts, getKtproduct, getKeywordranks, getKeywordTrackingData, createKeywords, performBulkActionKeywords, getProductKeywordData, suggestKeywords,
     exportKeywordsCSVFile, exportKeywordsXLSFile,
-    getAsinPerformance, getEmailChartData
+    getAsinPerformance, getEmailChartData, getSessionChartData
 }

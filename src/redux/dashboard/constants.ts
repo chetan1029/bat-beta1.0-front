@@ -5,6 +5,7 @@ export enum DashboardTypes {
 
     GET_SALESCHART_DATA = '@@company/dashboard/GET_SALESCHART_DATA',
     GET_EMAILCHART_DATA = '@@company/dashboard/GET_EMAILCHART_DATA',
+    GET_SESSIONCHART_DATA = '@@company/dashboard/GET_SESSIONCHART_DATA',
     GET_KEYWORDTRACKING_DATA = '@@company/dashboard/GET_KEYWORDTRACKING_DATA',
     GET_PRODUCTKEYWORD_DATA = '@@company/dashboard/GET_PRODUCTKEYWORD_DATA',
     RESET = '@@company/dashboard/RESET',

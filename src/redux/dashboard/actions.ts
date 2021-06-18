@@ -17,6 +17,11 @@ export const getSalesChartData = (companyId: string | number, filters?: any) => 
     payload: { companyId, filters }
 });
 
+export const getSessionChartData = (companyId: string | number, filters?: any) => ({
+    type: DashboardTypes.GET_SESSIONCHART_DATA,
+    payload: { companyId, filters }
+});
+
 export const getEmailChartData = (companyId: string | number, filters?: any) => ({
     type: DashboardTypes.GET_EMAILCHART_DATA,
     payload: { companyId, filters }
