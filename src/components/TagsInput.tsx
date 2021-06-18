@@ -39,6 +39,14 @@ const TagsInput = (props: TagsInputProps) => {
         setValue(value);
     }
 
+    const handlePaste = (event: any) => {
+        console.log(event.clipboardData);
+        const value = event.clipboardData.getData('Text');
+        addTags(value);
+        //event.clipboardData.setData('text/plain', '');
+        //event.preventDefault();
+    }
+
     const handleKeyDown = (event: any) => {
         const { value } = event.target;
         if ([13].includes(event.keyCode)) {
@@ -76,6 +84,7 @@ const TagsInput = (props: TagsInputProps) => {
                 autoComplete="off"
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
+                onPaste={handlePaste}
             />
             {error &&
             <span className="text-danger font-10">

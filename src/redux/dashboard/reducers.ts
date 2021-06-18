@@ -3,6 +3,7 @@ import { DashboardTypes } from './constants';
 const INIT_STATE: any = {
     salesChartData: {},
     emailChartData: {},
+    sessionChartData: {},
     keywordTrackingData: {},
     productKeywordData: {}
 };
@@ -23,6 +24,13 @@ const Dashboard = (state = INIT_STATE, action: any) => {
                     return {
                         ...state,
                         emailChartData: action.payload.data,
+                        loading: false,
+                    }
+                }
+                case DashboardTypes.GET_SESSIONCHART_DATA: {
+                    return {
+                        ...state,
+                        sessionChartData: action.payload.data,
                         loading: false,
                     }
                 }
@@ -61,6 +69,13 @@ const Dashboard = (state = INIT_STATE, action: any) => {
                         error: action.payload.error,
                     }
                 }
+                case DashboardTypes.GET_SESSIONCHART_DATA: {
+                    return {
+                        ...state,
+                        loading: false,
+                        error: action.payload.error,
+                    }
+                }
                 case DashboardTypes.GET_KEYWORDTRACKING_DATA: {
                     return {
                         ...state,
@@ -84,6 +99,9 @@ const Dashboard = (state = INIT_STATE, action: any) => {
             return { ...state, loading: true };
 
         case DashboardTypes.GET_EMAILCHART_DATA:
+            return { ...state, loading: true };
+
+        case DashboardTypes.GET_SESSIONCHART_DATA:
             return { ...state, loading: true };
 
         case DashboardTypes.GET_KEYWORDTRACKING_DATA:

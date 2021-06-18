@@ -1,6 +1,6 @@
 import { all, fork, put, takeEvery, call } from 'redux-saga/effects';
 
-import { getSalesChartData, getEmailChartData, getKeywordTrackingData, getProductKeywordData } from "../../api/index";
+import { getSalesChartData, getEmailChartData, getKeywordTrackingData, getProductKeywordData, getSessionChartData } from "../../api/index";
 
 import { dashboardApiResponseSuccess, dashboardApiResponseError } from "./actions";
 import { DashboardTypes } from './constants';
@@ -24,6 +24,15 @@ function* getDashboardEmailChartData({ payload: { companyId, filters } }: any) {
         yield put(dashboardApiResponseSuccess(DashboardTypes.GET_EMAILCHART_DATA, response.data));
     } catch (error) {
         yield put(dashboardApiResponseError(DashboardTypes.GET_EMAILCHART_DATA, error));
+    }
+}
+
+function* getDashboardSessionChartData({ payload: { companyId, filters } }: any) {
+    try {
+        const response = yield call(getSessionChartData, companyId, filters);
+        yield put(dashboardApiResponseSuccess(DashboardTypes.GET_SESSIONCHART_DATA, response.data));
+    } catch (error) {
+        yield put(dashboardApiResponseError(DashboardTypes.GET_SESSIONCHART_DATA, error));
     }
 }
 
@@ -53,6 +62,10 @@ export function* watchGetDashboardEmailChartData() {
     yield takeEvery(DashboardTypes.GET_EMAILCHART_DATA, getDashboardEmailChartData)
 }
 
+export function* watchGetDashboardSessionChartData() {
+    yield takeEvery(DashboardTypes.GET_SESSIONCHART_DATA, getDashboardSessionChartData)
+}
+
 export function* watchGetDashboardKeywordTrackingData() {
     yield takeEvery(DashboardTypes.GET_KEYWORDTRACKING_DATA, getDashboardKeywordTrackingData)
 }
@@ -65,6 +78,7 @@ function* dashboardSaga() {
     yield all([
         fork(watchGetDashboardSalesChartData),
         fork(watchGetDashboardEmailChartData),
+        fork(watchGetDashboardSessionChartData),
         fork(watchGetDashboardKeywordTrackingData),
         fork(watchGetDashboardProductKeywordData),
     ]);
