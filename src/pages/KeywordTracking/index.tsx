@@ -24,6 +24,7 @@ import {
     getMembershipPlan,
     getKeywordTrackingData,
     getSalesChartData,
+    getSessionChartData,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -72,7 +73,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
     }, [queryParam]);
 
 
-    const { loading, products, keywordTrackingData, markets, isMarketsFetched, salesChartData } = useSelector((state: any) => ({
+    const { loading, products, keywordTrackingData, markets, isMarketsFetched, salesChartData, sessionChartData } = useSelector((state: any) => ({
         loading: state.Company.KeywordTracking.loading,
         isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
         products: state.Company.KeywordTracking.products,
@@ -81,6 +82,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         membershipPlan: state.Company.MembershipPlan.membershipPlan,
         keywordTrackingData: state.Dashboard.keywordTrackingData,
         salesChartData: state.Dashboard.salesChartData,
+        sessionChartData: state.Dashboard.sessionChartData,
 
         markets: state.MarketPlaces.markets,
         isMarketsFetched: state.MarketPlaces.isMarketsFetched,
@@ -120,6 +122,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
         dispatch(getKtproducts(companyId, {...filters, 'limit': 100000000, 'status__name': 'Active'}));
         dispatch(getKeywordTrackingData(companyId, filters));
         dispatch(getSalesChartData(companyId, filters));
+        dispatch(getSessionChartData(companyId, filters));
     }, [dispatch, companyId, filters]);
 
     const onMarketChange = (market: any) => {
@@ -274,7 +277,7 @@ const KeywordTracking = (props: KeywordTrackingProps) => {
                               </Col>
                               <Col lg={4}>
                                 <h4>Session and page views</h4>
-                                {!loading ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}} />: <div style={{height: 350}}></div>}
+                                {!loading ? <OverallChart data={sessionChartData && sessionChartData.chartData ? sessionChartData.chartData : {}} />: <div style={{height: 350}}></div>}
                               </Col>
                             </Row>
                             <Row>
