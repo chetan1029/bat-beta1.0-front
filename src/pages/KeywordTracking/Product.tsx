@@ -65,8 +65,6 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   const api = new APICore();
 
-  const [selectedPeriod, setSelectedPeriod] = useState('1m');
-
   const loggedInUser = api.getLoggedInUser();
 
   useEffect(() => {
@@ -116,68 +114,50 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
 
   const [selectedKeywords, setSelectedKeywords] = useState<any>([]);
-  const [defaultFilters, setDefaultFilters] = useState<any>({
-    'productkeyword__amazonproduct': productId,
-    'date': dayjs(currentdate).format('YYYY-MM-DD'),
-    'limit': 10000,
-  });
-  const [filters, setFilters] = useState<any>({
-    'productkeyword__amazonproduct': productId,
-    'date': dayjs(currentdate).format('YYYY-MM-DD'),
-    'limit': 10000,
-  });
-  const [search, setSearch] = useState<any>({
-    'productkeyword__amazonproduct': productId,
-    'date': dayjs(currentdate).format('YYYY-MM-DD'),
-    'limit': 10000,
-  });
 
   const [keywordFrequency, setKeywordFrequency] = useState<any>({label: "All Keywords", value: "10000"});
   const [searchType, setSearchType] = useState<any>({label: "Inclusive (All)", value: "inclusive-all"});
 
 
-  const getDates = useCallback((period: string) => {
+  const getDates = useCallback(() => {
     const today = new Date();
 
-    switch (period) {
-      case '1m':
-        return {
-          start_date: dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY'),
-          end_date: dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY')
-        }
-      case '6m':
-        let dt = new Date();
-        dt.setMonth(today.getMonth() - 6);
-        return {
-          start_date: dayjs(dt).format('MM/DD/YYYY'),
-          end_date: dayjs(today).format('MM/DD/YYYY')
-        }
-      case '1y':
-        let dt2 = new Date();
-        dt2.setMonth(today.getMonth() - 12);
-        return {
-          start_date: dayjs(dt2).format('MM/DD/YYYY'),
-          end_date: dayjs(today).format('MM/DD/YYYY')
-        }
-      default:
-        return {}
+    const start_date = dayjs(new Date(today.getFullYear(), today.getMonth(), 1)).format('MM/DD/YYYY');
+    const end_date = dayjs(new Date(today.getFullYear(), today.getMonth() + 1, 0)).format('MM/DD/YYYY');
+
+    return {
+      start_date: start_date,
+      end_date: end_date
     }
   }, []);
+
+  const defaultSetting = {
+    'productkeyword__amazonproduct': productId,
+    'date': dayjs(currentdate).format('YYYY-MM-DD'),
+    'limit': 10000,
+  }
+  const [defaultFilters, setDefaultFilters] = useState<any>({
+    ...getDates(),
+    'productkeyword__amazonproduct': productId,
+  });
+  const [filters, setFilters] = useState<any>(defaultSetting);
+  const [search, setSearch] = useState<any>(defaultSetting);
+
 
   // get the data
   useEffect(() => {
     dispatch(getKtproduct(companyId, productId));
     dispatch(getMembershipPlan(companyId, { is_active: true }));
-    dispatch(getKeywordTrackingData(companyId, { ...getDates(selectedPeriod), product_id: productId }));
-  }, [dispatch, companyId, productId, getDates, selectedPeriod]);
+  }, [dispatch, companyId, productId, getDates]);
 
   useEffect(() => {
     if(isBulkActionPerformed){
-      dispatch(getKeywordranks(companyId, defaultFilters));
-    }else{
+      dispatch(getKeywordranks(companyId, defaultSetting));
+    }else {
       dispatch(getKeywordranks(companyId, filters));
+      dispatch(getKeywordTrackingData(companyId, { ...defaultFilters }));
     }
-  }, [dispatch, companyId, productId, getDates, filters, defaultFilters, isBulkActionPerformed]);
+  }, [dispatch, companyId, productId, filters, defaultFilters, isBulkActionPerformed]);
 
 
   const [records, setRecords] = useState<Array<any>>([]);
@@ -188,45 +168,57 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     }
   }, [keywordranks]);
 
+  const dateFormat = 'MM/DD/YYYY';
+
   const onDateChange = (dates: any) => {
-    const filters = {};
-    const dateFormat = 'YYYY-MM-DD';
-
-    filters["productkeyword__amazonproduct"] = productId;
-    filters["limit"] = 10000;
-
     if (dates) {
       const [start, end] = dates;
       setStartDate(start);
       setEndDate(end);
 
       if (start && end) {
-        filters['start_date'] = dayjs(start).format(dateFormat);
-        filters['end_date'] = dayjs(end).format(dateFormat);
-        dispatch(getKeywordranks(companyId, filters));
+        setDefaultFilters({...defaultFilters, 'start_date': dayjs(start).format(dateFormat), 'end_date': dayjs(end).format(dateFormat)});
       }
     } else {
       setStartDate(null);
       setEndDate(null);
-      dispatch(getKeywordranks(companyId, filters));
+      setDefaultFilters({...defaultFilters, 'start_date': "", 'end_date': ""});
     }
   }
 
+  const defaultDates = getDates();
+
   const getSelectdValue = () => {
-    const dateFormat = 'MM/DD/YYYY';
-    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : "";
+
+    let dateStr = startDate ? dayjs(startDate).format(dateFormat) : defaultDates['start_date'];
     if (dateStr && endDate) {
       dateStr = `${dateStr} - ${dayjs(endDate).format(dateFormat)}`;
+    } else if (dateStr && defaultDates['end_date']) {
+      dateStr = `${dateStr} - ${defaultDates['end_date']}`;
     }
     return dateStr;
   };
 
-  const onPeriodChange = (period: string) => {
-    setSelectedPeriod(period);
-    const filters = { ...getDates(period) };
-    filters['product'] = productId;
-    dispatch(getKeywordTrackingData(companyId, filters));
+  let noOfDays = 0;
+
+  if (startDate && endDate) {
+    noOfDays = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24));
+  } else if (defaultDates && defaultDates['start_date'] && defaultDates['end_date']) {
+    const st = Date.parse(defaultDates['start_date']);
+    const en = Date.parse(defaultDates['end_date']);
+    noOfDays = Math.round((en - st) / (1000 * 60 * 60 * 24));
   }
+
+  let prevStartDate = new Date();
+  let prevEndDate = new Date();
+
+  if (startDate || defaultDates['start_date']) {
+    const st = startDate || new Date(Date.parse(defaultDates['start_date']));
+    prevStartDate.setDate(st.getDate() - noOfDays - 1);
+    prevEndDate.setDate(st.getDate() - 1);
+  }
+
+
 
   const handleSearchKeyDown = (event: any) => {
     const { value } = event.target;
@@ -240,6 +232,15 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     setSearch(value);
     setFilters({ ...filters, search_keywords: value, offset: 0, searchtype: searchType.value });
   };
+
+  const handleOnClickReset = () => {
+    setFilters(defaultSetting)
+    setKeywordFrequency({label: "All Keywords", value: "10000"})
+    setSearchType({label: "Inclusive (All)", value: "inclusive-all"})
+    setOrderDirection(orderAsc)
+    setOrderBy("")
+    setSearch("")
+  }
 
   const handleOnClickOrderBy = (value: any) => {
     var orderType = "";
@@ -304,7 +305,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }, [isKeywordsCreated, dispatch, companyId, filters]);
 
   const handleOnSelectKeywords = (e: any, keywordrank: any) => {
-    const index = findIndex(selectedKeywords, _keywordrank => _keywordrank.id === keywordrank.id);
+    const index = findIndex(selectedKeywords, _keywordrank => _keywordrank.productkeyword.id === keywordrank.productkeyword.id);
 
     if (index === -1) {
       setSelectedKeywords([...selectedKeywords, keywordrank]);
@@ -322,13 +323,13 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   };
 
   const performBulkAction = (action: string) => {
-    dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['id'])));
+    dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['productkeyword']['id'])));
     setSelectedKeywords([]);
   }
 
 
   const showKeywordChart = (keywordrank: any) => {
-    dispatch(getProductKeywordData(companyId, keywordrank.productkeyword.id, { ...getDates(selectedPeriod) }));
+    dispatch(getProductKeywordData(companyId, keywordrank.productkeyword.id, filters));
   }
 
 
@@ -419,8 +420,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
             <Row className="mt-1 mb-3">
               <Col lg={12}>
                 {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}}
-                  /> : <ProductKeywordChart data={productKeywordData ? productKeywordData : {}} changePeriod={onPeriodChange}
-                    selectedPeriod={selectedPeriod} />}
+                  /> : <ProductKeywordChart data={productKeywordData ? productKeywordData : {}} />}
               </Col>
             </Row>
             <Row>
@@ -467,12 +467,15 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                   selectedTags={(tags: [string]) => setSearch(tags.join())}
                 />
               </Col>
-              <Col sm={1}>
+              <Col sm={2}>
                 <button className="btn btn-primary" onClick={() => handleOnClickSearch(search)}>
                   Search
                 </button>
+                <button className="btn btn-outline-primary ml-1" onClick={() => handleOnClickReset()}>
+                  Reset
+                </button>
               </Col>
-              <Col sm={2}>
+              <Col sm={1}>
                 <Dropdown className="float-right">
   								<Dropdown.Toggle variant="none" id="export" className='p-0 border-0 mx-3 mt-3 export'
   									as={Link}>
@@ -533,15 +536,15 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {keywordranks && keywordranks.map((keywordrank, key) =>
+                      {keywordranks && keywordranks.map((keywordrank, key) => keywordrank.productkeyword && keywordrank.productkeyword.id ?
                         <tr key={key}>
                           <td>
                             <Form.Check
                               type="switch"
-                              key={keywordrank.id}
-                              id={`checkbox${keywordrank.id}`}
+                              key={keywordrank.productkeyword.id}
+                              id={`checkbox${keywordrank.productkeyword.id}`}
                               label=""
-                              checked={!!find(selectedKeywords, _keywordrank => _keywordrank.id === keywordrank.id)}
+                              checked={!!find(selectedKeywords, _keywordrank => _keywordrank.productkeyword.id === keywordrank.productkeyword.id)}
                               onChange={(e: any) => handleOnSelectKeywords(e, keywordrank)}
                             />
                           </td>
@@ -553,6 +556,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                           <td>{keywordrank.visibility_score}</td>
                           <td><a href={`https://${(product.amazonaccounts.marketplace.sales_channel_name).toLowerCase()}/s?k=${keywordrank.productkeyword.keyword.name}&page=${keywordrank.page}`} target="_blank">View Rank</a></td>
                         </tr>
+                        : null
                       )}
                     </tbody>
                   </Table>
