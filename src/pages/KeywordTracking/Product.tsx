@@ -32,6 +32,7 @@ import {
   getKeywordTrackingData,
   getProductKeywordData,
   exportKeywords,
+  resetkeywordTracking,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -83,7 +84,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }, [queryParam]);
 
 
-  const { loading, product, redirectUri, keywordranks, totalKeywordranks, membershipPlan, isKeywordsCreated, keywordTrackingData, productKeywordData, isBulkActionPerformed, isProductKeywordChartFetched } = useSelector((state: any) => ({
+  const { loading, product, redirectUri, keywordranks, totalKeywordranks, membershipPlan, isKeywordsCreated, keywordTrackingData, productKeywordData, isBulkActionPerformed, isProductKeywordChartFetched, isKeywordrankFetched } = useSelector((state: any) => ({
     loading: state.Company.KeywordTracking.loading,
     isKtproductsFetched: state.Company.KeywordTracking.isKtproductsFetched,
     product: state.Company.KeywordTracking.product,
@@ -92,6 +93,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     totalKeywordranks: state.Company.KeywordTracking.totalKeywordranks,
     membershipPlan: state.Company.MembershipPlan.membershipPlan,
     isKeywordsCreated: state.Company.KeywordTracking.isKeywordsCreated,
+    isKeywordrankFetched: state.Company.KeywordTracking.isKeywordrankFetched,
     keywordTrackingData: state.Dashboard.keywordTrackingData,
     isBulkActionPerformed: state.Company.KeywordTracking.isBulkActionPerformed,
     productKeywordData: state.Dashboard.productKeywordData,
@@ -101,6 +103,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   useEffect(() => {
     dispatch(resetDashboard());
+    dispatch(resetkeywordTracking());
   }, []);
 
   const companyId = props.match.params.companyId;
@@ -155,10 +158,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
       dispatch(getKeywordranks(companyId, defaultSetting));
     }else {
       dispatch(getKeywordranks(companyId, filters));
-      dispatch(getKeywordTrackingData(companyId, { ...defaultFilters }));
+      dispatch(getKeywordTrackingData(companyId, defaultFilters ));
     }
   }, [dispatch, companyId, productId, filters, defaultFilters, isBulkActionPerformed]);
-
 
   const [records, setRecords] = useState<Array<any>>([]);
 
@@ -229,6 +231,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   };
 
   const handleOnClickSearch = (value: string) => {
+    dispatch(resetkeywordTracking());
     setSearch(value);
     setFilters({ ...filters, search_keywords: value, offset: 0, searchtype: searchType.value });
   };
@@ -325,6 +328,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const performBulkAction = (action: string) => {
     dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['productkeyword']['id'])));
     setSelectedKeywords([]);
+    handleOnClickReset();
   }
 
 
@@ -353,7 +357,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   return (
     <>
-      {loading ? <Loader /> : null}
+      {loading || !isKeywordrankFetched || !product ? <Loader /> : null}
       {product ? <>
         <div className="py-4">
           <Row className='align-items-center'>
@@ -490,7 +494,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 												if (file.value === 'csv-filtered' || file.value === 'xls-filtered')
 													dispatch(exportKeywords(companyId, file.value, filters))
 												else
-													dispatch(exportKeywords(companyId, file.value))
+													dispatch(exportKeywords(companyId, file.value, defaultSetting))
 											}}
                       >
   											{file.label}
@@ -503,7 +507,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
             <Row>
               <Col lg={12}>
                 <div className={"list-view"}>
-                  <p className="mt-3">{totalKeywordranks} Keywords</p>
+                  <p className="mt-3">{keywordranks ? keywordranks.length : 0} Keywords</p>
                   <Table className="mt-3">
                     <thead>
                       <tr>
@@ -536,7 +540,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {keywordranks && keywordranks.map((keywordrank, key) => keywordrank.productkeyword && keywordrank.productkeyword.id ?
+                  {keywordranks && keywordranks.map((keywordrank, key) => keywordrank.productkeyword && keywordrank.productkeyword.id ?
                         <tr key={key}>
                           <td>
                             <Form.Check
