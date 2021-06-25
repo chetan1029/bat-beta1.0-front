@@ -32,6 +32,7 @@ import {
   getKeywordTrackingData,
   getProductKeywordData,
   exportKeywords,
+  resetkeywordTracking,
 } from "../../redux/actions";
 
 const capitalizeFirstLetter = (string) => {
@@ -229,6 +230,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   };
 
   const handleOnClickSearch = (value: string) => {
+    console.log(isBulkActionPerformed);
+    resetkeywordTracking();
+    console.log(isBulkActionPerformed);
     setSearch(value);
     setFilters({ ...filters, search_keywords: value, offset: 0, searchtype: searchType.value });
   };
@@ -325,6 +329,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const performBulkAction = (action: string) => {
     dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['productkeyword']['id'])));
     setSelectedKeywords([]);
+    handleOnClickReset();
   }
 
 
