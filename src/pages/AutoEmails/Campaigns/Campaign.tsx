@@ -224,6 +224,17 @@ const Campaign = ({ companyId, campaign, templates, orderStatuses, market, setSe
                           </Card.Body>
                       </Card>
                   </Col>
+                  { campaign["send_optout"] ?
+                  <Col lg={3}>
+                      <Card>
+                          <Card.Body className="">
+                              <h6 className="mt-0 text-muted">{t('Reattempted Review Requests')}</h6>
+                              <h1 className="mb-0">{campaign['reattempted_reviews']}</h1>
+                          </Card.Body>
+                      </Card>
+                  </Col>
+                  : null
+                }
               </Row>
               <Form className="mt-3" noValidate onSubmit={validator.handleSubmit}>
                 <Row>

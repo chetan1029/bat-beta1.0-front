@@ -246,6 +246,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }
 
   const handleOnClickOrderBy = (value: any) => {
+    dispatch(resetkeywordTracking());
     var orderType = "";
     if (orderBy === value){
       if(orderDirection === orderAsc){
@@ -262,7 +263,6 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
     setOrderBy(value);
     const orderValue = orderType+""+value;
     setFilters({ ...filters, ordering: orderValue });
-
   };
 
   // useEffect(() => {
@@ -328,6 +328,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   const performBulkAction = (action: string) => {
     dispatch(performBulkActionKeywords(companyId, action, selectedKeywords.map(c => c['productkeyword']['id'])));
     setSelectedKeywords([]);
+    dispatch(resetkeywordTracking());
     handleOnClickReset();
   }
 
@@ -354,10 +355,9 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
   const isActiveMarket = quotas && quotas['available_quota'] > 0 ? true : false;
 
-
   return (
     <>
-      {loading || !isKeywordrankFetched || !product ? <Loader /> : null}
+      {loading || !keywordranks || !product ? <Loader /> : null}
       {product ? <>
         <div className="py-4">
           <Row className='align-items-center'>
@@ -421,7 +421,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
 
         <div>
           <div >
-            <Row className="mt-1 mb-3">
+            <Row className="mt-1 mb-3 sticky-top">
               <Col lg={12}>
                 {!loading && !isProductKeywordChartFetched ? <OverallChart data={keywordTrackingData ? keywordTrackingData : {}}
                   /> : <ProductKeywordChart data={productKeywordData ? productKeywordData : {}} />}
@@ -511,9 +511,10 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                   <Table className="mt-3">
                     <thead>
                       <tr>
-                        <th className="index">
+                        <th className="index" key={`custom-checkbox`}>
                           <Form.Check
-                            type="switch"
+                            custom
+                            type="checkbox"
                             id={"checkbox"}
                             label=""
                             checked={selectedKeywords && selectedKeywords.length}
@@ -544,7 +545,8 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
                         <tr key={key}>
                           <td>
                             <Form.Check
-                              type="switch"
+                              custom
+                              type="checkbox"
                               key={keywordrank.productkeyword.id}
                               id={`checkbox${keywordrank.productkeyword.id}`}
                               label=""
