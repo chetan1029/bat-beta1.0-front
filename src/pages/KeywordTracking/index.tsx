@@ -35,6 +35,7 @@ interface KeywordTrackingProps {
     match: any;
     location?: any;
 }
+
 const KeywordTracking = (props: KeywordTrackingProps) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();

@@ -239,7 +239,7 @@ const dateFormat = 'MM/DD/YYYY';
                     </Card>
                   </Col>
                 </Row>
-                <Row>
+                <Row className="mb-3">
                   <Col>
                     <Card className="card-stats mb-2">
                       <Card.Body className="clickable-row" onClick={() =>openDetails("opt-out")}>
@@ -270,6 +270,25 @@ const dateFormat = 'MM/DD/YYYY';
                         <p className="sub-header mt-1">
                           { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate"] || 0 : 0)}%
                           <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["opt_out_rate_percentage"] || 0 : 0 } />
+                        </p>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Card className="card-stats mb-2">
+                      <Card.Body className="clickable-row" onClick={() =>openDetails("reattempted-reviews")}>
+                        <p className="header">
+
+                        {t('Reattempted Review Request')}
+                        <span className="float-right">
+                          <ToolTips placement="auto" label="" message="Message on hover over" />
+                        </span>
+                        </p>
+                        <p className="sub-header mt-1">
+                          { getNumber(emailChartData && emailChartData.stats ? emailChartData.stats["reattempted_reviews"] || 0 : 0)}
+                          <ComparePercentage value={ emailChartData && emailChartData.stats ? emailChartData.stats["reattempted_reviews_percentage"] || 0 : 0 } />
                         </p>
                       </Card.Body>
                     </Card>
