@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import Loader from "../../../components/Loader";
 import { TEMPLATE_LANGS, TemplateLanguageDropdown } from "../../../components/TemplateLanguageDropdown";
 import ShowVariables from "./ShowVariables";
-
+import EmailTemplate from "./EmailTemplate";
 //plug-ins
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -49,10 +49,13 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
 
 
   const companyId = props.match.params.companyId;
-  const templateId = props.match.params.templateId;
+  let templateId = props.match.params.templateId;
 
   const defaultParams = useMemo(() => ({ 'limit': 100000000 }), []);
 
+  const [submitType, setSubmitType] = useState("Save");
+  const [showEmailTemplate, setShowEmailTemplate] = useState(false);
+  const [testTemplate, setTestTemplate] = useState<any>(null);
 
   // get the data
   useEffect(() => {
@@ -62,11 +65,17 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
     }
   }, [dispatch, companyId, templateId, defaultParams]);
 
+  const testEmailTemplate = (emailtemplatemodel: boolean, emailtemplate: any) => {
+    setSubmitType("Test");
+    setShowEmailTemplate(emailtemplatemodel);
+    setTestTemplate(emailtemplate);
+  };
 
   if (isTemplateUpdated || isTemplateCreated) {
-    history.push(`/auto-emails/${companyId}/templates`);
+    if (submitType == "Save"){
+      history.push(`/auto-emails/${companyId}/templates`);
+    }
   }
-
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
 
@@ -112,6 +121,7 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
   const closeModal = () => {
     setisopen(false);
   }
+
 
   return (
     <>
@@ -267,15 +277,22 @@ const AddEditTemplate = (props: AddEditTemplateProps) => {
                 >
                   {t("Cancel")}
                 </Link>
-                <Button type="submit" variant="primary">
+                <Button type="submit" variant="primary" className="mr-3" onClick={() => setSubmitType("Save")}>
                   {t("Save Template")}
                 </Button>
+                {templateId ?
+                <Button type="submit" variant="btn btn-outline-danger" onClick={() => testEmailTemplate(true, templateDetail)}>
+                  {t("Test Email Template")}
+                </Button>
+                : null }
               </div>
             </Form>
           </Card.Body>
         </Card>
       </div>
       {isOpen ? <ShowVariables isOpen={isOpen} onClose={closeModal} /> : null}
+      {showEmailTemplate ? <EmailTemplate emailTemplate={templateDetail} companyId={companyId} onClose={() => setShowEmailTemplate(false)} /> : null}
+
     </>
   );
 }
