@@ -338,7 +338,7 @@ const KeywordTrackingProduct = (props: KeywordTrackingProps) => {
   }
 
 
-  let keywordFrequencyOptions: Array<any> = [{label: "All Keywords", value: "10000"}, {label: "Top 100", value: "100"} , {label: "Top 200", value: "200"}, {label: "Top 500", value: "500"}, {label: "Top 1000", value: "1000"}];
+  let keywordFrequencyOptions: Array<any> = [{label: "All Keywords", value: "10000"}, {label: "Keywords with frequency rank", value: "10001"}, {label: "Keywords without frequency rank", value: "10002"}, {label: "Top 100", value: "100"} , {label: "Top 200", value: "200"}, {label: "Top 500", value: "500"}, {label: "Top 1000", value: "1000"}];
 
   const handleonSelectKeywordFrequency = (keywordFrequency: any) => {
     setOrderDirection(orderAsc);
